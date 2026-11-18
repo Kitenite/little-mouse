@@ -33,10 +33,14 @@ export function createFurVolume(T,source,material,{count,random,length=1,softnes
    tangent.set((du1*(p[ic*3]-p[ia*3])-du2*(p[ib*3]-p[ia*3]))/(det||1),(du1*(p[ic*3+1]-p[ia*3+1])-du2*(p[ib*3+1]-p[ia*3+1]))/(det||1),(du1*(p[ic*3+2]-p[ia*3+2])-du2*(p[ib*3+2]-p[ia*3+2]))/(det||1));
    tangent.addScaledVector(normal,-tangent.dot(normal));if(tangent.lengthSq()<1e-8)tangent.set(1,0,0).addScaledVector(normal,-normal.x);tangent.normalize().multiplyScalar(body?-1:1);side.crossVectors(tangent,normal).normalize();
    const len=lengths[i],width=widths[i];
-   for(let k=0;k<5;k++){const advance=k<2?0:k<4?.55*(1-softness*.2):1-softness*.2,rise=k<2?.015:k<4?.15+softness*.5:.08+softness*.6,spread=k===4?0:(k%2?1:-1)*(k<2?width:width*.55),at=i*15+k*3;
+   // Reuse seeded shade variation: mixed loft without extra RNG draws or buffers.
+   // Mixed shoulder heights break up the rim; tips curl back toward the coat.
+   const variation=Math.max(0,Math.min(1,(colors[i*15]/.93-.94)/.2));
+   const loft=.55+.45*variation, curl=softness*(.16+.18*(1-variation));
+   for(let k=0;k<5;k++){const advance=k<2?0:k<4?.55*(1-softness*.2):1-softness*.2,rise=k<2?.015:k<4?.15+softness*.5*loft:.08+softness*.6*loft-curl,spread=k===4?0:(k%2?1:-1)*(k<2?width:width*.55),at=i*15+k*3;
     positions[at]=point.x+tangent.x*len*advance+normal.x*len*rise+side.x*spread;positions[at+1]=point.y+tangent.y*len*advance+normal.y*len*rise+side.y*spread;positions[at+2]=point.z+tangent.z*len*advance+normal.z*len*rise+side.z*spread;
     // Curved normal profile catches light; no translucent halo or billboard blending.
-    faceNormal.copy(normal).addScaledVector(tangent,k<2?-.45:k<4?-.1:.3).normalize();normals[at]=faceNormal.x;normals[at+1]=faceNormal.y;normals[at+2]=faceNormal.z;rootNormals[at]=normal.x;rootNormals[at+1]=normal.y;rootNormals[at+2]=normal.z;
+    faceNormal.copy(normal).addScaledVector(tangent,k<2?-.25:k<4?-.08:.18+curl).normalize();normals[at]=faceNormal.x;normals[at+1]=faceNormal.y;normals[at+2]=faceNormal.z;rootNormals[at]=normal.x;rootNormals[at+1]=normal.y;rootNormals[at+2]=normal.z;
    }
   }
   geometry.attributes.position.needsUpdate=true;geometry.attributes.normal.needsUpdate=true;geometry.attributes.hairNormal.needsUpdate=true;

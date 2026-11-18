@@ -24,7 +24,9 @@ ears, nose, paws and tail retain their separate roughness contracts.
 The user-visible **Fuzziness** control reuses `furSoftness` (0–1, default .5), preserving
 saved profiles and numeric API. Both shared settings registry and legacy identity labels agree.
 Game, companion and playground expose the same control. At zero the tufts lie close to the
-surface; at one they spread and lift. Counts, nominal lengths, roots and UVs stay unchanged
+surface; at one they spread and lift to varied shoulder heights, with curled tips.
+Existing seeded shade variation supplies loft diversity without additional random draws,
+buffers or triangles. Counts, nominal lengths, roots and UVs stay unchanged
 when only Fuzziness changes. This differs from hair density and furLength.
 
 Identity, coat selection, shade, anatomy and attachments retain their existing seeded values.
@@ -72,7 +74,8 @@ shows top/side rest, groom, run bend and active hindpaw drag with the actual dra
 `/review/fur.html` accepts `close=1`, `coat=19`, `level=max|bare`, and `fuzz=0|1`.
 The [previous limb capture](evidence/limb-surface/mouse-limb-envelope.png) retains the old
 line/point coat for comparison. New edges have clear depth and stripes remain readable;
-maximum fuzziness still looks bristly, not plush. Existing sharp rump/head contours remain.
+Maximum fuzziness now has a tighter curled outline, but retains a dark stippled rim, not plush fur.
+Current bounded iteration evidence and independent review: [coat cycle](cycles/coat.md). Existing sharp rump/head contours remain.
 
 Desktop fixture: default 39 draws / 53,708 triangles, maximum 66,398 triangles, bare 34 draws /
 28,466 triangles; counts include the rest of the mouse and vary with identity/settings.
