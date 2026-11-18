@@ -57,3 +57,7 @@ This is an authored policy, not a trained AI or validated rodent psychology mode
 The rich preset is a design choice for this cat to try, not a scientifically optimal or
 validated engagement setting. Its comparative quality still requires observing Mouse for Cats
 and this cat's response.
+
+Known limit: a queued pre-contact retreat can survive a hold/toss and replay on landing.
+This is reproduced, not repaired in the current bounded batch; see
+[behavior cycle evidence](cycles/behavior.md) for the exact seed and next case.

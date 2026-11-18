@@ -62,11 +62,27 @@
 - Full suite: 236 pass. Independent critic accepts B3: same baseline stuck at40s,
   fix safely hides at.366667 and reenters at2.883333; reproduced twice.
 - Critic: 198 applicable size/viewport/rate/speed/insertion cases pass (18 already past peek
-  excluded), priority checks pass, 64 focused tests pass, diff clean. Fix SHA recorded below.
+  excluded), priority checks pass, 64 focused tests pass, diff clean. Fix: `b6cfec4ca5e6ab7ff3f72b70a0c156ca7d736550`.
 - No session/pairing/owner setting changes.
 
 ## Ranked follow-up
 
-- Critic reproduced pre-hold queued cue replay after a toss. Keep as next bounded policy case;
-  current batch prioritizes the two permanent entry deadlocks and injury recovery.
+- B4 (medium, reproduced, not repaired): pre-hold queued cue replays after a toss.
+- Seed42, one active mouse (512,384), 1024×768,60Hz; Hunt size2.2 speed1.2 hide2.5
+  tempo1 variation=true runThrough=.3. Tick .016667; remember touch (562,384); tick again.
+- Body-claim pointer1 at (512,384) at .033333; hold until .3; move pointer to (562,384);
+  tick twice; release at .333333 creates toss through .983333 (real contact+physics).
+- Pending retreat deadline .3127817 survives and enters retreat at .983333,
+  startledUntil=2.183333; no-cue control watches. Critic reproduced twice.
+- Expected: hold/toss supersedes the queued pre-contact cue. No fourth iteration started.
+- Critic DONE envelope received; retain its terminal for future review. Root should register
+  this lead/workspace in the shared workers ledger during integration; no root terminal guessed.
 - Device/cat response remains unverified; authored avoidance is a design inference.
+
+## Integration
+
+- Apply branch commits in order: `629121971d941505ca2fb257043dd1c24f94e96e`,
+  `af9142b7798f7299c1830b8d7efa77d260cbb9ee`, `b6cfec4ca5e6ab7ff3f72b70a0c156ca7d736550`,
+  then the report-only handoff commit at branch HEAD.
+- All edits are isolated here. No shared hooks or changes outside policy/tests/docs required.
+- Root performs combined integration/build and browser/device/cat validation.
