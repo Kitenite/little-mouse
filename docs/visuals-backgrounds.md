@@ -33,6 +33,27 @@ The rich launch preset selects the woodland clearing image with contrast 0.8, mi
 soft daylight. This is an owner-facing starting point, not evidence that this background is
 optimal for feline vision; quiet plain/contrast surfaces remain available for comparison.
 
+Ground response is implemented in `environment.js` / `environment3d.js`: temporary low-opacity
+compression on cloth/cork/paper, soil impressions with sparse settling grit on clearing/earth/sand,
+and sparse settling blade-shaped marks on grass. Boards, stone, tile and quiet plain floors emit
+nothing. No image-pixel obstacles, photo deformation, glowing rings, ray tracing or new bitmap assets.
+The woodland center stays soil: this pass does not synthesize leaf fragments at photographic edges.
+`environmentStrength` is numeric (zero clears/disables); `environmentPersistence` sets finite lifetime.
+Both use the shared schema, so game, companion, profiles, playground and server inherit validation.
+
+Rendered paw positions transformed by the mouse group supply contact samples; ground height and
+actual displacement gate emission, not speed/intent or cadence alone. Airborne paws reset history;
+landing seeds a new stance. Head/body claims leave wider drag compression even before activation;
+paw/tail holds use grounded feet. Stationary contacts do not repeatedly stamp. Spatial resampling
+is capped at eight samples per foot or body per render; extreme discontinuities discard backlog.
+The height threshold is an approximate contact test, not a force solver or pressure/deformation model.
+
+One pooled instanced draw holds at most 160 marks (320 triangles), with reusable sample buffers and
+no per-mark allocations. Exponential age decay and short grit/blade settling use simulation time.
+Disable and hard materials skip contact transforms. Surface, size, resize, backward time, long gaps
+and teleports clear memory; hidden/respawn/toss samples reseed. Paused simulation freezes decay.
+The visual module owns no audio; surface sound integration is maintained separately by the audio owner.
+
 Twenty-two stable coats include brown, gray, cream, white, black, pied, checker, blue, yellow,
 orange, teal, magenta and violet, with stripe, speckle and mottled options.
 Palettes are All coats (default), Natural variety, Light/dark/patterned, and Vibrant colors/patterns.
@@ -60,6 +81,6 @@ Portrait/landscape resize must preserve contact-coordinate alignment and safe ow
 - Generated images are visual materials, not scientific or wildlife reference evidence.
 
 Source owners: `mouse3d.js`, `lighting.js`, `backgrounds.js`, `backgrounds.css`, `coat-palette.js`,
-`mouse-identity.js` and shared settings. Tests include backgrounds, coat-palette, lighting,
+`mouse-identity.js` and shared settings. Tests include environment, backgrounds, coat-palette, lighting,
 mouse-model and mouse-identity. Pending validation: physical iPad visual quality and this cat's
 response to the new palettes and image scenes. No scientifically validated engagement claim.

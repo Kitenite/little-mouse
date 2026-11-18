@@ -42,7 +42,7 @@ test('turning head, pelvis, limbs and grabbed-tail picking share one articulated
 });
 test('pending head claims freeze the rendered anatomy before the hold threshold',async()=>{
  const {MouseScene}=await import('../public/mouse3d.js'),{identitySettings}=await import('../public/mouse-identity.js');const config={size:2.2,brightness:1},identity=createMouseIdentity(39),model=makeMouse(0,identity,config);model.settingsKey=JSON.stringify(identitySettings(config));
- const scene={models:[model],resizeObserver:true,w:1024,h:768,blood:{update(){}},lighting:{update:()=>({materialRoughness:.94})},renderer:{render(){}},scene:{add(){}},camera:{}};
+ const scene={models:[model],resizeObserver:true,w:1024,h:768,blood:{update(){}},environment:{update(){}},lighting:{update:()=>({materialRoughness:.94})},renderer:{render(){}},scene:{add(){}},camera:{}};
  const mouse={identity,x:400,y:300,angle:.4,state:'active',hiddenUntil:0,turnRate:6,speed:250,moving:true};
  for(let frame=0;frame<60;frame++)MouseScene.prototype.render.call(scene,[mouse],config,frame/60,1/60);
  const before=[model.articulation.head,model.articulation.pelvis];mouse.hold={part:'head',active:false,startedAt:1,localX:35,localY:0};mouse.turnRate=0;mouse.speed=0;mouse.moving=false;
@@ -59,4 +59,23 @@ test('feedback picking includes visible unclaimable mice without changing claim 
   if(mouse.hold||mouse.state==='defeated')assert.equal(MouseScene.prototype.contactAt.call(scene,[mouse],300,300,1),null);
  }
  model.group.visible=false;assert.equal(MouseScene.prototype.contactAt.call(scene,[mouse],300,300,1,{includeUnclaimable:true}),null);disposeMouse(model);
+});
+
+test('environment samples transformed rendered paws at morphology extremes and skips disabled transforms',async()=>{
+ const {GroundResponse}=await import('../public/environment3d.js'),T=await import('../public/vendor/three.module.js');
+ for(const size of [.6,3]){const config={size,background:'linen',environmentStrength:1,environmentPersistence:2},model=makeMouse(0,createMouseIdentity(55),config),ground=new GroundResponse(new T.Scene());
+ const mouse={x:300,y:300,state:'active',hiddenUntil:0};model.group.position.set(-100,0,0);model.group.rotation.z=.7;model.group.scale.setScalar(size);
+ ground.update([model],[mouse],config,0,800,600);mouse.x+=20;model.group.position.x+=20;ground.update([model],[mouse],config,.1,800,600);
+ const expected=model.feet[0].position.clone().applyMatrix4(model.group.matrixWorld);assert.ok(Math.abs(ground.feet[0]-expected.x-400)<1e-8);assert.ok(Math.abs(ground.feet[1]-(300-expected.y))<1e-8);
+ model.group.updateMatrix=()=>{throw Error('disabled transform work');};ground.update([model],[mouse],{...config,environmentStrength:0},.2,800,600);assert.equal(ground.mesh.visible,false);assert.equal(ground.memory.active,0);disposeMouse(model);
+ }
+});
+
+test('pending body drag, paw hold, toss, pause and grass settling use renderer integration',async()=>{
+ const {GroundResponse}=await import('../public/environment3d.js'),T=await import('../public/vendor/three.module.js');
+ const c={size:1,background:'grass',environmentStrength:1,environmentPersistence:2},model=makeMouse(0,createMouseIdentity(56),c),ground=new GroundResponse(new T.Scene()),mouse={x:300,y:300,state:'active',hold:{part:'body',active:false}};
+ ground.update([model],[mouse],c,0,800,600);mouse.x+=20;model.group.position.x+=20;ground.update([model],[mouse],c,.1,800,600);assert.equal(ground.memory.marks[0].kind,1);
+ ground.clear();mouse.hold.part='forepaw';ground.update([model],[mouse],c,.2,800,600);mouse.x+=20;model.group.position.x+=20;ground.update([model],[mouse],c,.3,800,600);assert.ok(ground.memory.marks.filter(p=>p.life).every(p=>p.kind!==1));
+ ground.clear();mouse.tossUntil=2;ground.update([model],[mouse],c,.4,800,600);mouse.x+=20;ground.update([model],[mouse],c,.5,800,600);assert.equal(ground.memory.active,0);
+ ground.memory.add(200,200,1,5,.2,2);ground.update([],[],c,.5,800,600);const before=Array.from(ground.shape.array);ground.update([],[],c,.5,800,600);assert.deepEqual(Array.from(ground.shape.array),before);ground.update([],[],c,.65,800,600);assert.ok(before.some((v,i)=>Math.abs(v-ground.shape.array[i])>.01));disposeMouse(model);
 });
