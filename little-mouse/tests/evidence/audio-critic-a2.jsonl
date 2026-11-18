@@ -1,0 +1,16 @@
+{"case":"503-recovery","firstRequests":26,"requests":52,"decoded":26,"played":1,"errors":0}
+{"case":"partial-retry-mute","cached":22,"beforeBackoff":26,"inFlightRequests":30,"finalRequests":30,"decoded":26,"errors":0,"played":0}
+{"case":"retry-cancel","unsolicited":0,"errorsAfterSecondFailure":26,"played":0,"errors":0,"requests":78}
+{"case":"retry-pause","unsolicited":0,"errorsAfterSecondFailure":26,"played":0,"errors":0,"requests":78}
+{"case":"retry-expiry","unsolicited":0,"errorsAfterSecondFailure":26,"played":0,"errors":0,"requests":78}
+{"case":"retry-none","unsolicited":0,"errorsAfterSecondFailure":26,"played":1,"errors":0,"requests":78}
+{"case":"slow-load-harmless","lateVoices":1,"pending":0,"last":"tap"}
+{"case":"slow-load-cancel","lateVoices":0,"pending":0}
+{"case":"slow-load-expire","lateVoices":0,"pending":0}
+{"case":"crossbank-partial","repeats":0,"partial":["floor-02","floor-01","floor-02","floor-01"],"restored":["floor-03","floor-02","floor-04","floor-01"]}
+{"case":"bank-rounds","checked":75,"failures":[]}
+{"case":"variety-fixed-half","unique":4,"picks":["floor-03","floor-02","floor-04","floor-01","floor-03","floor-02","floor-04","floor-01","floor-03","floor-02","floor-04","floor-01"]}
+{"case":"legacy-nibble-interruption","before":[{"kind":"nibble","owned":false}],"remaining":["nibble"]}
+{"case":"activity-removal","remaining":["nibble"]}
+{"case":"legacy-removal","remaining":["nibble"]}
+{"case":"long-harmless-release","extraVoices":1,"last":"tap"}
