@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useKeepAwake } from 'expo-keep-awake';
 import { WebView } from 'react-native-webview';
 import { isAllowedWebUrl } from '../connection';
+import { webCheckpointScript } from '../web-checkpoint';
 import { styles } from '../styles';
 function KeepScreenAwake() { useKeepAwake(); return null; }
 
@@ -34,16 +35,7 @@ export default function Game({ url, close }: { url: string; close: () => void })
       onError={event => { setActivePlay(false); setLoading(false); setError(event.nativeEvent.description); }}
       onHttpError={event => { if (event.nativeEvent.statusCode >= 400) { setActivePlay(false); setLoading(false); setError(`The game returned ${event.nativeEvent.statusCode}.`); } }}
       onContentProcessDidTerminate={() => { setActivePlay(false); setReloadKey(value => value + 1); }}
-      injectedJavaScript={`(() => {
-        if (location.origin !== ${JSON.stringify(new URL(url).origin)}) return true;
-        const checkpoint = () => {
-          const state = window.mouseDiagnostics?.();
-          if (!state) return;
-          try { localStorage.setItem('mouse-resume', JSON.stringify({playing:state.playing,catches:state.catches,elapsed:state.elapsed,at:Date.now()})); } catch {}
-          window.ReactNativeWebView?.postMessage(JSON.stringify({type:'play-state',playing:state.playing}));
-        };
-        checkpoint(); setInterval(checkpoint, 1000); return true;
-      })(); true;`}
+      injectedJavaScript={webCheckpointScript(new URL(url).origin)}
       onMessage={event => {
         try {
           if (new URL(event.nativeEvent.url).origin !== new URL(url).origin) return;
