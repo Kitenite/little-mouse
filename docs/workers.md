@@ -1,6 +1,6 @@
 # Worker coordination
 
-Reviewed 2026-11-17. Use persistent Superset terminal workers for ongoing core work;
+Reviewed 2026-11-18. Use persistent Superset terminal workers for ongoing core work;
 built-in subagents are not the default orchestration surface requested by the owner.
 Read the superset-orchestrate skill before dispatching. Keep this file a current ledger,
 not an append-only activity log. Terminal existence does not establish completion.
@@ -14,20 +14,21 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 
 | Role | Terminal | Current batch |
 | --- | --- | --- |
-| Physics builder | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Running `cycle-physics`: bounded drag/secondary motion; delegate independent critic |
-| Anatomy builder | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Running `cycle-anatomy`: connected anatomy/poses; owns renderer hooks; delegate critic |
-| Coat builder | `37be8626-484b-4e27-b7af-1786121687f7` | Running `cycle-coat`: softer fur silhouette, stable roots and render cost; delegate critic |
-| Environment builder | `1906036a-b32e-42b0-8678-76be0b6050f7` | Running `cycle-environment`: backgrounds, light/material response; reuse/delegate critic |
-| Audio builder | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Running `cycle-audio`: recorded cue variety, contextual routing and mix |
-| Audio critic | `49671af0-6882-4117-999f-3ffa3f788f01` | Running `cycle-audio-critic`: independent source/routing/mix review paired with audio builder |
-| Behavior builder | `ce1b794a-1fc4-4b52-b9d6-9dee3c7f5cf0` | Running `cycle-behavior`: seeded prey policy and paw avoidance; delegate critic |
-| Reliability builder | `be76f581-7262-4c17-b14c-8a9797b16141` | Running `cycle-reliability`: reproducible failures, diagnostics and recovery; delegate critic |
-| Reference realism critic | `b1905a2f-48ee-4727-9351-ce92957abbd8` | Dispatched `cycle-realism-critic`: actual rendered/reference comparisons sent to domain leads |
+| Physics builder | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Complete: integrated motion fixes and accepted B4 claim-boundary follow-up |
+| Anatomy builder | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Integrated profile/jaw fixes; independent combined render review passed |
+| Coat builder | `37be8626-484b-4e27-b7af-1786121687f7` | Integrated curled loft/face transition; independent review passed |
+| Environment builder | `1906036a-b32e-42b0-8678-76be0b6050f7` | Integrated three response fixes; previews stopped; critic retired after acceptance |
+| Audio builder | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Integrated three accepted audio fixes; source count unchanged |
+| Audio critic | `49671af0-6882-4117-999f-3ffa3f788f01` | Completed independent acceptance; evidence integrated |
+| Behavior builder | `ce1b794a-1fc4-4b52-b9d6-9dee3c7f5cf0` | Complete: four accepted policy fixes integrated, including held/toss cue cleanup |
+| Reliability builder | `be76f581-7262-4c17-b14c-8a9797b16141` | Integrated three accepted recovery/settings fixes |
+| Reference realism critic | `b1905a2f-48ee-4727-9351-ce92957abbd8` | Completed reference and combined rendered reviews; own previews stopped |
 
-Batch baseline: `cf064cc`. Each builder creates a new isolated worktree from this baseline.
+Batch baseline: `cf064cc`; stacks plus final B4 follow-up integrated at `d6c3409`.
+All domain builders/critics completed the current batch. Leads remain available for follow-up.
 Independent domain critics and worktree IDs are recorded in `docs/cycles/<domain>.md`.
 Scope: up to three focused build/review/repair iterations per domain, then exact commit
-handoffs and next ranked findings. Submitted tasks are not evidence of completed changes.
+handoffs and next ranked findings. See [current results](cycles/README.md) for evidence and cleanup.
 Physics owns drag/secondary/contact modules; anatomy owns shared renderer hooks; coat owns
 fur/material modules; environment owns background/light/response; behavior owns policy;
 audio owns samples/routing; reliability owns boot/game diagnostics. Shared hooks require

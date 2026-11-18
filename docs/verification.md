@@ -1,43 +1,43 @@
 # Current verification
 
-Reviewed 2026-11-17 (local time). This record replaces earlier totals; it is not an append-only log.
+Reviewed 2026-11-18 (local time). This record replaces earlier totals; it is not an append-only log.
 
 ## Verified in this change
 
-- Game regression suite: 232 tests pass covering behavior, contacts, physics, geometry,
-  activity interruption, backgrounds/coats, audio, settings, API and playground time control.
-- Native TypeScript and Expo lint pass; 4 tests cover connection validation and recovery checkpoints.
-- Integrated continuous limb skin, part-specific drag yielding and lit geometric fur. Root browser
-  exercised a fuzzy striped mouse through body drag/release; independent tests cover all paw
-  pins, tail fractions, pause, resets, fur roots/UVs, live roughness and resource disposal.
-  Fuzziness varies loft/spread independently of length/density. Maximum remains bristly.
-- Startup recovery: root browser blocked the game module, retried successfully, started play,
-  then induced WebGL context loss and verified Retry with the active checkpoint preserved.
-  Worker browser also covered first-preview failure and intentional pause; independent review
-  fixed partial-init writes, cleanup errors, duplicate-retry races and late pairing mutations.
-- Independent animation audit: 108 seeded drag cases over 35,640 simulation frames; bounded
-  contacts, attachments, pause, held collisions and disposal. Exact fractional tail pin regression passes.
-- Browser: real owner four-corner gesture opens home; shaders compile without logged errors.
-- Browser playground: eight visible models, separate lab settings, frame stepping and all five
-  idle activity scenarios; head/body/tail/forepaw/hind-paw drag-to-toss each resolves once.
-- Browser audio: all 26 active recordings load without errors. A real first-gesture
-  pointerdown plays one recorded floor squeak; quick harmless release does not add
-  a second cue or foot layer. Post-master peak 0.0631 establishes output, not hearing.
-  Recorded-only tests cover pending contact cancellation, pointer-scoped replacement,
-  mute/interruption and missing samples. Candidate hashes/PCM metadata pass.
-- Independent audio reviews: pointer-scoped cancellation (61 focused checks plus two-pointer
-  reproductions), event/animation integration, interruption, calm/distress mapping,
-  source licensing, PCM assets and mix trims. Independent visual review: 30 backgrounds,
-  22 coats, four palettes, generated-image provenance and representative rendered contrast.
-- Integrated anatomy/texture browser: continuous spine/waist bends and regional textures render
-  together with ground marks without logged errors. Focused checks cover legacy identities,
-  extreme inverse contacts, held-tail material fractions, attachment roots and stable UVs.
-- Reactive environment: 160-mark pool, one additional draw/320 triangles; tests cover actual
-  rendered paws, drag, restraint, toss, pause, material switches and disable. Counts match
-  at 30/60/120 Hz in the high-speed sampling case. Independent browser review covered
-  woodland, linen drag, grass and boards; root confirmed live marks in the integrated build.
-  Surface audio uses actual displacement and keeps contact ducking. No physical frame-rate claim.
-- Requirements documents satisfy their size caps; local relative links resolve.
+- Integrated seven Superset builder/critic stacks from baseline `cf064cc`.
+  [Current cycle results](cycles/README.md) link reproductions, commits and critique evidence.
+- Final combined web regression suite: 276 tests pass, including the held/toss cue follow-up.
+  Four native connection/checkpoint tests pass. No native source changed in this batch;
+  earlier native TypeScript/lint and installed landscape binary checks remain historical.
+- Physics: paused/reset pins, toss recency based on actual anchor movement and gradual
+  held-tail release. Independent combined review passed seven tests and four
+  contact/renderer/environment probes; engine prototype remains deferred.
+- Anatomy/coat: bounded shared-tangent profile, embedded nibbling jaw, varied curled loft
+  and gradual body-to-face fur transition. Eleven combined browser captures inspected by
+  the independent realism reviewer; default/extreme, hold/release and ground cases show
+  no new blocker. Root inspected the combined held-tail side view. Known fringe/rump limits remain.
+- Environment: no historical footprints on drag release, tapered anchored grass response
+  and immediate live strength changes. Integration probe found zero release backfill;
+  material switch clears marks. Pool stays160, one extra draw/320 triangles.
+- Behavior: clear entry selection, stale injury-cue removal and retreat when paws obstruct
+  a peek; held/tossed mice discard obsolete decisions without losing fresh cues. Successful
+  claims also clear queued decisions when canceled before the next policy tick. Independent
+  seeded adverse cases are recorded in the behavior cycle report.
+- Audio: failed recorded downloads can retry on later gestures; excerpt rounds avoid
+  two-clip alternation; eating/activity sounds stop when their owning action ends.
+  Independent source/routing/lifecycle probes pass; root reran the audio-critic fixture
+  against integrated source. Four original sources/26 runtime cuts
+  unchanged; no new recording acquisition or physical listening claim in this batch.
+- Reliability: unacknowledged owner settings survive reload/offline races; malformed
+  pairing/resume data cannot trap startup; bounded sanitized failure reports are available
+  through `mouseBoot.exportReport()` before Retry. No automatic upload or retry loop.
+- Root browser injected WebGL context loss and verified a captured pre-cleanup play state,
+  retained checkpoint, then Retry returning ready/recovering=false/playing=true/WebGL=true.
+  Scratch browser was backgrounded (elapsed0, no runtime fingerprint), so this proves the
+  recovery path only. The original owner's iPad freeze remains unconfirmed.
+- Closed five retired agent sessions and removed three clean obsolete workspaces/worktrees;
+  implementation commits and uncommitted research/evidence retained. Unused owned previews
+  stopped; root LAN8787 and Metro8088 remain. Domain leads retained for future batches.
 
 ## Device and perceptual limits
 
@@ -66,5 +66,7 @@ Local development serves current files with version reload. A GitHub push is sou
 Sites deployment is separate. Use the deployment result for hosted release status. Native shell
 changes use the existing development/Expo route and are not a new standalone binary release.
 
-Current hosted release succeeded: build `786aaf102aec`, Sites source `f209b1d`.
+Current hosted release succeeded: build `38df8075500e`, Sites source `b8d5680`.
+Deployment `appgdep_6afd5bec87ac8191ac16ee65ddf059ae` succeeded on 2026-11-18.
+Final build and Worker syntax checks passed. This is a web update, not a new native install.
 The owner-private game and `/playground.html` were deployed together; audience was preserved.

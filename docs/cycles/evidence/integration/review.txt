@@ -1,0 +1,41 @@
+Combined visual integration review — no new blocker found in sampled cases.
+Source: 4fc4dab5e49f90e19ec5055a93057ddb3cfea2aa, root working tree.
+Only pre-existing working change observed: little-mouse/public/version.json (22774d8dd6f9).
+No source edits, test-suite rerun, device use, publication or shared server changes.
+
+Browser: disposable HeadlessChrome158/macOS, viewport1440x913, DPR1.
+Source served read-only at localhost8879; production renderer/simulation modules.
+Reused docs/cycles/evidence/realism/setup.js from prior preserved review worktree.
+Default closeup: seed428, size3, count1, natural coat, morphologyVariation0,
+plain floor/studio lighting, idle/nibble frequency0; other baseline-config.json values.
+Top and side screenshots combined-default-{top,side}.png retain smoother profile and jaw closure.
+Extreme: bodyHairiness1.5, armHairiness1.5, furLength1.8, furSoftness1,
+morphologyVariation1, bodyLength1.2, bodyWidth1.25, headScale1.2, tailLength1.4, legLength1.25.
+combined-extreme-{top,side}.png: coherent coat/body; known dark fringe and pointed rear underside remain.
+Tail hold uses rendered tail ring32 hit; initial pointer(207.17018127441406,350),
+20 ticks, move to(287.17018127441406,280),12 ticks; held state confirmed.
+combined-tail-held-{top,side}.png: curved attached tail in this case; no new detached limb/coat mass.
+Release pointer71 then30 ticks: combined-released-{top,side}.png, t1.0333333,
+active/dodge state; tail remains continuous during the sampled turn.
+No claim all extreme morphologies or continuous gait are validated.
+
+Measured renderer snapshots: default39calls/52586triangles/16geometries/13textures;
+extreme39calls/66590triangles/16geometries/13textures, same held/released counts.
+These are draw/resource observations, not GPU timing or iPad performance results.
+
+Environment integration: reset same base config, size2.2, grass strength1.
+Chase45 ticks:4 active marks; grass-moving.png is neutral-background review view.
+Body hold at(650,350),20ticks, drag to(780,300),12ticks, release+1tick:
+5 active/9 cumulative emitted before and after; zero release backfill in this case.
+Switch to photo-boards:0 active marks. ground-checks.json records counts/config.
+Grass-release.png shows sparse soft drag marks, no burst of historical paw marks.
+Actual playground grass capture: seed42,size2.2,count1,natural palette, morphologyVariation.8,
+Chase45 individual ticks, actual1040x564 CSS arena: playground-grass.png,4 active marks,
+40calls/52987triangles. Marks remain faint, consistent with recorded environment limitation.
+No blanket environment/physics acceptance from one case. Photo background pixels remain static by design.
+
+Known limits, not new blockers: angular rear underside, stippled fringe at high fuzz,
+opaque thick ears and faint ground response. Existing extreme tail-root gap is not declared fixed
+by its lack of obvious separation in this selected seed. Continuous motion, Safari/WKWebView,
+physical iPad cadence/audio and feline engagement remain untested.
+All11PNG captures viewed. Original review/report/worktree preserved for acceptance.

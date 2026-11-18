@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "deterministic": false,
+  "state": "failed",
+  "failure": {
+    "reason": "context-loss",
+    "snapshot": {
+      "playing": true,
+      "recovering": false,
+      "catches": 0,
+      "elapsed": 0,
+      "paired": false,
+      "held": 0,
+      "viewport": {
+        "width": 1200,
+        "height": 953
+      },
+      "runtimeVersion": null,
+      "settings": {
+        "count": 2,
+        "size": 2.2,
+        "speed": 1.2,
+        "mode": "hunt"
+      }
+    }
+  },
+  "events": [
+    {
+      "kind": "loading",
+      "state": "loading",
+      "ms": 0
+    },
+    {
+      "kind": "ready",
+      "state": "ready",
+      "ms": 184
+    },
+    {
+      "kind": "failure",
+      "state": "ready",
+      "ms": 12750
+    }
+  ]
+}
