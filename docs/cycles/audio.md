@@ -49,7 +49,7 @@
 
 ## A3 — P2 stale eating/activity phrases outlive their mouse action
 
-- Status: independently reproduced baseline; candidate repair awaiting final review.
+- Status: fixed and independently accepted at exact commit.
 - Baseline: `f5a9cbc38358742900ea0401319e85042d5e00c9`; same mock host/width.
 - Sequence A: loaded clips, mouse at (100,100), active/watch, nibblingUntil=3;
   update at 0 creates nibble. At .1 start movement (speed 50), hide, grab, or expire.
@@ -61,11 +61,15 @@
   other mice and priority-2 direct-contact feedback retain independent ownership.
 - Checks: 63 audio tests pass; new “legacy nibble recording” and “removing a mouse”
   regressions exercise interruption, removal, other mouse and contact preservation.
-- Commit: exact SHA recorded in final report update; no reload/session changes.
+- Commit: `929662ed33542be460907720fdafbc26f7d74ce1`; no reload/session changes.
+- Critic independently passed 63 audio tests and ten canonical/legacy interruption cases;
+  removal stops both paths while other-mouse nibble and direct priority-2 cues survive.
+  A1 adverse recovery and A2 variety probes still pass.
+- Final combined audio, curation, enrichment and playground check: 91/91 pass.
 
 ## Remaining limits and next issue
 
-- Three focused iterations complete after final critic approval; no scheduled execution.
+- Three focused iterations complete and independently accepted; no scheduled execution.
 - Next candidate: requested audition may remain silent while an unrelated bank is already
   decoded. Needs its own reproducible case/review in a future batch, not changed here.
 - Long harmless release is a policy observation, not an accepted bug. Within-800ms
