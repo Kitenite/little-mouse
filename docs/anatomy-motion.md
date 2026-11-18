@@ -38,8 +38,9 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 
 Body cross-sections now share bounded monotone cubic tangents: original landmarks remain
 fixed while intermediate rump/head shelves are removed. Mesh and picking share the profile.
-Desktop before/after critique accepts this local smoothing; the downward rear tip, separate
-jaw oval and extreme-morphology tail-root gap remain open (see [cycle evidence](cycles/anatomy.md)).
+Desktop before/after critique accepts this local smoothing. The lower jaw now embeds at
+the shared muzzle underside while preserving nibble displacement. The downward rear tip and
+extreme-morphology tail-root gap remain open (see [cycle evidence](cycles/anatomy.md)).
 
 Independent arm length/thickness, body/arm hairiness and Fuzziness controls now feed the
 renderer. Ribcage, waist and pelvis width controls blend along the single surface, with a
@@ -89,7 +90,7 @@ source/tests do not establish photorealism.
 
 ## Sources and limits
 
-Source owners: `anatomy.js`, `mouse3d.js`, `mouse-identity.js`, `gait.js`, `leg-rig.js`,
+Source owners: `body-profile.js`, `anatomy.js`, `mouse3d.js`, `mouse-identity.js`, `gait.js`, `leg-rig.js`,
 `leg-kinematics.js`, `secondary-motion.js`, `idle-animation.js` and `contact.js`.
 Tests include `anatomy`, `mouse-model`, `mouse-identity`, `gait`, `leg-rig`, `held-paw`,
 `secondary-motion`, `whisker-geometry` and `idle-animation`.
