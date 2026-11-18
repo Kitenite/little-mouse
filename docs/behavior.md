@@ -14,6 +14,8 @@
 `enrichment.js` owns an authored state policy with hidden, peek, watch, creep, dart,
 retreat and traverse phases. Contact, injury, toss and manual control take priority.
 Cover and recent threat history persist across decisions; fear decays over simulation time.
+Cover selection and entry checks share paw contact radius and released-memory decay; a clear
+candidate outranks a blocked familiar entrance. Fully covered entrances wait for clearance.
 Choices occur on events, arrival or deadlines rather than unrelated random choices every frame.
 
 Invisible approaches move faster than the final visible peek. The exploration budget starts

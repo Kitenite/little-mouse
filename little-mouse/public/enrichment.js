@@ -21,6 +21,12 @@ export function rememberTouch(director, x, y, time, w, h) {
 function edgePoint(edge, slot, depth, w, h) {
   return edge===0 ? [depth,h*slot] : edge===1 ? [w-depth,h*slot] : edge===2 ? [w*slot,depth] : [w*slot,h-depth];
 }
+function pawReach(p,director) {
+  return ((director.pawClearance||100)+Math.max(0,(p.radius||0)-(director.pawBaseRadius||50)))*(p.memory??1);
+}
+function blockedMouth(x,y,director) {
+  return [...director.paws?.values()||[]].some(p=>Math.hypot(x-p.x,y-p.y)<pawReach(p,director));
+}
 function cover(m, time, w, h, director, rng, preferSame=false) {
   const old=m.hunt?.edge;
   let best, score=-Infinity;
@@ -30,7 +36,10 @@ function cover(m, time, w, h, director, rng, preferSame=false) {
     let value=rng()*.35 - Math.hypot(x-m.x,y-m.y)/Math.hypot(w,h)*.6;
     if(preferSame&&edge===old)value+=.9;
     for(const p of director.touches){const age=time-p.time;if(age<16)value-=Math.exp(-age/5)*Math.exp(-Math.hypot(x/w-p.x,y/h-p.y)*5)*2;}
-    for(const p of director.paws?.values()||[]){const distance=Math.hypot(x-p.x,y-p.y);if(distance<(director.pawClearance||100)*1.5)value-=8*(p.memory??1)*(1-distance/((director.pawClearance||100)*1.5));}
+    // An open entrance outranks familiar cover; use the exact entry clearance,
+    // including contact size and released-footprint decay. All blocked still waits.
+    if(blockedMouth(x,y,director))value-=100;
+    for(const p of director.paws?.values()||[]){const reach=pawReach(p,director)*1.5,distance=Math.hypot(x-p.x,y-p.y);if(reach>0&&distance<reach)value-=8*(1-distance/reach);}
     if(value>score){score=value;best={edge,slot};}
   }
   return best;
@@ -101,6 +110,7 @@ export function clearHunt(m,time) {
 export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,director=createHuntDirector()) {
   m.physicalBounds=physicalBounds(m.identity,config);
   if(m.hold)return true;
+  director.pawBaseRadius=Number(config.pawAvoidanceRadius)||50;
   director.pawClearance=Math.max(10,Math.min(150,Number(config.pawAvoidanceRadius)||50))+Math.min(39*config.size,Math.min(w,h)*.18);
   if(config.mode!=='hunt'||manual){if(m.hunt)clearHunt(m,time);return false;}
   if(!m.hunt){
@@ -133,7 +143,7 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     if(time<a.deadline||time<director.nextEntrance){m.hiddenUntil=Math.max(a.deadline,director.nextEntrance);return true;}
     Object.assign(a,cover(m,time,w,h,director,rng,true));
     const mouth=edgePoint(a.edge,a.slot,0,w,h);
-    if([...director.paws?.values()||[]].some(p=>Math.hypot(mouth[0]-p.x,mouth[1]-p.y)<(director.pawClearance+Math.max(0,(p.radius||0)-(Number(config.pawAvoidanceRadius)||50)))*(p.memory??1))){a.deadline=time+.35;m.hiddenUntil=a.deadline;return true;}
+    if(blockedMouth(mouth[0],mouth[1],director)){a.deadline=time+.35;m.hiddenUntil=a.deadline;return true;}
     [m.x,m.y]=edgePoint(a.edge,a.slot,-coverPad(m,config),w,h);
     m.angle=[0,Math.PI,Math.PI/2,-Math.PI/2][a.edge];m.vx=m.vy=m.speed=m.turnRate=0;
     m.reaction=null;m.hitAt=undefined;m.startledUntil=m.scrambleUntil=m.injuredUntil=0;

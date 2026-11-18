@@ -139,3 +139,23 @@ test('opposing darts yield after collision instead of charging indefinitely',()=
  assert.ok(collisions>0,'fixture exercises actual physics collisions');
  assert.ok(yielded,'both blocked darts must relinquish their charge within six seconds');
 });
+
+test('seed 42 large persistent paw cannot keep selecting a blocked familiar entrance',()=>{
+ const s=simulation({seed:42});Object.assign(s.m,{x:-360,y:384});s.tick();
+ const original={edge:s.m.hunt.edge,slot:s.m.hunt.slot};assert.equal(original.edge,0);
+ s.director.paws=new Map([[1,{x:230,y:s.h*original.slot,radius:180}]]);
+ s.until(m=>m.hunt.phase==='peek',2);
+ const a=s.m.hunt,mouth=a.edge===0?[0,s.h*a.slot]:a.edge===1?[s.w,s.h*a.slot]:a.edge===2?[s.w*a.slot,0]:[s.w*a.slot,s.h];
+ assert.ok(Math.hypot(mouth[0]-230,mouth[1]-s.h*original.slot)>=s.director.pawClearance+130,'chosen entrance clears full contact radius');
+ assert.notEqual(a.edge,original.edge,'choose an open edge instead of repeatedly waiting');
+});
+
+test('fully covered entry waits, then released memory permits reentry without a new touch',()=>{
+ const s=simulation({seed:42,w:390,h:390});s.tick();
+ s.director.paws=new Map([[1,{x:195,y:195,radius:180}]]);
+ // Small viewport: add four corner footprints to cover every edge candidate.
+ for(const [i,[x,y]] of [[2,[0,0]],[3,[390,0]],[4,[0,390]],[5,[390,390]]])s.director.paws.set(i,{x,y,radius:180});
+ while(s.time<5){s.tick();assert.equal(s.m.hunt.phase,'hidden');assert.equal(s.m.state,'away');}
+ for(const p of s.director.paws.values()){p.memory=0;p.recent=true;}
+ s.until(m=>m.hunt.phase==='peek',1);
+});
