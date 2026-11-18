@@ -35,7 +35,7 @@ optimal for feline vision; quiet plain/contrast surfaces remain available for co
 
 Ground response is implemented in `environment.js` / `environment3d.js`: temporary low-opacity
 compression on cloth/cork/paper, soil impressions with sparse settling grit on clearing/earth/sand,
-and sparse settling blade-shaped marks on grass. Boards, stone, tile and quiet plain floors emit
+and sparse tapered grass blades that bend about fixed ground roots. Boards, stone, tile and quiet plain floors emit
 nothing. No image-pixel obstacles, photo deformation, glowing rings, ray tracing or new bitmap assets.
 The woodland center stays soil: this pass does not synthesize leaf fragments at photographic edges.
 `environmentStrength` is numeric (zero clears/disables); `environmentPersistence` sets finite lifetime.

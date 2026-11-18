@@ -23,14 +23,26 @@ including transitions while stationary. After: zero release marks; subsequent tr
 Check: `node --test little-mouse/tests/environment.test.mjs` (9 pass).
 Regression: drag release and stationary claim transitions in `environment.test.mjs`.
 Status: independently verified; critic accepted zero release marks and adverse cases at sizes .6/1/3.
-Fix commit: this ENV-01 commit; exact SHA added by the following iteration record.
+Fix commit: `5b55c28778cfa4a9d15b2aa510a3c42b14f0e83b`.
 Restart/retry: fresh memory instances repeat baseline; no persistent settings or pairing affected.
 
 ## ENV-02 — P2 grass silhouette
 
 Baseline source confirms every kind uses the same soft elliptical shader mask.
 Expected: sparse grass responses have a tapered organic blade and bounded settling.
-Status: reproduced in source; rendered baseline and independent review pending.
+Rendered baseline: source `5b55c28` (shader unchanged from `cf064cc`), build metadata `786aaf102aec`.
+Chrome headless on macOS, 1100×600, device ratio 1; fixture renders production marks at 4×.
+No randomness. Grass/linen/earth; strength 1, persistence 2, size 1; contact then .2s settling.
+Fixture: `little-mouse/tests/evidence/environment-review.html`; repeat after reload is deterministic.
+Evidence: `little-mouse/tests/evidence/environment/grass-{before,after,settled}.png`.
+Before: blurred ellipse; after: tapered curved blade bending about a stable ground root.
+Bounds: <=.3rad bend, 15% compression; soil retains <=3px slide; cloth/footprints remain fixed.
+Normal scene: seed 42, grass, size 2.2, strength 1; Chase then 45 single-frame steps.
+1180×820 screenshot `grass-game.png`: clear prey, faint marks; boards switch clears all marks.
+No audio, model, background catalog or settings changes; no persisted room/pairing state exercised.
+Check: `node --test little-mouse/tests/environment*.test.mjs` (11 pass).
+Status: independently accepted: live browser fixture, 11 tests and 105 adverse pose cases.
+Root error <7.4e-15px; one draw, 320 triangles unchanged. Exact fix SHA in subsequent record.
 
 ## Limits and next issue
 
