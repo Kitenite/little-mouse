@@ -10,7 +10,8 @@ The coat samples the existing named albedo map, preserving playful markings and 
 
 The body samples source triangles by surface area. Each tuft records a triangle plus
 barycentric root weights. All five tuft vertices use that root's rest UV. Muzzle tufts are
-shorter/finer; limb tufts taper toward paws. Bare ears, nose, paw skin and tail receive no
+shorter/finer with smooth rest-v transitions (.60–.70 and .73–.83), retaining
+body scale1 and muzzle scale.24; limb tufts taper toward paws. Bare ears, nose, paw skin and tail receive no
 volume meshes. Existing eye material remains glossy and separate.
 
 Lit `MeshStandardMaterial` tufts write depth and receive scene shadows. They do not cast

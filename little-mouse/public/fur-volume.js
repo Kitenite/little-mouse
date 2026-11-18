@@ -1,5 +1,9 @@
 // Opaque, tapered three-triangle tufts. Rest UV sampling keeps markings on each root.
 export const BODY_TUFT_LIMIT=10800,LIMB_TUFT_LIMIT=520;
+export function bodyFurScale(v){
+ const smooth=(a,b)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+ return 1-.45*smooth(.60,.70)-.31*smooth(.73,.83);
+}
 export function createFurVolume(T,source,material,{count,random,length=1,softness=.5,body=false,triangleCount=source.index.count/3}={}){
  softness=Math.max(0,Math.min(1,softness));
  const positions=new Float32Array(count*15),normals=new Float32Array(count*15),uv=new Float32Array(count*10),colors=new Float32Array(count*15),flex=new Float32Array(count*5),rootNormals=new Float32Array(count*15),indices=new Uint16Array(count*9);
@@ -14,7 +18,7 @@ export function createFurVolume(T,source,material,{count,random,length=1,softnes
   for(let k=0;k<3;k++)roots[i*3+k]=index[tri+k];
   let v=0,u=0;for(let k=0;k<3;k++){u+=srcUV[roots[i*3+k]*2]*weights[i*3+k];v+=srcUV[roots[i*3+k]*2+1]*weights[i*3+k];}
   // Muzzle is finer and shorter; distal limbs thin toward bare paw skin.
-  const regional=body?(v>.78?.24:v>.65?.55:1):(.8-.4*v);
+  const regional=body?bodyFurScale(v):(.8-.4*v);
   lengths[i]=Math.min(6,(1.5+random()*3)*length)*regional;widths[i]=(.12+random()*.12)*(.7+softness)*regional;
   const shade=.94+random()*.2;
   for(let k=0;k<5;k++){uv.set([u,v],i*10+k*2);const brightness=shade*(k<2?.93:k<4?1:1.08);colors.set([brightness,brightness,brightness],i*15+k*3);flex[i*5+k]=k<2?0:k<4?.15:.25;}

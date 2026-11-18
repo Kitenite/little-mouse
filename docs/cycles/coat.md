@@ -34,7 +34,24 @@ Tests assert fixed barycentric roots, outward shoulders/tips at0/.5/1 fuzz and r
 boundaries, mixed loft, repeat-update stability and exact318 geometry bytes per tuft.
 Critic independently ran32 focused tests and reloaded all8 panels; no blocking finding.
 Critic requested accurate curled-tip wording and wider regression; both repaired.
-Final accepted commit recorded in handoff; later iterations record exact parent here.
+Accepted iteration1 commit `388459d87f489c8ff1d4b1f5e1d41f49c7823a20`.
+
+## COAT-02: abrupt face transition (P2)
+
+Baseline iteration1 `388459d87f489c8ff1d4b1f5e1d41f49c7823a20`, same fixture/settings.
+At v=.65±.000001 the regional scale jumped1→.55; at .78±.000001,.55→.24.
+Expected smooth shortening toward face; discrete jumps produced density/length bands.
+[Before](../evidence/cycle-coat/after-max.png) and
+[after](../evidence/cycle-coat/after-graduated.png) retain the same camera and simulated input.
+Smooth transitions over v=.60–.70 and .73–.83 retain body1 and muzzle.24 endpoints;
+limb falloff unchanged. Both length and width grade together only at construction.
+Tests cover monotonic continuity, regional minima/endpoints, seven RNG draws per body tuft,
+root positions and fuzziness invariance. Render/resource counts unchanged from COAT-01.
+Visual change subtle: graduated neck edge; no claim of resolving all dorsal stippling.
+Full suite235 tests passed; build e48360fbd36d passed after installing locked dependencies.
+Independent critic accepted:34 focused tests;10800-tuft prior/current comparison at
+fuzz0/.5/1 preserved roots,UV,RNG continuation and plateau lengths/widths.
+All8 live panels reproduced unchanged counts. Full suite/build are builder-run.
 
 ## Reference comparison and remaining queue
 
@@ -45,5 +62,5 @@ Inference: varied shoulder loft/curled tips approximate that layering; not a phy
 Specimen condition/photo resolution limit living-fur inference; no photo shipped as an asset.
 Current outcome modestly softer/tighter, still dark stippling at dorsal rim; not plush or
 photorealistic. Rump contour belongs to anatomy and is not masked by increased fuzz.
-Next ranked issue: abrupt body-to-fine-face length transitions; investigate separately.
+Next ranked issue: dark dorsal stippling under side lighting; assess after anatomy integration.
 Physical-iPad quality, sustained performance/heat and actual feline response remain unmeasured.

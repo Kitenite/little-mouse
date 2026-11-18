@@ -1,6 +1,6 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';
 import * as T from '../public/vendor/three.module.js';
-import {createFurVolume,furVolumeMaterial,BODY_TUFT_LIMIT,LIMB_TUFT_LIMIT} from '../public/fur-volume.js';
+import {createFurVolume,bodyFurScale,furVolumeMaterial,BODY_TUFT_LIMIT,LIMB_TUFT_LIMIT} from '../public/fur-volume.js';
 import {identityRandom} from '../public/mouse-identity.js';
 import {createLimbSurface} from '../public/limb-surface.js';
 import {LEG_LAYOUT,solveLeg} from '../public/leg-kinematics.js';
@@ -47,4 +47,12 @@ test('tuft shoulders and tips remain outward across fuzziness and muzzle/limb re
   volume.geometry.dispose();source.dispose();
  }
  material.dispose();
+});
+
+test('body to muzzle coat length and width grade continuously without changing roots or random stream',()=>{
+ assert.equal(bodyFurScale(0),1);assert.ok(Math.abs(bodyFurScale(1)-.24)<1e-12);
+ let previous=1;for(let v=0;v<=1;v+=.001){const scale=bodyFurScale(v);assert.ok(scale<=previous+1e-12);assert.ok(previous-scale<.007);previous=scale;}
+ for(const v of [.60,.65,.70,.73,.78,.83])assert.ok(Math.abs(bodyFurScale(v+1e-6)-bodyFurScale(v-1e-6))<.00002);
+ const source=new T.PlaneGeometry(10,10),material=new T.MeshStandardMaterial(),random=identityRandom(44);let calls=0;
+ const volume=createFurVolume(T,source,material,{count:100,random:()=>{calls++;return random();},body:true});assert.equal(calls,700,'same seven RNG draws per body tuft');volume.update();checkRoots(volume,source);volume.geometry.dispose();source.dispose();material.dispose();
 });
