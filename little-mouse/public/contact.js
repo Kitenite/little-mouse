@@ -22,7 +22,10 @@ export function beginContact(contacts,m,hit,pointerId,x,y,time,config,size){
  const hold={part:hit.part,x,y,targetX:x,targetY:y,anchorVX:0,anchorVY:0,lastAnchorMoveAt:time,lastMoveAt:time,localX:hit.localX??local.localX,localY:hit.localY??local.localY,fraction:hit.fraction??.5,legIndex:hit.legIndex,pawOffsetX:hit.pawOffsetX,pawOffsetY:hit.pawOffsetY,startedAt:time,pointerId,active:false,angle:m.angle,originX:x,originY:y,threshold:clamp(Number(config.holdThreshold)||.25,.15,1)};
  m.hold=hold;m.vx=m.vy=m.speed=0;m.moving=false;m.turnRate=0;
  hold.tailRoot=hit.tailRoot??-36*traits.bodyLength;hold.tailRootX=hit.tailRootX??hold.tailRoot;hold.tailRootY=hit.tailRootY??0;hold.tailLength=hit.tailLength??87*traits.tailLength;
- contacts.set(pointerId,{m,hold});return true;
+ contacts.set(pointerId,{m,hold});
+ // A claim supersedes queued threats even if cancelled before the next policy tick.
+ if(m.hunt){delete m.hunt.reactAt;delete m.hunt.reactKind;delete m.hunt.lookAt;}
+ return true;
 }
 export function cancelContact(contacts,pointerId){const record=contacts.get(pointerId);if(!record)return false;if(record.m.hold===record.hold)delete record.m.hold;contacts.delete(pointerId);return true;}
 export function clearContacts(contacts){for(const id of [...contacts.keys()])cancelContact(contacts,id);contacts.paws.clear();contacts.recentPaws.clear();contacts.obstacles.clear();}

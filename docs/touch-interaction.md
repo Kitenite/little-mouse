@@ -29,6 +29,9 @@ screen; retain those touch areas and route around them instead of running undern
   bounded toss; zero-time events and huge pointer jumps cannot create unbounded velocity.
 - Each completed tap/hold release counts once. Move events never repeatedly injure a mouse.
 - Cancel, lost capture, blur, pause, hide, resize and reload clear claims without hit outcomes.
+- Successful claims immediately discard that mouse’s queued hunt reaction/attention;
+  cancellation before a policy tick cannot revive it. Director cues and later reactions
+  remain intact; rejected claims do not clear anything.
 - Pending claims freeze anatomical pose and suppress eating immediately. Active grabs add
   bounded, damped yielding driven by actual capped drag displacement/acceleration and turns.
   Head grabs soften the trunk/pelvis; body grabs let head and pelvis counterbalance;

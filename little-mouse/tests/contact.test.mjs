@@ -115,3 +115,21 @@ test('stationary settled release and cancellation never reuse prior drag energy'
   else assert.equal(endContact(c,1,2,2048,1536,cfg.size,cfg,()=>0).outcome,'harmless');
  }
 });
+
+
+test('successful claim discards queued hunt cues even when cancelled before a policy tick',()=>{
+ const c=createContacts(),m=mouse(),hunt={phase:'watch',sensed:17,reactAt:.5,reactKind:'retreat',lookAt:[390,300]};m.hunt=hunt;
+ assert.equal(beginContact(c,m,{part:'body'},1,400,300,0,cfg,cfg.size),true);
+ assert.equal(m.hunt,hunt);assert.deepEqual(hunt,{phase:'watch',sensed:17});
+ assert.equal(cancelContact(c,1),true);assert.equal(m.hitAt,undefined);assert.equal(m.hold,undefined);
+ assert.deepEqual(hunt,{phase:'watch',sensed:17});
+ Object.assign(hunt,{reactAt:1,reactKind:'orient',lookAt:[650,450]});
+ assert.equal(cancelContact(c,1),false);assert.equal(endContact(c,1,.2,1024,768,cfg.size,cfg),null);
+ assert.deepEqual(hunt,{phase:'watch',sensed:17,reactAt:1,reactKind:'orient',lookAt:[650,450]},'fresh post-cancel cue survives stale cleanup');
+});
+test('rejected claims leave queued hunt cues untouched',()=>{
+ const c=createContacts(),m=mouse();m.hunt={reactAt:.5,reactKind:'orient',lookAt:[600,300]};m.invulnerableUntil=1;
+ const before=structuredClone(m.hunt);assert.equal(beginContact(c,m,{part:'body'},1,400,300,0,cfg,cfg.size),false);assert.deepEqual(m.hunt,before);
+ m.invulnerableUntil=0;assert.equal(beginContact(c,m,{part:'body'},1,400,300,0,cfg,cfg.size),true);
+ Object.assign(m.hunt,before);assert.equal(beginContact(c,m,{part:'head'},2,400,300,.1,cfg,cfg.size),false);assert.deepEqual(m.hunt,before);
+});
