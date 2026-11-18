@@ -494,3 +494,24 @@ test('cancel, mute, pause and expired input remain silent when a retry finishes'
   audio.setState(true,true);audio.contactFeedback({x:0},1000,'touch',1);await audio.loadSamples();now+=1001;online=true;const mouse={x:20};audio.contactFeedback(mouse,1000,'touch',2);cancel(audio,mouse);release();await audio.loadSamples();assert.equal(audio.played,0);assert.equal(audio.pendingContacts.length,0);
  }
 });
+
+test('tap variation visits every loaded excerpt before repeating within a bank cycle',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();const selected=[];
+ for(let i=0;i<12;i++){context.advance(i);audio.contactFeedback({x:100},1000,'touch',i);selected.push(audio.lastPlayed.sample);}
+ for(let i=0;i<12;i+=4)assert.equal(new Set(selected.slice(i,i+4)).size,4,JSON.stringify(selected));
+ for(let i=1;i<selected.length;i++)assert.notEqual(selected[i],selected[i-1]);
+});
+
+test('variation rounds adapt to partial/newly loaded recordings without immediate cross-bank repeats',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ for(const id of sampleBanks.tap.slice(2))audio.sampleBuffers.delete(id);
+ const first=[];for(let i=0;i<4;i++){context.advance(i);audio.contactFeedback({x:100},1000);first.push(audio.lastPlayed.sample);}assert.equal(new Set(first).size,2);
+ for(const id of sampleBanks.tap)audio.sampleBuffers.set(id,{duration:.3});const full=[];
+ for(let i=4;i<8;i++){context.advance(i);audio.contactFeedback({x:100},1000);full.push(audio.lastPlayed.sample);}assert.equal(new Set(full).size,4);
+ let previous=audio.lastPlayed.sample;for(let i=8;i<30;i++){context.advance(i);audio.cue(i%2?'hit':'tap',.5,null,{priority:2,bypassCooldown:true});assert.notEqual(audio.lastPlayed.sample,previous);previous=audio.lastPlayed.sample;}
+ for(const round of Object.values(audio.sampleRounds)){assert.ok(round.remaining.length<=12);assert.equal(new Set(round.remaining).size,round.remaining.length);}
+});
+test('a bank with one available recording plays honestly instead of starving for variety',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();for(const id of sampleBanks.tap.slice(1))audio.sampleBuffers.delete(id);
+ for(let i=0;i<4;i++){context.advance(i);assert.equal(audio.contactFeedback({x:100},1000),true);assert.equal(audio.lastPlayed.sample,'floor-01');assert.equal(audio.lastPlayed.source,'recording');}
+});

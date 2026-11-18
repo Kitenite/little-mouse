@@ -13,7 +13,7 @@ export const audioControlSchema={
 };
 export class PreyAudio {
   constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,audioSession=globalThis.navigator?.audioSession}={}) {
-    this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleLoading=false;this.sampleRetryAt=0;this.sampleErrors=[];this.sampleChoice={};this.context=null;this.master=null;
+    this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleLoading=false;this.sampleRetryAt=0;this.sampleErrors=[];this.sampleChoice={};this.sampleRounds={};this.context=null;this.master=null;
     this.enabled=false;this.active=false;this.voices=new Set();this.lastVariant={};this.lastCue=-Infinity;
     this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;this.surface={background:'photo-clearing',strength:.55};this.surfaceMotion=new WeakMap();
   }
@@ -98,9 +98,13 @@ export class PreyAudio {
     if(pan){pan.pan.value=clamp(x*1.4-.7,-.7,.7);gain.connect(pan);pan.connect(this.master);}else gain.connect(this.master);
     const nodes=[gain,...(pan?[pan]:[])];let source,duration,sampleId=null;
     {
-      const different=available.filter(id=>id!==this.lastSample),pool=different.length?different:available;
-      const varied=pool.filter(id=>id!==this.sampleChoice[kind]),choices=varied.length?varied:pool;
-      sampleId=choices[Math.min(choices.length-1,Math.floor(this.rng()*choices.length))];this.lastSample=sampleId;this.sampleChoice[kind]=sampleId;this.lastVariant[kind]=sampleBanks[kind].indexOf(sampleId);
+      const key=available.join('|');let round=this.sampleRounds[kind];
+      if(!round||round.key!==key||!round.remaining.length)round=this.sampleRounds[kind]={key,remaining:[...available]};
+      // Exhaust a bank's loaded excerpts before refilling. If another bank just
+      // used the sole remaining clip, defer that clip rather than repeat it now.
+      const fresh=round.remaining.filter(id=>id!==this.lastSample),different=available.filter(id=>id!==this.lastSample);
+      const choices=fresh.length?fresh:different.length?different:round.remaining;
+      sampleId=choices[Math.min(choices.length-1,Math.floor(this.rng()*choices.length))];round.remaining=round.remaining.filter(id=>id!==sampleId);this.lastSample=sampleId;this.sampleChoice[kind]=sampleId;this.lastVariant[kind]=sampleBanks[kind].indexOf(sampleId);
       source=context.createBufferSource();source.buffer=this.sampleBuffers.get(sampleId);
       source.playbackRate.value=.96+this.rng()*.08;
       duration=source.buffer.duration/source.playbackRate.value;

@@ -17,7 +17,8 @@ observation, not a scientific claim about the mix.
 Recorded banks cover arrival, teasing, contact, injury, concealment, movement, drag,
 scratch, release/toss, nibbling, grooming, hind-leg scratching, stretching and rolling.
 Legacy call/reply banks are quiet social movement foley, not calm vocalizations. Selection avoids
-immediate repetition when alternatives are available, with modest rate/gain variation.
+immediate repetition across banks; each bank cycles through loaded excerpts before
+refilling, with modest rate/gain variation. A sole remaining cross-bank repeat is deferred.
 There are 26 runtime excerpts and a maximum of three overlapping voices. Per-clip
 friction trims keep alternating texture RMS within 1 dB; final output is limited.
 
