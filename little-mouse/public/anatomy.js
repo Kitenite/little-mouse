@@ -25,11 +25,12 @@ export function articulatePoint(x,y,z,state,out=[0,0,0]){articulateSegments(x,y,
  // Continuous centerline, straight tangent extensions beyond the trunk.
  const length=20*state.scale,bx=out[0],by=out[1],q=spineSlope(bx,length),bend=state.spine||0;
  const a=Math.atan(bend*q),center=bend*spineCenter(bx,length);
- out[0]=bx-Math.sin(a)*by;out[1]=center+Math.cos(a)*by;out[2]=z;return out;}
+ out[0]=bx-Math.sin(a)*by+(state.offsetX||0);out[1]=center+Math.cos(a)*by+(state.offsetY||0);out[2]=z;return out;}
 // Newton inversion shares exactly the shader deformation. Angles are bounded
 // so the neck/hip transition remains continuous and locally invertible.
 export function unarticulatePoint(x,y,state,out=[0,0]){// Undo the central bend first. Its scalar derivative remains positive over
  // supported body widths, avoiding a poor combined-Newton initial guess.
+ x-=state.offsetX||0;y-=state.offsetY||0;
  const length=20*state.scale,bend=state.spine||0;let bx=x;
  for(let i=0;i<10;i++){const q=spineSlope(bx,length),slope=bend*q,center=bend*spineCenter(bx,length),error=bx-slope*(y-center)-x;
  if(Math.abs(error)<1e-9)break;bx-=error/(1-(Math.abs(bx)<length?bend*1.5*(1-bx*bx/(length*length))/length:0)*(y-center)+slope*slope);}
@@ -39,7 +40,8 @@ export function unarticulatePoint(x,y,state,out=[0,0]){// Undo the central bend 
 export const articulationGLSL=`uniform vec4 anatomyPose;
 uniform float anatomyScale;
 uniform float anatomySpine;
+uniform vec2 anatomyOffset;
 float anatomyWeight(float x){float q=clamp(x,0.0,1.0);return q*q*(3.0-2.0*q);}
-vec3 articulateMouse(vec3 v){float h=anatomyWeight((v.x/anatomyScale-10.0)/20.0),p=anatomyWeight((-v.x/anatomyScale-4.0)/20.0);vec2 hd=v.xy-vec2(anatomyPose.z,0.0),pd=v.xy-vec2(anatomyPose.w,0.0);float hc=cos(anatomyPose.x),hs=sin(anatomyPose.x),pc=cos(anatomyPose.y),ps=sin(anatomyPose.y);v.xy+=h*(vec2(hc*hd.x-hs*hd.y,hs*hd.x+hc*hd.y)+vec2(anatomyPose.z,0.0)-v.xy)+p*(vec2(pc*pd.x-ps*pd.y,ps*pd.x+pc*pd.y)+vec2(anatomyPose.w,0.0)-v.xy);float length=20.0*anatomyScale;float t=clamp(v.x/length,-1.0,1.0),q=t*(1.5-.5*t*t),a=atan(anatomySpine*q);float center=anatomySpine*(abs(v.x)<=length?length*(.75*t*t-.125*t*t*t*t):abs(v.x)-.375*length);v.xy=vec2(v.x-sin(a)*v.y,center+cos(a)*v.y);return v;}
+vec3 articulateMouse(vec3 v){float h=anatomyWeight((v.x/anatomyScale-10.0)/20.0),p=anatomyWeight((-v.x/anatomyScale-4.0)/20.0);vec2 hd=v.xy-vec2(anatomyPose.z,0.0),pd=v.xy-vec2(anatomyPose.w,0.0);float hc=cos(anatomyPose.x),hs=sin(anatomyPose.x),pc=cos(anatomyPose.y),ps=sin(anatomyPose.y);v.xy+=h*(vec2(hc*hd.x-hs*hd.y,hs*hd.x+hc*hd.y)+vec2(anatomyPose.z,0.0)-v.xy)+p*(vec2(pc*pd.x-ps*pd.y,ps*pd.x+pc*pd.y)+vec2(anatomyPose.w,0.0)-v.xy);float length=20.0*anatomyScale;float t=clamp(v.x/length,-1.0,1.0),q=t*(1.5-.5*t*t),a=atan(anatomySpine*q);float center=anatomySpine*(abs(v.x)<=length?length*(.75*t*t-.125*t*t*t*t):abs(v.x)-.375*length);v.xy=vec2(v.x-sin(a)*v.y,center+cos(a)*v.y)+anatomyOffset;return v;}
 vec3 articulateMouseNormal(vec3 p,vec3 n){vec3 f=articulateMouse(p);vec2 dx=(articulateMouse(p+vec3(.01,0.0,0.0)).xy-f.xy)/.01,dy=(articulateMouse(p+vec3(0.0,.01,0.0)).xy-f.xy)/.01;float det=dx.x*dy.y-dy.x*dx.y;return normalize(vec3((dy.y*n.x-dx.y*n.y)/det,(-dy.x*n.x+dx.x*n.y)/det,n.z));}
 `;

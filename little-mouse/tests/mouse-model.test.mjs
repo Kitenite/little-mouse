@@ -124,3 +124,19 @@ test('spine-bent tail pins the selected rendered material ring during dragging',
  }
  disposeMouse(model);
 });
+test('active drag yields free regions while reachable all-four paw and tail pins stay fixed',()=>{
+ for(const index of [0,1,2,3]){
+  const model=makeMouse(0,createMouseIdentity(81)),leg=model.legRig.legs[index];
+  const heldPaw={index,x:leg.layout.anchor[0]+4,y:leg.layout.anchor[1]+3,z:3},holdReference={part:index<2?'hindpaw':'forepaw',active:true};
+  for(let i=0;i<80;i++){model.animate(i/60,false,0,1/60,1,0,false,{x:0,y:i<40?i*5:(80-i)*5,heading:0,size:1,held:true,holdReference,heldPaw},{});assert.ok(Math.hypot(leg.paw.position.x-heldPaw.x,leg.paw.position.y-heldPaw.y,leg.paw.position.z-3)<1e-7);for(const l of model.legRig.legs){assert.deepEqual(l.shoulder.position.toArray(),l.anchor);assert.ok(l.paw.position.z>=1);}}
+  assert.ok(Math.hypot(...model.dragPose.values)>.1);disposeMouse(model);
+ }
+ for(const fraction of [.125,.5,.73,1]){
+  const model=makeMouse(0,createMouseIdentity(81)),t=model.traits,holdReference={part:'tail',active:true},tailHold={x:-36*t.bodyLength-87*fraction*.7*t.tailLength,y:0,fraction};
+  for(let i=0;i<60;i++)model.animate(i/60,false,0,1/60,1,0,false,{x:0,y:i*3,heading:0,size:1,held:true,holdReference,tailHold},{});
+  const p=model.tail.geometry.attributes.position.array,ring=fraction*48,lo=Math.floor(ring),hi=Math.ceil(ring),u=ring-lo;const center=(r,axis)=>(p[r*27+axis]+p[r*27+12+axis])/2;
+  // Arbitrary material fractions between rendered rings approximate the curve.
+  assert.ok(Math.hypot(center(lo,0)*(1-u)+center(hi,0)*u-tailHold.x,center(lo,1)*(1-u)+center(hi,1)*u-tailHold.y)<.25);
+  disposeMouse(model);
+ }
+});

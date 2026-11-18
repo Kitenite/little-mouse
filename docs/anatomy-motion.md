@@ -19,8 +19,9 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 - Speed-sensitive gait controls cadence, stride and foot lift; the rich-preset cadence cap is 4.2 Hz.
 - Secondary motion gives the tail, ears, fur and whiskers bounded motion with reset behavior
   after discontinuities. Rest and pauses must not accumulate unstable physics.
-- Anatomical head/pelvis pose freezes from initial claim, preventing movement under a pending
-  pointer. Ears, whiskers and fur retain bounded secondary responses during restraint.
+- Pending claims freeze anatomical pose. Active grabs use pin-preserving, region-aware
+  planar yielding; see [touch interaction](touch-interaction.md) for controls and constraints.
+  Ears, whiskers, fur and tail inherit actual motion; no timed grab-struggle cue is injected.
 - Tail contact uses the rendered centerline and a reachable dual-anchor curve. Exact material
   fractions remain pinned between solver nodes; held paws preserve the selected leg and
   contact offset while the limb solver follows the anchor.
@@ -44,7 +45,9 @@ Head response leads the trunk; pelvis follow-through is slower. `spineBendAmount
 strength. This is kinematic posing inside the existing solver, not a new dynamics engine.
 The composed map drives body, fur, whiskers, depth shadows, limb anchors and tail.
 Attachment tangents and deformed normals follow it. Inverse contacts undo the spine first.
-All anatomical pose freezes on any claim and zero dt. UVs and geometry objects stay stable.
+Zero dt and pending claims freeze pose. Active yielding preserves the captured point with a
+shared deformation offset; normals, depth, attachments and inverse picking use the same map.
+Free paws lag through IK; selected paws override lag. UVs and geometry objects stay stable.
 `furLength`, `furSway`, hair density and softness remain distinct parameters.
 The rich launch preset uses morphology variety 0.8, head/pelvis turns and tail/fur motion 1.15,
 ear/whisker motion 1.2, grooming frequency 1.25 and nibbling frequency 1.2. These amplify
