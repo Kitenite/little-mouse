@@ -1,0 +1,30 @@
+{
+  "seed": 428,
+  "time": 0.5333333333333333,
+  "frames": 32,
+  "hits": 0,
+  "selected": 0,
+  "mice": [
+    {
+      "id": "mouse-sjt1qz",
+      "state": "active",
+      "phase": "watch",
+      "x": 740,
+      "y": 300,
+      "angle": 0,
+      "vx": 0,
+      "vy": 0,
+      "hiddenUntil": 0,
+      "held": "head",
+      "activity": null
+    }
+  ],
+  "paws": [
+    {
+      "x": 810,
+      "y": 300,
+      "radius": 0,
+      "recent": false
+    }
+  ]
+}
