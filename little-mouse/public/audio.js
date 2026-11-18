@@ -183,7 +183,7 @@ export class PreyAudio {
   }
   update(mice,time,width,height=Infinity){
     if(!this.enabled||!this.active||!this.ready)return;
-    for(const voice of [...this.voices])if(voice.surface&&!mice.includes(voice.owner))voice.cancel();
+    for(const voice of [...this.voices])if(voice.owner&&(voice.surface||voice.priority===0)&&!mice.includes(voice.owner))voice.cancel();
     const density=this.settings.soundFrequency,visible=mouse=>mouse.state==='active'&&!(mouse.hiddenUntil>time)&&mouse.x>=0&&mouse.x<=width&&mouse.y>=0&&mouse.y<=height;
     const calm=mouse=>visible(mouse)&&!mouse.hold&&!(mouse.activity?.until>time)&&!(mouse.injuredUntil>time)&&!['retreat','dart','injury','toss'].includes(mouse.hunt?.phase);
     for(const mouse of mice){
@@ -192,6 +192,10 @@ export class PreyAudio {
       if(!seen){seen={phase:null,next:time+.5+this.rng(),nibbling:false};this.observations.set(mouse,seen);}
       const x=clamp(mouse.x/Math.max(1,width),0,1),held=!!mouse.hold?.active;
       const displaced=this.updateSurface(mouse,time,width,height,visible(mouse));
+      const legacyNibbling=visible(mouse)&&!mouse.hold&&!mouse.activity&&phase==='watch'&&!mouse.moving&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time)&&mouse.nibblingUntil>time;
+      const wasLegacyNibbling=seen.legacyNibbling;
+      if(wasLegacyNibbling&&!legacyNibbling)for(const voice of [...this.voices])if(voice.owner===mouse&&voice.priority===0&&voice.kind==='nibble')voice.cancel();
+      seen.legacyNibbling=legacyNibbling;
       const activity=visible(mouse)&&!mouse.hold&&!mouse.moving&&(mouse.speed||0)<12&&phase==='watch'&&(mouse.hunt?.fear||0)<.3&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time)&&mouse.activity?.at<=time&&mouse.activity.until>time?mouse.activity:null;
       const activityKey=activity?`${activity.kind}:${activity.at}`:null;
       if(seen.activityKey&&seen.activityKey!==activityKey)for(const voice of [...this.voices])if(voice.owner===mouse&&voice.priority===0&&!voice.surface)voice.cancel();
@@ -212,14 +216,14 @@ export class PreyAudio {
       seen.phase=phase;
       // One concealed rustle suggests a hiding place, then leave several seconds
       // of quiet. Faster movement earns short patter phrases, not a constant loop.
-      const nibbling=visible(mouse)&&!mouse.hold&&!mouse.activity&&phase==='watch'&&!mouse.moving&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time)&&mouse.nibblingUntil>time;
-      if(nibbling&&!seen.nibbling&&visible(mouse)){this.cue('nibble',x);seen.next=time+2/density;}
+      const nibbling=legacyNibbling;
+      if(nibbling&&!wasLegacyNibbling){this.cue('nibble',x,mouse);seen.next=time+2/density;}
       seen.nibbling=nibbling;
       if(changed&&['peek','dart','retreat'].includes(phase)){
         if(phase==='peek')this.cue('peek',x);seen.next=time+(1+this.rng()*1.8)/density;
       }else if(!displaced&&!mouse.moving&&time>=seen.next&&mouse.state!=='defeated'&&phase!=='injury'){
         const roll=this.rng(),kind=nibbling?'nibble':phase==='hidden'?'rustle':phase==='watch'&&roll<.3?'tease':roll<.55?'sniff':'rustle';
-        this.cue(kind,x);
+        this.cue(kind,x,nibbling?mouse:null);
         seen.next=time+(2.5+this.rng()*3.5)/density;
       }
     }

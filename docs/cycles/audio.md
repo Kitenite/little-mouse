@@ -32,7 +32,7 @@
 
 ## A2 — P2 excerpt selection collapses to two-clip alternation
 
-- Status: fixed; independent working-tree critique passes, exact commit review pending.
+- Status: fixed and independently accepted at exact commit.
 - Baseline: `7f41a8781585106de2c060966f75780d93f9b880`; same host/mock setup.
 - Sequence: RNG=.5, all 26 loaded, active/enabled, width 1000; 12 direct taps at
   AudioContext times 0–11 seconds. Expected four available floor cuts per cycle.
@@ -44,11 +44,30 @@
   Critic: all 25 banks × three RNG values × three rounds cover their banks;
   300 interleaved cues have zero immediate physical repeats. This is excerpt variety,
   not additional independent sources or a listening/timbre claim.
-- Commit: exact SHA follows in next report update; no restart/session change required.
+- Commit: `f5a9cbc38358742900ea0401319e85042d5e00c9`; no restart/session change.
+- Critic independently reran 61 audio tests at this SHA; A1 adverse cases still pass.
 
-## Next ranked case
+## A3 — P2 stale eating/activity phrases outlive their mouse action
 
-A3: legacy nibblingUntil cue has no owner and survives interruption; canonical owned
-activity also survives removal of its mouse from the input array. Reproduce and repair
-only this stale-activity lifecycle; long harmless release is a policy observation, not
-an accepted bug. Within-800ms queued harmless feedback remains intentionally allowed.
+- Status: independently reproduced baseline; candidate repair awaiting final review.
+- Baseline: `f5a9cbc38358742900ea0401319e85042d5e00c9`; same mock host/width.
+- Sequence A: loaded clips, mouse at (100,100), active/watch, nibblingUntil=3;
+  update at 0 creates nibble. At .1 start movement (speed 50), hide, grab, or expire.
+- Before: nibble owner=null and movement/hold cannot cancel the sounding clip.
+- Sequence B: canonical groom/nibble activity then update an array without that mouse
+  at .1. Before: owned phrase survives removal because only surface voices are reaped.
+- Expected/after: legacy nibble entry/repeat has mouse ownership; interruption cancels
+  it before hold branching. Removed mice lose ambient/activity and surface voices;
+  other mice and priority-2 direct-contact feedback retain independent ownership.
+- Checks: 63 audio tests pass; new “legacy nibble recording” and “removing a mouse”
+  regressions exercise interruption, removal, other mouse and contact preservation.
+- Commit: exact SHA recorded in final report update; no reload/session changes.
+
+## Remaining limits and next issue
+
+- Three focused iterations complete after final critic approval; no scheduled execution.
+- Next candidate: requested audition may remain silent while an unrelated bank is already
+  decoded. Needs its own reproducible case/review in a future batch, not changed here.
+- Long harmless release is a policy observation, not an accepted bug. Within-800ms
+  queued harmless feedback remains intentionally allowed. No hold policy changes.
+- Provenance/source confidence and physical listening status are unchanged; no new assets.

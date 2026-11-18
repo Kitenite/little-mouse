@@ -515,3 +515,18 @@ test('a bank with one available recording plays honestly instead of starving for
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();for(const id of sampleBanks.tap.slice(1))audio.sampleBuffers.delete(id);
  for(let i=0;i<4;i++){context.advance(i);assert.equal(audio.contactFeedback({x:100},1000),true);assert.equal(audio.lastPlayed.sample,'floor-01');assert.equal(audio.lastPlayed.source,'recording');}
 });
+
+test('legacy nibble recording belongs to its mouse and stops on activity interruption',async()=>{
+ for(const interrupt of [m=>{m.moving=true;m.speed=50;delete m.nibblingUntil;},m=>{m.hiddenUntil=2;},m=>{m.hold={active:true,part:'body'};},m=>{m.nibblingUntil=0;}]){
+  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'},nibblingUntil:3};
+  audio.update([mouse],0,1000,700);assert.equal(audio.lastPlayed.kind,'nibble');assert.equal([...audio.voices][0].owner,mouse);
+  interrupt(mouse);context.advance(.1);audio.update([mouse],.1,1000,700);assert.equal([...audio.voices].some(v=>v.kind==='nibble'),false);
+ }
+});
+test('removing a mouse cancels its activity phrase without cancelling other mice or direct contacts',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const a={x:100,y:100,state:'active',hunt:{phase:'watch'},activity:{kind:'groom',at:0,until:2}},b={x:200,y:100,state:'active',hunt:{phase:'watch'},activity:{kind:'nibble',at:0,until:2}};
+ audio.update([a],0,1000,700);context.currentTime=.4;audio.update([a,b],.4,1000,700);assert.equal(audio.voices.size,2);
+ audio.update([b],.41,1000,700);assert.equal([...audio.voices].some(v=>v.owner===a),false);assert.ok([...audio.voices].some(v=>v.owner===b));
+ audio.contactFeedback(a,1000,'touch',1);audio.update([], .42,1000,700);assert.ok([...audio.voices].some(v=>v.owner===a&&v.priority===2));
+});

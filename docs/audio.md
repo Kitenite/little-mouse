@@ -5,8 +5,8 @@
 Use varied prey-related recordings tied to actual events. Quiet intervals matter; avoid
 all synthetic audio, incessant footstep beats or audio continuing through pause.
 Audio must have local and companion mute, volume and activity controls, plus a local test.
-Every confirmed mouse touch uses a collected vocal squeak when audio
-is enabled, a recording is available and playback is allowed, including harmless,
+Every confirmed mouse touch uses a collected vocal squeak when audio is enabled,
+a recording is available and playback is allowed, including harmless,
 invulnerable, held and defeated prey. Missing recordings must never produce fake sound.
 This feedback does not apply additional damage. Explicit mute, zero volume, pause
 and background state remain authoritative. A cat's or owner's preference is an
@@ -38,7 +38,8 @@ paper scale friction by 1; clearing/earth/sand/grass by 0.65; hard/unknown floor
 `environmentPersistence` controls visual marks elsewhere; it adds no audio tail.
 Activity cues require visible safe poses; social textures recheck current context.
 `mouse.activity={kind,at,until}` triggers one entry cue with sparse repeats for
-nibble/groom/scratch. Interrupted activities cancel their own sounding voice.
+nibble/groom/scratch. Interrupted/removed mice cancel owned activity phrases, including
+legacy `nibblingUntil`; direct-contact voices keep their separate priority.
 Calm arrival, teasing, idle and grooming contain no distress vocals. Explicit taps and
 harmless contact outcomes use the recorded vocal tap bank, never foot or paper sounds.
 This is a requested game response, not a claim of calm natural communication.
@@ -56,7 +57,6 @@ Hold/drag textures have bounded timing and can replace ambience but cannot steal
 contact voice. At saturation, the newest contact replaces an older contact.
 Raw `tossed` outcomes reach the release cue and do not become generic harmless taps.
 Pause, mute, page hide and audio interruptions stop voices. Failed samples do not block play.
-
 Defaults: sound enabled, volume 0.7, activity 1.25. Intentional mute survives reload after the
 one-time legacy audio migration. `settings.js` owns ranges and persisted controls.
 
@@ -114,7 +114,6 @@ do not reproduce ultrasonic mouse calls.
   stale sound after pause, grab, activity cancellation or leaving the visible play area.
 - Listen on the physical iPad for timbre, loudness, clipping and distracting repetition.
 - Check zero device volume, output route and OS state before claiming audio is broken.
-
 Source owners: `audio.js`, `audio-samples.js`, game activation/event integration and
 `assets/audio/`; automated checks: `audio.test.mjs`.
 Limit: digital gain is not calibrated sound-pressure level. Physical listening remains a
