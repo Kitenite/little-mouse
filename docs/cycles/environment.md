@@ -58,7 +58,8 @@ Browser fixture at 1100×600 also confirms grass/soil .12→.012, linen .075→.
 Evidence: `little-mouse/tests/evidence/environment/strength-after.png`; no scene reload required.
 Fixture diagnostics use active marks rather than assuming the rolling pool's first slot is live.
 Status: independently accepted: exact paused sequence, nine adverse cases, 13 tests and live browser.
-No room/pairing storage changed. Exact fix SHA recorded in final handoff record.
+No room/pairing storage changed.
+Fix commit: `7d0823206269bba21ef9abd4ec3d4a716a67475f`.
 
 ## Limits and next issue
 
