@@ -14,3 +14,28 @@ test('held tail pins a reachable contact and releases without correction energy'
 test('whiskers explore, lag an impact, and settle when cues stop',()=>{const s=createSecondaryMotion();advanceSecondaryMotion(s,{x:0,y:0,heading:0,size:1},1/60);move(s,30,()=>({x:0,y:0,heading:0,size:1,whisking:1}));assert.ok(Math.hypot(...s.whiskers)>.005);move(s,12,()=>({x:0,y:0,heading:0,size:1,impact:1,struggle:.8}),{whiskerMotion:2});assert.ok(s.whiskers[2]>.05);assert.ok([...s.whiskers,...s.whiskerVelocity].every(Number.isFinite));assert.ok(Math.max(...s.whiskers.map(Math.abs))<=.4);const paused=[...s.whiskers];advanceSecondaryMotion(s,{x:0,y:0,heading:0,size:1},0);assert.deepEqual([...s.whiskers],paused);move(s,600,()=>({x:0,y:0,heading:0,size:1}));assert.ok(Math.hypot(...s.whiskers,...s.whiskerVelocity)<.00001);suspendSecondaryMotion(s);advanceSecondaryMotion(s,{x:20,y:10,heading:1,size:2},1/60);assert.ok(s.whiskers.every(v=>v===0));});
 
 test('a held rendered fraction stays at the pointer between solver nodes',()=>{for(const ring of[6,11,19,31,41,47,48]){const s=createSecondaryMotion(),fraction=ring/48,hold={x:-36-87*fraction*.93,y:87*fraction*.12,fraction};move(s,12,()=>({x:0,y:0,heading:0,size:1,tailHold:hold}));const p=new Float32Array(49*9*3),normal=new Float32Array(p.length);writeTailGeometry(s,p,normal);const k=ring*27;assert.ok(Math.hypot((p[k]+p[k+12])/2-hold.x,(p[k+1]+p[k+13])/2-hold.y)<.00002,`ring ${ring} must pin the actual rendered contact`);advanceSecondaryMotion(s,{x:0,y:0,heading:0,size:1},1/60);assert.equal(s.holdFraction,0);}});
+
+
+test('live secondary pause preserves all state across pending hide, teleport and scale resets',()=>{
+ for(const hidden of [false,true])for(const dt of [0,-1,NaN,Infinity]){
+  const s=createSecondaryMotion(),hold={x:-88,y:12,fraction:.7};
+  for(let i=0;i<60;i++)advanceSecondaryMotion(s,{x:i,y:0,size:1,tailHold:hold,impact:.5},1/60);
+  if(hidden)suspendSecondaryMotion(s);const before=structuredClone(s);
+  advanceSecondaryMotion(s,{x:10000,y:20,heading:2,size:2,tailHold:hold},dt);
+  assert.deepEqual(s,before,'no integration or reset during a live pause');
+  advanceSecondaryMotion(s,{x:10000,y:20,heading:2,size:2,tailHold:hold},1/60);
+  assert.equal(s.revision,before.revision+1);assert.equal(s.holdFraction,.7);
+  assert.ok(Math.hypot(s.points[s.holdIndex*3]-hold.x,s.points[s.holdIndex*3+1]-hold.y)<1e-8);
+  assert.ok([...s.ears,...s.whiskers,...s.fur,...s.earVelocity,...s.whiskerVelocity,...s.furVelocity].every(v=>v===0));
+  assert.deepEqual(s.previous,s.points,'reset pin corrections carry no release energy');
+ }
+});
+test('cold zero-time and long-gap resets preserve reachable tail material fractions',()=>{
+ for(const fraction of [.125,.5,.73,47/48,1])for(const dt of [0,1/60,.3]){
+  const s=createSecondaryMotion(),hold={x:-36-87*fraction*.8,y:87*fraction*.1,fraction};
+  advanceSecondaryMotion(s,{x:0,y:0,size:1,tailHold:hold},dt);
+  assert.equal(s.holdFraction,fraction);assert.ok(Math.hypot(s.points[s.holdIndex*3]-hold.x,s.points[s.holdIndex*3+1]-hold.y)<1e-8);
+  assert.deepEqual(Array.from(s.points.slice(0,3)),[-36,0,5]);assert.deepEqual(s.previous,s.points);
+ }
+ const cold=createSecondaryMotion(),before=structuredClone(cold);for(const dt of [-1,NaN,Infinity]){advanceSecondaryMotion(cold,{},dt);assert.deepEqual(cold,before);}
+});

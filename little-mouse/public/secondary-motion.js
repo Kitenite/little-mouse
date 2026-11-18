@@ -10,8 +10,15 @@ export function createSecondaryMotion(segments=24){segments=clamp(Math.round(seg
 export function resetSecondaryMotion(s,motion={}){for(let i=0;i<=s.segments;i++){const f=i/s.segments,k=i*3;s.points[k]=ROOT_X-LENGTH*f;s.points[k+1]=0;s.points[k+2]=ROOT_Z-2*f;}s.previous.set(s.points);s.fur.fill(0);s.furVelocity.fill(0);s.ears.fill(0);s.earVelocity.fill(0);s.whiskers.fill(0);s.whiskerVelocity.fill(0);s.whiskerTime=0;s.holdSide=0;s.holdFraction=0;s.holdIndex=0;s.x=Number.isFinite(motion.x)?motion.x:0;s.y=Number.isFinite(motion.y)?motion.y:0;s.heading=Number.isFinite(motion.heading)?motion.heading:0;s.size=Math.max(.1,motion.size||1);s.vx=s.vy=0;s.ready=true;s.active=true;s.revision++;return s;}
 export function suspendSecondaryMotion(s){s.active=false;}
 export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
+ // Pause preserves a live pose, even when a hidden reset or teleport is pending.
+ // A cold zero-time frame still initializes safe render geometry.
+ if(!Number.isFinite(dt)||dt<0||(dt===0&&s.ready))return s;
  const x=Number.isFinite(motion.x)?motion.x:s.x,y=Number.isFinite(motion.y)?motion.y:s.y,heading=Number.isFinite(motion.heading)?motion.heading:s.heading,size=Math.max(.1,Number.isFinite(motion.size)?motion.size:1);
- if(!s.ready||!s.active||!Number.isFinite(dt)||dt>.2||Math.abs(size-s.size)>.001||Math.hypot(x-s.x,y-s.y)/size>250)return resetSecondaryMotion(s,{x,y,heading,size});
+ if(!s.ready||!s.active||dt>.2||Math.abs(size-s.size)>.001||Math.hypot(x-s.x,y-s.y)/size>250){
+  resetSecondaryMotion(s,{x,y,heading,size});
+  if(motion.tailHold&&Number.isFinite(motion.tailHold.x)&&Number.isFinite(motion.tailHold.y))applyTailHold(s,motion.tailHold);
+  return s;
+ }
  if(dt<=0)return s;
  const elapsed=Math.min(dt,1/15),steps=Math.max(1,Math.ceil(elapsed*120)),h=elapsed/steps;
  const dx=(x-s.x)/size,dy=(y-s.y)/size,rotation=angleDelta(heading-s.heading),vx=dx/elapsed,vy=dy/elapsed;
