@@ -14,3 +14,12 @@ test('800 px/s size .6 spatial resampling preserves density at 30/60/120 Hz',()=
 test('planted feet emit nothing when body shifts; hidden respawn and frozen time preserve reset behavior',()=>{const m=new GroundMemory();sample(m,0);m.begin(config,.1,10000,1000);m.sample(0,1,101,100,1,feet);assert.equal(m.emitted,0);m.sample(0,1,101,100,1,feet,false,false);m.sample(0,1,500,100,1,feet);assert.equal(m.emitted,0);sample(m,.2,520);const p=m.marks.find(p=>p.life),alpha=m.opacity(p);m.begin(config,.2,10000,1000);assert.equal(m.opacity(p),alpha);});
 
 test('airborne feet seed on landing without interpolating a phantom trail',()=>{const m=new GroundMemory();sample(m,0);sample(m,.1,130,false,10);sample(m,.2,160,false,10);sample(m,.3,190);assert.equal(m.emitted,0);sample(m,.4,210);assert.ok(m.emitted>=4);assert.equal(m.marks[0].x,204);});
+
+
+test('drag release never backfills footprints; stationary claim transitions reset spacing',()=>{
+ const m=new GroundMemory();sample(m,0,100);sample(m,.1,150,true);sample(m,.2,200,true);
+ const before=m.emitted;sample(m,.3,201);assert.equal(m.emitted,before);
+ sample(m,.4,221);assert.ok(m.emitted>before);assert.ok(m.marks.filter(p=>p.life&&p.kind===0).every(p=>p.x>=201));
+ const n=new GroundMemory();sample(n,0,100);sample(n,.1,111,true);sample(n,.2,111,false);sample(n,.3,111,true);
+ sample(n,.4,113,true);assert.equal(n.emitted,0);sample(n,.5,124,true);assert.equal(n.emitted,1);
+});

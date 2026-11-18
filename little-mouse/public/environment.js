@@ -6,7 +6,7 @@ export const materialResponses=Object.freeze(Object.fromEntries([
  ...['photo-boards','chalk','ink','pale-blue','warm-yellow','plain','wood','walnut','birch','weathered','parquet','marble','limestone','slate','terrazzo','ceramic','terracotta','concrete','night'].map(id=>[id,'hard'])
 ]));
 export class GroundMemory{
- constructor(){this.marks=Array.from({length:ENVIRONMENT_CAPACITY},()=>({life:0}));this.tracks=Array.from({length:8},()=>({id:null,x:0,y:0,distance:0,feet:new Float64Array(8).fill(NaN)}));this.cursor=0;this.emitted=0;this.clear();}
+ constructor(){this.marks=Array.from({length:ENVIRONMENT_CAPACITY},()=>({life:0}));this.tracks=Array.from({length:8},()=>({id:null,x:0,y:0,distance:0,drag:false,feet:new Float64Array(8).fill(NaN)}));this.cursor=0;this.emitted=0;this.clear();}
  clear(){for(const p of this.marks)p.life=0;for(const s of this.tracks){s.id=null;s.distance=0;s.feet.fill(NaN);}this.active=0;}
  begin(config,t,w,h){const material=materialResponses[config.background]||'hard',strength=Math.max(0,Math.min(1,config.environmentStrength??.55));
   if(this.surface!==config.background||this.w!==w||this.h!==h||this.size!==config.size||t<this.time||t-this.time>.25||strength===0)this.clear();
@@ -17,7 +17,9 @@ export class GroundMemory{
  // feet is a reused array of rendered world x/y/z triples, not gait phase.
  sample(index,id,x,y,size,feet,drag=false,visible=true){const s=this.tracks[index];if(!s)return;
   if(!visible||!this.strength||this.material==='hard'){s.id=null;return;}
-  if(s.id!==id){s.id=id;s.x=x;s.y=y;s.distance=0;for(let j=0;j<4;j++){const grounded=feet[j*3+2]>=0&&feet[j*3+2]<=3.7*size;s.feet[j*2]=grounded?feet[j*3]:NaN;s.feet[j*2+1]=grounded?feet[j*3+1]:NaN;}return;}
+  if(s.id!==id){s.id=id;s.x=x;s.y=y;s.distance=0;s.drag=drag;for(let j=0;j<4;j++){const grounded=feet[j*3+2]>=0&&feet[j*3+2]<=3.7*size;s.feet[j*2]=grounded?feet[j*3]:NaN;s.feet[j*2+1]=grounded?feet[j*3+1]:NaN;}return;}
+  // Claims can switch while stationary; never carry footprint or spacing history across modes.
+  if(s.drag!==drag){s.drag=drag;s.distance=0;s.feet.fill(NaN);}
   const oldX=s.x,oldY=s.y,dx=x-oldX,dy=y-oldY,d=Math.hypot(dx,dy);s.x=x;s.y=y;
   if(d>Math.max(100,size*65)){this.clear();return;}
   if(d<.001){for(let j=0;j<4;j++)if(!(feet[j*3+2]>=0&&feet[j*3+2]<=3.7*size))s.feet[j*2]=s.feet[j*2+1]=NaN;return;} // Stationary animation cannot emit.

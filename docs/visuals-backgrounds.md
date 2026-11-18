@@ -44,7 +44,7 @@ Both use the shared schema, so game, companion, profiles, playground and server 
 Rendered paw positions transformed by the mouse group supply contact samples; ground height and
 actual displacement gate emission, not speed/intent or cadence alone. Airborne paws reset history;
 landing seeds a new stance. Head/body claims leave wider drag compression even before activation;
-paw/tail holds use grounded feet. Stationary contacts do not repeatedly stamp. Spatial resampling
+paw/tail holds use grounded feet. Stationary contacts do not repeatedly stamp. Claim-mode changes reset foot and drag history. Spatial resampling
 is capped at eight samples per foot or body per render; extreme discontinuities discard backlog.
 The height threshold is an approximate contact test, not a force solver or pressure/deformation model.
 
