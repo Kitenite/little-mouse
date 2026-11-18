@@ -50,7 +50,7 @@ export default function Home() {
           <Pressable style={styles.secondary} onPress={async () => { try { const link = companionUrl(draft); await Share.share({ message: link, url: link }); } catch { Alert.alert('Check the game address', 'Enter a valid game address first.'); } }}><Text style={styles.secondaryText}>Share companion</Text></Pressable>
           <Pressable style={styles.secondary} disabled={updateBusy} onPress={updateApp}><Text style={styles.secondaryText}>{updateBusy ? 'Checking…' : 'Update app'}</Text></Pressable>
         </View>
-        <Text style={styles.note}>Use the pairing code inside the game to connect your companion. Hold “app settings” for a moment to return here.</Text>
+        <Text style={styles.note}>Use the pairing code inside the game to connect your companion. During play, pause from the companion or tap the four screen corners clockwise, starting at the top left. App connection settings appear when play is paused.</Text>
       </View>
     </ScrollView>
   </KeyboardAvoidingView>;

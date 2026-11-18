@@ -1,0 +1,12 @@
+/* Static material tiles are set by backgrounds.js. No full-screen filters or animated layers. */
+#game[data-background],.background-preview[data-background]{background-position:0 0;background-repeat:repeat;background-size:var(--surface-size,512px)}
+#game[data-background-tone=dark] .game-top,#game[data-background-tone=dark] #gameHint{color:#e1e6d8}
+#game[data-background-tone=dark] #exit{background:#e9ebdfdd;color:#47523b}
+.background-preview[data-background]{min-height:52px;border-radius:8px;border:1px solid #767c6633}
+/* A dedicated image layer keeps contrast adjustments off the WebGL mice and HUD.
+   Negative stacking is contained by isolation; the parent floor color remains beneath it. */
+#game[data-background-kind=image],.background-preview[data-background-kind=image]{isolation:isolate}
+.background-preview[data-background-kind=image]{position:relative;overflow:hidden}
+#game[data-background-kind=image]::before,.background-preview[data-background-kind=image]::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:var(--surface-image);background-size:var(--surface-image-scale,100%) var(--surface-image-scale,100%);background-position:center;background-repeat:no-repeat;filter:contrast(var(--surface-image-contrast,1));opacity:var(--surface-image-opacity,1)}
+#game[data-background-kind=image] .game-top>span:not(:empty){background:#f6f4e6d9;color:#35422b;padding:5px 8px;border-radius:7px}
+#game[data-background-kind=image] #gameHint{color:#35422b;text-shadow:0 1px 2px #ffffff,0 0 5px #ffffff}

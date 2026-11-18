@@ -39,3 +39,20 @@ html[data-surface=ipad],html[data-surface=ipad] body{height:100%;overflow:hidden
 [data-surface=ipad] #tabletSettings .settings-heading{display:none}
 [data-surface=ipad] #tabletSettings .range-labels{margin-bottom:12px}
 [data-surface=ipad] #tabletSettings input[type=range]{height:24px;margin:10px 0}
+
+#enableSound{position:absolute;z-index:4;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#f7f6f2e8;border-radius:24px;font-size:13px;touch-action:manipulation}
+/* Shared live controls: finger-sized sliders, exact numeric entry, and portable settings profiles. */
+.control-group{border-top:1px solid #d9ddd0;padding:8px 0;margin:0;text-align:left}
+.control-group>summary{min-height:48px;display:list-item;cursor:pointer;font-weight:600;padding:12px 4px;touch-action:manipulation}
+.setting-control{padding:8px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.setting-control>label{font-size:14px;line-height:1.4}
+.setting-control select{max-width:100%;min-height:44px}.setting-control input[type=checkbox]{min-width:44px;min-height:28px}
+.setting-control input[type=color]{width:56px;height:44px;padding:3px;border:1px solid #cbd1bf;border-radius:8px;background:white}
+.numeric-control{display:grid;grid-template-columns:minmax(80px,1fr) 76px 28px;gap:10px;align-items:center;width:100%}
+.numeric-control input[type=range]{width:100%;min-height:44px;margin:0!important;padding:0}
+.numeric-control input[type=number]{width:76px;min-height:44px;border:1px solid #cbd1bf;border-radius:8px;background:#fffefa;padding:8px;font:inherit;font-size:14px;color:inherit}
+.control-unit{font-size:12px;color:#626b53}.control-note,.control-status{font-size:12px;line-height:1.6;color:#626b53}
+.control-group>.secondary{min-height:44px;margin:8px 6px 8px 0;font-size:12px}.control-group>input,.control-group>select{display:block;width:100%;min-height:44px;margin:10px 0;border:1px solid #cbd1bf;border-radius:8px;padding:8px;font:inherit}
+.surface-swatch{height:100px;border:1px solid #cbd1bf;border-radius:12px;margin-bottom:10px;box-shadow:inset 0 1px 6px #0001}
+.controls{min-width:0}.remote-panel{min-width:0}input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #78944b;outline-offset:3px}
+[data-surface=ipad] #tabletSettings .numeric-control input[type=range]{min-height:44px;height:44px}

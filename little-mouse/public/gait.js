@@ -1,9 +1,11 @@
 const TAU=Math.PI*2;
 export const MAX_CADENCE=4.5;
 // Travel arrives in CSS pixels; the rig is expressed in unscaled model units.
-export function advanceGait(state,speed,size,moving,dt){
+export function advanceGait(state,speed,size,moving,dt,config={}){
  const localSpeed=moving?Math.max(0,speed)/Math.max(.1,size):0;
- const targetCadence=Math.min(MAX_CADENCE,localSpeed/72);
+ const maxCadence=Math.max(2,Math.min(6,config.gaitCadence??MAX_CADENCE)),stride=Math.max(.5,Math.min(1.5,config.strideLength??1));
+ const targetCadence=Math.min(maxCadence,localSpeed/(72*stride));
+ state.stepHeight=Math.max(.5,Math.min(2,config.stepHeight??1));
  const blend=1-Math.exp(-Math.max(0,dt)*10);
  state.cadence+=(targetCadence-state.cadence)*blend;
  state.activity+=((moving?1:0)-state.activity)*blend;
@@ -18,6 +20,6 @@ export function footPose(state,offset){
  const u=swing?(cycle-.62)/.38:cycle/.62;
  const eased=u*u*(3-2*u);
  return{x:(swing?-state.reach+2*state.reach*eased:state.reach-2*state.reach*u)*state.activity,
- lift:(swing?Math.sin(Math.PI*u)*3:0)*state.activity,
+ lift:(swing?Math.sin(Math.PI*u)*3*(state.stepHeight??1):0)*state.activity,
  pitch:(swing?-Math.sin(Math.PI*u)*.2:0)*state.activity};
 }

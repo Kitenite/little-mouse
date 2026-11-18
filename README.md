@@ -15,12 +15,14 @@ Open http://localhost:8787 for the game or http://localhost:8787/companion for t
 
 ## iPad app
 
-The Expo app is in [ipad](./ipad/README.md). Run `cd ipad && npm install && npm run local`, then scan the QR code with Expo Go on your iPad. The app and game update independently over the air.
+The Expo app is in [ipad](./ipad/README.md). For the installed development app, run `cd ipad && npm install && npm run local` and open Little Mouse on the iPad. A connected device can be installed with `npm run ios -- --device` using Apple signing. Expo Go is an optional development route. Game files update over the local network independently of the native shell.
 
 ## Research and review
 
-- [Research findings](./RESEARCH-NEXT.md)
-- [iPad performance review](./IPAD-PERFORMANCE.md)
-- [iPad integration review](./IPAD-REVIEW.md)
+- [Requirements and living policies](./docs/README.md)
+- [Mouse behavior research](./docs/mouse-behavior-research.md)
+- [Earlier research review (historical)](./RESEARCH-NEXT.md)
+- [Earlier iPad performance review](./IPAD-PERFORMANCE.md)
+- [Earlier iPad integration review](./IPAD-REVIEW.md)
 
 The game’s hosted deployment uses the Sites configuration in `little-mouse/.openai/hosting.json`. This GitHub repository contains both applications; pushing here does not automatically deploy the hosted game or publish an Expo update. See each app’s README for its release workflow.

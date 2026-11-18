@@ -1,8 +1,8 @@
 # Little Mouse
 
-A tablet game with a textured, articulated 3D mouse, a phone/laptop companion, saved live settings, and automatic over-the-air releases.
+A tablet game with textured, articulated mice and a separate phone/laptop companion for live control.
 
-## Run
+## Run and pair
 
 Requires Node 22.13+ (built-in SQLite).
 
@@ -12,44 +12,41 @@ npm run build
 npm run dev
 ```
 
-Game: http://localhost:8787 · Companion: http://localhost:8787/companion
+Game: http://localhost:8787 · Controller: http://localhost:8787/companion
 
-On the same Wi-Fi, replace `localhost` with the Mac's LAN IP on the iPad and phone. The hosted private Site also works over the internet; sign into the owning ChatGPT account on each device.
+On the same Wi-Fi, replace `localhost` with the computer's LAN IP. On the tablet home screen choose **Create pairing code**, then enter it on the companion or use the copied companion link. Play, pause, steer, recall mice and tune settings from the phone or laptop. Changes persist and apply live. Saved profiles retain combinations of settings.
 
-## Pair and play
+To leave play, briefly tap the four corners clockwise: **top-left → top-right → bottom-right → bottom-left**, within four seconds. Resting paws and long holds do not open the menu. The companion's Pause button and keyboard Escape also work. Play continues until the owner stops it; there is no automatic break timer.
 
-1. On the tablet, select **Create pairing code** below the settings.
-2. Open `/companion` on a phone or laptop and enter the code, or copy the companion link from the tablet.
-3. Start play. Drag the companion pad to steer, or choose automatic stalking/scurrying.
-4. Change speed, mouse size/count, pauses, floor preset/color, lighting, squeaks, variation, and session length live. These settings persist in server storage.
-5. Hold the tablet's pause button for 1.2 seconds, press Escape, or pause from the companion.
+## Testing playground
 
-The tablet must receive a local tap to unlock audio under browser autoplay restrictions. A backgrounded or locked browser cannot receive updates until it resumes.
+Open `/playground.html` for a separate many-mouse lab with live controls, repeatable scenarios and simulation-time controls. Its settings are separate from normal play and pairing.
 
-## Fast iteration / OTA
+## Sound
 
-Settings are applied without reload. The game polls state at 400 ms, the companion at 500 ms; latency includes network round trips. This is near-real-time polling, not a hard real-time guarantee or WebSocket stream. Steering interpolates locally between targets.
+Tap Play locally to unlock browser audio, or use **Test sound** in Sound design. Remote Play cannot supply the local gesture required by browser autoplay rules. The status reports activation errors and generated signal. It cannot prove the physical speaker is audible: device volume and output routing still apply. Supported Safari audio sessions request playback during activation.
 
-Local changes to public files change the version fingerprint. Hosted releases fingerprint all public assets and the API. Once a new release is deployed, an open game detects it and reloads automatically, restoring pairing, settings, elapsed time and catch count through local storage. The companion's **Reload game now** command forces a reload. Code updates have a brief reload interruption; they are not module hot-swaps. `npm run build` creates the deployment artifact; publishing still requires the Sites deployment workflow.
+The 30 recording excerpts cover mouse/rat squeaks, rat and hamster activity, and paper friction foley. They are not all literal mouse recordings. [SOUND.md](SOUND.md) records exact provenance, licensing, event mapping and verification limits.
 
-## Architecture
+## Behavior and rendering
 
-- `public/mouse3d.js`: Three.js geometry, fur material, skin textures, lighting, tail and distance-driven four-foot gait. A real-time approximation, not a scanned or photoreal-certified asset.
-- `public/game.js`: behavior, hits, multi-touch, hold-to-pause, session breaks, remote commands, update detection.
-- `public/companion.js`: remote controls, steering, connection/latency/activity feedback.
-- `worker/api.js`: validated room API; D1 on Sites, SQLite locally. Pairing codes are bearer capabilities in local mode; hosted access is additionally owner-private.
-- `drizzle/0000_rooms.sql`: persistent schema migration.
-- `scripts/build.mjs`: self-contained Worker ESM artifact with embedded assets.
-- `public/research.html`: cited studies, evidence limits, and the design choices inferred from them.
+Mice hide, peek, watch, creep, dash, occasionally cross the whole board and remember threatening touch locations. Resting paws remain obstacles; released footprints fade. Touches can be harmless, injure a mouse, or defeat it. Head/body/limb/tail holds, dragging and bounded tosses have different constraints. Defeated individuals are replaced; surviving individuals keep their traits through hiding and injury.
 
-`npm test` checks pairing, state persistence, steering bounds and invalid/cross-origin writes. Browser checks use real Chromium; physical iPad/Safari testing remains outstanding.
+The renderer uses procedural textured geometry, connected jointed legs, inertial tails, rooted ears and whiskers, fur motion, directional lighting and shadow maps. It is a real-time approximation, not a scanned animal or ray tracer. There are 30 floor options, including three generated texture images, plus 22 coat styles across natural, contrast and playful palettes. The research page separates study findings from design inferences; cat engagement and photorealism are not scientifically established outcomes of this implementation.
 
-## Research
+## Updates
 
-Hall et al. (2002): habituation/novelty in physical toy play. Payne et al. (2025): human–cat tablet interaction. Kogan & Grigg (2021): correlational laser-play survey, not a tablet study. See the in-app research page for links and limitations. Session length and visual presets are adjustable design defaults, not established scientific optima.
+Settings and remote commands poll every 400–500 ms; latency includes network round trips. This is near-real-time polling, not a hard real-time guarantee. Local public-file edits change the version fingerprint. Deployed hosted releases do the same. Open games reload on a new version, preserving pairing, settings, elapsed time and hit count, with a brief interruption. Individual poses are recreated after reload.
 
-Direct presses sharply squash mice against the floor. They either stay flattened briefly before replacement, or rebound and scramble offscreen; nearby misses startle them. Mice also leave and reenter through screen edges. The companion can recall them. Slower, capped leg cadence remains independent of the escape speed boost.
+`npm run build` creates the Worker artifact. Publishing requires the Sites workflow; pushing GitHub alone does not deploy. The hosted Site remains owner-private. Backgrounded devices receive changes after resuming.
 
-Hits produce a brief blood splatter and randomly choose squash, tumble, zigzag escape, straight dash, or stun-and-flee. Droplets expire within five seconds and use a fixed 320-instance pool. New sessions clear all effects.
+## Code and checks
 
-Heading-driven movement brakes before sharp turns, limits angular acceleration, and widens turns at speed. Body banking, tail drag, and inside/outside stride differences follow turn rate. Hit responses also include a faster dash and a temporary limp with reduced left-hind stride and uneven pace.
+- `public/game.js`: integration, input, play lifecycle and OTA detection.
+- `public/enrichment.js`, `contact.js`, `physics.js`: behavior policy, touch memory and motion.
+- `public/mouse3d.js`, `secondary-motion.js`, `leg-rig.js`: rendering and attached motion.
+- `public/settings.js`, `controls.js`, `companion.js`: shared validation and tunable controls.
+- `public/audio.js`, `audio-samples.js`: bounded recorded sound scheduling and mixing.
+- `worker/api.js`: room API; D1 hosted, SQLite locally.
+
+Run `npm test` for policy, geometry, contact, audio, settings and API regression checks. Browser and physical iPad checks supplement these; numerical tests alone cannot judge how natural motion or sound feels. Current requirements and acceptance policies live in the repository's [docs index](../docs/README.md).

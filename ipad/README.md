@@ -2,7 +2,11 @@
 
 An Expo / React Native iPad app hosting the existing Three.js game in WKWebView. It preserves the live companion, game releases, hit reactions, and settings without maintaining a second renderer.
 
-## Play on your iPad now
+## Installed development app
+
+Little Mouse can be installed directly on a connected iPad using Xcode signing: run `npm run ios -- --device`. During development, keep `npm run local` running and open the installed Little Mouse app. The computer and tablet need network connectivity for Metro and the game server; the USB cable alone does not publish game updates.
+
+## Optional Expo Go route
 
 Install [Expo Go](https://expo.dev/go) on the iPad, connect it to the same Wi-Fi as the computer, then run these commands from the repository root:
 
@@ -21,7 +25,7 @@ Scan the terminal QR code with the iPad Camera. The launcher also prints an iOS 
 ## Control from your phone
 
 1. Connect the phone to the same Wi-Fi as the computer and iPad. No phone app is needed.
-2. On the iPad’s game home screen, tap **Create pairing code**. During play, hold **Hold to pause** to return there.
+2. On the iPad’s game home screen, tap **Create pairing code**. During play, briefly tap the four corners clockwise (top-left, top-right, bottom-right, bottom-left) within four seconds, or pause from the companion.
 3. In Safari or Chrome on your phone, open the **Companion** URL printed in the terminal, such as `http://COMPUTER-IP:8787/companion`. The native **Share companion** button can share this address.
 4. Enter the iPad’s 16-character code and tap **Connect**. Spaces in the displayed code are accepted.
 5. Use **Play**, **Pause**, the steering pad, or the settings to control the iPad live. Changes to mouse count, movement, speed, size and background apply without restarting the session.
@@ -30,7 +34,7 @@ If the phone says it is waiting for the game, keep the iPad app visible and its 
 
 To test without Expo Go, open the printed game address with `/?surface=ipad` in iPad Safari. The same companion and automatic game-code reload work there.
 
-Saved addresses persist. If you previously saved another address, replace it with the current one printed by `npm run local`. Hold **app settings** at the bottom right for 1.2 seconds to leave the game. The screen stays awake during active play.
+Saved addresses persist. If you previously saved another address, replace it with the current one printed by `npm run local`. After pausing, tap **app settings** to leave the game. This button is hidden during play. The screen stays awake during active play.
 
 ## Hosted play
 
@@ -85,6 +89,6 @@ SDK versions follow the generated Expo 58 template and `expo install` compatibil
 
 ## Verification completed
 
-On 2026-11-17, the iPad simulator build succeeded and rendered the fullscreen game. Expo lint/typecheck, 2 connection tests, 20 Expo Doctor checks and the iOS export passed. The browser companion also paired with the native iPad simulator and remotely started/paused it. Browser QA verified paired controls in both directions, remote pause, portrait/landscape layout and saved-file reload preserving pairing and elapsed time. The game suite passes 34 tests.
+On 2026-11-17, the iPad simulator build succeeded and rendered the fullscreen game. Expo lint/typecheck, 2 connection tests, 20 Expo Doctor checks and the iOS export passed. The browser companion also paired with the native iPad simulator and remotely started/paused it. Browser QA verified paired controls in both directions, remote pause, portrait/landscape layout and saved-file reload preserving pairing and elapsed time. See the current game test output for the expanded policy, contact, geometry, audio and API regression suite.
 
 The initial iOS preview update (runtime 1.0.0) is published: https://expo.dev/accounts/flyakiet/projects/little-mouse-ipad/updates/e8bcd8b8-a5e0-4899-9f29-78cb5e69dfd2 . Publication does not verify delivery to a signed physical preview build; physical iPad performance, permissions and hosted login remain to test.

@@ -54,6 +54,6 @@ export default function Game({ url, close }: { url: string; close: () => void })
       onShouldStartLoadWithRequest={request => isAllowedWebUrl(request.url)} />
     {loading && !error && <View pointerEvents="none" style={styles.loading}><ActivityIndicator color="#304d38" /><Text style={styles.detail}>Opening Little Mouse…</Text></View>}
     {!!error && <View style={styles.error}><Text style={styles.heading}>Couldn’t reach the game</Text><Text style={styles.detail}>{error}</Text><Text style={styles.detail}>For local play, keep your computer running and connect both devices to the same Wi-Fi.</Text><Pressable style={styles.primary} onPress={() => { setError(''); setReloadKey(value => value + 1); }}><Text style={styles.primaryText}>Try again</Text></Pressable><Pressable style={styles.secondary} onPress={close}><Text style={styles.secondaryText}>Connection settings</Text></Pressable></View>}
-    {!error && <Pressable accessibilityRole="button" accessibilityLabel="Hold for app settings" delayLongPress={1200} onLongPress={close} style={styles.owner}><Text style={styles.ownerText}>Hold · app settings</Text></Pressable>}
+    {!error && !loading && !activePlay && <Pressable accessibilityRole="button" accessibilityLabel="App connection settings" onPress={close} style={styles.owner}><Text style={styles.ownerText}>App connection settings</Text></Pressable>}
   </View>;
 }
