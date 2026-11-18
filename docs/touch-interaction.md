@@ -13,6 +13,9 @@ screen; retain those touch areas and route around them instead of running undern
 
 - Pointerdown claims a mouse without immediate injury, death or score. Hold activation defaults
   to 0.25 seconds (configurable 0.15–1); quick release resolves a tap.
+- Every visible mouse contact gives immediate gentle audio feedback while play and sound are
+  enabled, including harmless, invulnerable and already-held mice. Feedback does not bypass
+  damage immunity or create a second claim. Release adds the contextual reaction sound.
 - Renderer contact geometry selects body/head, articulated paw index/offset, or tail fraction.
 - One pointer owns at most one mouse; a claimed mouse cannot be claimed by another pointer.
 - Head/body hold anchors the contacted point. Paw holds pivot within a short tether; tail holds

@@ -4,17 +4,21 @@ Reviewed 2026-11-17 (local time). This record replaces earlier totals; it is not
 
 ## Verified in this change
 
-- Game regression suite: 157 passing tests covering behavior, contacts, physics, geometry,
+- Game regression suite: 169 passing tests covering behavior, contacts, physics, geometry,
   activity interruption, backgrounds/coats, audio, settings, API and playground time control.
-- Native wrapper: two connection tests, TypeScript check and Expo lint pass.
+- Native wrapper (previous pass, unchanged here): two connection tests, TypeScript and Expo lint pass.
 - Independent animation audit: 108 seeded drag cases over 35,640 simulation frames; bounded
   contacts, attachments, pause, held collisions and disposal. Exact fractional tail pin regression passes.
 - Browser: real owner four-corner gesture opens home; shaders compile without logged errors.
 - Browser playground: eight visible models, separate lab settings, frame stepping and all five
   idle activity scenarios; head/body/tail/forepaw/hind-paw drag-to-toss each resolves once.
-- Browser audio: all 30 recordings load without sample errors; local Test sound and grooming
-  audition produce post-master signal. This establishes generated output, not physical hearing.
-- Independent audio reviews: event/animation integration, interruption, calm/distress mapping,
+- Browser audio: all 30 recordings load without sample errors. Actual pointerdown in the game
+  and playground immediately produces a contact cue, followed by harmless release feedback.
+  Invulnerable/second held touches produce a cue without extra hits; cancellation clears voices,
+  and mute prevents cues. First-gesture fallback generates output before recordings load.
+  Post-master signal is positive; this establishes generated output, not physical hearing.
+- Independent audio reviews: pointer-scoped cancellation (61 focused checks plus two-pointer
+  reproductions), event/animation integration, interruption, calm/distress mapping,
   source licensing, PCM assets and mix trims. Independent visual review: 30 backgrounds,
   22 coats, four palettes, generated-image provenance and representative rendered contrast.
 - Requirements documents satisfy their size caps; local relative links resolve.
@@ -37,5 +41,5 @@ Local development serves current files with version reload. A GitHub push is sou
 Sites deployment is separate. Use the deployment result for hosted release status. Native shell
 changes use the existing development/Expo route and are not a new standalone binary release.
 
-Current hosted release succeeded: build `a343005e7fbe`, Sites source `2c20ca1`.
+Current hosted release succeeded: build `e7c3bcc83137`, Sites source `dc6a698`.
 The owner-private game and `/playground.html` were deployed together; audience was preserved.

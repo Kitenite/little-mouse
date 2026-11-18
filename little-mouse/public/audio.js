@@ -15,10 +15,11 @@ export class PreyAudio {
   constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,audioSession=globalThis.navigator?.audioSession}={}) {
     this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleErrors=[];this.sampleChoice={};this.context=null;this.master=null;
     this.enabled=false;this.active=false;this.voices=new Set();this.lastVariant={};this.lastCue=-Infinity;
-    this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;
+    this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;
   }
   configure(config={}){
     for(const [key,schema] of Object.entries(audioControlSchema)){const value=Number(config[key]??schema.default);this.settings[key]=Number.isFinite(value)?clamp(value,schema.min,schema.max):schema.default;}
+    if(this.settings.soundVolume===0)this.stop();
     const volume=this.settings.soundVolume*OUTPUT_GAIN;
     if(this.master&&this.masterVolume!==volume){this.master.gain.setValueAtTime(volume,this.context.currentTime);this.masterVolume=volume;}
   }
@@ -28,6 +29,7 @@ export class PreyAudio {
     if(!this.enabled||(wasActive&&!this.active)||globalThis.document?.hidden)this.stop();
   }
   unlock(){
+    const generation=++this.unlockGeneration;
     // Called directly by a pointer/click handler. Never await before resume().
     try {
       // A supported Safari playback session can play with the ringer switch
@@ -42,7 +44,7 @@ export class PreyAudio {
         this.noise=this.context.createBuffer(1,Math.ceil(this.context.sampleRate*.65),this.context.sampleRate);
         const data=this.noise.getChannelData(0);let smooth=0;
         for(let i=0;i<data.length;i++){smooth=.65*smooth+.35*(this.rng()*2-1);data[i]=smooth;}
-        this.context.onstatechange=()=>{if(!this.ready)this.stop();};
+        this.context.onstatechange=()=>{if(!this.ready)this.stop();else this.flushContacts();};
       }
       this.loadSamples();
       this.lastError=null;
@@ -50,11 +52,11 @@ export class PreyAudio {
       // A silent one-sample source also primes older iOS Web Audio implementations.
       const source=this.context.createBufferSource();source.buffer=this.context.createBuffer(1,1,this.context.sampleRate);
       source.connect(this.master);source.onended=()=>source.disconnect();source.start();
-      return Promise.resolve(resumed).then(()=>this.ready,error=>{this.lastError=String(error?.message||error);return false;});
-    }catch(error){this.lastError=String(error?.message||error);return Promise.resolve(false);}
+      return Promise.resolve(resumed).then(()=>{this.flushContacts();return this.ready;},error=>{if(generation===this.unlockGeneration){this.pendingContacts=[];this.lastError=String(error?.message||error);}return false;});
+    }catch(error){this.pendingContacts=[];this.lastError=String(error?.message||error);return Promise.resolve(false);}
   }
   stop(){
-    this.auditionGeneration++;this.pendingReply=null;
+    this.auditionGeneration++;this.pendingReply=null;this.pendingContacts=[];
     for(const voice of [...this.voices])voice.cancel();
   }
   reset(){this.stop();this.observations=new WeakMap();this.lastCue=this.lastHit=-Infinity;this.nextSocial=null;this.pendingReply=null;}
@@ -77,15 +79,18 @@ export class PreyAudio {
     if(index===this.lastVariant[kind])index=(index+1)%bank.length;
     this.lastVariant[kind]=index;return bank[index];
   }
-  cue(kind,x=.5,owner=null){
-    if(!sampleBanks[kind]||!this.enabled||(!this.active&&!this.testing)||!this.ready||this.settings.soundVolume===0)return false;
+  cue(kind,x=.5,owner=null,{priority=0,bypassCooldown=false,pointerId=null}={}){
+    if(globalThis.document?.hidden||!sampleBanks[kind]||!this.enabled||(!this.active&&!this.testing)||!this.ready||this.settings.soundVolume===0)return false;
     const context=this.context,t=context.currentTime;
     const impact=['hit','hurt','tap','dragrelease'].includes(kind);
-    if(t-this.lastCue<(impact?.08:.32)||impact&&t-this.lastHit<.18)return false;
-    if(this.voices.size>=3)return false;
+    if(!bypassCooldown&&(t-this.lastCue<(impact?.08:.32)||impact&&t-this.lastHit<.18))return false;
     const available=sampleBanks[kind].filter(id=>this.sampleBuffers.has(id));
     // Foot friction must never fall back to the old mechanical beat pattern.
-    if(!available.length&&['patter','retreat','dodge','dragloop'].includes(kind))return false;
+    if(!available.length&&priority<2&&['patter','retreat','dodge','dragloop'].includes(kind))return false;
+    if(this.voices.size>=3){
+      const victim=[...this.voices].filter(voice=>voice.priority<priority||priority===2&&voice.priority===2).sort((a,b)=>a.priority-b.priority)[0];
+      if(!victim)return false;victim.cancel();
+    }
     this.lastCue=t;if(impact)this.lastHit=t;
     const gain=context.createGain(),pan=context.createStereoPanner?.();
     if(pan){pan.pan.value=clamp(x*1.4-.7,-.7,.7);gain.connect(pan);pan.connect(this.master);}else gain.connect(this.master);
@@ -111,12 +116,33 @@ export class PreyAudio {
     }
     nodes.push(source);let cleaned=false;
     const cleanup=()=>{if(cleaned)return;cleaned=true;for(const node of nodes)node.disconnect();this.voices.delete(voice);};
-    const voice={owner,cancel:()=>{try{source.stop();}catch{}cleanup();}};
+    const voice={owner,priority,pointerId,cancel:()=>{try{source.stop();}catch{}cleanup();}};
     this.voices.add(voice);source.onended=cleanup;source.start(t);source.stop(t+duration);
-    this.played++;this.lastPlayed={kind,variant:this.lastVariant[kind],sample:sampleId,source:sampleId?'recording':'quiet-noise-fallback',at:t};
+    this.played++;this.lastPlayed={kind,variant:this.lastVariant[kind],sample:sampleId,priority,source:sampleId?'recording':'quiet-noise-fallback',at:t};
     return true;
   }
-  hit(mouse,width,outcome){const seen=this.observations.get(mouse);if(seen)seen.held=false;const kind=outcome==='tossed'?'dragrelease':outcome==='harmless'?(mouse.reaction==='dodge'?'dodge':mouse.reaction==='freeze'?'sniff':'tap'):mouse.reaction==='limp'||mouse.reaction==='stunned'?'hurt':'hit';return this.cue(kind,mouse.x/Math.max(1,width));}
+  contactFeedback(mouse,width,outcome='touch',pointerId=null){
+    if(!mouse||!this.enabled||!this.active||this.settings.soundVolume===0||globalThis.document?.hidden)return false;
+    const kind=outcome==='touch'?'tap':outcome==='tossed'?'dragrelease':outcome==='harmless'?(mouse.reaction==='dodge'?'dodge':mouse.reaction==='freeze'?'sniff':'tap'):mouse.reaction==='limp'||mouse.reaction==='stunned'?'hurt':'hit';
+    const event={kind,mouse,pointerId,x:clamp(mouse.x/Math.max(1,width),0,1),expires:Date.now()+800};
+    if(this.ready)return this.cue(kind,event.x,mouse,{priority:2,bypassCooldown:true,pointerId});
+    // Keep only the latest ten contacts while the local gesture resumes iOS.
+    this.pendingContacts.push(event);if(this.pendingContacts.length>10)this.pendingContacts.shift();
+    this.unlock();return true;
+  }
+  flushContacts(){
+    if(!this.ready)return;
+    const pending=this.pendingContacts.splice(0);
+    if(!this.enabled||!this.active||this.settings.soundVolume===0||globalThis.document?.hidden)return;
+    for(const event of pending)if(event.expires>=Date.now())this.cue(event.kind,event.x,event.mouse,{priority:2,bypassCooldown:true,pointerId:event.pointerId});
+  }
+  cancelContactFeedback(mouse,pointerId=null,{cancelHold=true}={}){
+    const matchesPointer=event=>pointerId===null||event.pointerId===pointerId;
+    this.pendingContacts=this.pendingContacts.filter(event=>event.mouse!==mouse||!matchesPointer(event));
+    for(const voice of [...this.voices])if(voice.owner===mouse&&(voice.priority===2&&matchesPointer(voice)||voice.priority===1&&cancelHold))voice.cancel();
+    if(cancelHold){const seen=this.observations.get(mouse);if(seen)seen.held=false;}
+  }
+  hit(mouse,width,outcome){const seen=this.observations.get(mouse);if(seen)seen.held=false;return this.contactFeedback(mouse,width,outcome);}
   update(mice,time,width,height=Infinity){
     if(!this.enabled||!this.active||!this.ready)return;
     const density=this.settings.soundFrequency,visible=mouse=>mouse.state==='active'&&!(mouse.hiddenUntil>time)&&mouse.x>=0&&mouse.x<=width&&mouse.y>=0&&mouse.y<=height;
@@ -128,7 +154,7 @@ export class PreyAudio {
       const x=clamp(mouse.x/Math.max(1,width),0,1),held=!!mouse.hold?.active;
       const activity=visible(mouse)&&!mouse.hold&&!mouse.moving&&(mouse.speed||0)<12&&phase==='watch'&&(mouse.hunt?.fear||0)<.3&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time)&&mouse.activity?.at<=time&&mouse.activity.until>time?mouse.activity:null;
       const activityKey=activity?`${activity.kind}:${activity.at}`:null;
-      if(seen.activityKey&&seen.activityKey!==activityKey)for(const voice of [...this.voices])if(voice.owner===mouse)voice.cancel();
+      if(seen.activityKey&&seen.activityKey!==activityKey)for(const voice of [...this.voices])if(voice.owner===mouse&&voice.priority===0)voice.cancel();
       if(activity){
         const kind=({nibble:'nibble',groom:'groom',scratch:'hindlegscratch',stretch:'stretch',roll:'roll'})[activity.kind];
         const entered=seen.activityKey!==activityKey;if(entered)seen.activityPlayed=false;
@@ -140,12 +166,12 @@ export class PreyAudio {
       seen.activityKey=null;
       if(held){
         const hold=mouse.hold,dragSpeed=Math.hypot(hold.anchorVX||0,hold.anchorVY||0);
-        if(!seen.held){this.cue('dragstart',x);seen.dragNext=time+.7;seen.scratchNext=time+1.2;}
-        else if(dragSpeed>45&&time>=seen.dragNext){this.cue('dragloop',x);seen.dragNext=time+.7+this.rng()*.7;}
-        else if(['tail','forepaw','hindpaw'].includes(hold.part)&&time>=seen.scratchNext){this.cue('scratch',x);seen.scratchNext=time+1.4+this.rng()*1.5;}
+        if(!seen.held){this.cue('dragstart',x,mouse,{priority:1,bypassCooldown:true});seen.dragNext=time+.7;seen.scratchNext=time+1.2;}
+        else if(dragSpeed>45&&time>=seen.dragNext){this.cue('dragloop',x,mouse,{priority:1,bypassCooldown:true});seen.dragNext=time+.7+this.rng()*.7;}
+        else if(['tail','forepaw','hindpaw'].includes(hold.part)&&time>=seen.scratchNext){this.cue('scratch',x,mouse,{priority:1,bypassCooldown:true});seen.scratchNext=time+1.4+this.rng()*1.5;}
         seen.held=true;seen.next=time+2;continue;
       }
-      if(seen.held){seen.held=false;this.cue('dragrelease',x);}
+      if(seen.held){seen.held=false;this.cue('dragrelease',x,mouse,{priority:1,bypassCooldown:true});}
       const changed=seen.phase!==phase;
       seen.phase=phase;
       // One concealed rustle suggests a hiding place, then leave several seconds
@@ -199,5 +225,5 @@ export class PreyAudio {
     if(this.analyser?.getFloatTimeDomainData&&this.samples){this.analyser.getFloatTimeDomainData(this.samples);let peak=0;for(const sample of this.samples)peak=Math.max(peak,Math.abs(sample));this.signalPeak=Math.max(this.signalPeak,peak);}
     return this.signalPeak;
   }
-  diagnostics(){this.measure();return{state:this.context?.state||'locked',enabled:this.enabled,active:this.active,voices:this.voices.size,settings:{...this.settings},sampleCount:this.sampleBuffers.size,sampleTotal:recordedSamples.length,sampleErrors:this.sampleErrors.slice(0,3),audioSessionType:this.audioSession?.type||'unavailable',signalPeak:this.signalPeak,lastError:this.lastError,blockedReason:!this.enabled?'muted':this.settings.soundVolume===0?'volume-zero':!this.ready?(this.context?.state||'gesture-required'):this.lastError?'audio-error':null,played:this.played,last:this.lastPlayed};}
+  diagnostics(){this.measure();return{state:this.context?.state||'locked',enabled:this.enabled,active:this.active,voices:this.voices.size,pendingContacts:this.pendingContacts.length,settings:{...this.settings},sampleCount:this.sampleBuffers.size,sampleTotal:recordedSamples.length,sampleErrors:this.sampleErrors.slice(0,3),audioSessionType:this.audioSession?.type||'unavailable',signalPeak:this.signalPeak,lastError:this.lastError,blockedReason:!this.enabled?'muted':this.settings.soundVolume===0?'volume-zero':!this.ready?(this.context?.state||'gesture-required'):this.lastError?'audio-error':null,played:this.played,last:this.lastPlayed};}
 }

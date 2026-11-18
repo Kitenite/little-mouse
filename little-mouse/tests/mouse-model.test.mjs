@@ -49,3 +49,14 @@ test('pending head claims freeze the rendered anatomy before the hold threshold'
  for(let frame=0;frame<12;frame++)MouseScene.prototype.render.call(scene,[mouse],config,1+frame/60,1/60);
  assert.deepEqual([model.articulation.head,model.articulation.pelvis],before);disposeMouse(model);
 });
+test('feedback picking includes visible unclaimable mice without changing claim eligibility',async()=>{
+ const {MouseScene}=await import('../public/mouse3d.js'),{beginContact,createContacts}=await import('../public/contact.js');
+ const model=makeMouse(0,createMouseIdentity(91)),mouse={x:300,y:300,angle:0,state:'active',hiddenUntil:0},scene={models:[model]};
+ for(const state of [{hold:{pointerId:1}},{state:'defeated'},{invulnerableUntil:10}]){
+  Object.assign(mouse,{hold:undefined,state:'active',invulnerableUntil:0},state);
+  const hit=MouseScene.prototype.contactAt.call(scene,[mouse],300,300,1,{includeUnclaimable:true});
+  assert.equal(hit?.mouse,mouse);assert.equal(beginContact(createContacts(),mouse,hit,2,300,300,1,{},1),false);
+  if(mouse.hold||mouse.state==='defeated')assert.equal(MouseScene.prototype.contactAt.call(scene,[mouse],300,300,1),null);
+ }
+ model.group.visible=false;assert.equal(MouseScene.prototype.contactAt.call(scene,[mouse],300,300,1,{includeUnclaimable:true}),null);disposeMouse(model);
+});

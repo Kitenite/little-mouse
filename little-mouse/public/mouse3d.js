@@ -53,8 +53,8 @@ clearEffects(){this.blood.clear();}
 diagnostics(){return{pixelRatio:this.renderer.getPixelRatio(),width:this.canvas.width,height:this.canvas.height,models:this.models.length,activeBlood:this.blood.active,render:{...this.renderer.info.render},memory:{...this.renderer.info.memory}};}
 // Hit-test the current rendered tail and articulated paw locations rather
 // than one large body circle. Input coordinates are CSS pixels in the arena.
-contactAt(mice,x,y,size=1){
- for(let index=mice.length-1;index>=0;index--){const data=mice[index],model=this.models[index];if(!model?.group.visible||data.hold||data.state==='away'||data.state==='defeated')continue;const c=Math.cos(data.angle),sn=Math.sin(data.angle),dx=(x-data.x)/size,dy=(y-data.y)/size,localX=dx*c+dy*sn,localY=dx*sn-dy*c,hit=part=>({mouse:data,index,part,localX,localY});
+contactAt(mice,x,y,size=1,{includeUnclaimable=false}={}){
+ for(let index=mice.length-1;index>=0;index--){const data=mice[index],model=this.models[index];if(!model?.group.visible||data.state==='away'||!includeUnclaimable&&(data.hold||data.state==='defeated'))continue;const c=Math.cos(data.angle),sn=Math.sin(data.angle),dx=(x-data.x)/size,dy=(y-data.y)/size,localX=dx*c+dy*sn,localY=dx*sn-dy*c,hit=part=>({mouse:data,index,part,localX,localY});
   let tailContact=null;{const p=model.tail.geometry.attributes.position.array;let best=Infinity,fraction=0;for(let ring=6;ring<48;ring++){const a=ring*27,b=(ring+1)*27,ax=(p[a]+p[a+12])*.5,ay=(p[a+1]+p[a+13])*.5,bx=(p[b]+p[b+12])*.5,by=(p[b+1]+p[b+13])*.5,vx=bx-ax,vy=by-ay,u=Math.max(0,Math.min(1,((localX-ax)*vx+(localY-ay)*vy)/(vx*vx+vy*vy||1))),distance=Math.hypot(localX-ax-vx*u,localY-ay-vy*u);if(distance<best){best=distance;fraction=(ring+u)/48;}}
    if(best<Math.max(4,8/size)){const root=articulatePoint(-36*model.traits.bodyLength,0,5,model.articulation);tailContact={...hit('tail'),fraction,tailRoot:root[0],tailRootX:root[0],tailRootY:root[1],tailLength:87*model.traits.tailLength};}
   }

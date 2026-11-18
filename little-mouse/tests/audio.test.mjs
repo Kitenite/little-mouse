@@ -258,3 +258,90 @@ test('stopping while an audition awaits recordings prevents delayed playback aft
  const audition=audio.testSound('roll');await new Promise(resolve=>setImmediate(resolve));audio.stop();release({duration:.3});await audition;
  assert.equal(audio.played,0);assert.equal(audio.voices.size,0);
 });
+
+test('each direct touch and harmless outcome bypasses cooldown and ambient congestion',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ for(let i=0;i<3;i++){context.currentTime=i;audio.cue('rustle');}
+ const ambient=[...audio.voices];assert.equal(ambient.length,3);
+ const mouse={x:100,reaction:'dodge'};
+ for(let i=0;i<8;i++){const before=audio.played;assert.equal(audio.contactFeedback(mouse,1000),true);assert.equal(audio.played,before+1);assert.equal(audio.lastPlayed.kind,'tap');assert.equal(audio.lastPlayed.priority,2);assert.ok(audio.voices.size<=3);}
+ assert.equal(ambient.some(voice=>audio.voices.has(voice)),false);
+ const before=audio.played;assert.equal(audio.hit(mouse,1000,'harmless'),true);assert.equal(audio.played,before+1);assert.equal(audio.lastPlayed.kind,'dodge');
+ assert.equal(audio.cue('peek'),false);assert.equal(audio.voices.size,3);
+});
+test('priority harmless contact has quiet fallback even when its movement recording is missing',async()=>{
+ const {audio}=setup();audio.sampleBuffers.clear();audio.setState(true,true);await audio.unlock();
+ assert.equal(audio.contactFeedback({x:100,reaction:'dodge'},1000,'harmless'),true);
+ assert.equal(audio.lastPlayed.source,'quiet-noise-fallback');assert.equal(audio.lastPlayed.kind,'dodge');
+});
+test('hold friction preempts ambience but cannot steal voices from direct contacts',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hold:{active:true,part:'tail',anchorVX:100,anchorVY:0}};
+ for(let i=0;i<3;i++){context.currentTime=i;audio.cue('rustle');}
+ audio.update([mouse],2,1000,700);assert.equal(audio.lastPlayed.kind,'dragstart');assert.equal(audio.lastPlayed.priority,1);
+ for(let i=0;i<3;i++)audio.contactFeedback(mouse,1000);
+ const contacts=[...audio.voices],played=audio.played;context.currentTime=3;audio.update([mouse],3,1000,700);
+ assert.equal(audio.played,played);assert.ok(contacts.every(v=>audio.voices.has(v)));
+});
+test('first-gesture feedback survives asynchronous resume, queues bounded contacts and never replays cancelled input',async()=>{
+ for(const cancel of [null,a=>a.setState(false,true),a=>a.setState(true,false),a=>a.configure({soundVolume:0}),a=>a.stop()]){
+  const {audio,context}=setup();let resume;context.resume=()=>new Promise(resolve=>{resume=()=>{context.state='running';context.onstatechange?.();resolve();};});
+  audio.setState(true,true);for(let i=0;i<12;i++)assert.equal(audio.contactFeedback({x:100},1000),true);
+  assert.equal(audio.pendingContacts.length,10);assert.equal(audio.played,0);if(cancel)cancel(audio);resume();await Promise.resolve();
+  assert.equal(audio.played,cancel?0:10);assert.equal(audio.pendingContacts.length,0);assert.ok(audio.voices.size<=3);
+ }
+});
+test('expired, hidden, muted, zero-volume and paused contacts never start later',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);let resume;
+ context.resume=()=>new Promise(resolve=>{resume=()=>{context.state='running';resolve();};});audio.contactFeedback({x:0},1000);
+ audio.pendingContacts[0].expires=Date.now()-1;resume();await Promise.resolve();assert.equal(audio.played,0);
+ for(const [enabled,active,volume] of [[false,true,.7],[true,false,.7],[true,true,0]]){audio.setState(enabled,active);audio.configure({soundVolume:volume});assert.equal(audio.contactFeedback({x:0},1000),false);}
+ audio.setState(true,true);audio.configure({soundVolume:.7});const previous=globalThis.document;
+ try{globalThis.document={hidden:true};assert.equal(audio.contactFeedback({x:0},1000),false);assert.equal(audio.cue('tap'),false);}finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
+ assert.equal(audio.played,0);
+});
+
+test('an older resume failure cannot cancel a newer gesture waiting to activate',async()=>{
+ const {audio,context}=setup();const resumes=[];
+ context.resume=()=>new Promise((resolve,reject)=>resumes.push({resolve,reject}));audio.setState(true,true);
+ audio.contactFeedback({x:10},1000);audio.contactFeedback({x:20},1000);assert.equal(audio.pendingContacts.length,2);
+ resumes[0].reject(Error('earlier activation failed'));await Promise.resolve();assert.equal(audio.pendingContacts.length,2);
+ context.state='running';resumes[1].resolve();await Promise.resolve();assert.equal(audio.played,2);assert.equal(audio.lastError,null);
+});
+
+test('pointer cancellation removes only that mouse pending feedback before resume',async()=>{
+ const {audio,context}=setup();let resume;context.resume=()=>new Promise(resolve=>{resume=()=>{context.state='running';resolve();};});audio.setState(true,true);
+ const cancelled={x:50},other={x:100};audio.contactFeedback(cancelled,1000);audio.contactFeedback(other,1000);audio.cancelContactFeedback(cancelled);
+ assert.equal(audio.pendingContacts.length,1);resume();await Promise.resolve();assert.equal(audio.played,1);assert.equal([...audio.voices][0].owner,other);
+});
+test('pointer cancellation stops contact and hold voices without a phantom release',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'},hold:{active:true,part:'tail',anchorVX:0,anchorVY:0}};
+ audio.contactFeedback(mouse,1000);audio.update([mouse],0,1000,700);assert.equal(audio.voices.size,2);
+ audio.cancelContactFeedback(mouse);delete mouse.hold;assert.equal(audio.voices.size,0);assert.equal(audio.observations.get(mouse).held,false);
+ const played=audio.played;context.advance(.1);audio.update([mouse],.1,1000,700);assert.equal(audio.played,played);
+});
+test('interrupting an old idle activity does not cancel new contact feedback for the same mouse',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'},activity:{kind:'groom',at:0,until:2}};
+ audio.update([mouse],0,1000,700);audio.contactFeedback(mouse,1000);delete mouse.activity;
+ context.advance(.1);audio.update([mouse],.1,1000,700);assert.ok([...audio.voices].some(voice=>voice.owner===mouse&&voice.priority===2));
+});
+
+test('canceling a second pointer preserves another pointer queued on the same mouse',async()=>{
+ const {audio,context}=setup();let resume;context.resume=()=>new Promise(resolve=>{resume=()=>{context.state='running';resolve();};});audio.setState(true,true);
+ const mouse={x:100};audio.contactFeedback(mouse,1000,'touch',1);audio.contactFeedback(mouse,1000,'touch',2);
+ audio.cancelContactFeedback(mouse,2,{cancelHold:false});assert.equal(audio.pendingContacts.length,1);assert.equal(audio.pendingContacts[0].pointerId,1);
+ resume();await Promise.resolve();assert.equal(audio.played,1);assert.equal([...audio.voices][0].pointerId,1);
+});
+test('canceling a nonowner pointer leaves direct owner and hold sounds without restarting the hold',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'},hold:{active:true,part:'tail',anchorVX:0,anchorVY:0}};
+ audio.contactFeedback(mouse,1000,'touch',1);audio.update([mouse],0,1000,700);audio.contactFeedback(mouse,1000,'touch',2);
+ assert.equal(audio.voices.size,3);audio.cancelContactFeedback(mouse,2,{cancelHold:false});
+ assert.equal(audio.voices.size,2);assert.equal(audio.observations.get(mouse).held,true);
+ assert.ok([...audio.voices].some(v=>v.priority===2&&v.pointerId===1));assert.ok([...audio.voices].some(v=>v.priority===1));
+ const played=audio.played;context.advance(.1);audio.update([mouse],.1,1000,700);assert.equal(audio.played,played);
+ audio.cancelContactFeedback(mouse,1,{cancelHold:true});delete mouse.hold;assert.equal(audio.voices.size,0);assert.equal(audio.observations.get(mouse).held,false);
+ context.advance(.2);audio.update([mouse],.2,1000,700);assert.equal(audio.played,played);
+});
