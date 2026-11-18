@@ -91,3 +91,27 @@ test('fast paw and tail dragging carries the body instead of leaving the contact
 });
 test('paused and invalid time steps do not move overlapping mice or contact anchors',()=>{const a=mouse(),b=mouse(),c=createContacts();beginContact(c,a,{part:'body'},1,a.x,a.y,0,cfg,cfg.size);moveContact(c,1,900,600,cfg.size,.1);const before=JSON.stringify([a,b]);for(const dt of [0,-1,NaN,Infinity]){stepMice([a,b],cfg,1,dt,1024,768);assert.equal(JSON.stringify([a,b]),before);}});
 test('collision moves the free mouse without displacing a claimed mouse',()=>{const a={...mouse(),angle:0},b={...mouse(),x:410},c=createContacts();beginContact(c,a,{part:'body'},1,a.x,a.y,0,cfg,cfg.size);updateContacts(c,.3);const at=[a.x,a.y];stepMice([a,b],cfg,.4,1/60,1024,768);assert.deepEqual([a.x,a.y],at);assert.ok(Math.hypot(b.x-a.x,b.y-a.y)>=2*radius(cfg.size,1024,768)-.001);});
+
+
+test('release toss depends on integrated anchor motion, not redundant pointer events',()=>{
+ const run=redundant=>{
+  const m={...mouse(),x:300,y:300,angle:0},c=createContacts();beginContact(c,m,{part:'body'},1,300,300,0,cfg,cfg.size);
+  for(let i=1;i<=18;i++){updateContacts(c,i/60);stepMice([m],cfg,i/60,1/60,2048,1536);}
+  moveContact(c,1,900,300,cfg.size,.3);
+  for(let i=19;i<=36;i++){updateContacts(c,i/60);stepMice([m],cfg,i/60,1/60,2048,1536);}
+  if(redundant)moveContact(c,1,900,300,cfg.size,.6);
+  const anchorVelocity=m.hold.anchorVX,result=endContact(c,1,.6,2048,1536,cfg.size,cfg,()=>0);
+  return{outcome:result.outcome,vx:m.throwVX,anchorVelocity,x:m.x};
+ };
+ const a=run(false),b=run(true);assert.equal(a.outcome,'tossed');assert.deepEqual(a,b);assert.ok(a.vx>790&&a.vx<=800);
+});
+test('stationary settled release and cancellation never reuse prior drag energy',()=>{
+ for(const cancel of [false,true]){
+  const m={...mouse(),x:300,y:300,angle:0},c=createContacts();beginContact(c,m,{part:'body'},1,300,300,0,cfg,cfg.size);
+  moveContact(c,1,380,300,cfg.size,.3);
+  for(let i=1;i<=120;i++){updateContacts(c,i/60);stepMice([m],cfg,i/60,1/60,2048,1536);}
+  moveContact(c,1,380,300,cfg.size,2);assert.ok(Math.hypot(m.hold.anchorVX,m.hold.anchorVY)<1e-6);
+  if(cancel){cancelContact(c,1);assert.equal(endContact(c,1,2,2048,1536,cfg.size,cfg),null);assert.equal(m.throwVX,undefined);}
+  else assert.equal(endContact(c,1,2,2048,1536,cfg.size,cfg,()=>0).outcome,'harmless');
+ }
+});

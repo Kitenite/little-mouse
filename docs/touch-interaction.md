@@ -23,7 +23,9 @@ screen; retain those touch areas and route around them instead of running undern
   use a fraction-dependent tether and preserve rearward tail geometry.
 - Drag anchors follow at a bounded 800 CSS px/s. Paw/tail bodies travel with their anchors,
   retaining local escape/tether motion. Claimed mice remain kinematic during collisions.
-  Release uses recent filtered actual anchor motion for a
+  Release recency is stamped by actual integrated anchor displacement, not pointer-event
+  arrival; redundant no-displacement events cannot change the outcome. Release uses
+  recent filtered actual anchor motion for a
   bounded toss; zero-time events and huge pointer jumps cannot create unbounded velocity.
 - Each completed tap/hold release counts once. Move events never repeatedly injure a mouse.
 - Cancel, lost capture, blur, pause, hide, resize and reload clear claims without hit outcomes.

@@ -19,7 +19,7 @@ export function beginContact(contacts,m,hit,pointerId,x,y,time,config,size){
  if(!m||!hit||m.hold||contacts.has(pointerId)||m.state==='away'||m.state==='defeated'||m.hiddenUntil>time||(m.invulnerableUntil||0)>time)return false;
  const local=localContact(m,x,y,size);
  const traits=m.identity?physicalTraits(m.identity,config):{bodyLength:config.bodyLength||1,tailLength:config.tailLength||1};
- const hold={part:hit.part,x,y,targetX:x,targetY:y,anchorVX:0,anchorVY:0,lastMoveAt:time,localX:hit.localX??local.localX,localY:hit.localY??local.localY,fraction:hit.fraction??.5,legIndex:hit.legIndex,pawOffsetX:hit.pawOffsetX,pawOffsetY:hit.pawOffsetY,startedAt:time,pointerId,active:false,angle:m.angle,originX:x,originY:y,threshold:clamp(Number(config.holdThreshold)||.25,.15,1)};
+ const hold={part:hit.part,x,y,targetX:x,targetY:y,anchorVX:0,anchorVY:0,lastAnchorMoveAt:time,lastMoveAt:time,localX:hit.localX??local.localX,localY:hit.localY??local.localY,fraction:hit.fraction??.5,legIndex:hit.legIndex,pawOffsetX:hit.pawOffsetX,pawOffsetY:hit.pawOffsetY,startedAt:time,pointerId,active:false,angle:m.angle,originX:x,originY:y,threshold:clamp(Number(config.holdThreshold)||.25,.15,1)};
  m.hold=hold;m.vx=m.vy=m.speed=0;m.moving=false;m.turnRate=0;
  hold.tailRoot=hit.tailRoot??-36*traits.bodyLength;hold.tailRootX=hit.tailRootX??hold.tailRoot;hold.tailRootY=hit.tailRootY??0;hold.tailLength=hit.tailLength??87*traits.tailLength;
  contacts.set(pointerId,{m,hold});return true;
@@ -29,8 +29,8 @@ export function clearContacts(contacts){for(const id of [...contacts.keys()])can
 export function moveContact(contacts,pointerId,x,y,size,time){const record=contacts.get(pointerId);if(!record||!Number.isFinite(x+y))return false;
  record.hold.targetX=x;record.hold.targetY=y;record.hold.lastMoveAt=time??record.hold.lastMoveAt;return true;
 }
-export function advanceContactAnchor(m,time,dt){const hold=m.hold;if(!hold||dt<=0)return;const dx=hold.targetX-hold.x,dy=hold.targetY-hold.y,d=Math.hypot(dx,dy),limit=800*dt,scale=d>0?Math.min(1,limit/d):0;
- const vx=dx*scale/dt,vy=dy*scale/dt;hold.x+=dx*scale;hold.y+=dy*scale;if(hold.active&&hold.part!=='body'&&hold.part!=='head'){m.x+=dx*scale;m.y+=dy*scale;}hold.anchorVX+=(vx-hold.anchorVX)*Math.min(1,dt*30);hold.anchorVY+=(vy-hold.anchorVY)*Math.min(1,dt*30);}
+export function advanceContactAnchor(m,time,dt){const hold=m.hold;if(!hold||!Number.isFinite(dt)||dt<=0)return;const dx=hold.targetX-hold.x,dy=hold.targetY-hold.y,d=Math.hypot(dx,dy),limit=800*dt,scale=d>0?Math.min(1,limit/d):0;
+ const vx=dx*scale/dt,vy=dy*scale/dt;hold.x+=dx*scale;hold.y+=dy*scale;if(d*scale>1e-9)hold.lastAnchorMoveAt=time;if(hold.active&&hold.part!=='body'&&hold.part!=='head'){m.x+=dx*scale;m.y+=dy*scale;}hold.anchorVX+=(vx-hold.anchorVX)*Math.min(1,dt*30);hold.anchorVY+=(vy-hold.anchorVY)*Math.min(1,dt*30);}
 function refreshObstacles(contacts,time){contacts.obstacles.clear();for(const[id,p]of contacts.paws)contacts.obstacles.set(id,p);for(const[id,p]of contacts.recentPaws){const memory=clamp(1-(time-p.releasedAt)/4,0,1);if(memory<=0){contacts.recentPaws.delete(id);continue;}if(contacts.obstacles.size<10)contacts.obstacles.set(`recent:${id}`,{...p,memory,recent:true});}}
 export function updateContacts(contacts,time,mice){refreshObstacles(contacts,time);for(const[id,{m,hold}]of contacts){if(m.hold!==hold||(mice&&!mice.includes(m))){cancelContact(contacts,id);continue;}hold.active=time-hold.startedAt>=hold.threshold;}}
 export function endContact(contacts,pointerId,time,w,h,size,config,rng=Math.random){
@@ -39,7 +39,7 @@ export function endContact(contacts,pointerId,time,w,h,size,config,rng=Math.rand
  const record=contacts.get(pointerId);if(!record)return null;
  const {m,hold}=record;cancelContact(contacts,pointerId);
  const held=hold.active||time-hold.startedAt>=hold.threshold;
- const velocity=Math.hypot(hold.anchorVX||0,hold.anchorVY||0),recent=time-hold.lastMoveAt<.15;
+ const velocity=Math.hypot(hold.anchorVX||0,hold.anchorVY||0),recent=Number.isFinite(hold.lastAnchorMoveAt)&&time>=hold.lastAnchorMoveAt&&time-hold.lastAnchorMoveAt<.15;
  if(recent&&velocity>140&&time-hold.startedAt>.08){const scale=Math.min(1,900/velocity);m.throwVX=hold.anchorVX*scale;m.throwVY=hold.anchorVY*scale;m.vx=m.throwVX;m.vy=m.throwVY;m.tossAt=time;m.tossUntil=time+.65;m.state='active';m.reaction='tossed';m.hitPart=hold.part;m.hitAt=time;m.harmlessUntil=m.injuredUntil=m.hurtUntil=m.scrambleUntil=0;m.invulnerableUntil=time+.8;if(m.hunt)m.hunt.phase='toss';return{mouse:m,outcome:'tossed',part:hold.part,held,x:hold.x,y:hold.y};}
  m.invulnerableUntil=0; // The claim was acquired while hittable; resolve once.
  const outcome=pressMouse(m,hold.x,hold.y,time,w,h,size,rng,{...config,hitPart:hold.part,held,holdDuration:time-hold.startedAt});
