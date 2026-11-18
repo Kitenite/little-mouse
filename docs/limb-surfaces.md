@@ -20,18 +20,18 @@ transforms remain available for existing invariants and tools; they cannot protr
 Paw groups and toes retain their distinct fine skin, transforms and contact dimensions.
 The new surface uses the existing fine limb coat material and stable UVs. No new textures.
 
-`addLimbSurfaceHair` allocates at construction, driven by armHairiness and the identity RNG.
-Up to 520 hairs per limb attach to envelope vertices; their roots and tips update alongside
-the skin. The supported setting maximum currently yields 450 hairs. This replaces the old
-upper/lower sphere hair children. Hair direction is a short surface-normal approximation.
+The runtime uses opaque tapered `createFurVolume` tufts on the final solved surface, driven by
+armHairiness, furLength and Fuzziness; see [fur-volume.md](fur-volume.md). They replace the
+original sphere hair children and the intermediate envelope line hairs. Four limb volumes
+share one coat material, sample root UVs, and do not apply the anatomy shader a second time.
 
 ## Resource and deformation bounds
 
 Position/normal/UV/index buffers and temporary vectors are allocated once. Animation mutates
-existing position and normal buffers, plus hair positions; no new geometry, arrays, materials
+existing position and normal buffers, plus volume tuft positions/normals; no new geometry, arrays, materials
 or textures are created by the surface update. The loop bound is fixed by ring/hair counts.
 Four envelope meshes add 1,100 vertices / 2,016 triangles per mouse, while hidden spheres
-stop drawing. Four surface hair draws replace eight bone hair draws.
+stop drawing. Four surface volume draws replace eight bone hair draws.
 Existing model traversal disposes envelope/hair geometries and shared model materials once;
 shared regional texture maps retain their existing bounded-cache lifecycle.
 

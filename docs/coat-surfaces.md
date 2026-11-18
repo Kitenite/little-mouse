@@ -2,7 +2,8 @@
 
 ## Contract
 
-Implemented in `little-mouse/public/coat-surfaces.js`; no geometry or audio changes.
+Region materials are implemented in `little-mouse/public/coat-surfaces.js`.
+Opaque geometric coat depth is owned by [fur volume](fur-volume.md); no audio changes.
 `createSurfaceCache(T)` owns a fixed ten-map cache: six linear relief maps, four sRGB skin
 albedo maps, each 256². `applyCoatSurfaces(T, cache, parts)` runs once during construction.
 Parts: `{bodyMaterial, fur, ears, legRig, tail, nose, traits}`. Each leg supplies
@@ -18,8 +19,8 @@ texture creation occurs. Geometry and contact ownership remains with the anatomy
 `map.userData.mouseSurface` marks shared cache resources. Exclude these from per-mouse
 texture disposal. Material clones remain model-owned; the replaced skin material and
 original ear maps are disposed. The existing fur material remains used by the jaw.
-Eyes retain the original glossy physical material. Existing body/arm geometric hair-density
-and fuzz controls remain intact; new microtexture is surface detail independent of them.
+Eyes retain the original glossy physical material. Body/arm geometric hair-density
+and Fuzziness controls remain independent from this microtexture.
 
 Memory ceiling added: 10 × 256² × 4 × 4/3 = 3.33 MiB GPU including mipmaps, plus about
 2.5 MiB canvas backing. Existing named coat maps remain bounded at 22 (~7.33 MiB GPU).

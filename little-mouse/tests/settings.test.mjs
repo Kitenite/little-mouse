@@ -51,3 +51,6 @@ test('fresh startup keeps the rich preset and current user choices survive migra
  for(const[key,value]of Object.entries(settingsDefaults))assert.equal(fresh[key],value,key);
  const custom={...fresh,count:1,hide:8,sound:false};assert.deepEqual(upgradeSettings(custom),custom);
 });
+test('Fuzziness keeps the persisted numeric softness key and shared control label',async()=>{
+ const {identityControls}=await import('../public/mouse-identity.js');assert.equal(settingsSchema.furSoftness.label,'Fuzziness');assert.equal(identityControls.furSoftness.label,'Fuzziness');assert.equal(settingsSchema.furSoftness.min,0);assert.equal(settingsSchema.furSoftness.max,1);for(const value of [0,.5,1])assert.equal(cleanSettings({furSoftness:value}).furSoftness,value);
+});

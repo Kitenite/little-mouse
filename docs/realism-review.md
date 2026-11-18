@@ -67,7 +67,7 @@ Fancy mice are domestic variation, not a separate wild species.
   artistic approximation, not measured playback of that motor pattern.
 - Fur: short rooted fibers can lag acceleration; density, length and silhouette
   softness are independent. Default limb fuzz is finer than trunk fur.
-  Coat softness affects the narrow edge, while eyes, nose, paws and tail stay crisp.
+  Fuzziness changes opaque tuft loft/spread; eyes, ears, nose, paws and tail retain distinct materials.
 - Tail: preserve segment length and root attachment; bend smoothly with turns,
   braking and constraint. Ground contact must not kink, tunnel or lengthen the tail.
 - Body: head may orient before torso and pelvis follows through; joints and coat
@@ -108,7 +108,7 @@ It is commercial, not CC0; no asset was purchased, downloaded or approved for bu
    nibbling, hold/drag/release, sudden contact, and reset after a hidden interval.
 4. At default and extreme controls, reject detached roots, stretching, inverted
    joints, ground penetration, explosive oscillation, persistent jitter or NaNs.
-5. Inspect narrow fur softness on both light and dark floors; preserve eye detail.
+5. Inspect Fuzziness on both light and dark floors; preserve eye detail.
 6. Verify event/clip/source logs, silence when appropriate, nonrepetition and mix
    peaks; then listen on an actual iPad before calling timbre or loudness approved.
 7. Record screenshot/build identifier and resolved findings here; carry only the

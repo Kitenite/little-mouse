@@ -42,6 +42,7 @@ export function createLimbSurface(T,parent,material,layout){
   }
   for(let axis=0;axis<3;axis++){positions[rootCap*3+axis]=anchor[axis];positions[tipCap*3+axis]=foot[axis];normals[rootCap*3+axis]=-u.getComponent(axis);normals[tipCap*3+axis]=v.getComponent(axis);}
   geometry.attributes.position.needsUpdate=true;geometry.attributes.normal.needsUpdate=true;
+  if(surface.volume)surface.volume.update();
   if(surface.hair){const {data,roots,lengths,geometry:hairGeometry}=surface.hair;for(let i=0;i<roots.length;i++){const root=roots[i]*3,k=i*6;for(let axis=0;axis<3;axis++){data[k+axis]=positions[root+axis];data[k+3+axis]=positions[root+axis]+normals[root+axis]*lengths[i];}}hairGeometry.attributes.position.needsUpdate=true;}
  }
  return surface;

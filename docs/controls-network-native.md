@@ -12,6 +12,8 @@ The native app must remain horizontal: allow both landscape sides and no portrai
 
 The game is `/`; the companion is `/companion`. `?surface=ipad` selects the tablet layout.
 Both use `public/settings.js` for validated settings and `controls.js` for grouped controls.
+Fuzziness is an independent anatomy control in game, companion and playground; it reuses the
+persisted numeric `furSoftness` key (0–1), with tuft loft/spread distinct from length and density.
 Profiles persist locally. Pairing uses a 16-character code or companion link.
 The game polls at 400 ms; the companion at 500 ms. This is live polling, not hard realtime.
 Commands include play, pause, steer, recall and reload. Stale commands are rejected.

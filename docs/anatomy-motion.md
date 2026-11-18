@@ -36,7 +36,7 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 
 ## Implemented refinements; visual validation pending
 
-Independent arm length/thickness, body/arm hairiness and fur softness controls now feed the
+Independent arm length/thickness, body/arm hairiness and Fuzziness controls now feed the
 renderer. Ribcage, waist and pelvis width controls blend along the single surface, with a
 mildly narrower default waist. Seeded regional variation preserves legacy coat/profile draws;
 persisted older identities receive missing regional defaults without changing the individual.
@@ -53,7 +53,10 @@ All four limbs now use one connected tapered envelope per solved joint chain, wi
 elbows/knees and covered end rings. The former shoulder/bone/joint spheres stay hidden while
 retaining their transforms. Surface-attached hairs follow the envelope; distinct paw skin and
 paw contact transforms remain unchanged. See [limb surface contract and evidence](limb-surfaces.md).
-`furLength`, `furSway`, hair density and softness remain distinct parameters.
+Opaque tapered tufts now replace the line coat and transparent point halo on body/head/limbs.
+`furLength`, `furSway`, hair density and Fuzziness (`furSoftness`) remain distinct parameters.
+Fuzziness changes tuft loft/spread without changing count or nominal length. See
+[fur volume contract and budget](fur-volume.md) for attachment, lighting and validation.
 The rich launch preset uses morphology variety 0.8, head/pelvis turns and tail/fur motion 1.15,
 ear/whisker motion 1.2, grooming frequency 1.25 and nibbling frequency 1.2. These amplify
 bounded responses modestly; spring stiffness/damping, mesh density and anatomical proportions

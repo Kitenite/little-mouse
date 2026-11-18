@@ -126,8 +126,8 @@ test('spine-bent tail pins the selected rendered material ring during dragging',
 });
 test('continuous limb surfaces hide internal joints and dispose their bounded buffers',()=>{
  const model=makeMouse(0,createMouseIdentity(314159),{armHairiness:1.5,armWidth:1.35});let disposed=0;
- for(const leg of model.legRig.legs){for(const part of ['shoulder','upper','lower','knee'])assert.equal(leg[part].visible,false);assert.equal(leg.surface.mesh.material,leg.upper.material);for(const geo of [leg.surface.geometry,leg.surface.hair.geometry])geo.addEventListener('dispose',()=>disposed++);}
- for(const held of [undefined,{index:0,x:-40,y:-30,z:3},{index:3,x:35,y:20,z:3}]){model.animate(1,true,120,1/60,1,.8,false,{heldPaw:held});for(const leg of model.legRig.legs){assert.deepEqual(leg.paw.position.toArray(),leg.solution.foot);assert.equal(leg.surface.hair.data,leg.surface.hair.geometry.attributes.position.array);}}
+ for(const leg of model.legRig.legs){for(const part of ['shoulder','upper','lower','knee'])assert.equal(leg[part].visible,false);assert.equal(leg.surface.mesh.material,leg.upper.material);for(const geo of [leg.surface.geometry,leg.surface.volume.geometry])geo.addEventListener('dispose',()=>disposed++);}
+ for(const held of [undefined,{index:0,x:-40,y:-30,z:3},{index:3,x:35,y:20,z:3}]){model.animate(1,true,120,1/60,1,.8,false,{heldPaw:held});for(const leg of model.legRig.legs){assert.deepEqual(leg.paw.position.toArray(),leg.solution.foot);assert.equal(leg.surface.volume.geometry.attributes.position.array,leg.surface.volume.geometry.attributes.position.array);}}
  disposeMouse(model);assert.equal(disposed,8);
 });
 test('active drag yields free regions while reachable all-four paw and tail pins stay fixed',()=>{
@@ -145,4 +145,21 @@ test('active drag yields free regions while reachable all-four paw and tail pins
   assert.ok(Math.hypot(center(lo,0)*(1-u)+center(hi,0)*u-tailHold.x,center(lo,1)*(1-u)+center(hi,1)*u-tailHold.y)<.25);
   disposeMouse(model);
  }
+});
+test('volume coat inherits drag uniforms once, obeys live roughness, and disposes without shared maps',async()=>{
+ const {updateFurRoughness}=await import('../public/fur-volume.js'),model=makeMouse(0,createMouseIdentity(314159));
+ const makeShader=()=>({uniforms:{},vertexShader:'#include <beginnormal_vertex>\n#include <begin_vertex>'});const body=makeShader(),fur=makeShader();model.body.material.onBeforeCompile(body);model.bodyFur.mesh.material.onBeforeCompile(fur);for(const key of ['anatomyPose','anatomySpine','anatomyOffset'])assert.equal(fur.uniforms[key],body.uniforms[key]);
+ for(const roughness of [.5,.94,1]){updateFurRoughness(model,roughness);assert.equal(model.bodyFur.mesh.material.roughness,roughness);for(const leg of model.legRig.legs){assert.equal(leg.surface.volume.mesh.material.roughness,roughness);assert.equal(leg.surface.mesh.material.roughness,roughness);}}
+ const geometries=[model.bodyFur.geometry,...model.legRig.legs.map(l=>l.surface.volume.geometry)],materials=new Set([model.bodyFur.mesh.material,...model.legRig.legs.map(l=>l.surface.volume.mesh.material)]);let disposed=0,maps=0;for(const resource of [...geometries,...materials])resource.addEventListener('dispose',()=>disposed++);model.fur.map.addEventListener('dispose',()=>maps++);disposeMouse(model);assert.equal(disposed,7);assert.equal(maps,0);
+});
+test('fur sway projects in posed normal frame under combined bend, and pause keeps roots fixed',()=>{
+ const model=makeMouse(0,createMouseIdentity(81)),motion={x:0,y:0,heading:0,size:1};for(let i=0;i<80;i++)model.animate(i/60,true,250,1/60,1,1,false,motion,{});
+ assert.ok(Math.abs(model.articulation.head)+Math.abs(model.articulation.spine)>.1);
+ const shader={uniforms:{},vertexShader:'#include <beginnormal_vertex>\n#include <begin_vertex>'};model.bodyFur.mesh.material.onBeforeCompile(shader);
+ assert.ok(shader.vertexShader.indexOf('transformed=articulateMouse(transformed);')<shader.vertexShader.indexOf('vec3 posedHairNormal=articulateMouseNormal(position,hairNormal);'));
+ assert.match(shader.vertexShader,/hairDisplacement-=posedHairNormal\*min\(0.0,dot\(hairDisplacement,posedHairNormal\)\)/);
+ // Evaluate the same finite-difference posed normal with a nonzero group-local sway.
+ const p=[35,8,20],n=[.5,.8,.2],state=model.articulation,f=articulatePoint(...p,state),dx=articulatePoint(p[0]+.01,p[1],p[2],state),dy=articulatePoint(p[0],p[1]+.01,p[2],state),a=(dx[0]-f[0])/.01,b=(dy[0]-f[0])/.01,c=(dx[1]-f[1])/.01,d=(dy[1]-f[1])/.01,det=a*d-b*c,normal=[(d*n[0]-c*n[1])/det,(-b*n[0]+a*n[1])/det,n[2]],norm=Math.hypot(...normal);for(let i=0;i<3;i++)normal[i]/=norm;
+ const displacement=[-1,-2,.1],dot=normal.reduce((sum,v,i)=>sum+v*displacement[i],0);for(let i=0;i<3;i++)displacement[i]-=normal[i]*Math.min(0,dot);assert.ok(normal.reduce((sum,v,i)=>sum+v*displacement[i],0)>-1e-10);
+ const pose={...model.articulation},roots=model.legRig.legs.map(l=>Array.from(l.surface.volume.geometry.attributes.position.array));model.animate(2,true,250,0,1,1,false,motion,{});assert.deepEqual(model.articulation,pose);for(let i=0;i<4;i++)assert.deepEqual(Array.from(model.legRig.legs[i].surface.volume.geometry.attributes.position.array),roots[i]);disposeMouse(model);
 });
