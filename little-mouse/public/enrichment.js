@@ -132,6 +132,8 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   }
   if(a.phase==='touch'&&m.state!=='hurt'&&m.state!=='defeated') {m.reaction=null;enter(m,'watch',time,config,w,h,rng,director);}
   if(m.state==='hurt'||m.state==='defeated'||a.phase==='injury'||(m.injuredUntil||0)>time) {
+    // Injury owns the response. Do not replay a pre-impact decision on reentry.
+    a.sensed=director.serial;delete a.reactAt;delete a.reactKind;delete a.lookAt;
     a.phase='injury';m.huntSpeed=1;
     if(m.state==='away') {enter(m,'hidden',time,config,w,h,rng,director);return true;}
     updateLifecycle(m,time,w,h,config.size,config.hide,rng,config);

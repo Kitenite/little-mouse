@@ -28,9 +28,26 @@
 - Regression evidence: final two cases in `little-mouse/tests/hunt-policy.test.mjs`.
 - Independent critic reproduced twice: baseline hidden at 30.0167s; fix peeks at 0.3667s.
   81 seed/rate/size/clearance combinations pass; actual release decay permits entry in 1.55s.
-  No concrete B1 regression found. Fix SHA will be recorded with the next iteration.
+  No concrete B1 regression found. Fix: `629121971d941505ca2fb257043dd1c24f94e96e`.
+
+## B2: superseded threat cancels recovery entry — medium, verified
+
+- Baseline: `629121971d941505ca2fb257043dd1c24f94e96e`; seed 42, 60 Hz, 1024×768, Node/macOS.
+- Hunt size 2.2, speed 1.2, hide 2.5, tempo 1, run-through .3; active at (512,384).
+- Tick t=.016667; remember touch (562,384); tick .033333; press at (502,384), RNG .8,
+  harmlessChance=0. Continue Hunt + physics with no more inputs.
+- Baseline: queued retreat deadline .3127817 survives injury. At t=5.066667, history
+  hidden→peek→retreat→hidden occurs in one update; visible approach waits until 8.25s.
+- Expected: impact supersedes the pre-impact decision, first recovery entrance succeeds.
+- New regression fails before fix (`hidden !== peek`); fix consumes current touch serial
+  and clears pending decision on injury. First recovery entry now peeks; new cues still react.
+- Focused hunt-policy/touch-reactions/behavior suite: 30 pass; full suite: 235 pass.
+- Independent critic accepts B2: baseline fails at 5.066667s, fix peeks; 75 harmful
+  region/outcome/rate variants pass, and fresh cues still react. Fix SHA recorded next.
+- Reproduction uses simulation time only; restart with seed42 repeats; pairing untouched.
 
 ## Ranked follow-up
 
-- Critic is investigating queued threat reactions surviving injury into reentry.
+- B3 reproduced: paw arriving after entry choice holds invisible peek for 60 seconds.
+  Plan bounded retreat/reselection without teleporting a visible mouse.
 - Device/cat response remains unverified; authored avoidance is a design inference.

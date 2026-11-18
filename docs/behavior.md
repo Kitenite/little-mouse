@@ -25,6 +25,8 @@ Manual steering and recall release hidden mice and temporarily override autonomo
 
 Close taps prompt delayed escape; moderate taps can freeze, with repeated events escalating
 risk. Distant taps can orient or pause rather than being ignored or always causing flight.
+Injury supersedes queued pre-impact touch reactions so stale flight decisions cannot cancel
+the first recovery entrance. Fresh cues after recovery still receive contextual attention.
 Direct contact can be harmless or cause the requested cosmetic injury/defeat reactions;
 [contact rules](touch-interaction.md) own region selection and held outcomes.
 

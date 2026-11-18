@@ -159,3 +159,19 @@ test('fully covered entry waits, then released memory permits reentry without a 
  for(const p of s.director.paws.values()){p.memory=0;p.recent=true;}
  s.until(m=>m.hunt.phase==='peek',1);
 });
+
+test('injury supersedes queued nearby retreat and preserves the first recovery entrance',()=>{
+ const s=simulation({seed:42,state:'active',settings:{hide:2.5,runThroughChance:.3}});s.tick();
+ rememberTouch(s.director,s.m.x+50,s.m.y,s.time,s.w,s.h);s.tick();
+ assert.equal(s.m.hunt.reactKind,'retreat');assert.ok(s.m.hunt.reactAt>s.time);
+ pressMouse(s.m,s.m.x-10,s.m.y,s.time,s.w,s.h,s.config.size,()=>.8,{harmlessChance:0});
+ s.until(m=>m.hunt.phase==='hidden',20);
+ const firstEntry=Math.max(s.m.hunt.deadline,s.director.nextEntrance);
+ while(s.time<firstEntry)s.tick();
+ assert.equal(s.m.hunt.phase,'peek','old threat must not cancel the first recovery entrance');
+ assert.equal(s.m.hunt.reactKind,undefined);
+ assert.equal(s.m.hunt.reactAt,undefined);
+ // A genuinely new cue after recovery still receives a reaction.
+ rememberTouch(s.director,s.m.x,s.m.y,s.time,s.w,s.h);s.tick();
+ assert.equal(s.m.hunt.reactKind,'retreat');
+});
