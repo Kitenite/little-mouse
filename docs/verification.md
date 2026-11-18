@@ -50,5 +50,5 @@ Local development serves current files with version reload. A GitHub push is sou
 Sites deployment is separate. Use the deployment result for hosted release status. Native shell
 changes use the existing development/Expo route and are not a new standalone binary release.
 
-Current hosted release succeeded: build `a98b951bdff1`, Sites source `e0c0765`.
+Current hosted release succeeded: build `bc090bf76208`, Sites source `0c7a68a`.
 The owner-private game and `/playground.html` were deployed together; audience was preserved.
