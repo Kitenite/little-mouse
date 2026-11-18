@@ -13,6 +13,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | [Sound curation](sound-curation.md) | Clip inventory, source identity, replacement decisions and listening limits |
 | [Visuals and backgrounds](visuals-backgrounds.md) | Realism target, materials, lighting and iPad rendering |
 | [Coat surfaces](coat-surfaces.md) | Region material contract, memory budget and reference comparison |
+| [Limb surfaces](limb-surfaces.md) | Continuous arm/leg skin, solved-joint attachment and visual evidence |
 | [Controls, network and native app](controls-network-native.md) | Companion, settings, owner exit, live iteration and installed app |
 | [Validation and research](validation-research.md) | Acceptance evidence, critique agents, device checks and scientific limits |
 | [Playground](playground.md) | Dedicated testing, forcing scenarios and controlled simulation time |

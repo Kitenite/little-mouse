@@ -15,12 +15,13 @@ export default function Home() {
   useEffect(() => { let live = true; AsyncStorage.getItem(CONNECTION_KEY).then(saved => {
     if (live && saved) { try { const normalized = normalizeGameUrl(saved); setDraft(normalized); } catch {} }
   }).catch(() => {}).finally(() => { if (live) setReady(true); }); return () => { live = false; }; }, []);
-  async function play() {
+  function play() {
     try {
       const normalized = normalizeGameUrl(draft);
-      await AsyncStorage.setItem(CONNECTION_KEY, normalized);
+      // Opening the game must not wait for storage during reload/recovery.
+      void AsyncStorage.setItem(CONNECTION_KEY, normalized).catch(() => {});
       setDraft(normalized); router.push({ pathname: '/game', params: { url: normalized } });
-    } catch (error) { Alert.alert('Check the game address', error instanceof Error ? error.message : 'Could not save the connection.'); }
+    } catch (error) { Alert.alert('Check the game address', error instanceof Error ? error.message : 'Could not open the game.'); }
   }
   async function updateApp() {
     if (__DEV__ || !Updates.isEnabled) { Alert.alert('Development mode', 'App changes arrive through the development server. Hosted game updates arrive automatically.'); return; }
