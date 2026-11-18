@@ -72,5 +72,13 @@ export function paintCoatTexture(context,image,coat){
  }else if(coat.pattern==='agouti'){
   for(let i=0;i<900;i++){x.strokeStyle='rgba(75,67,54,.12)';x.beginPath();const px=random()*256,py=random()*256;x.moveTo(px,py);x.lineTo(px+.4,py+2+random()*4);x.stroke();}
  }
+ // Rest UV v=1 is muzzle: markings fade into fine pale facial fur, without a hard seam.
+ for(let row=0;row<65;row++){x.globalAlpha=.78*(1-row/65)**2;x.fillStyle='#ececec';x.fillRect(0,row,256,1);}x.globalAlpha=1;
+ // Fine directional fibers sit above markings; relief is supplied separately by coat-surfaces.
+ for(let i=0;i<6200;i++){
+  const px=random()*256,py=random()*256,length=1.5+random()*4;
+  x.lineWidth=.45;x.strokeStyle=i%3===0?'rgba(255,255,255,.23)':'rgba(45,40,36,.1)';
+  x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.sin(px/256*Math.PI*2)*.6,py+length);x.stroke();
+ }
  x.restore();
 }

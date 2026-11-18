@@ -79,3 +79,17 @@ test('pending body drag, paw hold, toss, pause and grass settling use renderer i
  ground.clear();mouse.tossUntil=2;ground.update([model],[mouse],c,.4,800,600);mouse.x+=20;ground.update([model],[mouse],c,.5,800,600);assert.equal(ground.memory.active,0);
  ground.memory.add(200,200,1,5,.2,2);ground.update([],[],c,.5,800,600);const before=Array.from(ground.shape.array);ground.update([],[],c,.5,800,600);assert.deepEqual(Array.from(ground.shape.array),before);ground.update([],[],c,.65,800,600);assert.ok(before.some((v,i)=>Math.abs(v-ground.shape.array[i])>.01));disposeMouse(model);
 });
+
+test('region materials preserve UV attachment, eye gloss and shared maps through disposal',()=>{
+ const identity=createMouseIdentity(314159),a=makeMouse(0,identity),b=makeMouse(0,identity);
+ assert.notEqual(a.body.material.map,a.body.material.bumpMap);
+ assert.equal(a.body.material.bumpMap,b.body.material.bumpMap);
+ assert.notEqual(a.tail.material.map,a.feet[0].children[0].material.map);
+ const uv=Array.from(a.body.geometry.attributes.uv.array),tailUV=Array.from(a.tail.geometry.attributes.uv.array);
+ for(let i=0;i<80;i++)a.animate(i/60,true,220,1/60,1,.8,false,{tailHold:{x:-70,y:20,fraction:.7}});
+ assert.deepEqual(Array.from(a.body.geometry.attributes.uv.array),uv);
+ assert.deepEqual(Array.from(a.tail.geometry.attributes.uv.array),tailUV);
+ const eyes=[];a.group.traverse(node=>{if(node.material?.isMeshPhysicalMaterial)eyes.push(node.material);});
+ assert.equal(eyes.length,2);assert.ok(eyes.every(m=>m.roughness===.075&&!m.map));
+ let disposed=0;a.body.material.bumpMap.addEventListener('dispose',()=>disposed++);disposeMouse(a);assert.equal(disposed,0);disposeMouse(b);assert.equal(disposed,0);
+});

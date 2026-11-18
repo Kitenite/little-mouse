@@ -64,6 +64,15 @@ by a second brown tint. Named coat texture caching remains bounded to 22 maps; n
 change material colors rather than allocate a texture per value. Saturated colors and graphic patterns are
 intentional playful options, not natural species claims or claims about what cats prefer.
 
+Region-specific surface relief now separates body/limb fibers from ear, tail, nose and paw skin.
+Ten shared 256² textures (six linear relief, four sRGB skin color maps) add a fixed ~3.33 MiB
+GPU mipmapped budget plus ~2.5 MiB canvas backing; they never vary by seed or control value.
+The existing 22-map named coat cache remains separate (~7.33 MiB GPU with mipmaps).
+UVs stay attached through deformation. Body albedo uses one whole-body tile and fades markings
+near the muzzle; this makes graphic stripes broader than the former repeated tile.
+No image post-blur or eye material change is used. Region material clones are model-owned;
+shared maps survive individual disposal. See [surface evidence and contract](coat-surfaces.md).
+
 The renderer caps iPad pixel ratio at 1.5 for gameplay and 1 for preview. Game rendering is
 scheduled at up to 60 Hz and preview at 30 Hz; these are caps, not measured device FPS.
 Portrait/landscape resize must preserve contact-coordinate alignment and safe owner access.
