@@ -54,7 +54,7 @@ Limit: stale coordinates are still accepted as targets; timestamp neutrality is 
 
 ## PHYS-03: held-tail release continuity
 
-Severity medium; verified by independent critic; fix is this PHYS-03 commit.
+Severity medium; verified by independent critic; fix `6ace88af32ab289edd3fcbbc2140c190b54f5172`.
 Baseline `e574753`; Node/macOS, no GPU/viewport, deterministic defaults.
 Initialize60 frames stationary held tail x=-36-87*.73*.5,y=0,fraction=.73.
 Release at30/60/120Hz with no pointer/body motion. Expected continuous relaxation.
