@@ -12,27 +12,31 @@ Root owns main integration, iPad setup, checks, source publication and Sites dep
 Parallel edits require isolated worktrees or deliberately disjoint file ownership.
 Workers may delegate bounded independent reviews through Superset; preserve their IDs.
 
-| Role | Terminal | Current batch |
-| --- | --- | --- |
-| Physics builder | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Complete: integrated motion fixes and accepted B4 claim-boundary follow-up |
-| Anatomy builder | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Integrated profile/jaw fixes; independent combined render review passed |
-| Coat builder | `37be8626-484b-4e27-b7af-1786121687f7` | Integrated curled loft/face transition; independent review passed |
-| Environment builder | `1906036a-b32e-42b0-8678-76be0b6050f7` | Integrated three response fixes; previews stopped; critic retired after acceptance |
-| Audio builder | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Integrated three accepted audio fixes; source count unchanged |
-| Audio critic | `49671af0-6882-4117-999f-3ffa3f788f01` | Completed independent acceptance; evidence integrated |
-| Behavior builder | `ce1b794a-1fc4-4b52-b9d6-9dee3c7f5cf0` | Complete: four accepted policy fixes integrated, including held/toss cue cleanup |
-| Reliability builder | `be76f581-7262-4c17-b14c-8a9797b16141` | Integrated three accepted recovery/settings fixes |
-| Reference realism critic | `b1905a2f-48ee-4727-9351-ce92957abbd8` | Completed reference and combined rendered reviews; own previews stopped |
+## Durable roles and current status
 
-Batch baseline: `cf064cc`; stacks plus final B4 follow-up integrated at `d6c3409`.
-All domain builders/critics completed the current batch. Leads remain available for follow-up.
-Independent domain critics and worktree IDs are recorded in `docs/cycles/<domain>.md`.
-Scope: up to three focused build/review/repair iterations per domain, then exact commit
-handoffs and next ranked findings. See [current results](cycles/README.md) for evidence and cleanup.
-Physics owns drag/secondary/contact modules; anatomy owns shared renderer hooks; coat owns
-fur/material modules; environment owns background/light/response; behavior owns policy;
-audio owns samples/routing; reliability owns boot/game diagnostics. Shared hooks require
-peer coordination and separate commits. Root owns final integration and publication.
+The accepted batch is complete and integrated on main. All 14 remaining completed
+sessions and 20 auxiliary workspaces are queued for owner-authorized retirement
+once this preservation commit is verified on GitHub. No new workers are running.
+Reusable roles, ownership, delegation and handoff policies are stored in
+[`agents/roles.json`](../agents/roles.json); [`agents/prompt.mjs`](../agents/prompt.mjs)
+prints prompts for the next bounded assignment. Main workspace stays available.
+
+| Builder | Independent review | Pending queue / evidence |
+| --- | --- | --- |
+| Physics | physics-critic | [Physics](cycles/physics.md); engine adoption remains deferred |
+| Anatomy / animation | anatomy-critic | [Anatomy](cycles/anatomy.md); rump, tail root and ears |
+| Coat / texture | coat-critic | [Coat](cycles/coat.md); stippling and fringe |
+| Environment / backgrounds | environment-critic | [Environment](cycles/environment.md); material response |
+| Sound | audio-critic | [Audio](cycles/audio.md); listening and audition coverage |
+| Prey behavior | behavior-critic | [Behavior](cycles/behavior.md); paw scenarios |
+| Reliability / controls | reliability-critic | [Reliability](cycles/reliability.md); physical WebKit checks |
+| Reference realism critic | Root integration review | [Realism](cycles/realism.md); observed references |
+
+Domain reports retain historical session IDs and exact handoffs; these are not active
+assignments. New batches must record fresh IDs, status, dependencies and acceptance
+criteria here. Shared renderer hooks belong to anatomy; coordinate cross-domain edits.
+[Retirement inventory](archive/workspace-retirement/README.md) preserves remaining
+research and branch heads. Root owns preservation, push verification and deletion.
 
 Previously integrated: part-drag `68a8337`, limb skin `8bdc57b`, fur/Fuzziness `3c71dab`,
 environment `20313f4`, surface rustle `655eab4`, web recovery `0ae2101`, landscape `46eaeb9`.
@@ -57,7 +61,7 @@ Separate waveform/source analysis from actual listening; do not claim physical s
 
 Require a SUPERSET_WORKER_DONE or SUPERSET_WORKER_BLOCKED envelope with task, summary,
 files, checks and remaining work. Inspect evidence before integrating or claiming completion.
-Keep completed terminals for continuation. Update this ledger when ownership or status changes.
+Retire completed terminals after authorized cleanup. Update this ledger when ownership or status changes.
 The owner now requests continuing builder/critic improvement. Follow
 [the cycle contract](improvement-cycles.md): three focused iterations per active batch,
 independent criticism, reproducible cases and root-owned integration. This does not

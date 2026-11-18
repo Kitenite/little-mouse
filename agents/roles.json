@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "transport": "superset",
+  "agentPreset": "codex",
+  "maxIterationsPerBatch": 3,
+  "maxCriticsPerBuilder": 1,
+  "roles": [
+    {
+      "id": "physics",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/contact.js",
+        "little-mouse/public/secondary-motion.js",
+        "little-mouse/public/drag-pose.js",
+        "little-mouse/public/physics.js"
+      ],
+      "requirements": [
+        "docs/touch-interaction.md"
+      ],
+      "report": "docs/cycles/physics.md",
+      "objective": "Stable body-part anchors, tail/ear/whisker damping, pause/reset, collision and bounded throws. Keep the Planck adoption gate; reproduce extreme holds and release.",
+      "coordinateWith": [
+        "anatomy"
+      ],
+      "critic": "physics-critic"
+    },
+    {
+      "id": "physics-critic",
+      "kind": "critic",
+      "reviews": "physics",
+      "owns": [],
+      "requirements": [
+        "docs/touch-interaction.md"
+      ],
+      "report": "docs/cycles/physics.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "anatomy",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/anatomy.js",
+        "little-mouse/public/body-profile.js",
+        "little-mouse/public/mouse3d.js",
+        "little-mouse/public/limb-surface.js",
+        "little-mouse/public/leg-rig.js",
+        "little-mouse/public/leg-kinematics.js",
+        "little-mouse/public/idle-animation.js"
+      ],
+      "requirements": [
+        "docs/anatomy-motion.md"
+      ],
+      "report": "docs/cycles/anatomy.md",
+      "objective": "Attached continuous limbs, articulated head/waist/rump and varied idle animations. Review pointed rump, tail-root gap and thick ears against reference images.",
+      "coordinateWith": [
+        "physics",
+        "coat"
+      ],
+      "critic": "anatomy-critic"
+    },
+    {
+      "id": "anatomy-critic",
+      "kind": "critic",
+      "reviews": "anatomy",
+      "owns": [],
+      "requirements": [
+        "docs/anatomy-motion.md"
+      ],
+      "report": "docs/cycles/anatomy.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "coat",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/fur-volume.js",
+        "little-mouse/public/coat-surfaces.js",
+        "little-mouse/public/coat-palette.js"
+      ],
+      "requirements": [
+        "docs/fur-volume.md"
+      ],
+      "report": "docs/cycles/coat.md",
+      "objective": "Regional fuzziness, length, density, color and patterns with stable roots and identity. Review dorsal stippling and fringe; measure draw calls and memory.",
+      "coordinateWith": [
+        "anatomy"
+      ],
+      "critic": "coat-critic"
+    },
+    {
+      "id": "coat-critic",
+      "kind": "critic",
+      "reviews": "coat",
+      "owns": [],
+      "requirements": [
+        "docs/fur-volume.md"
+      ],
+      "report": "docs/cycles/coat.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "environment",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/environment.js",
+        "little-mouse/public/environment3d.js",
+        "little-mouse/public/backgrounds.js",
+        "little-mouse/public/backgrounds.css",
+        "little-mouse/public/lighting.js"
+      ],
+      "requirements": [
+        "docs/visuals-backgrounds.md"
+      ],
+      "report": "docs/cycles/environment.md",
+      "objective": "Varied backgrounds and lighting; material-appropriate rustle, impressions and responsive foliage. Bound pooled effects, preserve pause/reset and do not invent obstacles from images.",
+      "coordinateWith": [
+        "audio",
+        "physics"
+      ],
+      "critic": "environment-critic"
+    },
+    {
+      "id": "environment-critic",
+      "kind": "critic",
+      "reviews": "environment",
+      "owns": [],
+      "requirements": [
+        "docs/visuals-backgrounds.md"
+      ],
+      "report": "docs/cycles/environment.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "audio",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/audio.js",
+        "little-mouse/public/audio-samples.js",
+        "little-mouse/public/assets/audio"
+      ],
+      "requirements": [
+        "docs/audio.md"
+      ],
+      "report": "docs/cycles/audio.md",
+      "objective": "Recorded-only cues and provenance; diverse touch squeaks above very quiet footsteps. Verify hold/drag/hit/idle/eating/scurry routing, cancellation, download retry and mixing. No synthesized fallback.",
+      "coordinateWith": [
+        "environment",
+        "behavior"
+      ],
+      "critic": "audio-critic"
+    },
+    {
+      "id": "audio-critic",
+      "kind": "critic",
+      "reviews": "audio",
+      "owns": [],
+      "requirements": [
+        "docs/audio.md"
+      ],
+      "report": "docs/cycles/audio.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "behavior",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/enrichment.js",
+        "little-mouse/public/behavior.js"
+      ],
+      "requirements": [
+        "docs/behavior.md"
+      ],
+      "report": "docs/cycles/behavior.md",
+      "objective": "Sophisticated tease/hide/reentry/run-through policy with persistent paw avoidance. Few mice, varied reactions, no deadlocks and no automatic break. Use deterministic adversarial touch scenarios.",
+      "coordinateWith": [
+        "physics",
+        "audio"
+      ],
+      "critic": "behavior-critic"
+    },
+    {
+      "id": "behavior-critic",
+      "kind": "critic",
+      "reviews": "behavior",
+      "owns": [],
+      "requirements": [
+        "docs/behavior.md"
+      ],
+      "report": "docs/cycles/behavior.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "reliability",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/game.js",
+        "little-mouse/public/index.html",
+        "little-mouse/public/playground.html"
+      ],
+      "requirements": [
+        "docs/controls-network-native.md"
+      ],
+      "report": "docs/cycles/reliability.md",
+      "objective": "Owner UI and numeric tuning, companion settings, startup/retry, sanitized diagnostics and replay. Preserve pairing and pending settings; coordinate native changes under ipad/AGENTS.md.",
+      "coordinateWith": [
+        "behavior",
+        "audio"
+      ],
+      "critic": "reliability-critic"
+    },
+    {
+      "id": "reliability-critic",
+      "kind": "critic",
+      "reviews": "reliability",
+      "owns": [],
+      "requirements": [
+        "docs/controls-network-native.md"
+      ],
+      "report": "docs/cycles/reliability.md",
+      "objective": "Independently reproduce the builder case and adverse cases; inspect actual evidence and report ranked defects. Remain read-only in the builder worktree. Audio review must separate source/waveform analysis from actual listening."
+    },
+    {
+      "id": "realism",
+      "kind": "critic",
+      "owns": [],
+      "requirements": [
+        "docs/anatomy-motion.md",
+        "docs/sound-curation.md"
+      ],
+      "report": "docs/cycles/realism.md",
+      "objective": "Compare actual rendered views and audio against cited mouse images, movement and recordings. Record specific anatomy, physics, fur, background and sound defects. Separate evidence from inference; never infer device quality or cat engagement from software tests."
+    }
+  ],
+  "contract": [
+    "Read AGENTS.md, docs/README.md, docs/maintenance.md, docs/workers.md and owning topics before edits.",
+    "Use the superset-orchestrate skill. Coordinator assigns an isolated workspace, exact baseline, objective, acceptance criteria and verification commands before dispatch.",
+    "New user messages add requirements; they never silently cancel existing work. Record ownership, dependencies and pending work in docs/workers.md.",
+    "Coordinate shared renderer, settings and native hooks; do not broaden scope or overwrite other domains.",
+    "Builders may delegate one independent Superset critic and reuse it. Critics do not edit builder worktrees. At most three build/review/repair iterations per batch.",
+    "Capture revision, seed, viewport, settings and ordered input reproduction. Run meaningful checks; distinguish tests, rendered inspection, listening and physical device evidence.",
+    "Only root integrates main, publishes, restarts devices or changes production settings. Workers hand off exact commits, files, checks, limits and next ranked issues.",
+    "Keep topical Markdown within 120 lines where possible, maximum 150; index maximum 80. Replace stale requirements rather than appending logs.",
+    "Finish with SUPERSET_WORKER_DONE (task, summary, files, checks, handoff) or SUPERSET_WORKER_BLOCKED (task, reason, needs).",
+    "No recurring daemon is installed. After integration and explicit cleanup authorization, retire sessions and auxiliary workspaces; preserve evidence and role definitions in main."
+  ]
+}

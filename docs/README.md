@@ -51,3 +51,6 @@ The root and app READMEs remain setup references; older review reports are histo
 snapshots. If they conflict with these requirements, inspect current source and repair the
 owning document rather than copying the obsolete instruction. In particular, old long-press
 pause instructions are superseded by the corner gesture in the controls document.
+
+Reusable worker definitions: [agent catalog](../agents/README.md). Historical unmerged
+research and cleanup inventory: [retirement archive](archive/workspace-retirement/README.md).

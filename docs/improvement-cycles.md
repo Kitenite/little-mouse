@@ -6,8 +6,8 @@ The owner requests continuing Superset builder/critic work across physics, anato
 coat, environment, sound and prey behavior, with reproducible failures. New feedback
 adds to these domains. Root coordinates integration and the installed iPad release.
 The current batch runs up to three focused build/review iterations per domain; workers
-then hand off exact commits and the next ranked issue. This is an active agent batch,
-not a scheduled service or a promise of perpetual execution after agents stop.
+then hand off exact commits and the next ranked issue. The last batch is complete; reusable role definitions live in `agents/roles.json`.
+Future batches are bounded work, not a scheduled service or perpetual execution.
 
 ## Iteration contract
 

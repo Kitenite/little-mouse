@@ -34,15 +34,13 @@ elapsed0 and no runtime version; this is recovery evidence, not a live-motion te
 
 ## Cleanup
 
-Closed five completed Superset sessions: audio-source review, physics prototype
-builder/critic and original environment implementation/review. Removed two clean worktrees
-`mouse-game-start-recovery` and `mouse-surface-rustle`, plus the clean obsolete Superset
-`reactive-environment-review` workspace; implementation branches/commits retained.
-Stopped obsolete Planck4177 and environment8816/8817 previews; old8794/9338 were
-already stopped. Uncommitted critique/audio research/environment screenshots remain
-preserved in their old worktrees. Root8787 and Metro8088 remain available for iPad use.
-Root scratch browser9444 also stopped after recovery checks.
-Current domain leads stay available for future bounded batches; no periodic service.
+Earlier cleanup retired five sessions and three obsolete workspaces/worktrees.
+Final owner-authorized cleanup is in progress: preserve all unique research on main,
+then retire the remaining 14 completed sessions and 20 auxiliary Mouse workspaces.
+The primary main checkout is retained. See [worker ledger](../workers.md) and
+[retirement evidence](../archive/workspace-retirement/README.md).
+Reusable roles are checked in under `agents/`; no periodic service is installed.
+Old terminal and workspace IDs in individual reports are historical identifiers.
 
 B4 follow-up also covers a grab canceled between policy ticks; accepted claims clear
 queued decisions while rejected claims/fresh cues remain unaffected. Same simulation

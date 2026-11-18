@@ -42,11 +42,12 @@ anchor speed, time handling and ownership ordering; swapping libraries would pre
 mistakes unless the interaction policy changed. The current visual soft tissue and tail are
 bounded approximations, not a physically accurate animal.
 
-The isolated `physics-engine-prototype` branch at `6c1633e` contains the Planck experiment
+The isolated `prototypes/physics-engine/` directory, preserved from `6c1633e`, contains the Planck experiment
 and 23 passing tests. Its seeded scenarios measured 21.62 px drag lag, 12.27 px collision
 joint gap (proposed gate ≤2 px), and 1.635 rad angular overshoot (gate ≤0.2 rad).
 Tests document those limitations; they do not establish adoption readiness. Preview with
-`PORT=4180 npm --prefix prototypes/physics-engine start` in that worktree.
+`npm ci --prefix prototypes/physics-engine`, then
+`PORT=4180 npm --prefix prototypes/physics-engine start` from the main checkout.
 
 Adopt an engine only when an isolated
 prototype demonstrably improves the same seeded drag/collision scenarios and measured iPad

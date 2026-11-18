@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mouse physics comparison</title>
+<style>body{font:16px system-ui;background:#17212d;color:#e4eaf0;margin:24px}button,select{font:inherit;padding:8px;margin:4px}main{display:flex;gap:20px}section{flex:1;min-width:0}canvas{background:#f2efe6;width:100%;touch-action:none;border-radius:8px}pre{white-space:pre-wrap;font-size:13px}p{max-width:1050px;line-height:1.5}@media(max-width:800px){main{display:block}}</style>
+<script type="importmap">{"imports":{"planck":"/prototypes/physics-engine/node_modules/planck/dist/planck.mjs"}}</script>
+<h1>Mouse physics · isolated comparison</h1>
+<p>Drag body, paws or tail in either panel. Inputs are mirrored by mouse/part identity; geometry may diverge. Pending claims freeze pose for 0.25 seconds; active Planck grabs pull with force and can rotate. Yellow dots show targets. No full ragdoll or renderer integration.</p>
+<button id="reset">Reset</button><button id="pause">Pause</button><button id="cancel">Cancel all claims</button>
+<select id="scenario"><option value="drag">Drag / release</option><option value="collision">Collision</option><option value="hold">Stationary hold</option><option value="cancel">Cancellation</option><option value="wall">Wall release</option></select><button id="run">Run matched scenario</button>
+<main><section><h2>Existing kinematic solver</h2><canvas id="kinematic" width="800" height="500"></canvas><pre id="kinematic-status"></pre></section><section><h2>Planck 1.5.1</h2><canvas id="planck" width="800" height="500"></canvas><pre id="planck-status"></pre></section></main>
+<p>Coarse 2D collision geometry: equal 39 px torso radii; Planck adds four single-body limbs and three tail segments. Head picks use the torso, with no separate head collider. Kinematic artwork is illustrative. Baseline quick drags can toss before hold activation; Planck pending releases do not toss. Cancel cleanup zeroes motion in this harness.</p>
+<script type="module" src="/prototypes/physics-engine/demo.mjs"></script></html>

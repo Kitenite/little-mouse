@@ -1,0 +1,230 @@
+[
+  {
+    "id": "541324e5-b900-4564-a3e2-ab1eb663fbfa",
+    "branch": "physics-engine-prototype",
+    "head": "6c1633eff42c9536a66b46b0214484f4c18ff5aa",
+    "preservedFiles": []
+  },
+  {
+    "id": "772b83df-1a88-4e7e-87b7-cd58fe7a2d37",
+    "branch": "physics-engine-critique",
+    "head": "9e2f7e876dea24e8bdeafc49488b2f7672569a30",
+    "preservedFiles": [
+      {
+        "source": "docs/physics-prototype-critique.md",
+        "saved": "docs/archive/workspace-retirement/physics-engine-critique/docs/physics-prototype-critique.md",
+        "sha256": "8567ec5a79820b5103d86fd34a58a4dc3f2231dd7b3a546951609064a6544fb7"
+      }
+    ]
+  },
+  {
+    "id": "20126437-a3d7-4780-9499-2b8e5f718562",
+    "branch": "reactive-environment",
+    "head": "ad1d8a4e7b1479846c3cfbb74082b4f00a80c3fd",
+    "preservedFiles": [
+      {
+        "source": "artifacts/reactive-environment/grass.png",
+        "saved": "docs/archive/workspace-retirement/reactive-environment/artifacts/reactive-environment/grass.png",
+        "sha256": "f87882bb418ba7e8feee45edacf99b8921fa0a2115c328da5616c65821b08d8a"
+      },
+      {
+        "source": "artifacts/reactive-environment/photo-boards.png",
+        "saved": "docs/archive/workspace-retirement/reactive-environment/artifacts/reactive-environment/photo-boards.png",
+        "sha256": "05673e3b743a1d7d3a432190f3148de1c225c1cbed724c5d3766348ce6d90a50"
+      },
+      {
+        "source": "artifacts/reactive-environment/photo-clearing.png",
+        "saved": "docs/archive/workspace-retirement/reactive-environment/artifacts/reactive-environment/photo-clearing.png",
+        "sha256": "f2c723f7558cc24ed7f2e221d768b74863e2ef270ac324736c340693783ca39d"
+      },
+      {
+        "source": "artifacts/reactive-environment/photo-linen.png",
+        "saved": "docs/archive/workspace-retirement/reactive-environment/artifacts/reactive-environment/photo-linen.png",
+        "sha256": "dba8a384d7920dcdc187d395cd4db06c359107ed517c82587b6dc4d5ab9e2099"
+      }
+    ]
+  },
+  {
+    "id": "1d9572b2-5dbc-41b2-8205-d1cab725e06f",
+    "branch": "cycle-environment",
+    "head": "28e203f8bc1582976ab628d6393a54c0993b4186",
+    "preservedFiles": []
+  },
+  {
+    "id": "02d640e5-5549-4b57-ad98-ff481686f443",
+    "branch": "cycle-physics",
+    "head": "6bef5ac7ab6e646e7e4ce4d0a5194325ad51b6f1",
+    "preservedFiles": []
+  },
+  {
+    "id": "5cff0c70-a838-40e9-82bd-d39f287779a3",
+    "branch": "cycle-anatomy",
+    "head": "4b863dc53e4846ac5a6faa98397f4df449c1ba09",
+    "preservedFiles": []
+  },
+  {
+    "id": "82ee8695-82c6-44df-a181-0d1e1330ec17",
+    "branch": "cycle-anatomy-critic",
+    "head": "cf064cc936e7fa6527b7eb479d2c77f2f63dc1b3",
+    "preservedFiles": []
+  },
+  {
+    "id": "363ca24d-e54c-4318-a6bf-ff1e437aa0ed",
+    "branch": "cycle-physics-critic",
+    "head": "cf064cc936e7fa6527b7eb479d2c77f2f63dc1b3",
+    "preservedFiles": []
+  },
+  {
+    "id": "a58da62b-63e0-4529-bac2-02b467aaf170",
+    "branch": "cycle-behavior",
+    "head": "f8c3de03e772964acb44290db6e9253a205a8f93",
+    "preservedFiles": []
+  },
+  {
+    "id": "d4d9a648-3c4c-4080-8357-e95b4e6163df",
+    "branch": "cycle-reliability",
+    "head": "e4dd7f93ad77193c60ec04923e0c939db8a84718",
+    "preservedFiles": []
+  },
+  {
+    "id": "d776f081-5f66-4772-b381-8ad921892f3d",
+    "branch": "cycle-audio",
+    "head": "43142eff548d49714d56bbdaf9cc2832ce9b0971",
+    "preservedFiles": []
+  },
+  {
+    "id": "f255fd4d-6ff8-451f-939b-6f107c9e270f",
+    "branch": "anatomy-segmented-spine",
+    "head": "23c65bf05436d16db55dd3a23156d70012f77e81",
+    "preservedFiles": []
+  },
+  {
+    "id": "86fd7466-48f6-4c11-b32b-d905088fbf58",
+    "branch": "audio-realism-variety",
+    "head": "9e2f7e876dea24e8bdeafc49488b2f7672569a30",
+    "preservedFiles": [
+      {
+        "source": "docs/sound-curation.md",
+        "saved": "docs/archive/workspace-retirement/audio-realism-variety/docs/sound-curation.md",
+        "sha256": "91e9e7238eb04dcda1df4924c26f7687fe719b1f020f772f34e825b65b8817c6"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/CURATION.json",
+        "saved": "little-mouse/public/assets/audio/CURATION.json",
+        "sha256": "e19a7cc90d00fc80c8b8f786eb61d64f6a21e184e747a91908d8085ea076e3f4"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/cracker-01.wav",
+        "saved": "little-mouse/public/assets/audio/cracker-01.wav",
+        "sha256": "b087086faadece1ee9b40ccbb6b300605422efb6a6b186e8586729d991b33348"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/cracker-02.wav",
+        "saved": "little-mouse/public/assets/audio/cracker-02.wav",
+        "sha256": "149d4c0a3562bf57df3d8c4a45f8c2b2a0e2ffc96c73b7090051f1aa33376f74"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/cracker-03.wav",
+        "saved": "little-mouse/public/assets/audio/cracker-03.wav",
+        "sha256": "fb4bc52b72666f258f38effd854a253a3b6848157176d9e2447029b96d1d6af7"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/cracker-04.wav",
+        "saved": "little-mouse/public/assets/audio/cracker-04.wav",
+        "sha256": "aa407d51aa9246dab032d961a2c7f6b3b88715380903ce83458bb621275c95ab"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/cracker-05.wav",
+        "saved": "little-mouse/public/assets/audio/cracker-05.wav",
+        "sha256": "c8e8a0ac49ee2e76afeaff3e46026c197d8617356ca05e92a4912f71bede167b"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/cracker-06.wav",
+        "saved": "little-mouse/public/assets/audio/cracker-06.wav",
+        "sha256": "a3b7339c675850ed8353acf04bc9b321e64a4d7b88f0bdaf88fae6c80cd32e96"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/crawl-01.wav",
+        "saved": "little-mouse/public/assets/audio/crawl-01.wav",
+        "sha256": "cecdd2150d59d44aa1804660763b65a5778ecffeefb501a70fa6ca1062333a1c"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/crawl-02.wav",
+        "saved": "little-mouse/public/assets/audio/crawl-02.wav",
+        "sha256": "4f1c06c588aac1cdee799e1cdeec4134cfbf1ec64116c2c9d3b5ce726360bdb1"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/crawl-03.wav",
+        "saved": "little-mouse/public/assets/audio/crawl-03.wav",
+        "sha256": "278ff28c7d649dc7aeb224d077a920ce6f1f5634364cd8865e615ed13511ec6f"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/floor-01.wav",
+        "saved": "little-mouse/public/assets/audio/floor-01.wav",
+        "sha256": "c1bbe0ba6c152f75a861153f918ad205d59a1f8c2bdb6b2ec9e5f613649f9c87"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/floor-02.wav",
+        "saved": "little-mouse/public/assets/audio/floor-02.wav",
+        "sha256": "d20fdcdcb1ebb2553f61cd1fbed13cc2a52b8ce75b3c7945e2d286631c100a08"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/floor-03.wav",
+        "saved": "little-mouse/public/assets/audio/floor-03.wav",
+        "sha256": "cd897f039599682bc78171e08820e6738831aa76ce7a0bc098d07c5c6efa3ba0"
+      },
+      {
+        "source": "little-mouse/public/assets/audio/floor-04.wav",
+        "saved": "little-mouse/public/assets/audio/floor-04.wav",
+        "sha256": "7690ee2914759dd155dc30eaa50be411795654a5455a7b03b5fef7a49343d9ba"
+      },
+      {
+        "source": "little-mouse/tests/audio-curation.test.mjs",
+        "saved": "little-mouse/tests/audio-curation.test.mjs",
+        "sha256": "757c0c8d288931d04d671fe134ce2f41797fe7de3f4ed7b64d7f56f3dbfa84a7"
+      }
+    ]
+  },
+  {
+    "id": "4fb09a7b-430e-4c8d-b95b-8193111f6535",
+    "branch": "cycle-audio-critic",
+    "head": "6f72c7f92f54b5bd4717c3e8cf725949b3185fa9",
+    "preservedFiles": []
+  },
+  {
+    "id": "39f89071-fb3a-4e57-a5e3-bfe8cfa8fd03",
+    "branch": "cycle-coat",
+    "head": "452afa280d9abb07465bbfdc23dbfc9d5bcadf20",
+    "preservedFiles": []
+  },
+  {
+    "id": "2cde3f9d-4906-4319-a693-4572690ce1e2",
+    "branch": "landscape-app-lock",
+    "head": "edea2af7abb5d40242de60e988e5e3a60f16696c",
+    "preservedFiles": []
+  },
+  {
+    "id": "89a11252-515d-4be5-88ba-1745461cf51a",
+    "branch": "continuous-limb-skin",
+    "head": "b5f28d7b4d5a4446ea7a683081c083cc0e805d82",
+    "preservedFiles": []
+  },
+  {
+    "id": "7b753e85-ecbc-40ad-83ba-0414da78ad11",
+    "branch": "part-drag-flop",
+    "head": "88bc3c7ce6e7fcc27cdd5ce40a65de18f30d0b8e",
+    "preservedFiles": []
+  },
+  {
+    "id": "4c37ed80-6f18-4bf0-ba07-a3e75ea2e362",
+    "branch": "review/cycle-realism-cf064cc",
+    "head": "e90445facbb5de3b787864034bcca55c9ec4ceee",
+    "preservedFiles": []
+  },
+  {
+    "id": "3eee36f8-6f68-40d5-a0bd-771286a6db22",
+    "branch": "texture-lead",
+    "head": "bb9ce1cf5923fdadf9ee3a225cf3303ad47a6b1a",
+    "preservedFiles": []
+  }
+]

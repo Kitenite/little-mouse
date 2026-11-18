@@ -1,0 +1,7 @@
+{
+  "name": "mouse-physics-comparison",
+  "private": true,
+  "type": "module",
+  "scripts": {"start": "node server.mjs", "test": "node --test test/*.test.mjs", "scenarios": "node scenarios.mjs"},
+  "dependencies": {"planck": "1.5.1"}
+}
