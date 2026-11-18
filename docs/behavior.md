@@ -16,6 +16,8 @@ retreat and traverse phases. Contact, injury, toss and manual control take prior
 Cover and recent threat history persist across decisions; fear decays over simulation time.
 Cover selection and entry checks share paw contact radius and released-memory decay; a clear
 candidate outranks a blocked familiar entrance. Fully covered entrances wait for clearance.
+A paw arriving during a peek triggers withdrawal through the approach edge, followed by
+clear-cover reselection; the full silhouette must clear the screen before hiding.
 Choices occur on events, arrival or deadlines rather than unrelated random choices every frame.
 
 Invisible approaches move faster than the final visible peek. The exploration budget starts

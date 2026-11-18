@@ -175,3 +175,26 @@ test('injury supersedes queued nearby retreat and preserves the first recovery e
  rememberTouch(s.director,s.m.x,s.m.y,s.time,s.w,s.h);s.tick();
  assert.equal(s.m.hunt.reactKind,'retreat');
 });
+
+test('seed 42 paw arriving during peek backs out and reenters through clear cover',()=>{
+ for(const approachAge of [0,.7,2.3]){
+ const s=simulation({seed:42,settings:{hide:2.5}});s.until(m=>m.hunt.phase==='peek',2);
+ const peekAt=s.time;while(s.time-peekAt<approachAge)s.tick();
+ assert.equal(s.m.hunt.phase,'peek','fixture inserts a paw during approach/peek');
+ const a=s.m.hunt,oldEdge=a.edge,slot=a.slot;
+ const [x,y]=a.edge===0?[0,s.h*slot]:a.edge===1?[s.w,s.h*slot]:a.edge===2?[s.w*slot,0]:[s.w*slot,s.h];
+ s.director.paws=new Map([[1,{x,y,radius:100}]]);
+ const started=s.time;let withdrew=false,hidden=false,reentered=false;
+ // Include the real persistent-paw physics that caused the approach deadlock.
+ while(s.time-started<20){
+  s.time+=1/60;const prev=[s.m.x,s.m.y];
+  updateHunt(s.m,s.config,s.time,s.w,s.h,false,s.rng,s.director);
+  stepMice([s.m],s.config,s.time,1/60,s.w,s.h,s.director.paws.values());
+  if(s.m.hunt.phase==='retreat'){withdrew=true;assert.equal(s.m.hunt.edge,oldEdge,'back out through the approach cover');}
+  if(s.m.hunt.phase==='hidden'){hidden=true;withdrew ||= s.m.hunt.history.includes('retreat');const pad=140*s.config.size;assert.ok(s.m.x < -pad||s.m.x>s.w+pad||s.m.y < -pad||s.m.y>s.h+pad,'withdraw beyond full silhouette before hiding');}
+  if(hidden&&s.m.hunt.phase==='peek'){assert.notEqual(s.m.hunt.edge,oldEdge);reentered=true;break;}
+  assert.ok(Math.hypot(s.m.x-prev[0],s.m.y-prev[1])<40,'no teleport during withdrawal');
+ }
+ assert.ok(withdrew&&hidden&&reentered,'newly blocked peek must return through clear cover within 20 seconds');
+ }
+});

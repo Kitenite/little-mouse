@@ -43,11 +43,30 @@
   and clears pending decision on injury. First recovery entry now peeks; new cues still react.
 - Focused hunt-policy/touch-reactions/behavior suite: 30 pass; full suite: 235 pass.
 - Independent critic accepts B2: baseline fails at 5.066667s, fix peeks; 75 harmful
-  region/outcome/rate variants pass, and fresh cues still react. Fix SHA recorded next.
+  region/outcome/rate variants pass, and fresh cues still react. Fix: `af9142b7798f7299c1830b8d7efa77d260cbb9ee`.
 - Reproduction uses simulation time only; restart with seed42 repeats; pairing untouched.
+
+## B3: paw arrives during approach — medium, verified
+
+- Baseline: `af9142b7798f7299c1830b8d7efa77d260cbb9ee`; Node/macOS, 1024×768, 60 Hz.
+- Seed 42; one away mouse at (512,384); Hunt size2.2 speed1.2 hide2.5 tempo1, clearance50.
+- On first peek (t=.35), add persistent radius100 paw at entrance (477.4502635,768).
+  Pass paw values to real `stepMice` on every tick; no further inputs.
+- Baseline at t=60: still peek at (477.4502635,953.8), target distance163.8,
+  visibleSince=null. The hidden-phase entry gate never revisits a later obstruction.
+- Expected: back out and try clear cover, without disappearing inside the playfield.
+- New regression fails before fix: no withdrawal/reentry within20s. Fix checks peek mouth
+  and retreats through its existing approach edge, then uses normal hidden reentry selection.
+- After: initial/.7/2.3s approach-age insertions all retreat/hide/reenter within20s;
+  no >40px physics step, no hide before full silhouette clearance. Seed replay deterministic.
+- Full suite: 236 pass. Independent critic accepts B3: same baseline stuck at40s,
+  fix safely hides at.366667 and reenters at2.883333; reproduced twice.
+- Critic: 198 applicable size/viewport/rate/speed/insertion cases pass (18 already past peek
+  excluded), priority checks pass, 64 focused tests pass, diff clean. Fix SHA recorded below.
+- No session/pairing/owner setting changes.
 
 ## Ranked follow-up
 
-- B3 reproduced: paw arriving after entry choice holds invisible peek for 60 seconds.
-  Plan bounded retreat/reselection without teleporting a visible mouse.
+- Critic reproduced pre-hold queued cue replay after a toss. Keep as next bounded policy case;
+  current batch prioritizes the two permanent entry deadlocks and injury recovery.
 - Device/cat response remains unverified; authored avoidance is a design inference.

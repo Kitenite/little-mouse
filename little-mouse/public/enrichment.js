@@ -45,7 +45,7 @@ function cover(m, time, w, h, director, rng, preferSame=false) {
   return best;
 }
 function enter(m, phase, time, config, w, h, rng, director) {
-  const a=m.hunt, tempo=clamp(Number(config.huntTempo)||1,.5,2);
+  const a=m.hunt, previousPhase=a.phase, tempo=clamp(Number(config.huntTempo)||1,.5,2);
   a.phase=phase;a.since=time;a.arrivedAt=null;a.history.push(phase);a.history=a.history.slice(-4);
   delete a.progress;
   a.dwell=between(rng,.65,1.65)/tempo;
@@ -80,7 +80,8 @@ function enter(m, phase, time, config, w, h, rng, director) {
     a.goal=[clamp(m.x+Math.cos(angle)*reach,inset,w-inset)/w,clamp(m.y+Math.sin(angle)*reach,inset,h-inset)/h];
     a.dwell=between(rng,.25,.6)/tempo;
   } else if(phase==='retreat') {
-    Object.assign(a,cover(m,time,w,h,director,rng,true));
+    // A blocked peek backs out along its approach instead of crossing the playfield.
+    if(previousPhase!=='peek')Object.assign(a,cover(m,time,w,h,director,rng,true));
     a.depth=-coverPad(m,config);
     a.dwell=0;
   } else if(phase==='traverse') {
@@ -173,6 +174,10 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
         else m.restUntil=time+a.dwell;
       }
     }
+  }
+  if(a.phase==='peek') {
+    const mouth=edgePoint(a.edge,a.slot,0,w,h);
+    if(blockedMouth(mouth[0],mouth[1],director))enter(m,'retreat',time,config,w,h,rng,director);
   }
   let target;
   if(a.phase==='traverse')target=edgePoint(a.crossEdge,a.crossSlot,a.depth,w,h);
