@@ -21,21 +21,21 @@ import{stepMice,flee}from'../public/physics.js';
 import{sendOffscreen,pressMouse,updateLifecycle}from'../public/behavior.js';
 import * as contact from '../public/contact.js';
 import{createOwnerGesture}from'../public/owner-gesture.js';
-async function gameHarness(failure,surface='web'){
+async function gameHarness(failure,surface='web',fault={}){
  const elements=new Map(),storage=new Map([['mouse-room',JSON.stringify('0123456789abcdef')],['mouse-command',JSON.stringify({steer:'old'})]]),calls=[];
  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',style:{setProperty(){}},dataset:{},options:[],listeners:{},addEventListener(name,fn){const old=this.listeners[name];this.listeners[name]=old?e=>{old(e);fn(e);}:fn;},setAttribute(){},setPointerCapture(){},getBoundingClientRect(){return{left:0,top:0,width:800,height:600};},getContext(){return{};},querySelector(){return{removeAttribute(){}};}});return elements.get(id);};
- let response=failure;
+ let response=failure,pendingResponse=null;
  const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,createOwnerGesture,...contact,settingsDefaults,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,radius:()=>40,
  document:{documentElement:{dataset:{surface}},hidden:false,getElementById:element,querySelectorAll:()=>[],addEventListener(){}},
  window:{addEventListener(){}},navigator:{},location:{origin:'http://local'},
  localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
- MouseScene:class{w=800;h=600;resize(){}clearEffects(){}render(){}splatter(){}},setInterval(){},requestAnimationFrame(){},
- fetch:async(path,options)=>{calls.push([path,options]);if(path==='/api/rooms')return Response.json({code:'fedcba9876543210'});if(path==='/api/version')return Response.json({version:'v1'});if(response==='offline')throw TypeError('Failed to fetch');if(response)return new Response('not JSON',{status:response});return Response.json({version:'v1',revision:0,settings:upgradeSettings({...defaults}),command:{}});}
+ MouseScene:class{constructor(){if(fault.construct)throw Error('Injected WebGL initialization failure');}w=800;h=600;resize(){}clearEffects(){}render(){if(fault.render)throw Error('Injected first render failure');}splatter(){}},setInterval(){},requestAnimationFrame(){},
+ fetch:async(path,options)=>{calls.push([path,options]);if(path==='/api/rooms')return Response.json({code:'fedcba9876543210'});if(path==='/api/version')return Response.json({version:'v1'});if(pendingResponse)await pendingResponse;if(response==='offline')throw TypeError('Failed to fetch');if(response)return new Response('not JSON',{status:response});return Response.json({version:'v1',revision:0,settings:upgradeSettings({...defaults}),command:{}});}
  });
  const source=(await readFile(new URL('../public/game.js',import.meta.url),'utf8')).replace(/^import.*;\n/gm,'');
  vm.runInContext(source+'\nglobalThis.testGame={poll,sync,sendSettings,flushSettings,config,start,pause,frame,applyCommand,contacts,get catches(){return catches},get mice(){return mice},get elapsed(){return elapsed},get room(){return room},get revision(){return revision},get commandSeen(){return commandSeen}};',context);
  await new Promise(resolve=>setImmediate(resolve));
- return{context,e:element,storage,calls,recover(){response=0;}};
+ return{context,e:element,storage,calls,deferResponse(status){response=status;let release;pendingResponse=new Promise(resolve=>{release=resolve;});return release;},recover(){response=0;}};
 }
 test('missing saved room clears pairing and allows creating a fresh room',async()=>{
  const h=await gameHarness(404);assert.equal(h.context.testGame.room,null);assert.equal(JSON.parse(h.storage.get('mouse-room')),null);assert.equal(h.storage.get('mouse-command'),'{}');
@@ -120,4 +120,43 @@ test('real pointer handlers defer hit until release, cancel cleanly and retain s
 
 test('legacy session duration cannot automatically stop ongoing play',async()=>{
  const h=await gameHarness('offline'),g=h.context.testGame;g.config.sessionMinutes=.0001;g.start();g.frame(1000);for(let i=1;i<20;i++)g.frame(1000+i*50);assert.equal(h.context.document.documentElement.dataset.playing,'true');assert.ok(g.elapsed>.5);
+});
+
+
+test('WebGL constructor failure rejects boot instead of leaving a permanently disabled play button',async()=>{
+ await assert.rejects(gameHarness('offline','ipad',{construct:true}),/Injected WebGL initialization failure/);
+});
+test('first preview RAF exception stops the game and reaches recovery after readiness',async()=>{
+ const h=await gameHarness('offline','ipad',{render:true});let failures=0;h.context.window.mouseBoot={state:'ready',fail(){failures++;h.context.window.mouseStopForRecovery();this.state='failed';this.recovering=true;}};h.e('game').hidden=true;
+ h.context.runFrame(1000);assert.equal(failures,1);assert.equal(JSON.parse(h.storage.get('mouse-resume')).playing,false);
+ h.context.testGame.start();h.context.runFrame(1017);assert.equal(failures,1);assert.equal(h.context.document.documentElement.dataset.playing,'false');
+});
+test('context loss preserves active resume and intentional pause checkpoints, then blocks stale polling',async()=>{
+ for(const paused of [false,true]){
+  const h=await gameHarness('offline','ipad'),g=h.context.testGame;g.start();if(paused)g.pause();
+  h.context.window.mouseBoot={state:'ready',fail(){h.context.window.mouseStopForRecovery();this.state='failed';this.recovering=true;}};let prevented=false;
+  h.e('board').listeners.webglcontextlost({preventDefault(){prevented=true;}});assert.equal(prevented,true);assert.equal(h.context.window.mouseBoot.state,'failed');
+  const saved=h.storage.get('mouse-resume');assert.equal(JSON.parse(saved).playing,!paused);assert.equal(h.context.window.mouseDiagnostics().recovering,true);assert.equal(h.context.window.mouseDiagnostics().playing,false);const calls=h.calls.length;await g.poll();assert.equal(h.calls.length,calls);
+  g.start();h.context.checkpoint();assert.equal(h.storage.get('mouse-resume'),saved);assert.equal(h.context.document.documentElement.dataset.playing,'false');
+ }
+});
+
+
+test('partial setup failure keeps checkpoint and polling blocked throughout deferred retry',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;g.start();g.frame(1000);g.frame(1017);h.context.checkpoint();const saved=h.storage.get('mouse-resume');
+ // Represent failure before the stop hook is assigned: only the inline latch exists.
+ h.context.window.mouseStopForRecovery=undefined;h.context.window.mouseBoot={state:'failed',recovering:true};
+ for(const state of ['failed','checking','reloading']){h.context.window.mouseBoot.state=state;g.pause();h.context.checkpoint();const calls=h.calls.length;await g.poll();await g.flushSettings();assert.equal(h.calls.length,calls);assert.equal(h.storage.get('mouse-resume'),saved);assert.equal(h.context.window.mouseDiagnostics().recovering,true);g.start();assert.equal(h.context.document.documentElement.dataset.playing,'false');}
+});
+test('faulting audio cleanup cannot prevent stopped diagnostics or preserve a live frame loop',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;g.start();
+ vm.runInContext("preyAudio.setState=()=>{throw Error('Injected audio cleanup failure');};preyAudio.stop=()=>{throw Error('Injected audio stop failure');};",h.context);
+ h.context.window.mouseStopForRecovery();assert.equal(h.context.window.mouseDiagnostics().recovering,true);assert.equal(h.context.window.mouseDiagnostics().playing,false);assert.equal(JSON.parse(h.storage.get('mouse-resume')).playing,true);
+});
+
+
+test('in-flight missing-room response after context loss cannot clear retained pairing',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;g.start();const room=g.room,stored=h.storage.get('mouse-room');
+ const release=h.deferResponse(404),polling=g.poll();h.context.window.mouseBoot={state:'ready',fail(){h.context.window.mouseStopForRecovery();this.state='failed';this.recovering=true;}};
+ h.e('board').listeners.webglcontextlost({preventDefault(){}});release();await polling;assert.equal(g.room,room);assert.equal(h.storage.get('mouse-room'),stored);assert.equal(h.context.window.mouseDiagnostics().recovering,true);
 });

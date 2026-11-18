@@ -24,6 +24,22 @@ behavior and moderate secondary motion. It is a design starting point to test wi
 not a scientifically established optimum. The connected iPad also has a saved
 `Rich woodland hunt` profile; custom settings remain adjustable.
 
+## Web startup recovery
+
+The HTML shows loading until the game module initializes. An inline recovery controller
+survives failed module downloads; startup failure or a 15-second timeout offers **Retry
+loading game**. Retry checks the game response before a fresh navigation, preserving
+stored pairing/settings and the existing short resume window. There is no automatic
+error-reload loop or same-document re-import that could duplicate handlers.
+WebGL initialization, preview/game frame exceptions and context loss use this recovery;
+an active session is checkpointed before stopping, while intentional pause stays paused.
+`mouseDiagnostics().recovering` stays true through failed/checking/reloading states;
+the native bridge must skip resume-storage writes then, while still posting actual
+`playing:false` for native UI/keep-awake. Startup also supplies a recovering snapshot
+until the full diagnostic function is installed. Cleanup failures cannot hide Retry.
+This covers a plausible web failure mode, not a confirmed diagnosis of the reported iPad
+incident. The initial HTML must load; device/WebKit validation remains separate.
+
 ## Ending play
 
 Current owner exit: briefly tap corners **top-left, top-right, bottom-right, bottom-left**
