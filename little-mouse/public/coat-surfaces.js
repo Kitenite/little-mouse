@@ -50,7 +50,7 @@ export function applyCoatSurfaces(T,cache,{bodyMaterial,fur,ears,legRig,tail,nos
  const skin=(region,roughness,bumpScale)=>new T.MeshStandardMaterial({color:traits.coat.skin,map:cache.get(region,true),bumpMap:cache.get(region),bumpScale,roughness});
  const replacedSkin=tail.material;
  const paws=skin('paw',.83,.065);
- for(const leg of legRig.legs){for(const part of ['upper','lower','shoulder','knee'])leg[part].material=limb;leg.paw.traverse(node=>{if(node.isMesh)node.material=paws;});}
+ for(const leg of legRig.legs){if(leg.surface)leg.surface.mesh.material=limb;for(const part of ['upper','lower','shoulder','knee'])leg[part].material=limb;leg.paw.traverse(node=>{if(node.isMesh)node.material=paws;});}
  for(const ear of ears)ear.traverse(node=>{if(node.isMesh){node.material.map?.dispose();node.material.map=cache.get('ear',true);node.material.bumpMap=cache.get('ear');node.material.bumpScale=.06;node.material.color.set(traits.coat.skin);node.material.roughness=.86;}});
  tail.material=skin('tail',.88,.09);tail.material.map.repeat.set(1,3);tail.material.bumpMap.repeat.set(1,3);
  nose.material=skin('nose',.46,.045);replacedSkin.dispose();

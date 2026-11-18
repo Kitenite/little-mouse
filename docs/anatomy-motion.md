@@ -48,6 +48,11 @@ Attachment tangents and deformed normals follow it. Inverse contacts undo the sp
 Zero dt and pending claims freeze pose. Active yielding preserves the captured point with a
 shared deformation offset; normals, depth, attachments and inverse picking use the same map.
 Free paws lag through IK; selected paws override lag. UVs and geometry objects stay stable.
+
+All four limbs now use one connected tapered envelope per solved joint chain, with rounded
+elbows/knees and covered end rings. The former shoulder/bone/joint spheres stay hidden while
+retaining their transforms. Surface-attached hairs follow the envelope; distinct paw skin and
+paw contact transforms remain unchanged. See [limb surface contract and evidence](limb-surfaces.md).
 `furLength`, `furSway`, hair density and softness remain distinct parameters.
 The rich launch preset uses morphology variety 0.8, head/pelvis turns and tail/fur motion 1.15,
 ear/whisker motion 1.2, grooming frequency 1.25 and nibbling frequency 1.2. These amplify

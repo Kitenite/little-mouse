@@ -6,7 +6,8 @@ Implemented in `little-mouse/public/coat-surfaces.js`; no geometry or audio chan
 `createSurfaceCache(T)` owns a fixed ten-map cache: six linear relief maps, four sRGB skin
 albedo maps, each 256². `applyCoatSurfaces(T, cache, parts)` runs once during construction.
 Parts: `{bodyMaterial, fur, ears, legRig, tail, nose, traits}`. Each leg supplies
-`upper`, `lower`, `shoulder`, `knee`, and a traversable `paw`. Ears contain mesh children.
+`upper`, `lower`, `shoulder`, `knee`, a traversable `paw`, and optional `surface.mesh`.
+The continuous limb envelope receives the same fine limb material as its hidden bones. Ears contain mesh children.
 The nose must be captured from the existing ellipsoid construction.
 
 Preserve rest UVs: body v=0 rump, v=1 muzzle, u wraps circumference. Body albedo repeat is

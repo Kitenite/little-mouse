@@ -124,6 +124,12 @@ test('spine-bent tail pins the selected rendered material ring during dragging',
  }
  disposeMouse(model);
 });
+test('continuous limb surfaces hide internal joints and dispose their bounded buffers',()=>{
+ const model=makeMouse(0,createMouseIdentity(314159),{armHairiness:1.5,armWidth:1.35});let disposed=0;
+ for(const leg of model.legRig.legs){for(const part of ['shoulder','upper','lower','knee'])assert.equal(leg[part].visible,false);assert.equal(leg.surface.mesh.material,leg.upper.material);for(const geo of [leg.surface.geometry,leg.surface.hair.geometry])geo.addEventListener('dispose',()=>disposed++);}
+ for(const held of [undefined,{index:0,x:-40,y:-30,z:3},{index:3,x:35,y:20,z:3}]){model.animate(1,true,120,1/60,1,.8,false,{heldPaw:held});for(const leg of model.legRig.legs){assert.deepEqual(leg.paw.position.toArray(),leg.solution.foot);assert.equal(leg.surface.hair.data,leg.surface.hair.geometry.attributes.position.array);}}
+ disposeMouse(model);assert.equal(disposed,8);
+});
 test('active drag yields free regions while reachable all-four paw and tail pins stay fixed',()=>{
  for(const index of [0,1,2,3]){
   const model=makeMouse(0,createMouseIdentity(81)),leg=model.legRig.legs[index];
