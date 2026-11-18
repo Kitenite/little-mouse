@@ -19,9 +19,9 @@ test('all shared settings round trip through server validation, including each m
  }
  assert.throws(()=>validateSettings({count:2.5}));assert.throws(()=>validateSettings({sound:'false'}));assert.throws(()=>validateSettings({lighting:'bad'}));assert.throws(()=>validateSettings({backgroundColor:'javascript:x'}));
 });
-test('sound and secondary physics controls match the shared contract',()=>{
+test('module fallback values and physics bounds remain valid under the rich shared preset',()=>{
  for(const[defaults,controls]of [[{coatSaturation:coatDefaults.coatSaturation,coatBrightness:coatDefaults.coatBrightness},coatControls],[audioDefaults,audioControlSchema],[secondaryMotionDefaults,secondaryMotionControls]])for(const[key,value]of Object.entries(defaults)){
- assert.equal(settingsDefaults[key],value,key);for(const bound of ['min','max','step'])assert.equal(settingsSchema[key][bound],controls[key][bound],key+bound);
+ assert.equal(validateSettings({[key]:value})[key],value,key);for(const bound of ['min','max','step'])assert.equal(settingsSchema[key][bound],controls[key][bound],key+bound);
  }
 });
 test('profiles preserve settings and safely restore valid fields after schema changes',()=>{

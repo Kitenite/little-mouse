@@ -1,21 +1,21 @@
 # Recorded prey sound
 
-The game uses 30 short recording excerpts across 25 event families. The original
+The game uses 26 short recording excerpts across 25 event families. The original
 synthetic squeaks and repeated footstep beats have been removed. Small playback
 rate changes (0.96–1.04), gain changes, and nonrepeating clip selection vary the
 phrases; they do not replace source recordings with oscillator tones.
 
 ## Sources and what they actually contain
 
-All four sources are **CC0 1.0**, verified on their primary Freesound pages on
+All four active sources are **CC0 1.0**, verified on their primary Freesound pages on
 2026-11-17. They are reusable without attribution, but credits and exact source
 links are retained in [the attribution manifest](public/assets/audio/ATTRIBUTION.json).
 
 | Recording | Creator | Used for | Provenance limitation |
 | --- | --- | --- | --- |
 | [Mouse Squeaks.wav](https://freesound.org/people/shyguy014/sounds/463789/) | shyguy014 | 12 short vocal excerpts | Uploader identifies a trapped mouse/rat; species is uncertain and calls were agitated. |
-| [ratSqueak.wav](https://freesound.org/people/Zabuhailo/sounds/143125/) | Zabuhailo | 8 contact/distress excerpts | Actual pet rat, not a mouse. |
-| [hamster eating](https://freesound.org/people/Yuval/sounds/204762/) | Yuval | 6 nibbling excerpts | Actual hamster eating, used as rodent eating texture. |
+| [Mice Squeaks](https://freesound.org/people/berboberbo/sounds/727114/) | berboberbo | 4 tap squeaks | Uploader identifies mice beneath a floor; species/context unverified. |
+| [Mouse eating cracker](https://freesound.org/people/Jon285/sounds/75166/) | Jon285 | 6 nibbling excerpts | Uploader identifies a pet mouse; background birdsong disclosed. |
 | [Paper Rustle](https://freesound.org/people/BenjaminNelan/sounds/353125/) | BenjaminNelan | 4 friction excerpts | Paper foley for small movement/scratching; not recorded mouse footsteps. |
 
 This is a rodent-inspired game mix, not a scientifically validated model of mouse
@@ -25,13 +25,17 @@ noncommercial license was unsuitable for this public project's unrestricted use.
 
 ## Processing and mix
 
-The shipped clips total approximately 548 KB: mono 22,050 Hz, 16-bit PCM WAV.
+Runtime clips use mono 22,050 Hz, 16-bit PCM WAV. Rat and hamster excerpts remain
+archived with provenance but are not loaded or selected. Three crawl candidates
+are also withheld pending listening; see [curation](../docs/sound-curation.md).
 They were extracted from the sources' public high-quality MP3 previews, filtered
 at 180 Hz and 10.5 kHz, adjusted toward a family RMS target with a bounded gain
 and 0.55 peak ceiling, and given 12 ms endpoint fades. The manifest records exact
 cut times, gain, final PCM peak/RMS, size, and SHA-256 for every excerpt.
 
-Surface friction sits below vocal cues. Small per-clip playback trims match its
+Surface friction sits below vocal cues. Running, retreat and drag-loop gains are
+approximately 11–12 dB quieter than the previous mix. Contact squeaks suppress
+movement layers for at least 450 ms. Small per-clip playback trims match its
 RMS within 1 dB, preserving transient shape and the final mix limiter. Running produces sparse short friction
 bursts only at meaningful movement speeds, with 1.7–3.9 seconds of spacing at
 normal activity. It is not synchronized individual paw impacts. The game never
@@ -44,9 +48,10 @@ events whenever another loaded clip is available.
 A shared master gain and soft-knee waveshaper bound the digital output below
 approximately 0.81. Ordinary cue levels stay below the knee. Volume is not a
 calibrated physical sound-pressure level; device volume and speaker routing still
-apply. Missing or failed assets do not block play: movement sounds fall silent,
-and other events use a very quiet, short broadband rustle rather than a tonal
-synthetic squeak.
+apply. Missing or failed assets do not block play: unavailable cues fall silent.
+There is no synthesized fallback or generated primer. Contact cues briefly queue
+while recordings load and take priority over movement audio. A quick harmless
+release does not add a second squeak; harmful outcomes replace their contact cue.
 
 ## Behavior and controls
 
@@ -55,7 +60,7 @@ synthetic squeak.
 
 - `sound`: application mute, available locally and on the companion.
 - `soundVolume`: 0–1, default 0.7.
-- `soundFrequency`: 0.25–2, default 1; adjusts incidental spacing without raising
+- `soundFrequency`: 0.25–2, default 1.25; adjusts incidental spacing without raising
   the concurrency ceiling.
 
 Arrival, teasing, contact, injury, concealment, running, dragging, scratching,
@@ -98,9 +103,9 @@ interruption stop voices; another local gesture can resume an interrupted contex
 `mouseDiagnostics().audio` reports decoded clip count, loading errors, the last
 sample ID/source, context state, active voices, and a measured signal peak after
 the master/limiter. A positive digital peak proves the graph produced audio; it
-does not prove the physical speaker is audible. In the local browser, Test sound
-loaded all 30 clips without errors and produced a measured peak of 0.0443 from
-`mouse-06` while gameplay was paused.
+does not prove the physical speaker is audible. In the local browser, all 26
+clips loaded without errors. A real pointerdown played one recorded floor squeak;
+quick harmless release left the cue count at one. Post-master peak was 0.0171.
 
 ## Migration and verification
 

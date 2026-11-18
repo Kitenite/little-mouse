@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {PreyAudio,createLimiterCurve} from '../public/audio.js';
-import{recordedSamples,sampleBanks,sampleTrim}from'../public/audio-samples.js';
+import{recordedSamples,sampleBanks,sampleTrim,sampleMix}from'../public/audio-samples.js';
 class Param {
   value=0;
   setValueAtTime(value,time){assert.ok(Number.isFinite(value)&&Number.isFinite(time));this.value=value;}
@@ -98,9 +98,9 @@ test('numeric sound settings clamp invalid values, volume zero mutes, activity c
   audio.configure({soundVolume:NaN,soundFrequency:Infinity});assert.equal(audio.settings.soundVolume,.7);assert.equal(audio.settings.soundFrequency,1);
 });
 
-test('harmless contacts choose soft reactions instead of injury sounds',async()=>{
+test('harmless contacts choose recorded vocal taps instead of injury sounds',async()=>{
   const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
-  for(const [reaction,kind] of [['flinch','tap'],['freeze','sniff'],['dodge','dodge']]){
+  for(const [reaction,kind] of [['flinch','tap'],['freeze','tap'],['dodge','tap']]){
     context.advance(context.currentTime+1);audio.hit({x:100,reaction},1000,'harmless');assert.equal(audio.lastPlayed.kind,kind);
   }
   context.advance(4);audio.hit({x:100,reaction:'limp'},1000,'hurt');assert.equal(audio.lastPlayed.kind,'hurt');
@@ -138,10 +138,10 @@ test('recorded cue selection avoids the same physical sample across neighboring 
   context.advance(context.currentTime+1);assert.equal(audio.cue(kind),true);assert.equal(audio.lastPlayed.source,'recording');assert.notEqual(audio.lastPlayed.sample,previous);previous=audio.lastPlayed.sample;
  }
 });
-test('failed sample loads retain quiet contact fallback and never fake mechanical footsteps',async()=>{
+test('failed sample loads remain silent and expose unavailable recordings',async()=>{
  const context=new Context(),audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async()=>{throw Error('Offline');}});
  audio.setState(true,true);await audio.unlock();await audio.loadSamples();assert.equal(audio.sampleBuffers.size,0);assert.equal(audio.sampleErrors.length,recordedSamples.length);
- assert.equal(audio.cue('patter'),false);assert.equal(audio.cue('dragloop'),false);assert.equal(audio.cue('tap'),true);assert.equal(audio.lastPlayed.source,'quiet-noise-fallback');
+ assert.equal(audio.cue('patter'),false);assert.equal(audio.cue('dragloop'),false);assert.equal(audio.cue('tap'),false);assert.equal(audio.played,0);assert.equal(context.sources.length,0);assert.equal(audio.diagnostics().blockedReason,'sample-unavailable');
 });
 test('loading accepts available recordings despite individual download failures',async()=>{
  const context=new Context();let inFlight=0,maximum=0;
@@ -178,10 +178,10 @@ test('a pending calm reply is cancelled if its mouse is grabbed or injured',asyn
 
 test('shipped recording files match provenance, have faded endpoints and no near-silent vocal cuts',()=>{
   const base=new URL('../public/assets/audio/',import.meta.url),manifest=JSON.parse(readFileSync(new URL('ATTRIBUTION.json',base)));
-  assert.equal(manifest.clips.length,recordedSamples.length);
+  for(const id of recordedSamples)assert.equal(manifest.clips.filter(c=>c.id===id).length,1);
   let total=0;
   for(const clip of manifest.clips){
-    const bytes=readFileSync(new URL(clip.file,base));total+=bytes.length;
+    const bytes=readFileSync(new URL(clip.file,base));if(recordedSamples.includes(clip.id))total+=bytes.length;
     assert.equal(createHash('sha256').update(bytes).digest('hex'),clip.sha256);
     assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WAVE');
     let offset=12,pcm;
@@ -190,10 +190,10 @@ test('shipped recording files match provenance, have faded endpoints and no near
     for(let i=0;i<pcm.length;i+=2){const v=pcm.readInt16LE(i)/32768;peak=Math.max(peak,Math.abs(v));sum+=v*v;}
     assert.equal(pcm.readInt16LE(0),0);assert.equal(pcm.readInt16LE(pcm.length-2),0);
     assert.ok(peak<=.551);const rms=Math.sqrt(sum/(pcm.length/2));
-    if(['mouse','rat'].includes(clip.source))assert.ok(rms>.03,`${clip.id} vocal cut is too quiet: ${rms}`);
+    if(['mouse','rat','floor'].includes(clip.source))assert.ok(rms>.03,`${clip.id} vocal cut is too quiet: ${rms}`);
     assert.ok(Math.abs(rms-clip.rms)<.00001);
   }
-  assert.ok(total<600000);
+  assert.ok(total<600000); // Runtime collection excludes archived rat and hamster clips.
   assert.deepEqual(new Set(Object.values(sampleBanks).flat()),new Set(recordedSamples));
 });
 
@@ -203,8 +203,8 @@ test('paused audition selects an event family and repeated impact previews are n
  await audio.testSound('constructor');assert.equal(audio.lastPlayed.kind,'squeak');assert.equal(audio.active,false);
 });
 
-test('calm and harmless banks never reuse distress vocals; idle remains nonvocal',async()=>{
-  for(const kind of ['peek','tease','call','reply','tap','flinch','dragrelease','groom','facewipe','hindlegscratch','stretch','roll'])assert.ok(sampleBanks[kind].every(id=>id.startsWith('paper-')),kind);
+test('calm idle banks remain nonvocal; explicit touch uses collected vocals',async()=>{
+  for(const kind of ['peek','tease','call','reply','flinch','dragrelease','groom','facewipe','hindlegscratch','stretch','roll'])assert.ok(sampleBanks[kind].every(id=>id.startsWith('paper-')),kind);
   const {audio,context}=setup();audio.rng=()=>.99;audio.setState(true,true);await audio.unlock();
   const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'}};
   for(let time=0;time<60;time++){context.advance(time);audio.update([mouse],time,1000,700);if(audio.lastPlayed)assert.ok(audio.lastPlayed.sample.startsWith('paper-'));}
@@ -266,13 +266,13 @@ test('each direct touch and harmless outcome bypasses cooldown and ambient conge
  const mouse={x:100,reaction:'dodge'};
  for(let i=0;i<8;i++){const before=audio.played;assert.equal(audio.contactFeedback(mouse,1000),true);assert.equal(audio.played,before+1);assert.equal(audio.lastPlayed.kind,'tap');assert.equal(audio.lastPlayed.priority,2);assert.ok(audio.voices.size<=3);}
  assert.equal(ambient.some(voice=>audio.voices.has(voice)),false);
- const before=audio.played;assert.equal(audio.hit(mouse,1000,'harmless'),true);assert.equal(audio.played,before+1);assert.equal(audio.lastPlayed.kind,'dodge');
+ const before=audio.played;assert.equal(audio.hit(mouse,1000,'harmless'),true);assert.equal(audio.played,before);assert.equal(audio.lastPlayed.kind,'tap');
  assert.equal(audio.cue('peek'),false);assert.equal(audio.voices.size,3);
 });
-test('priority harmless contact has quiet fallback even when its movement recording is missing',async()=>{
+test('missing touch vocals queue briefly without synthetic fallback',async()=>{
  const {audio}=setup();audio.sampleBuffers.clear();audio.setState(true,true);await audio.unlock();
  assert.equal(audio.contactFeedback({x:100,reaction:'dodge'},1000,'harmless'),true);
- assert.equal(audio.lastPlayed.source,'quiet-noise-fallback');assert.equal(audio.lastPlayed.kind,'dodge');
+ assert.equal(audio.lastPlayed,null);assert.equal(audio.played,0);assert.equal(audio.pendingContacts.length,1);assert.equal(audio.diagnostics().blockedReason,'sample-unavailable');
 });
 test('hold friction preempts ambience but cannot steal voices from direct contacts',async()=>{
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
@@ -317,7 +317,7 @@ test('pointer cancellation removes only that mouse pending feedback before resum
 test('pointer cancellation stops contact and hold voices without a phantom release',async()=>{
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
  const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'},hold:{active:true,part:'tail',anchorVX:0,anchorVY:0}};
- audio.contactFeedback(mouse,1000);audio.update([mouse],0,1000,700);assert.equal(audio.voices.size,2);
+ audio.contactFeedback(mouse,1000);audio.update([mouse],0,1000,700);assert.equal(audio.voices.size,1);
  audio.cancelContactFeedback(mouse);delete mouse.hold;assert.equal(audio.voices.size,0);assert.equal(audio.observations.get(mouse).held,false);
  const played=audio.played;context.advance(.1);audio.update([mouse],.1,1000,700);assert.equal(audio.played,played);
 });
@@ -334,14 +334,80 @@ test('canceling a second pointer preserves another pointer queued on the same mo
  audio.cancelContactFeedback(mouse,2,{cancelHold:false});assert.equal(audio.pendingContacts.length,1);assert.equal(audio.pendingContacts[0].pointerId,1);
  resume();await Promise.resolve();assert.equal(audio.played,1);assert.equal([...audio.voices][0].pointerId,1);
 });
-test('canceling a nonowner pointer leaves direct owner and hold sounds without restarting the hold',async()=>{
+test('canceling a nonowner pointer preserves owner vocal and held observation without restarting hold',async()=>{
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
  const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'},hold:{active:true,part:'tail',anchorVX:0,anchorVY:0}};
  audio.contactFeedback(mouse,1000,'touch',1);audio.update([mouse],0,1000,700);audio.contactFeedback(mouse,1000,'touch',2);
- assert.equal(audio.voices.size,3);audio.cancelContactFeedback(mouse,2,{cancelHold:false});
- assert.equal(audio.voices.size,2);assert.equal(audio.observations.get(mouse).held,true);
- assert.ok([...audio.voices].some(v=>v.priority===2&&v.pointerId===1));assert.ok([...audio.voices].some(v=>v.priority===1));
+ assert.equal(audio.voices.size,2);audio.cancelContactFeedback(mouse,2,{cancelHold:false});
+ assert.equal(audio.voices.size,1);assert.equal(audio.observations.get(mouse).held,true);
+ assert.ok([...audio.voices].some(v=>v.priority===2&&v.pointerId===1));assert.equal([...audio.voices].some(v=>v.priority===1),false);
  const played=audio.played;context.advance(.1);audio.update([mouse],.1,1000,700);assert.equal(audio.played,played);
  audio.cancelContactFeedback(mouse,1,{cancelHold:true});delete mouse.hold;assert.equal(audio.voices.size,0);assert.equal(audio.observations.get(mouse).held,false);
  context.advance(.2);audio.update([mouse],.2,1000,700);assert.equal(audio.played,played);
+});
+
+
+test('walking and dragging stay substantially below squeaks while contact gain remains audible',()=>{
+ const manifest=JSON.parse(readFileSync(new URL('../public/assets/audio/ATTRIBUTION.json',import.meta.url)));
+ const rms=new Map(manifest.clips.map(c=>[c.id,c.rms]));
+ const power=kind=>Math.sqrt(sampleBanks[kind].reduce((sum,id)=>sum+(rms.get(id)*(sampleTrim[id]??1)*sampleMix[kind])**2,0)/sampleBanks[kind].length);
+ for(const kind of ['patter','retreat','dragloop'])assert.ok(20*Math.log10(power(kind)/power('squeak')) < -22,kind);
+ assert.equal(sampleMix.tap,.2);assert.equal(sampleMix.hit,.38);assert.equal(sampleMix.hurt,.32);assert.equal(sampleMix.squeak,.28);
+ assert.ok(power('tap')>power('patter')*5);
+});
+test('startup loads touch vocal recordings before movement textures',async()=>{
+ const {audio}=setup();const starts=[];let release;
+ const gate=new Promise(resolve=>{release=resolve;});audio.sampleLoader=async id=>{starts.push(id);await gate;return{duration:.3};};
+ await audio.unlock();assert.deepEqual(starts,sampleBanks.tap);release();await audio.loadSamples();
+ assert.equal(starts.length,recordedSamples.length);assert.equal(new Set(starts).size,recordedSamples.length);assert.equal(audio.sampleBuffers.size,recordedSamples.length);
+});
+
+test('direct touch silences foley through its vocal and quick harmless release does not double it',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100};audio.cue('patter');assert.equal(audio.voices.size,1);
+ audio.contactFeedback(mouse,1000,'touch',1);assert.equal(audio.voices.size,1);
+ assert.ok(sampleBanks.tap.includes(audio.lastPlayed.sample));assert.equal(audio.lastPlayed.source,'recording');
+ for(const kind of ['patter','rustle','dragstart','dragloop','scratch','peek'])assert.equal(audio.cue(kind,.5,mouse,{priority:1,bypassCooldown:true}),false,kind);
+ const before=audio.played;audio.hit(mouse,1000,'harmless');assert.equal(audio.played,before);
+ audio.contactFeedback(mouse,1000,'touch',2);assert.equal(audio.played,before+1);
+ audio.hit(mouse,1000,'tossed');assert.equal(audio.lastPlayed.kind,'dragrelease');
+ mouse.reaction='stunned';audio.hit(mouse,1000,'injured');assert.equal(audio.lastPlayed.kind,'hurt');
+ context.advance(1);assert.equal(audio.cue('patter'),true);
+});
+test('canceling secondary touch still deduplicates the owner harmless release',async()=>{
+ const {audio}=setup();audio.setState(true,true);await audio.unlock();const mouse={x:100};
+ audio.contactFeedback(mouse,1000,'touch',1);audio.contactFeedback(mouse,1000,'touch',2);audio.cancelContactFeedback(mouse,2,{cancelHold:false});
+ const before=audio.played;audio.hit(mouse,1000,'harmless');assert.equal(audio.played,before);
+});
+test('first touch waits for an actual recording, load completion respects cancellation and expiration',async()=>{
+ for(const cancel of [null,(a,m)=>a.cancelContactFeedback(m,1),(a)=>a.setState(false,true),(a)=>a.setState(true,false),(a)=>a.configure({soundVolume:0}),(a)=>{a.pendingContacts[0].expires=Date.now()-1;}]){
+  const context=new Context();let release;const gate=new Promise(resolve=>{release=resolve;});const requested=[];
+  const audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async id=>{requested.push(id);await gate;return {duration:.3,id};}});
+  audio.setState(true,true);const mouse={x:100};audio.contactFeedback(mouse,1000,'touch',1);audio.hit(mouse,1000,'harmless');
+  await Promise.resolve();assert.equal(audio.played,0);assert.equal(context.sources.length,0);assert.equal(audio.pendingContacts.length,1);assert.deepEqual(requested,sampleBanks.tap);
+  if(cancel)cancel(audio,mouse);release();await audio.loadSamples();assert.equal(audio.played,cancel?0:1);assert.equal(audio.pendingContacts.length,0);
+  for(const source of context.sources)assert.ok(source.buffer?.id?.startsWith('floor-'));
+ }
+});
+
+test('quick injury replaces its pointer down vocal while preserving other paws',async()=>{
+ const {audio}=setup();audio.setState(true,true);await audio.unlock();const mouse={x:100,reaction:'stunned'};
+ audio.contactFeedback(mouse,1000,'touch',1);audio.contactFeedback(mouse,1000,'touch',2);
+ audio.hit(mouse,1000,'injured',1);
+ assert.equal(audio.voices.size,2);assert.ok([...audio.voices].some(v=>v.pointerId===2&&v.kind==='tap'));
+ assert.ok([...audio.voices].some(v=>v.pointerId===1&&v.kind==='hurt'));assert.equal([...audio.voices].some(v=>v.pointerId===1&&v.kind==='tap'),false);
+});
+test('quick injury replaces queued down before activation instead of flushing both',async()=>{
+ const {audio,context}=setup();let resume;context.resume=()=>new Promise(resolve=>{resume=()=>{context.state='running';resolve();};});
+ audio.setState(true,true);const mouse={x:100,reaction:'stunned'};audio.contactFeedback(mouse,1000,'touch',1);audio.contactFeedback(mouse,1000,'touch',2);audio.hit(mouse,1000,'injured');
+ assert.deepEqual(audio.pendingContacts.map(e=>[e.pointerId,e.kind]),[[2,'tap'],[1,'hurt']]);resume();await Promise.resolve();assert.equal(audio.played,2);
+});
+
+
+test('runtime uses mouse-eating cracker cuts and excludes archived rat, hamster and crawl recordings',()=>{
+ assert.deepEqual(sampleBanks.nibble,Array.from({length:6},(_,i)=>`cracker-${String(i+1).padStart(2,'0')}`));
+ assert.deepEqual(sampleBanks.eat,sampleBanks.nibble);assert.equal(recordedSamples.length,26);
+ for(const id of Object.values(sampleBanks).flat())assert.ok(!/^(rat|chew|crawl)-/.test(id),id);
+ assert.ok(sampleBanks.hit.every(id=>/^(mouse|floor)-/.test(id)));assert.ok(sampleBanks.hurt.every(id=>/^(mouse|floor)-/.test(id)));
+ assert.equal(sampleMix.nibble,.3);assert.equal(sampleMix.eat,.3);
 });

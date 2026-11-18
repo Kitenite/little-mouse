@@ -1,6 +1,6 @@
 # Physics engine decision
 
-Status: current solver retained; engine comparison researched, engine prototypes not benchmarked.
+Status: current solver retained; isolated Planck prototype tested; adoption deferred.
 This decision concerns world movement, collision and dragging. Three.js already renders the
 3D rig; changing the physics engine would not replace its mesh, fur, anatomical deformation,
 limb IK, ears or whiskers.
@@ -42,8 +42,13 @@ anchor speed, time handling and ownership ordering; swapping libraries would pre
 mistakes unless the interaction policy changed. The current visual soft tissue and tail are
 bounded approximations, not a physically accurate animal.
 
-Prototype Planck first when requirements include force-based rotational dragging, stable
-stacking, articulated collision bodies or convincing ragdoll throws. Adopt it when an isolated
+The isolated `physics-engine-prototype` branch at `6c1633e` contains the Planck experiment
+and 23 passing tests. Its seeded scenarios measured 21.62 px drag lag, 12.27 px collision
+joint gap (proposed gate ≤2 px), and 1.635 rad angular overshoot (gate ≤0.2 rad).
+Tests document those limitations; they do not establish adoption readiness. Preview with
+`PORT=4180 npm --prefix prototypes/physics-engine start` in that worktree.
+
+Adopt an engine only when an isolated
 prototype demonstrably improves the same seeded drag/collision scenarios and measured iPad
 frame times, while preserving deterministic ownership, cancellation, morphology-aware contacts,
 resting-paw routing, pause, live settings and bounded resource use. A prototype must not become
@@ -54,4 +59,7 @@ a second simultaneous authority over mouse positions.
 Current numerical tests cover ordinary fast drags, held-part tethers, pause, cancellation,
 kinematic collisions, bounded throws and articulated attachment. Browser and physical iPad
 checks must still inspect reachable paw/tail pins, curve appearance, multi-touch pressure and
-frame pacing. No engine package was added and no comparative engine benchmark is claimed.
+frame pacing. No engine package was added to the live game. Prototype measurements
+are desktop scenario results, not physical iPad performance or perceptual validation.
+Ground impressions can use rendered foot contacts and actual displacement independently
+of engine adoption; held mouse velocity alone is insufficient to detect dragging.

@@ -26,8 +26,9 @@ risk. Distant taps can orient or pause rather than being ignored or always causi
 Direct contact can be harmless or cause the requested cosmetic injury/defeat reactions;
 [contact rules](touch-interaction.md) own region selection and held outcomes.
 
-Current defaults are one mouse, size 2.2, pace 1.2, hide 3 seconds, Hunt tempo 1 and
-run-through probability 0.22. `settings.js` owns actual ranges/defaults. Peek/watch duration,
+The rich launch preset uses two mice, size 2.2, pace 1.2, hide 2.5 seconds, Hunt tempo 1
+and run-through probability 0.30. It favors varied visible bouts while retaining pauses and
+concealment, rather than maximizing simultaneous mice or movement speed. `settings.js` owns actual ranges/defaults. Peek/watch duration,
 creep/dart speed, perception distance and reaction delay are independently adjustable.
 No old saved session-duration value may stop the game automatically.
 
@@ -47,4 +48,6 @@ No old saved session-duration value may stop the game automatically.
 Implemented in `little-mouse/public/{enrichment,behavior,physics}.js`; checked by
 `hunt-policy`, `behavior`, `physics`, `touch-reactions` and `contact` tests.
 This is an authored policy, not a trained AI or validated rodent psychology model.
-The comparative quality target still requires observing Mouse for Cats and this cat's response.
+The rich preset is a design choice for this cat to try, not a scientifically optimal or
+validated engagement setting. Its comparative quality still requires observing Mouse for Cats
+and this cat's response.

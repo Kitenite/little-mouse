@@ -29,6 +29,9 @@ Image contrast applies to a separate CSS background layer, leaving the mouse and
 Image scale 1 shows the complete composition; values 1–2.5 zoom without repeating and values below
 1 retain the complete image. Procedural scale 0.5–2.5 changes the repeating texture size.
 The transparent WebGL layer and shadow receiver sit above either type of surface.
+The rich launch preset selects the woodland clearing image with contrast 0.8, mixed coats and
+soft daylight. This is an owner-facing starting point, not evidence that this background is
+optimal for feline vision; quiet plain/contrast surfaces remain available for comparison.
 
 Twenty-two stable coats include brown, gray, cream, white, black, pied, checker, blue, yellow,
 orange, teal, magenta and violet, with stripe, speckle and mottled options.

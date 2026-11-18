@@ -57,7 +57,7 @@ function boardPoint(e){const r=$('board').getBoundingClientRect();return{x:e.cli
 const touchSounds=new Map();
 function cancelTouchSound(id){const mouse=touchSounds.get(id);if(mouse)preyAudio.cancelContactFeedback(mouse,id,{cancelHold:contacts.get(id)?.m===mouse});touchSounds.delete(id);}
 function cancelTouchSounds(){for(const id of touchSounds.keys())cancelTouchSound(id);}
-function finishContact(e){touchSounds.delete(e.pointerId);const result=endContact(contacts,e.pointerId,elapsed,scene.w,scene.h,config.size,config);if(!result)return;const {mouse:m,outcome,x,y}=result;catches++;if(outcome!=='harmless'&&outcome!=='tossed')scene.splatter(x,y,config.size,m.angle,elapsed);preyAudio.hit(m,scene.w,outcome);$('score').textContent=`${catches} ${catches===1?'hit':'hits'}`;}
+function finishContact(e){touchSounds.delete(e.pointerId);const result=endContact(contacts,e.pointerId,elapsed,scene.w,scene.h,config.size,config);if(!result)return;const {mouse:m,outcome,x,y}=result;catches++;if(outcome!=='harmless'&&outcome!=='tossed')scene.splatter(x,y,config.size,m.angle,elapsed);preyAudio.hit(m,scene.w,outcome,e.pointerId);$('score').textContent=`${catches} ${catches===1?'hit':'hits'}`;}
 $('board').addEventListener('pointerdown',e=>{e.preventDefault();if(!playing)return;const {x,y}=boardPoint(e);if(!recordPointer(contacts,e.pointerId,x,y,elapsed,e.width,e.height))return;try{$('board').setPointerCapture(e.pointerId);}catch{}rememberTouch(huntDirector,x,y,elapsed,scene.w,scene.h);
  const eligible=mice.filter(m=>!m.hold&&m.hiddenUntil<=elapsed&&m.state!=='away'&&m.state!=='defeated');
  let hit=scene.contactAt?.(mice,x,y,config.size,{includeUnclaimable:true});

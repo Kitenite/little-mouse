@@ -54,7 +54,7 @@ export class PlaygroundSimulation{
   if(this.config.mode!=='hunt')for(const m of this.mice)flee(m,x,y,this.time,this.width,this.height,this.config.size);return false;
  }
  pointerMove(id,x,y,width=0,height=0){if(!this.contacts.paws.has(id))return;recordPointer(this.contacts,id,x,y,this.time,width,height);moveContact(this.contacts,id,x,y,this.config.size,this.time);}
- pointerUp(id){const result=endContact(this.contacts,id,this.time,this.width,this.height,this.config.size,this.config,this.rng);this.recordHit(result);return result;}
+ pointerUp(id){const result=endContact(this.contacts,id,this.time,this.width,this.height,this.config.size,this.config,this.rng);if(result)result.pointerId=id;this.recordHit(result);return result;}
  cancelPointer(id){removePointer(this.contacts,id);}
  placePaw(x,y,radius=45){const id='lab-paw-'+(++this.obstacleSerial);recordPointer(this.contacts,id,x,y,this.time,radius*2,radius*2);return id;}
  clearPaws(){clearContacts(this.contacts);}

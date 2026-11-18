@@ -16,7 +16,7 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 - Persistent seeded identities supply bounded morphology and coat variation. Defeat/replacement
   may introduce a new identity; ordinary hiding must preserve the individual.
 - Geometry, articulated legs, contacts and exit bounds use the same morphology.
-- Speed-sensitive gait controls cadence, stride and foot lift; the default cadence cap is 4.5 Hz.
+- Speed-sensitive gait controls cadence, stride and foot lift; the rich-preset cadence cap is 4.2 Hz.
 - Secondary motion gives the tail, ears, fur and whiskers bounded motion with reset behavior
   after discontinuities. Rest and pauses must not accumulate unstable physics.
 - Anatomical head/pelvis pose freezes from initial claim, preventing movement under a pending
@@ -39,6 +39,10 @@ Independent arm length/thickness, body/arm hairiness and fur softness controls n
 renderer. Head/torso/pelvis articulation eases separate turns through a continuous surface,
 with anatomy-aware limb anchors and corresponding contact transforms.
 `furLength`, `furSway`, hair density and softness remain distinct parameters.
+The rich launch preset uses morphology variety 0.8, head/pelvis turns and tail/fur motion 1.15,
+ear/whisker motion 1.2, grooming frequency 1.25 and nibbling frequency 1.2. These amplify
+bounded responses modestly; spring stiffness/damping, mesh density and anatomical proportions
+remain at their standard settings. The two-mouse default is within the intended 1–3 mouse budget.
 
 The implementation owner reports focused anatomy, model, identity and leg-rig checks passing,
 including articulation limits, seam continuity, inverse contacts and limb lengths. Physical

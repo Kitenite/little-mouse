@@ -16,6 +16,11 @@ The game polls at 400 ms; the companion at 500 ms. This is live polling, not har
 Commands include play, pause, steer, recall and reload. Stale commands are rejected.
 Unsaved local changes survive stale polling until acknowledged; failures preserve local play.
 
+The current rich starting preset uses two large mice, woodland clearing, varied hunt/idle
+behavior and moderate secondary motion. It is a design starting point to test with this cat,
+not a scientifically established optimum. The connected iPad also has a saved
+`Rich woodland hunt` profile; custom settings remain adjustable.
+
 ## Ending play
 
 Current owner exit: briefly tap corners **top-left, top-right, bottom-right, bottom-left**

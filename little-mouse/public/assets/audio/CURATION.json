@@ -1,0 +1,198 @@
+{
+  "sources": {
+    "cracker": {
+      "title": "Mouse eating cracker.wav",
+      "author": "Jon285",
+      "url": "https://freesound.org/people/Jon285/sounds/75166/",
+      "download": "https://cdn.freesound.org/previews/75/75166_282197-hq.mp3",
+      "recording": "Uploader identifies a pet mouse eating a prawn cracker; ambient noise and birdsong are disclosed. Not independently species-verified.",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "verified": "2026-11-17",
+      "previewSha256": "c8a5f595d2a719545bd25a9547bc9f67d545b9f04c2f824e7741d676f77062f9"
+    },
+    "crawl": {
+      "title": "mouse.wav",
+      "author": "jimmyfisher",
+      "url": "https://freesound.org/people/jimmyfisher/sounds/415230/",
+      "download": "https://cdn.freesound.org/previews/415/415230_6502466-hq.mp3",
+      "recording": "Uploader identifies a mouse crawling in a kitchen, DR-05 recorder. Very quiet source; species and isolated sound content not independently verified. Listening pending.",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "verified": "2026-11-17",
+      "previewSha256": "6ef7a62f4ea008617efed2cc834276ef51b4e8b7c8425938a4f9655a4bb13ff9"
+    },
+    "floor": {
+      "title": "Mice Squeaks",
+      "author": "berboberbo",
+      "url": "https://freesound.org/people/berboberbo/sounds/727114/",
+      "download": "https://cdn.freesound.org/previews/727/727114_15781963-hq.mp3",
+      "recording": "Uploader identifies mice squeaking beneath a floor. Behavioral context and exact species unverified; do not label as calm communication. Potential tap cue is game feedback, not a biological claim.",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "verified": "2026-11-17",
+      "previewSha256": "db10383e2a84c1018c5ee89a42ab5b2b562e5fc54a517dff5c1cacc994851ad4"
+    }
+  },
+  "processing": "Public HQ MP3 previews decoded; mono 22050 Hz PCM; 180 Hz high-pass / 10.5 kHz low-pass; excerpting; bounded peak/RMS gain; 12 ms endpoint fades. Slight playback-rate variation occurs at runtime.",
+  "auditionLimitation": "Waveforms, spectrograms and peaks checked. This agent runtime cannot hear audio; no subjective listening approval is claimed.",
+  "clips": [
+    {
+      "id": "cracker-01",
+      "file": "cracker-01.wav",
+      "source": "cracker",
+      "start": 1.1,
+      "duration": 0.4500226757369615,
+      "gain": 0.758554,
+      "peak": 0.54998779296875,
+      "rms": 0.019749562151435356,
+      "bytes": 19890,
+      "sha256": "b087086faadece1ee9b40ccbb6b300605422efb6a6b186e8586729d991b33348"
+    },
+    {
+      "id": "cracker-02",
+      "file": "cracker-02.wav",
+      "source": "cracker",
+      "start": 3.2,
+      "duration": 0.5,
+      "gain": 0.544584,
+      "peak": 0.54998779296875,
+      "rms": 0.022330941952615185,
+      "bytes": 22094,
+      "sha256": "149d4c0a3562bf57df3d8c4a45f8c2b2a0e2ffc96c73b7090051f1aa33376f74"
+    },
+    {
+      "id": "cracker-03",
+      "file": "cracker-03.wav",
+      "source": "cracker",
+      "start": 5.2,
+      "duration": 0.4500226757369615,
+      "gain": 0.781579,
+      "peak": 0.54998779296875,
+      "rms": 0.02926108632674836,
+      "bytes": 19890,
+      "sha256": "fb4bc52b72666f258f38effd854a253a3b6848157176d9e2447029b96d1d6af7"
+    },
+    {
+      "id": "cracker-04",
+      "file": "cracker-04.wav",
+      "source": "cracker",
+      "start": 9.1,
+      "duration": 0.5499773242630386,
+      "gain": 0.553363,
+      "peak": 0.54998779296875,
+      "rms": 0.022541977104984803,
+      "bytes": 24298,
+      "sha256": "aa407d51aa9246dab032d961a2c7f6b3b88715380903ce83458bb621275c95ab"
+    },
+    {
+      "id": "cracker-05",
+      "file": "cracker-05.wav",
+      "source": "cracker",
+      "start": 15.1,
+      "duration": 0.4500226757369615,
+      "gain": 0.926264,
+      "peak": 0.54998779296875,
+      "rms": 0.01284904367974629,
+      "bytes": 19890,
+      "sha256": "c8e8a0ac49ee2e76afeaff3e46026c197d8617356ca05e92a4912f71bede167b"
+    },
+    {
+      "id": "cracker-06",
+      "file": "cracker-06.wav",
+      "source": "cracker",
+      "start": 20.1,
+      "duration": 0.5,
+      "gain": 0.596311,
+      "peak": 0.54998779296875,
+      "rms": 0.0276177521176783,
+      "bytes": 22094,
+      "sha256": "a3b7339c675850ed8353acf04bc9b321e64a4d7b88f0bdaf88fae6c80cd32e96"
+    },
+    {
+      "id": "crawl-01",
+      "file": "crawl-01.wav",
+      "source": "crawl",
+      "start": 5.0,
+      "duration": 0.5500226757369614,
+      "gain": 27.95939,
+      "peak": 0.32745361328125,
+      "rms": 0.02499923097755242,
+      "bytes": 24300,
+      "sha256": "cecdd2150d59d44aa1804660763b65a5778ecffeefb501a70fa6ca1062333a1c"
+    },
+    {
+      "id": "crawl-02",
+      "file": "crawl-02.wav",
+      "source": "crawl",
+      "start": 6.5,
+      "duration": 0.4500226757369615,
+      "gain": 32,
+      "peak": 0.228668212890625,
+      "rms": 0.01133407197239602,
+      "bytes": 19890,
+      "sha256": "4f1c06c588aac1cdee799e1cdeec4134cfbf1ec64116c2c9d3b5ce726360bdb1"
+    },
+    {
+      "id": "crawl-03",
+      "file": "crawl-03.wav",
+      "source": "crawl",
+      "start": 9.0,
+      "duration": 0.5,
+      "gain": 32,
+      "peak": 0.21063232421875,
+      "rms": 0.012749197296379114,
+      "bytes": 22094,
+      "sha256": "278ff28c7d649dc7aeb224d077a920ce6f1f5634364cd8865e615ed13511ec6f"
+    },
+    {
+      "id": "floor-01",
+      "file": "floor-01.wav",
+      "source": "floor",
+      "start": 1.46,
+      "duration": 0.24,
+      "gain": 56.619501,
+      "peak": 0.4873046875,
+      "rms": 0.06999781417011865,
+      "bytes": 10628,
+      "sha256": "c1bbe0ba6c152f75a861153f918ad205d59a1f8c2bdb6b2ec9e5f613649f9c87"
+    },
+    {
+      "id": "floor-02",
+      "file": "floor-02.wav",
+      "source": "floor",
+      "start": 2.28,
+      "duration": 0.34,
+      "gain": 64,
+      "peak": 0.260498046875,
+      "rms": 0.049723197716581825,
+      "bytes": 15038,
+      "sha256": "d20fdcdcb1ebb2553f61cd1fbed13cc2a52b8ce75b3c7945e2d286631c100a08"
+    },
+    {
+      "id": "floor-03",
+      "file": "floor-03.wav",
+      "source": "floor",
+      "start": 4.28,
+      "duration": 0.52,
+      "gain": 55.983412,
+      "peak": 0.543212890625,
+      "rms": 0.06999793765873534,
+      "bytes": 22976,
+      "sha256": "cd897f039599682bc78171e08820e6738831aa76ce7a0bc098d07c5c6efa3ba0"
+    },
+    {
+      "id": "floor-04",
+      "file": "floor-04.wav",
+      "source": "floor",
+      "start": 4.98,
+      "duration": 0.34,
+      "gain": 47.12429,
+      "peak": 0.444488525390625,
+      "rms": 0.06999804565746326,
+      "bytes": 15038,
+      "sha256": "7690ee2914759dd155dc30eaa50be411795654a5455a7b03b5fef7a49343d9ba"
+    }
+  ],
+  "status": "Curated candidates only; not wired into runtime banks. Physical listening and integration pending."
+}
