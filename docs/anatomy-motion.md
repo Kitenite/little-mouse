@@ -36,6 +36,11 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 
 ## Implemented refinements; visual validation pending
 
+Body cross-sections now share bounded monotone cubic tangents: original landmarks remain
+fixed while intermediate rump/head shelves are removed. Mesh and picking share the profile.
+Desktop before/after critique accepts this local smoothing; the downward rear tip, separate
+jaw oval and extreme-morphology tail-root gap remain open (see [cycle evidence](cycles/anatomy.md)).
+
 Independent arm length/thickness, body/arm hairiness and Fuzziness controls now feed the
 renderer. Ribcage, waist and pelvis width controls blend along the single surface, with a
 mildly narrower default waist. Seeded regional variation preserves legacy coat/profile draws;
