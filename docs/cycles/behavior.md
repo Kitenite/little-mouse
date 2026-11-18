@@ -103,7 +103,8 @@
 - Previous stack (already integrated by root; do not apply again): `629121971d941505ca2fb257043dd1c24f94e96e`,
   `af9142b7798f7299c1830b8d7efa77d260cbb9ee`, `b6cfec4ca5e6ab7ff3f72b70a0c156ca7d736550`,
   then `8c8d74e632703419cddc8c2d927d73d36cdf50fb` (report).
-- Only new B4 behavior commits should be applied for this follow-up; exact code SHA below.
+- B4 code/tests/docs: `d26bed87041ae233f1b03acc6563efd9793844c5`, followed by the
+  report-only commit at behavior branch HEAD. Only these new behavior commits are handed off.
   Do not apply local dependency equivalent `0ce4ffa`; root uses original physics SHA above.
 - All edits are isolated here. No shared hooks or changes outside policy/tests/docs required.
 - Root performs combined integration/build and browser/device/cat validation.
