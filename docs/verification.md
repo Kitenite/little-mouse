@@ -4,9 +4,17 @@ Reviewed 2026-11-17 (local time). This record replaces earlier totals; it is not
 
 ## Verified in this change
 
-- Game regression suite: 205 tests pass covering behavior, contacts, physics, geometry,
+- Game regression suite: 232 tests pass covering behavior, contacts, physics, geometry,
   activity interruption, backgrounds/coats, audio, settings, API and playground time control.
-- Native wrapper remains unchanged; TypeScript and Expo lint pass again. Previous two connection tests passed.
+- Native TypeScript and Expo lint pass; 4 tests cover connection validation and recovery checkpoints.
+- Integrated continuous limb skin, part-specific drag yielding and lit geometric fur. Root browser
+  exercised a fuzzy striped mouse through body drag/release; independent tests cover all paw
+  pins, tail fractions, pause, resets, fur roots/UVs, live roughness and resource disposal.
+  Fuzziness varies loft/spread independently of length/density. Maximum remains bristly.
+- Startup recovery: root browser blocked the game module, retried successfully, started play,
+  then induced WebGL context loss and verified Retry with the active checkpoint preserved.
+  Worker browser also covered first-preview failure and intentional pause; independent review
+  fixed partial-init writes, cleanup errors, duplicate-retry races and late pairing mutations.
 - Independent animation audit: 108 seeded drag cases over 35,640 simulation frames; bounded
   contacts, attachments, pause, held collisions and disposal. Exact fractional tail pin regression passes.
 - Browser: real owner four-corner gesture opens home; shaders compile without logged errors.
@@ -40,8 +48,11 @@ Later deliberate mute choices are preserved. No physical listening claim follows
 The physical iPad was relaunched and reported live play with two mice. Copied app settings
 confirm photo-clearing, contrast 0.8, size 2.2, hunt mode, enabled sound/volume 0.7/activity 1.25,
 tail sway 1.15, ear and whisker motion 1.2. This verifies saved settings and earlier live telemetry, not pixels or hearing.
-The final anatomy/texture app relaunch succeeded, but the saved room telemetry is stale;
-do not treat it as confirmation that the physical iPad received the latest build.
+The landscape native binary rebuilt, signed, installed and relaunched successfully on the
+connected iPad. Its built Info.plist allows only landscape-left/right and requires full screen.
+The final game route launch succeeded, but saved room telemetry remains stale; do not treat
+it as confirmation that the physical iPad received the latest web build. Physical rotation,
+fur appearance and recovery of the owner's original incident remain unverified.
 
 Final iPad visual review, multi-touch feel, all coat/background combinations, eight-mouse frame
 pacing, hosted WebView sign-in and physical speaker listening remain owner/device checks.
@@ -55,5 +66,5 @@ Local development serves current files with version reload. A GitHub push is sou
 Sites deployment is separate. Use the deployment result for hosted release status. Native shell
 changes use the existing development/Expo route and are not a new standalone binary release.
 
-Current hosted release succeeded: build `d8b19d45a575`, Sites source `e714b02`.
+Current hosted release succeeded: build `786aaf102aec`, Sites source `f209b1d`.
 The owner-private game and `/playground.html` were deployed together; audience was preserved.

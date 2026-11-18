@@ -14,13 +14,13 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 
 | Role | Terminal | Scope/status |
 | --- | --- | --- |
-| Audio implementation | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Recorded-only and surface-rustle integrated; new isolated game-start-recovery task running |
+| Audio implementation | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Recorded-only and surface-rustle integrated; game-start-recovery integrated at `0ae2101`; independent failure-path review passed |
 | Sound curation lead | `49671af0-6882-4117-999f-3ffa3f788f01` | Isolated `audio-realism-variety` branch; completed inventory/source audit; 10 excerpts integrated, 3 crawl excerpts held for listening |
-| Physics prototype lead | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Isolated `physics-engine-prototype` branch; prototype at `6c1633e` deferred; drag review passed; fur attachment/resource critique passed |
+| Physics prototype lead | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Prototype at `6c1633e` deferred; drag, fur attachment/resource and startup-recovery reviews passed |
 
 | Reactive environment lead | `1906036a-b32e-42b0-8678-76be0b6050f7` | Integrated at `20313f4`; material-aware impressions, settling fragments, controls and independent review |
 
-| Anatomy lead | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Articulation and part-drag-flop integrated at `68a8337`; pinned grabs with free-region inertia; landscape configuration integrated, root device build running |
+| Anatomy lead | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Part-drag-flop integrated at `68a8337`; landscape configuration integrated; root signed build installed on connected iPad |
 | Texture lead | `37be8626-484b-4e27-b7af-1786121687f7` | Regional surfaces integrated at `722f366`; continuous-limb-skin integrated; fur-depth/Fuzziness integrated; independent attachment, shader and resource review passed |
 
 New messages are additive. Do not cancel or replace these tasks merely because another request arrives.

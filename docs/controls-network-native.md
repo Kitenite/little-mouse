@@ -34,11 +34,13 @@ error-reload loop or same-document re-import that could duplicate handlers.
 WebGL initialization, preview/game frame exceptions and context loss use this recovery;
 an active session is checkpointed before stopping, while intentional pause stays paused.
 `mouseDiagnostics().recovering` stays true through failed/checking/reloading states;
-the native bridge must skip resume-storage writes then, while still posting actual
+the native bridge skips resume-storage writes then, while still posting actual
 `playing:false` for native UI/keep-awake. Startup also supplies a recovering snapshot
 until the full diagnostic function is installed. Cleanup failures cannot hide Retry.
 This covers a plausible web failure mode, not a confirmed diagnosis of the reported iPad
 incident. The initial HTML must load; device/WebKit validation remains separate.
+The native home opens the game without awaiting the connection preference write, preventing
+slow storage from blocking navigation. Saving the address is best-effort; URL validation remains.
 
 ## Ending play
 
@@ -98,5 +100,5 @@ binary through the existing local or EAS workflow. Preserve/recheck the existing
 team and provisioning. EAS builds from source without native folders generate them via
 [Continuous Native Generation](https://docs.expo.dev/workflow/continuous-native-generation/).
 Web reload, Metro refresh and an OTA JavaScript update do not replace the installed mask.
-Generated native files stay ignored; this config change does not itself install or publish.
-Physical-device rotation and landscape layout acceptance remain pending after rebuild.
+Generated native files stay ignored. The connected iPad received a signed landscape build;
+its built mask was checked. Physical rotation and landscape layout acceptance remain pending.
