@@ -31,3 +31,12 @@ test('all morphologies have a continuous body and exactly reversible hit coordin
 test('settings reject nonfinite and out of bounds values',()=>{
  const traits=physicalTraits(createMouseIdentity(7),{morphologyVariation:0,bodyLength:Infinity,tailLength:100,eyeSize:-1});assert.equal(traits.bodyLength,identityDefaults.bodyLength);assert.equal(traits.tailLength,identityControls.tailLength.max);assert.equal(traits.eyeSize,identityControls.eyeSize.min);
 });
+test('persisted pre-regional identities keep coat and finite morphology after reload',()=>{
+ const fresh=createMouseIdentity(314159),legacy=JSON.parse(JSON.stringify(fresh));
+ for(const key of ['ribcageWidth','waistWidth','pelvisWidth'])delete legacy.traits[key];
+ const before=JSON.stringify(legacy),traits=physicalTraits(legacy,{waistWidth:.9});
+ assert.equal(traits.waistWidth,.9);assert.equal(traits.ribcageWidth,1);assert.equal(traits.pelvisWidth,1);
+ assert.equal(traits.coat.name,physicalTraits(fresh).coat.name);assert.ok(Object.values(physicalBounds(legacy)).every(Number.isFinite));
+ for(let x=-39;x<51;x+=1){const p=morphologyPoint(x,12,20,traits),inverse=unmorphologyPoint(p[0],p[1],traits);assert.ok(p.every(Number.isFinite));assert.ok(Math.hypot(inverse[0]-x,inverse[1]-12)<1e-10);}
+ assert.equal(JSON.stringify(legacy),before);
+});

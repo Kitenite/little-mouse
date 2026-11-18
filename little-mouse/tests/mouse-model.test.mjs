@@ -1,5 +1,5 @@
 import{test}from'node:test';
-import{articulatePoint}from'../public/anatomy.js';
+import{articulatePoint,unarticulatePoint}from'../public/anatomy.js';
 import assert from'node:assert/strict';
 import{createMouseIdentity,identityControls,COATS}from'../public/mouse-identity.js';
 // The model and resource lifecycle do not need a WebGL context. Minimal canvas
@@ -92,4 +92,35 @@ test('region materials preserve UV attachment, eye gloss and shared maps through
  const eyes=[];a.group.traverse(node=>{if(node.material?.isMeshPhysicalMaterial)eyes.push(node.material);});
  assert.equal(eyes.length,2);assert.ok(eyes.every(m=>m.roughness===.075&&!m.map));
  let disposed=0;a.body.material.bumpMap.addEventListener('dispose',()=>disposed++);disposeMouse(a);assert.equal(disposed,0);disposeMouse(b);assert.equal(disposed,0);
+});
+
+test('regional extrema, both turn directions, pause and every hold retain coherent rig roots',()=>{
+ for(const extreme of ['min','max'])for(const turn of [-2,2]){
+  const config={...Object.fromEntries(Object.entries(identityControls).map(([k,v])=>[k,v[extreme]])),spineBendAmount:1.5};
+  const model=makeMouse(0,createMouseIdentity(314159),config),geometry=model.body.geometry,uv=geometry.attributes.uv.array.slice();
+  for(let i=0;i<80;i++)model.animate(i/60,true,180,1/60,1,turn,false,{},config);
+  const positions=geometry.attributes.position;
+  for(let v=0;v<positions.count;v+=7){const x=positions.getX(v),y=positions.getY(v),p=articulatePoint(x,y,positions.getZ(v),model.articulation),u=unarticulatePoint(p[0],p[1],model.articulation);assert.ok(Math.hypot(u[0]-x,u[1]-y)<1e-5,'inverse on extreme rendered surface');}
+  const before={...model.articulation};model.animate(9,true,180,0,1,-turn,false,{},config);assert.deepEqual(model.articulation,before);
+  for(const motion of [{held:true},{held:true,holdReference:{part:'head'}},{held:true,holdReference:{part:'body'}},{heldPaw:{index:0,x:20,y:12,z:2}},{tailHold:{x:-65,y:12,fraction:.65}}]){
+   model.animate(10,true,100,.05,1,-turn,false,motion,config);assert.deepEqual(model.articulation,before);
+   assert.equal(model.body.geometry,geometry);assert.deepEqual(geometry.attributes.uv.array,uv);
+   for(const leg of model.legRig.legs){const root=articulatePoint(...leg.layout.anchor,model.articulation);assert.deepEqual(leg.shoulder.position.toArray(),root);assert.ok(leg.solution.foot.every(Number.isFinite));}
+   assert.ok([...model.tail.geometry.attributes.position.array].every(Number.isFinite));
+  }
+  disposeMouse(model);
+ }
+});
+test('spine-bent tail pins the selected rendered material ring during dragging',()=>{
+ const model=makeMouse(0,createMouseIdentity(71));
+ for(const turn of [-1,1]){
+  for(let i=0;i<60;i++)model.animate(i/60,true,180,1/60,1,turn,false,{},{});
+  for(const ring of [6,19,31,47])for(const drag of [-1,1]){
+   const fraction=ring/48,t=model.traits,point=articulatePoint(-36*t.bodyLength-87*fraction*.93*t.tailLength,drag*87*fraction*.12*t.tailLength,5,model.articulation);
+   for(let i=0;i<12;i++)model.animate(2+i/60,false,0,1/60,1,0,false,{x:0,y:0,heading:0,size:1,tailHold:{x:point[0],y:point[1],fraction}},{});
+   const a=model.tail.geometry.attributes.position.array,k=ring*27;
+   assert.ok(Math.hypot((a[k]+a[k+12])/2-point[0],(a[k+1]+a[k+13])/2-point[1])<.0001);
+  }
+ }
+ disposeMouse(model);
 });

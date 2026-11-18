@@ -8,7 +8,7 @@ the pose coherently. Continue critique against real prey; realism is a target, n
 
 Individuals should have stable, adjustable differences in body, head, legs, tail, ears, eyes
 and coat. Fur should look soft and fuzzy around the silhouette rather than a hard smooth shell.
-Head/torso/pelvis shaping, arm sizing and arm hairiness are adjustable. Calm watch bouts
+Head, ribcage, waist and pelvis shaping, arm sizing and arm hairiness are adjustable. Calm watch bouts
 should include eating, face wiping, hindleg scratching, stretching and occasional rolling.
 
 ## Implemented foundation
@@ -36,16 +36,25 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 ## Implemented refinements; visual validation pending
 
 Independent arm length/thickness, body/arm hairiness and fur softness controls now feed the
-renderer. Head/torso/pelvis articulation eases separate turns through a continuous surface,
-with anatomy-aware limb anchors and corresponding contact transforms.
+renderer. Ribcage, waist and pelvis width controls blend along the single surface, with a
+mildly narrower default waist. Seeded regional variation preserves legacy coat/profile draws;
+persisted older identities receive missing regional defaults without changing the individual.
+A bounded central spine curve adds gait-linked lateral flexion and idle counterbalance.
+Head response leads the trunk; pelvis follow-through is slower. `spineBendAmount` controls
+strength. This is kinematic posing inside the existing solver, not a new dynamics engine.
+The composed map drives body, fur, whiskers, depth shadows, limb anchors and tail.
+Attachment tangents and deformed normals follow it. Inverse contacts undo the spine first.
+All anatomical pose freezes on any claim and zero dt. UVs and geometry objects stay stable.
 `furLength`, `furSway`, hair density and softness remain distinct parameters.
 The rich launch preset uses morphology variety 0.8, head/pelvis turns and tail/fur motion 1.15,
 ear/whisker motion 1.2, grooming frequency 1.25 and nibbling frequency 1.2. These amplify
 bounded responses modestly; spring stiffness/damping, mesh density and anatomical proportions
 remain at their standard settings. The two-mouse default is within the intended 1–3 mouse budget.
 
-The implementation owner reports focused anatomy, model, identity and leg-rig checks passing,
-including articulation limits, seam continuity, inverse contacts and limb lengths. Physical
+Tests cover both turns, combined spine extremes, inverse contacts, regional extrema,
+persisted identities, stable geometry/UVs, limb roots and rendered tail material-fraction pins.
+Browser Use preview exercised head/body/hindpaw/tail drags and top/side turn poses advanced
+in quarter-speed simulation increments. Physical
 visual review still needs to establish whether softness and motion satisfy the requested look;
 source/tests do not establish photorealism.
 
@@ -64,7 +73,7 @@ source/tests do not establish photorealism.
 
 ## Sources and limits
 
-Source owners: `mouse3d.js`, `mouse-identity.js`, `gait.js`, `leg-rig.js`,
+Source owners: `anatomy.js`, `mouse3d.js`, `mouse-identity.js`, `gait.js`, `leg-rig.js`,
 `leg-kinematics.js`, `secondary-motion.js`, `idle-animation.js` and `contact.js`.
 Tests include `anatomy`, `mouse-model`, `mouse-identity`, `gait`, `leg-rig`, `held-paw`,
 `secondary-motion`, `whisker-geometry` and `idle-animation`.
@@ -73,3 +82,18 @@ Scratching raises a hindpaw toward the side/neck within its reachable limb span;
 contact and biological grooming sequences remain visual refinement work. Rolls currently use
 partial side rotation, not a full ragdoll or 360-degree tumble.
 Physical iPad visual critique remains necessary even when numerical invariants pass.
+
+## Reference comparison and remaining priorities
+
+- Observed anatomy: [Cook, The Anatomy of the Laboratory Mouse](https://www.informatics.jax.org/cookbook/chapters/contents2.shtml)
+  distinguishes thoracic cage, lumbar vertebrae and pelvic girdle. Our blended regional widths
+  represent those landmarks, not measured tissue volumes or individual vertebral joints.
+- Observed motion: [Walter 2003, Kinematics of 90° running turns in wild mice](https://carrier.biology.utah.edu/Dave%27s%20PDF/Walter%20mice%20turning.pdf)
+  filmed six mice at 250 Hz and reported stride-linked bouts of trunk rotation and flexion.
+  Design inference: link central bending to gait and steering. The lateral sinusoid, gains and
+  head-leading response are game approximations, not fits to that study's motion traces.
+- Preview comparison with the supplied top baseline shows a more distinct waist and bending
+  trunk. Side captures still show a long triangular muzzle, abrupt front torso/head contour
+  and thick-looking ears. Brow/cheek and pinna geometry refinement remains pending.
+- Desktop browser screenshots and short drags do not establish iPad performance, naturalistic
+  gait, photorealism or physical handling quality. Anatomy is not considered finished.
