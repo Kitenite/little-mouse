@@ -16,12 +16,12 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 | --- | --- | --- |
 | Audio implementation | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Recorded-only pass integrated; surface-rustle integrated at `655eab4`; 75 focused checks |
 | Sound curation lead | `49671af0-6882-4117-999f-3ffa3f788f01` | Isolated `audio-realism-variety` branch; completed inventory/source audit; 10 excerpts integrated, 3 crawl excerpts held for listening |
-| Physics prototype lead | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Isolated `physics-engine-prototype` branch; completed at `6c1633e`; 23 tests; adoption deferred for joint gaps/overshoot; not live |
+| Physics prototype lead | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Isolated `physics-engine-prototype` branch; Prototype at `6c1633e` deferred; now independent anchor/inertia critique for part-drag-flop |
 
 | Reactive environment lead | `1906036a-b32e-42b0-8678-76be0b6050f7` | Integrated at `20313f4`; material-aware impressions, settling fragments, controls and independent review |
 
-| Anatomy lead | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Running isolated spine/waist/head/pelvis shaping and articulation; contact/attachment regression review |
-| Texture lead | `37be8626-484b-4e27-b7af-1786121687f7` | Running isolated regional fur/skin detail and coat materials; coordinates deformation contract with anatomy |
+| Anatomy lead | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Articulation integrated at `72b4b3a`; new isolated part-drag-flop follow-up running; pinned grabs with free-region inertia |
+| Texture lead | `37be8626-484b-4e27-b7af-1786121687f7` | Integrated at `722f366`; regional fur/skin maps, bounded cache, natural/playful reference review |
 
 New messages are additive. Do not cancel or replace these tasks merely because another request arrives.
 

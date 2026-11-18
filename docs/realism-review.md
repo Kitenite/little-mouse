@@ -15,6 +15,8 @@ This is a reference-based game approximation, not validated animal biomechanics.
   The photograph was viewed as reference only; no redistribution license asserted.
 - Examined `mouse3d.js`, `mouse-identity.js`, `secondary-motion.js`,
   `audio-samples.js`, and [sound provenance](../little-mouse/SOUND.md).
+- Current regional surface comparison and limitations: [coat surfaces](coat-surfaces.md).
+  Browser captures include natural and playful coats on light/dark floors.
 - A still image cannot validate gait, settling, collision response, or speaker sound.
   No subjective audio audition or physical iPad listening is claimed.
 
@@ -27,7 +29,7 @@ This is a reference-based game approximation, not validated animal biomechanics.
 | P1 | Tail reads as a dark straight cone | Restrained pink/gray skin, visible fine rings at close range, gentle resting curvature and taper |
 | P1 | Feet disappear in the resting top view | Delicate distal paws peek beyond flanks; grounded paws remain visible in a side-view check |
 | P2 | Whiskers form two overly regular fans | Unequal curved lengths, shorter rostral and longer caudal whiskers, subtle asymmetric exploration |
-| P2 | Coat lacks region-specific shading | Dense body underfur, directional guard hairs, finer facial/limb coat, sparse tail/ear hair |
+| P2 | Regional detail is implemented but reads as short strokes | Deeper layered fur; preserve finer face/limb detail and sparse tail/ear hair |
 | P2 | Vocal banks reuse agitated recordings for calm events | Prefer documented calm mouse sources; retain honest approximation labels until replaced |
 
 These are image-review judgments, not measured discrepancies in millimeters.
@@ -84,14 +86,13 @@ interchangeable simply by changing volume. Sparse quiet movement is appropriate
 as a game design choice; exact event rates here are not biological measurements.
 Proximity-triggered call/reply is game choreography, not documented conversation.
 
-Primary uploader pages were checked independently; all four show CC0 licensing:
-
-- [12 vocal excerpts](https://freesound.org/people/shyguy014/sounds/463789/): uploader says trapped mouse/rat; species uncertain, agitated context.
-- [8 contact excerpts](https://freesound.org/people/Zabuhailo/sounds/143125/): pet rat, not identified mouse.
-- [6 eating excerpts](https://freesound.org/people/Yuval/sounds/204762/): hamster eating.
-- [4 movement excerpts](https://freesound.org/people/BenjaminNelan/sounds/353125/): paper foley, not real feet.
-
-Thirty excerpts do not mean thirty independent animal recordings.
+The current bank has 26 excerpts from four originals; see [sound curation](sound-curation.md)
+for inventory, attribution and review limits. Recorded floor-mouse squeaks provide taps;
+mouse-cracker eating replaces hamster cuts. Confirmed rat and hamster sources remain archived
+but are excluded from runtime. Twelve vocal cuts retain uncertain mouse/rat identity;
+four paper-foley cuts remain substitutes for movement. No synthesized fallback is permitted.
+Source/PCM inspection does not establish subjective timbre or physical speaker quality.
+Twenty-six excerpts do not mean twenty-six independent animal recordings.
 Shipped 22.05 kHz files cannot represent frequencies above 11.025 kHz;
 they do not reproduce mouse ultrasound. Slowed/transposed ultrasound, if added,
 must be labeled transformed. Search for better sources without discarding

@@ -63,4 +63,4 @@ brightness and removing them kept texture count at 13; geometry count returned 1
 on every removal. This verifies this rebuild path, not all browser/driver memory behavior.
 17 focused tests cover deterministic region generation, finite cache keys, distinct color
 spaces, stable identity, UV invariance while bending/holding, crisp eye material settings,
-and shared maps surviving individual disposal. Final integrated anatomy review remains pending.
+and shared maps surviving individual disposal. Root integrated anatomy and environment; browser shader/contact smoke passed. Physical iPad review remains pending.

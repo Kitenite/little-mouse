@@ -60,3 +60,7 @@ A wired connection alone does not demonstrate that signing, installation or laun
 Source owners: game/companion/controls/settings, worker API, dev/build scripts, and
 `ipad/src/components/Game.tsx`. Tests: `network`, `settings`, `enrichment`, `owner-gesture`,
 and native connection tests. Public-repository permission is not proof of a public deployment.
+
+Development server: `npm run dev` watches the API plus shared settings/migration modules.
+Schema edits restart the local API so new companion sliders validate immediately; static
+asset changes use the source-version reload. Existing room data persists in `.local/rooms.sqlite`.
