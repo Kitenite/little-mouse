@@ -7,7 +7,7 @@ Builder `37be8626-484b-4e27-b7af-1786121687f7`; independent read-only critic
 `5b5bc0ce-e628-499e-b026-143bf97a9de0`.
 Worktree `/Users/kietho/workplace/mouse-cycle-coat`, branch `cycle-coat`.
 Base `cf064cc`; no main edits, device commands, publication, audio changes or renderer hooks.
-Active bounded batch, not scheduled or perpetual execution.
+Completed bounded batch of two accepted iterations, not scheduled or perpetual execution.
 
 ## COAT-01: uniform maximum-fuzz bristles (P2)
 
@@ -52,6 +52,7 @@ Full suite235 tests passed; build e48360fbd36d passed after installing locked de
 Independent critic accepted:34 focused tests;10800-tuft prior/current comparison at
 fuzz0/.5/1 preserved roots,UV,RNG continuation and plateau lengths/widths.
 All8 live panels reproduced unchanged counts. Full suite/build are builder-run.
+Accepted iteration2 commit `2549abc8975c4cb5758e239cc29598ce1931d917`.
 
 ## Reference comparison and remaining queue
 
