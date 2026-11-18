@@ -7,7 +7,7 @@ test('API validates hunt controls and migrates to the teasing defaults',()=>{
  assert.deepEqual(cleanSettings({mode:'hunt',huntTempo:.5}),{mode:'hunt',huntTempo:.5});
  for(const huntTempo of [0,2.1,NaN,Infinity,'1',null])assert.throws(()=>cleanSettings({huntTempo}));
  const settings=upgradeSettings(defaults);
- for(const [key,value] of Object.entries({behaviorVersion:3,audioVersion:1,count:1,speed:1.2,mode:'hunt',hide:3,size:2.2,sound:true}))assert.equal(settings[key],value,key);
+ for(const [key,value] of Object.entries({behaviorVersion:3,audioVersion:1,count:2,speed:1.2,mode:'hunt',hide:2.5,size:2.2,sound:true}))assert.equal(settings[key],value,key);
 });
 
 // Exercise the real game entry point with a minimal DOM and network, without WebGL.
@@ -90,8 +90,9 @@ test('pausing the game freezes simulation and resume does not spend wall time',a
 });
 
 test('owner steer and recall release hidden hunt mice and retain control',async()=>{
+ // Isolate command retention from collision avoidance, which can choose a new escape target.
  for(const action of ['steer','recall']){
-  const h=await gameHarness('offline'),g=h.context.testGame;g.start();g.frame(1000);g.frame(1017);
+  const h=await gameHarness('offline'),g=h.context.testGame;g.config.count=1;g.start();g.frame(1000);g.frame(1017);
   assert.equal(g.mice[0].hunt.phase,'hidden');
   g.applyCommand({action,nonce:action,x:.8,y:.3},action);
   const m=g.mice[0],target=[m.targetX,m.targetY];assert.equal(m.hunt,undefined);assert.equal(m.state,'active');assert.equal(m.hiddenUntil,0);assert.ok(m.restUntil<=g.elapsed);

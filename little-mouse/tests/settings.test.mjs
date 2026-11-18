@@ -44,3 +44,10 @@ test('every numeric setting renders a paired slider and exact entry; sync emits 
  config.background='slate';controls.sync();assert.equal(document.ids.get('background').value,'slate');assert.equal(changes,2);
  }finally{globalThis.document=previous;}
 });
+
+test('fresh startup keeps the rich preset and current user choices survive migration',async()=>{
+ const{upgradeSettings}=await import('../public/settings-migration.js');
+ const fresh=upgradeSettings({...settingsDefaults});
+ for(const[key,value]of Object.entries(settingsDefaults))assert.equal(fresh[key],value,key);
+ const custom={...fresh,count:1,hide:8,sound:false};assert.deepEqual(upgradeSettings(custom),custom);
+});
