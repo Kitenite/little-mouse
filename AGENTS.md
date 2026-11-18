@@ -5,6 +5,12 @@ Use an applicable MCP integration first. Fall back to Browser Use when MCP is un
 cannot handle the task, and use computer use only when Browser Use cannot handle it.
 Follow any explicit tool preference the user gives for a particular task.
 
+## Conversation continuity
+
+New user messages and interruptions add requirements; they do not cancel earlier work.
+Keep existing tasks active unless the user explicitly cancels or replaces one. Record ownership
+and pending dependencies in docs/workers.md so additions do not silently displace work.
+
 ## Durable requirements and policies
 
 - Read [docs/README.md](docs/README.md) and the owning topic before changing behavior.

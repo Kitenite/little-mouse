@@ -4,7 +4,7 @@ Reviewed 2026-11-17 (local time). This record replaces earlier totals; it is not
 
 ## Verified in this change
 
-- Game regression suite: 179 tests pass covering behavior, contacts, physics, geometry,
+- Game regression suite: 195 tests pass covering behavior, contacts, physics, geometry,
   activity interruption, backgrounds/coats, audio, settings, API and playground time control.
 - Native wrapper remains unchanged; TypeScript and Expo lint pass again. Previous two connection tests passed.
 - Independent animation audit: 108 seeded drag cases over 35,640 simulation frames; bounded
@@ -21,6 +21,11 @@ Reviewed 2026-11-17 (local time). This record replaces earlier totals; it is not
   reproductions), event/animation integration, interruption, calm/distress mapping,
   source licensing, PCM assets and mix trims. Independent visual review: 30 backgrounds,
   22 coats, four palettes, generated-image provenance and representative rendered contrast.
+- Reactive environment: 160-mark pool, one additional draw/320 triangles; tests cover actual
+  rendered paws, drag, restraint, toss, pause, material switches and disable. Counts match
+  at 30/60/120 Hz in the high-speed sampling case. Independent browser review covered
+  woodland, linen drag, grass and boards; root confirmed live marks in the integrated build.
+  Surface audio uses actual displacement and keeps contact ducking. No physical frame-rate claim.
 - Requirements documents satisfy their size caps; local relative links resolve.
 
 ## Device and perceptual limits
