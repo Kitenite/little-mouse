@@ -15,8 +15,8 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 ## Durable roles and current status
 
 The accepted batch is complete and integrated on main. All 14 remaining completed
-sessions and 20 auxiliary workspaces are queued for owner-authorized retirement
-once this preservation commit is verified on GitHub. No new workers are running.
+sessions and 20 auxiliary workspaces were retired after preservation commit
+`d1f687a` was verified on GitHub. No workers are currently running.
 Reusable roles, ownership, delegation and handoff policies are stored in
 [`agents/roles.json`](../agents/roles.json); [`agents/prompt.mjs`](../agents/prompt.mjs)
 prints prompts for the next bounded assignment. Main workspace stays available.

@@ -35,8 +35,10 @@ elapsed0 and no runtime version; this is recovery evidence, not a live-motion te
 ## Cleanup
 
 Earlier cleanup retired five sessions and three obsolete workspaces/worktrees.
-Final owner-authorized cleanup is in progress: preserve all unique research on main,
-then retire the remaining 14 completed sessions and 20 auxiliary Mouse workspaces.
+Final owner-authorized cleanup completed after preservation commit `d1f687a`
+was verified on GitHub: 14 sessions closed and 20 auxiliary Mouse workspaces deleted.
+Verified one main worktree, no remaining worker terminals and all historical branch
+heads retained. Six obsolete preview servers and four owned scratch browsers stopped.
 The primary main checkout is retained. See [worker ledger](../workers.md) and
 [retirement evidence](../archive/workspace-retirement/README.md).
 Reusable roles are checked in under `agents/`; no periodic service is installed.

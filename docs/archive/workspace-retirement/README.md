@@ -14,3 +14,7 @@ Local implementation branches are retained as historical refs. Superset workspac
 and terminal IDs in old cycle reports are historical, not active assignments.
 Dependencies, build output, scratch room databases and generated native build state
 are disposable local artifacts and are not published in this archive.
+
+Cleanup verified: 20 auxiliary directories/workspaces removed, 14 sessions disposed,
+only the main Mouse workspace remains. All 15 role prompts/path checks passed;
+the preserved prototype passed its 23 tests (adoption remains deferred).
