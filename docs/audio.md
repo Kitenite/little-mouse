@@ -72,6 +72,8 @@ that pointer's pending/direct feedback; a null ID means mouse-wide cleanup. Set
 the held observation and hold audio intact. Owner cancellation clears both, avoiding
 a phantom release or restarted hold sound.
 There is no noise buffer, oscillator, synthesized fallback or generated silent primer.
+A new local activation/touch can retry failed downloads after a one-second backoff;
+successful clips are retained, concurrent retries coalesce, and no timer retries on its own.
 Unavailable recordings remain silent; diagnostics expose `unavailableKind`,
 `sample-unavailable`, sample load errors and pending count honestly. Browser denial or
 zero physical speaker volume cannot be overridden.

@@ -13,7 +13,7 @@ export const audioControlSchema={
 };
 export class PreyAudio {
   constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,audioSession=globalThis.navigator?.audioSession}={}) {
-    this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleErrors=[];this.sampleChoice={};this.context=null;this.master=null;
+    this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleLoading=false;this.sampleRetryAt=0;this.sampleErrors=[];this.sampleChoice={};this.context=null;this.master=null;
     this.enabled=false;this.active=false;this.voices=new Set();this.lastVariant={};this.lastCue=-Infinity;
     this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;this.surface={background:'photo-clearing',strength:.55};this.surfaceMotion=new WeakMap();
   }
@@ -49,7 +49,7 @@ export class PreyAudio {
         if(this.analyser){this.analyser.fftSize=256;this.samples=new Float32Array(256);this.limiter.connect(this.analyser);this.analyser.connect(this.context.destination);}else this.limiter.connect(this.context.destination);
         this.context.onstatechange=()=>{if(!this.ready)this.stop();else this.flushContacts();};
       }
-      this.loadSamples();
+      this.loadSamples(true);
       this.lastError=null;
       const resumed=this.context.resume();
       return Promise.resolve(resumed).then(()=>{this.flushContacts();return this.ready;},error=>{if(generation===this.unlockGeneration){this.pendingContacts=[];this.lastError=String(error?.message||error);}return false;});
@@ -60,18 +60,19 @@ export class PreyAudio {
     for(const voice of [...this.voices])voice.cancel();
   }
   reset(){this.stop();this.observations=new WeakMap();this.lastCue=this.lastHit=-Infinity;this.nextSocial=null;this.pendingReply=null;}
-  loadSamples(){
-    if(this.samplesPromise)return this.samplesPromise;
+  loadSamples(retryFailed=false){
+    if(this.samplesPromise&&(this.sampleLoading||!retryFailed||!this.sampleErrors.length||Date.now()<this.sampleRetryAt))return this.samplesPromise;
     if(!this.context||(!this.sampleLoader&&typeof this.context.decodeAudioData!=='function'))return Promise.resolve();
     const loader=this.sampleLoader|| (async id=>{
       const response=await fetch(new URL(`./assets/audio/${id}.wav`,import.meta.url),{signal:AbortSignal.timeout(6000)});
       if(!response.ok)throw Error(`Audio ${id}: HTTP ${response.status}`);
       return this.context.decodeAudioData(await response.arrayBuffer());
     });
-    let next=0;
+    const requested=this.samplesPromise?recordedSamples.filter(id=>!this.sampleBuffers.has(id)):recordedSamples;
+    let next=0;this.sampleLoading=true;
     this.samplesPromise=Promise.all(Array.from({length:4},async()=>{
-      while(next<recordedSamples.length){const id=recordedSamples[next++];try{const buffer=await loader(id);if(!(buffer?.duration>0))throw Error('Empty audio buffer');this.sampleBuffers.set(id,buffer);this.flushContacts();}catch(error){this.sampleErrors.push({id,error:String(error?.message||error)});}}
-    }));
+      while(next<requested.length){const id=requested[next++];try{const buffer=await loader(id);if(!(buffer?.duration>0))throw Error('Empty audio buffer');this.sampleBuffers.set(id,buffer);this.sampleErrors=this.sampleErrors.filter(entry=>entry.id!==id);this.flushContacts();}catch(error){this.sampleErrors=this.sampleErrors.filter(entry=>entry.id!==id);this.sampleErrors.push({id,error:String(error?.message||error)});}}
+    })).finally(()=>{this.sampleLoading=false;this.sampleRetryAt=Date.now()+1000;});
     return this.samplesPromise;
   }
   variant(kind){
@@ -138,7 +139,7 @@ export class PreyAudio {
     if(this.ready&&this.cue(kind,event.x,mouse,{priority:2,bypassCooldown:true,pointerId}))return true;
     // Bound both activation and recording-load waits; no synthetic substitute.
     this.pendingContacts.push(event);if(this.pendingContacts.length>10)this.pendingContacts.shift();
-    if(!this.ready)this.unlock();else this.loadSamples();
+    if(!this.ready)this.unlock();else this.loadSamples(true);
     return true;
   }
   flushContacts(){

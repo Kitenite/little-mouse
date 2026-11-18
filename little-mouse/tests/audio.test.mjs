@@ -467,3 +467,30 @@ test('irregular update cadence preserves bounded displacement-driven friction sp
  }
  assert.ok(Math.min(...counts)>=10);assert.ok(Math.max(...counts)-Math.min(...counts)<=1);
 });
+
+test('a later local touch retries failed recording downloads after the server returns',async t=>{
+ let now=10000,online=false,requests=0;t.mock.method(Date,'now',()=>now);
+ const context=new Context(),audio=new PreyAudio({contextFactory:()=>context,rng:()=>.5,sampleLoader:async()=>{requests++;if(!online)throw Error('temporary 503');return{duration:.3};}});
+ audio.setState(true,true);audio.contactFeedback({x:100},1000,'touch',1);await audio.loadSamples();
+ assert.equal(audio.played,0);assert.equal(audio.sampleErrors.length,recordedSamples.length);assert.equal(requests,recordedSamples.length);
+ now+=1001;online=true;audio.contactFeedback({x:200},1000,'touch',2);await audio.loadSamples();
+ assert.equal(audio.played,1,'the fresh touch plays a recording; expired first touch never replays');assert.equal(audio.sampleErrors.length,0);assert.equal(audio.lastPlayed.source,'recording');
+});
+
+test('recording recovery preserves successes, coalesces gestures and bounds repeated failures',async t=>{
+ let now=10000,attempt=0,release;t.mock.method(Date,'now',()=>now);const requests=[];
+ const context=new Context(),audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async id=>{requests.push(id);if(attempt===1)await new Promise(resolve=>{(release??=[]).push(resolve);});if(id!=='paper-01')throw Error('offline');return{duration:.3};}});
+ audio.setState(true,true);await audio.unlock();await audio.loadSamples();const retained=audio.sampleBuffers.get('paper-01');
+ for(let i=0;i<20;i++)audio.contactFeedback({x:10},1000);await audio.loadSamples();assert.equal(requests.length,26,'backoff blocks contact storms');
+ now+=1001;await audio.loadSamples();assert.equal(requests.length,26,'time alone and read-only load await do not retry');
+ attempt=1;audio.contactFeedback({x:10},1000);for(let i=0;i<20;i++)audio.contactFeedback({x:20},1000);
+ assert.equal(requests.length,30,'one four-request flight shared by every touch');assert.equal(audio.pendingContacts.length,10);
+ attempt=2;for(const resolve of release)resolve();await audio.loadSamples();assert.equal(requests.length,51);assert.equal(audio.sampleErrors.length,25);assert.equal(new Set(audio.sampleErrors.map(e=>e.id)).size,25);assert.equal(audio.sampleBuffers.get('paper-01'),retained);assert.equal(requests.filter(id=>id==='paper-01').length,1);
+});
+test('cancel, mute, pause and expired input remain silent when a retry finishes',async t=>{
+ let now=10000;t.mock.method(Date,'now',()=>now);
+ for(const cancel of [(a,m)=>a.cancelContactFeedback(m,2),(a)=>a.setState(false,true),(a)=>a.setState(true,false),(a)=>{now+=801;}]){
+  let online=false,release;const gate=new Promise(resolve=>{release=resolve;});const context=new Context(),audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async()=>{if(!online)throw Error('503');await gate;return{duration:.3};}});
+  audio.setState(true,true);audio.contactFeedback({x:0},1000,'touch',1);await audio.loadSamples();now+=1001;online=true;const mouse={x:20};audio.contactFeedback(mouse,1000,'touch',2);cancel(audio,mouse);release();await audio.loadSamples();assert.equal(audio.played,0);assert.equal(audio.pendingContacts.length,0);
+ }
+});
