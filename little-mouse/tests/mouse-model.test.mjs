@@ -163,3 +163,19 @@ test('fur sway projects in posed normal frame under combined bend, and pause kee
  const displacement=[-1,-2,.1],dot=normal.reduce((sum,v,i)=>sum+v*displacement[i],0);for(let i=0;i<3;i++)displacement[i]-=normal[i]*Math.min(0,dot);assert.ok(normal.reduce((sum,v,i)=>sum+v*displacement[i],0)>-1e-10);
  const pose={...model.articulation},roots=model.legRig.legs.map(l=>Array.from(l.surface.volume.geometry.attributes.position.array));model.animate(2,true,250,0,1,1,false,motion,{});assert.deepEqual(model.articulation,pose);for(let i=0;i<4;i++)assert.deepEqual(Array.from(model.legRig.legs[i].surface.volume.geometry.attributes.position.array),roots[i]);disposeMouse(model);
 });
+test('embedded jaw stays attached through nibbling and both head turns at morphology extremes',async()=>{
+ const {bodySection}=await import('../public/body-profile.js'),{morphologyPoint}=await import('../public/mouse-identity.js');
+ for(const extreme of ['min','max']){
+  const config=Object.fromEntries(Object.entries(identityControls).map(([key,value])=>[key,value[extreme]])),model=makeMouse(0,createMouseIdentity(428),config),s=bodySection(40),base=morphologyPoint(40,0,s.z-s.r*.73+1.1,model.traits),underside=morphologyPoint(40,0,s.z-s.r*.73,model.traits)[2];
+  const geometry=model.jaw.geometry;let low=Infinity,high=-Infinity;
+  for(let frame=0;frame<120;frame++){
+   model.animate(frame/60,true,180,1/60,1,frame<60?-1:1,false,{nibble:1},config);
+   const expected=articulatePoint(...base,model.articulation),p=model.jaw.position;
+   assert.ok(Math.hypot(p.x-expected[0],p.y-expected[1])<1e-9);
+   assert.ok(p.z+model.jaw.scale.z>underside,'jaw remains embedded in muzzle');
+   assert.ok(p.z-model.jaw.scale.z>0,'jaw stays above model ground');
+   assert.equal(model.jaw.geometry,geometry);low=Math.min(low,p.z);high=Math.max(high,p.z);
+  }
+  assert.ok(high-low>1,'nibble displacement remains active');disposeMouse(model);
+ }
+});

@@ -1,8 +1,8 @@
-<!doctype html><meta charset="utf-8"><title>Anatomy contour review</title>
+<!doctype html><meta charset="utf-8"><title>Anatomy contour review</title><base href="/">
 <style>body{margin:0;background:#ddd;font:16px system-ui}main{display:grid;grid-template-columns:1fr 1fr}section{position:relative}canvas{width:100%;height:320px;display:block}label{position:absolute;left:16px;top:12px;background:#ffffffdd;padding:6px;border-radius:5px}h1,p{margin:14px}</style>
 <h1>Anatomy contour review · seed 314159</h1><p>Identity seed 314159, lemon stripes · same pose and camera · daylight / moonlight × pale / dark floor. Desktop diagnostic, not device acceptance.</p><main></main>
 <script type="module">
-import * as T from '../vendor/three.module.js';import{makeMouse,disposeMouse}from'../mouse3d.js';import{createMouseIdentity}from'../mouse-identity.js';import{createLighting}from'../lighting.js';
+import * as T from '/vendor/three.module.js';import{makeMouse,disposeMouse}from'/mouse3d.js';import{createMouseIdentity}from'/mouse-identity.js';import{createLighting}from'/lighting.js';
 const identity={...createMouseIdentity(314159),coat:0},diagnostics=[];document.querySelector('p').textContent='Top/side · bare/default coat · identity 314159/agouti · neutral pose · desktop only. Reload repeats the same state.';
 for(const pose of ['bare contour','default coat'])for(const view of ['top','side']){const floor='#e6e3d9',lighting='daylight';
  const section=document.createElement('section'),canvas=document.createElement('canvas');section.style.background=floor;section.innerHTML=`<label>${pose} · ${view}</label>`;section.append(canvas);document.querySelector('main').append(section);
