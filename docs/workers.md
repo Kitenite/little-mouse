@@ -21,9 +21,14 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 | Reactive environment lead | `1906036a-b32e-42b0-8678-76be0b6050f7` | Integrated at `20313f4`; material-aware impressions, settling fragments, controls and independent review |
 
 | Anatomy lead | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Articulation integrated at `72b4b3a`; new isolated part-drag-flop follow-up running; pinned grabs with free-region inertia |
-| Texture lead | `37be8626-484b-4e27-b7af-1786121687f7` | Integrated at `722f366`; regional fur/skin maps, bounded cache, natural/playful reference review |
+| Texture lead | `37be8626-484b-4e27-b7af-1786121687f7` | Regional surfaces integrated at `722f366`; continuous-limb-skin running; additive coat-depth follow-up assigned on same isolated branch, coordinated with drag physics |
 
 New messages are additive. Do not cancel or replace these tasks merely because another request arrives.
+
+Coat-depth requirement: body/head and continuous limbs need visible fur volume and silhouette
+breakup, not just flat texture. Preserve regional bare skin, coat identity, deformation and
+existing hair controls. Verify top/side poses, drag attachment, bounded resources and iPad
+rendering cost; physical-device quality remains pending until observed.
 
 ## Sound curation acceptance
 
