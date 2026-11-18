@@ -8,7 +8,8 @@
 - Persistent independent Superset critic: `579e1251-641e-49c9-98a1-12273fd360fd`, same workspace, read-only.
 - Root workspace has no terminal ID; none inferred. Audio peer notified via its known terminal.
 - Current contract read from root `docs/improvement-cycles.md`; not yet tracked at baseline.
-- At most three focused iterations; this batch is not a scheduled/perpetual service.
+- Three focused iterations accepted; this batch is not a scheduled/perpetual service.
+- Runtime for reproductions: Node v26.7.0, Darwin arm64, VM DOM/renderer doubles; no browser/GPU.
 - No root/main edits, merge, push, deployment, device commands, audio changes or automatic breaks.
 
 ## R1 — P2 offline settings lost after reload
@@ -68,7 +69,8 @@
 - Legacy settings fixture uses existing migration markers to isolate malformed storage from
   intentional preset migration. No product changes to settings migration.
 - Independent critic accepted after malformed-value, exact timestamp-boundary, valid-resume
-  and paused/context-loss checks. Accepted implementation commit follows.
+  and paused/context-loss checks.
+- Fix commit: `0ec23dcc22ef82f5bfab403a002c9e27ade60bcb`.
 
 ## Next ranked work
 
@@ -76,3 +78,15 @@
 - Optional future lab input recording/replay would need fixed seed/settings/viewport and
   contact hit-source metadata; current ordinary-game report deliberately claims no determinism.
 - Native/WebKit context loss and physical-device behavior remain pending root verification.
+
+## Integration handoff
+
+- Root integrates R1, R2, R3 commits above in order, then this bounded documentation handoff.
+- Final checks: `node --test --test-reporter=dot little-mouse/tests/*.test.mjs` (242 pass);
+  `node --experimental-strip-types --test ipad/tests/*.test.ts` (4 pass); `git diff --check` clean.
+- Independent critic accepted all three; kept available in the recorded Superset terminal.
+- No native implementation changed, no dependency/build/server/device commands run.
+- Documentation: cycle report <120 lines; controls topic <120; workers ledger <120.
+- `docs/workers.md` adds only this isolated role; reconcile root's newer ledger on integration.
+- Diagnostic export resets at navigation and records only selected settings; full deterministic
+  playground input replay remains a distinct future task, not implied by the export.
