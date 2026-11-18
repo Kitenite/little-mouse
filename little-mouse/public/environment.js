@@ -13,7 +13,7 @@ export class GroundMemory{
   this.size=config.size;this.surface=config.background;this.material=material;this.strength=strength;this.persistence=Math.max(.2,Math.min(6,config.environmentPersistence??1.8));this.w=w;this.h=h;this.time=t;this.active=0;
   for(const p of this.marks){if(p.life&&t-p.at>=p.life)p.life=0;if(p.life)this.active++;}
  }
- add(x,y,rx,ry,angle,kind=0){if(x<0||y<0||x>this.w||y>this.h)return;const p=this.marks[this.cursor++%ENVIRONMENT_CAPACITY];if(!p.life)this.active++;p.x=x;p.y=y;p.rx=rx;p.ry=ry;p.angle=angle;p.kind=kind;p.at=this.time;p.life=kind===2?Math.min(.65,this.persistence):this.persistence;p.alpha=(this.material==='soft'?.075:.12)*this.strength;this.emitted++;}
+ add(x,y,rx,ry,angle,kind=0){if(x<0||y<0||x>this.w||y>this.h)return;const p=this.marks[this.cursor++%ENVIRONMENT_CAPACITY];if(!p.life)this.active++;p.x=x;p.y=y;p.rx=rx;p.ry=ry;p.angle=angle;p.kind=kind;p.at=this.time;p.life=kind===2?Math.min(.65,this.persistence):this.persistence;p.alpha=this.material==='soft'?.075:.12;this.emitted++;}
  // feet is a reused array of rendered world x/y/z triples, not gait phase.
  sample(index,id,x,y,size,feet,drag=false,visible=true){const s=this.tracks[index];if(!s)return;
   if(!visible||!this.strength||this.material==='hard'){s.id=null;return;}
@@ -43,5 +43,5 @@ export class GroundMemory{
    if(gap>8*spacing){s.feet[q]=fx;s.feet[q+1]=fy;}
   }
  }
- opacity(p){return p.life?p.alpha*Math.exp(-3*(this.time-p.at)/p.life)*Math.min(1,(p.life-this.time+p.at)/.2):0;}
+ opacity(p){return p.life?p.alpha*this.strength*Math.exp(-3*(this.time-p.at)/p.life)*Math.min(1,(p.life-this.time+p.at)/.2):0;}
 }

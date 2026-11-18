@@ -21,3 +21,12 @@ test('material discriminator reaches fixed pooled shader attributes and disable 
  const shape=g.shape.array,style=g.style.array;g.update([],[],c,.2,100,100);assert.equal(g.shape.array,shape);assert.equal(g.style.array,style);
  g.update([],[],{...c,environmentStrength:0},.2,100,100);assert.equal(g.mesh.visible,false);assert.equal(g.memory.active,0);
 });
+
+
+test('paused live strength updates shader opacity in place without moving marks',()=>{
+ const g=new GroundResponse(new T.Scene()),c={background:'linen',size:1,environmentStrength:1};
+ g.memory.begin(c,0,100,100);g.memory.add(30,30,5,2,0);g.update([],[],c,0,100,100);
+ const before=g.style.getY(0),shape=Array.from(g.shape.array);g.update([],[],{...c,environmentStrength:.1},0,100,100);
+ assert.ok(Math.abs(g.style.getY(0)-before*.1)<1e-8);assert.deepEqual(Array.from(g.shape.array),shape);
+ assert.equal(g.memory.emitted,1);
+});

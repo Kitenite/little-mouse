@@ -1,17 +1,17 @@
 <!doctype html><meta charset="utf-8"><title>Ground response comparison</title>
 <style>body{background:#eeeee6;color:#263126;font:16px system-ui;margin:24px}.row{display:flex;gap:20px}.panel{width:300px}canvas{width:300px;height:240px;border:1px solid #a4a696}small{display:block;margin:8px 0}button{padding:10px;margin:12px 8px 12px 0}</style>
 <h1>Ground response material review</h1><p>Production shader; isolated contact marks magnified 4× for silhouette inspection. Not a prey scene or device-performance test.</p>
-<button onclick="review.renderAt(0)">At contact</button><button onclick="review.renderAt(.2)">Settled 0.2s</button><span id="time"></span><div class="row" id="panels"></div>
+<button onclick="review.renderAt(0)">At contact</button><button onclick="review.renderAt(.2)">Settled 0.2s</button><span id="time"></span><label> Strength <input type="range" min="0" max="1" step=".1" value="1" oninput="review.strength(Number(this.value))"></label><div class="row" id="panels"></div>
 <script type="module">
 import * as T from '../../public/vendor/three.module.js';
 import {GroundResponse} from '../../public/environment3d.js';
-const panels=[];
+const panels=[];let currentTime=0;
 for(const [background,color,label] of [['grass','#a7b783','Grass'],['linen','#e9ebdf','Linen'],['earth','#ad997d','Soil']]){
  const el=document.createElement('section');el.className='panel';el.innerHTML=`<h2>${label}</h2><small>Foot impression · Body drag · Fragment</small>`;document.querySelector('#panels').append(el);
  const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(300,240);renderer.setPixelRatio(1);el.append(renderer.domElement);
  const scene=new T.Scene();scene.background=new T.Color(color);const camera=new T.OrthographicCamera(-37.5,37.5,30,-30,.1,100);camera.position.z=20;
  const ground=new GroundResponse(scene),config={background,size:1,environmentStrength:1,environmentPersistence:2};panels.push({renderer,scene,camera,ground,config});
 }
-window.review={renderAt(t){for(const p of panels){p.ground.clear();p.ground.memory.begin(p.config,0,75,60);p.ground.memory.add(15,30,4.5,2.2,0,0);p.ground.memory.add(38,30,10,5,0,1);if(p.config.background!=='linen')p.ground.memory.add(61,30,p.config.background==='grass'?1:1.8,p.config.background==='grass'?5:1,.7,2);p.ground.update([],[],p.config,t,75,60);p.renderer.render(p.scene,p.camera);}document.querySelector('#time').textContent=t+' simulation seconds';return panels.map(p=>({material:p.config.background,draws:p.renderer.info.render.calls,triangles:p.renderer.info.render.triangles,active:p.ground.memory.active}));}};
+window.review={strength(value){document.querySelector('input').value=value;for(const p of panels){p.config.environmentStrength=value;p.ground.update([],[],p.config,currentTime,75,60);p.renderer.render(p.scene,p.camera);}return panels.map(p=>({material:p.config.background,opacity:Math.max(...p.ground.memory.marks.map(mark=>p.ground.memory.opacity(mark))),active:p.ground.memory.active}));},renderAt(t){currentTime=t;for(const p of panels){p.ground.clear();p.ground.memory.begin(p.config,0,75,60);p.ground.memory.add(15,30,4.5,2.2,0,0);p.ground.memory.add(38,30,10,5,0,1);if(p.config.background!=='linen')p.ground.memory.add(61,30,p.config.background==='grass'?1:1.8,p.config.background==='grass'?5:1,.7,2);p.ground.update([],[],p.config,t,75,60);p.renderer.render(p.scene,p.camera);}document.querySelector('#time').textContent=t+' simulation seconds';return panels.map(p=>({material:p.config.background,draws:p.renderer.info.render.calls,triangles:p.renderer.info.render.triangles,active:p.ground.memory.active}));}};
 review.renderAt(0);
 </script>

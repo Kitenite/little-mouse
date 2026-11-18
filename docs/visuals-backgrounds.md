@@ -38,7 +38,7 @@ compression on cloth/cork/paper, soil impressions with sparse settling grit on c
 and sparse tapered grass blades that bend about fixed ground roots. Boards, stone, tile and quiet plain floors emit
 nothing. No image-pixel obstacles, photo deformation, glowing rings, ray tracing or new bitmap assets.
 The woodland center stays soil: this pass does not synthesize leaf fragments at photographic edges.
-`environmentStrength` is numeric (zero clears/disables); `environmentPersistence` sets finite lifetime.
+`environmentStrength` updates existing marks live, including while paused (zero clears/disables); `environmentPersistence` sets finite lifetime.
 Both use the shared schema, so game, companion, profiles, playground and server inherit validation.
 
 Rendered paw positions transformed by the mouse group supply contact samples; ground height and

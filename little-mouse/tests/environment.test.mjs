@@ -23,3 +23,13 @@ test('drag release never backfills footprints; stationary claim transitions rese
  const n=new GroundMemory();sample(n,0,100);sample(n,.1,111,true);sample(n,.2,111,false);sample(n,.3,111,true);
  sample(n,.4,113,true);assert.equal(n.emitted,0);sample(n,.5,124,true);assert.equal(n.emitted,1);
 });
+
+
+test('live strength changes existing marks while paused; disable clears rather than resurrecting',()=>{
+ const m=new GroundMemory(),c={...config,background:'linen',environmentStrength:1};
+ m.begin(c,0,1000,600);m.add(300,300,5,2,0);const p=m.marks[0];assert.equal(m.opacity(p),.075);
+ m.begin({...c,environmentStrength:.1},0,1000,600);assert.ok(Math.abs(m.opacity(p)-.0075)<1e-12);
+ m.begin({...c,environmentStrength:.8},0,1000,600);assert.equal(m.opacity(p),.06);assert.equal(m.emitted,1);
+ m.begin({...c,environmentStrength:0},0,1000,600);assert.equal(m.active,0);
+ m.begin(c,0,1000,600);assert.equal(m.active,0);assert.equal(m.opacity(p),0);
+});

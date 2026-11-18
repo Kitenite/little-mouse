@@ -42,9 +42,32 @@ Normal scene: seed 42, grass, size 2.2, strength 1; Chase then 45 single-frame s
 No audio, model, background catalog or settings changes; no persisted room/pairing state exercised.
 Check: `node --test little-mouse/tests/environment*.test.mjs` (11 pass).
 Status: independently accepted: live browser fixture, 11 tests and 105 adverse pose cases.
-Root error <7.4e-15px; one draw, 320 triangles unchanged. Exact fix SHA in subsequent record.
+Root error <7.4e-15px; one draw, 320 triangles unchanged.
+Fix commit: `7831a702bf41417749c76713eee7ca1f84f99d6f`.
+
+## ENV-03 — P2 paused live strength ignores existing marks
+
+Baseline: `7831a702bf41417749c76713eee7ca1f84f99d6f`; same environment logic as `cf064cc`.
+Deterministic Node case: linen, size 1, strength 1, persistence 2; bounds 1000×600,t=0.
+Add one mark at (300,300), radii (5,2), angle 0; change strength to .1 without advancing time.
+Expected opacity .0075; observed .075 unchanged. Critic reproduced baseline twice.
+Repair: retain intrinsic material alpha; apply current strength when evaluating opacity.
+After: .075→.0075; raising to .8 gives .06; zero clears and re-enable does not resurrect marks.
+13 focused checks pass, including stable shader positions and no added emissions while paused.
+Browser fixture at 1100×600 also confirms grass/soil .12→.012, linen .075→.0075.
+Evidence: `little-mouse/tests/evidence/environment/strength-after.png`; no scene reload required.
+Fixture diagnostics use active marks rather than assuming the rolling pool's first slot is live.
+Status: independently accepted: exact paused sequence, nine adverse cases, 13 tests and live browser.
+No room/pairing storage changed. Exact fix SHA recorded in final handoff record.
 
 ## Limits and next issue
 
 Ground responses remain approximate visual marks; no bitmap obstacles or photo deformation.
+Next ranked issue: low contrast of impressions on photographic soil at normal gameplay scale;
+needs controlled before/after contrast review before increasing opacity or adding edge foliage.
+Photographic pixels still do not deform; generated grass blades are sparse cosmetic marks.
 Physical iPad quality/performance and feline response remain unverified.
+Full suite: 237/237 pass. Build passed: `3ecb09b30e61` after local `npm ci --ignore-scripts`.
+Preview: `http://localhost:8816/playground.html`; comparison fixture on port 8817.
+Serve fixture from `little-mouse` with `python3 -m http.server 8817 --bind 127.0.0.1`.
+This completes the authorized three-iteration batch, not a permanently running service.
