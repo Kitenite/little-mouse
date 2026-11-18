@@ -31,7 +31,9 @@ not a scientifically established optimum. The connected iPad also has a saved
 The HTML shows loading until the game module initializes. An inline recovery controller
 survives failed module downloads; startup failure or a 15-second timeout offers **Retry
 loading game**. Retry checks the game response before a fresh navigation, preserving
-stored pairing/settings and the existing short resume window. There is no automatic
+stored pairing/settings and the existing short resume window. Malformed pairing values are
+cleared individually; resume requires finite nonnegative counters and a nonfuture timestamp
+less than 60 seconds old. Valid owner state is retained. There is no automatic
 error-reload loop or same-document re-import that could duplicate handlers.
 WebGL initialization, preview/game frame exceptions and context loss use this recovery;
 an active session is checkpointed before stopping, while intentional pause stays paused.

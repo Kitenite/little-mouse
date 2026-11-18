@@ -227,3 +227,30 @@ test('held contact reload preserves session and pairing without resurrecting a g
  const saved=JSON.parse(h.storage.get('mouse-resume'));assert.equal(saved.playing,true);assert.ok(saved.elapsed>.3);
  const restored=await gameHarness('offline','web',{storage:h.storage});assert.equal(restored.context.testGame.elapsed,saved.elapsed);assert.equal(restored.context.testGame.catches,0);assert.equal(restored.context.testGame.contacts.paws.size,0);assert.equal(restored.storage.get('mouse-room'),h.storage.get('mouse-room'));
 });
+
+test('malformed saved pairing cannot make every startup retry fail',async()=>{
+ for(const room of [42,{},[],true,'not-a-pairing-code']){
+  const storage=new Map([['mouse-room',JSON.stringify(room)],['little-mouse',JSON.stringify({...upgradeSettings(settingsDefaults),speed:2})]]);
+  const h=await gameHarness('offline','web',{storage});
+  assert.equal(h.context.testGame.room,null);assert.equal(h.context.testGame.config.speed,2);assert.equal(h.e('pair').textContent,'Create pairing code');
+  const restarted=await gameHarness('offline','web',{storage:h.storage});assert.equal(restarted.context.testGame.room,null);
+ }
+});
+
+test('invalid resume payload is ignored without losing valid pairing or settings',async()=>{
+ for(const resume of [
+  {playing:true,catches:7,elapsed:'broken',at:Date.now()},
+  {playing:true,catches:-1,elapsed:42,at:Date.now()},
+  {playing:'yes',catches:7,elapsed:42,at:Date.now()},
+  {playing:true,catches:7,elapsed:42,at:Date.now()+60000},
+ ]){
+  const storage=new Map([['mouse-room',JSON.stringify('0123456789abcdef')],['mouse-resume',JSON.stringify(resume)]]);
+  const h=await gameHarness('offline','web',{storage});assert.equal(h.context.window.mouseDiagnostics().playing,false);assert.equal(h.context.testGame.elapsed,0);assert.equal(h.context.testGame.room,'0123456789abcdef');
+ }
+});
+
+test('null saved command history does not break remote commands',async()=>{
+ const storage=new Map([['mouse-command','null']]);const h=await gameHarness('offline','web',{storage});
+ assert.doesNotThrow(()=>h.context.testGame.applyCommand({action:'play',nonce:'fresh-command'},'playback'));
+ assert.equal(h.context.window.mouseDiagnostics().playing,true);
+});

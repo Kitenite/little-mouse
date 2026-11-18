@@ -49,10 +49,30 @@
 - Device/OS/browser is Node VM only; no real GPU context loss or installed app claim.
 - Independent critic accepted: malformed/throwing diagnostics, 100-retry bound, full web suite
   and native checkpoint tests pass. Null snapshot on diagnostic failure documented.
-- Collect report before Retry: in-memory navigation limit. Accepted commit follows.
+- Collect report before Retry: in-memory navigation limit.
+- Fix commit: `4aa4116bc91b7fcf5d0cf602fcd928b667615b12`.
+
+## R3 — P2 malformed durable state prevents useful Retry
+
+- Baseline: `4aa4116bc91b7fcf5d0cf602fcd928b667615b12`; Node VM at 800×600, no seed/input.
+- Pairing repro: store JSON `42` in `mouse-room`, load game; expected settings/home available,
+  actual startup TypeError `room.match is not a function`, repeated on unchanged-storage retry.
+- Resume repro: `{playing:true,catches:7,elapsed:"broken",at:Date.now()}` in `mouse-resume`;
+  expected ignored invalid checkpoint; actual playing=true with string elapsed.
+- Command: `node --test --test-name-pattern='malformed saved pairing|invalid resume payload|null saved command' little-mouse/tests/enrichment.test.mjs`.
+- Before: 2 fail, null-command-history adverse case already passes (no change warranted).
+- Repair: discard noncanonical pairing only; validate strict playing flag, nonnegative safe
+  catches, finite nonnegative elapsed and nonfuture <60s checkpoint before resuming.
+- Checks: focused boot/enrichment/network 38/38 pass. Valid pairing/owner settings survive;
+  held-contact reload still restores elapsed without a ghost grab or hit; no auto-stop added.
+- Legacy settings fixture uses existing migration markers to isolate malformed storage from
+  intentional preset migration. No product changes to settings migration.
+- Independent critic accepted after malformed-value, exact timestamp-boundary, valid-resume
+  and paused/context-loss checks. Accepted implementation commit follows.
 
 ## Next ranked work
 
-- Corrupted saved pairing/resume values can make repeated startup retries unproductive;
-  reproduce before deciding a bounded repair.
+- Real WebKit context-loss/retry and delayed native resume remain pending root/device checks.
+- Optional future lab input recording/replay would need fixed seed/settings/viewport and
+  contact hit-source metadata; current ordinary-game report deliberately claims no determinism.
 - Native/WebKit context loss and physical-device behavior remain pending root verification.
