@@ -4,17 +4,31 @@ An Expo / React Native iPad app hosting the existing Three.js game in WKWebView.
 
 ## Play on your iPad now
 
-Install **Expo Go** on the iPad, connect it to the same Wi-Fi as this computer, then run:
+Install [Expo Go](https://expo.dev/go) on the iPad, connect it to the same Wi-Fi as the computer, then run these commands from the repository root:
 
 ```sh
+npm --prefix little-mouse ci
+npm --prefix ipad ci
 cd ipad
-npm install
+npx expo login
 npm run local
 ```
 
-Scan the terminal QR code with the iPad Camera. The launcher also prints an iOS browser link that opens the project in Expo Go. Tap **Let’s play** in the app, then the game’s play button. Allow local-network access if iOS asks. The script discovers this computer’s LAN address, starts the game server if necessary, and runs Expo on port 8088. The computer must remain running for local play.
+Sign into Expo Go with the same Expo account used by the computer. Physical iOS devices require matching accounts; see [Expo’s setup instructions](https://docs.expo.dev/get-started/start-developing/). If the computer is already signed in, skip `npx expo login`; `npx expo whoami` shows its account.
 
-The phone/laptop companion is at the printed game address followed by `/companion`. Create a pairing code inside the game and enter it in the companion. The native **Share companion** button shares that address.
+Scan the terminal QR code with the iPad Camera. The launcher also prints an iOS browser link that opens the project in Expo Go. Tap **Let’s play** in the app, then the game’s play button. Allow local-network access if iOS asks. The script discovers this computer’s LAN address, starts the game server if necessary, and runs Expo on port 8088. Keep the terminal open and the computer awake for local play.
+
+## Control from your phone
+
+1. Connect the phone to the same Wi-Fi as the computer and iPad. No phone app is needed.
+2. On the iPad’s game home screen, tap **Create pairing code**. During play, hold **Hold to pause** to return there.
+3. In Safari or Chrome on your phone, open the **Companion** URL printed in the terminal, such as `http://COMPUTER-IP:8787/companion`. The native **Share companion** button can share this address.
+4. Enter the iPad’s 16-character code and tap **Connect**. Spaces in the displayed code are accepted.
+5. Use **Play**, **Pause**, the steering pad, or the settings to control the iPad live. Changes to mouse count, movement, speed, size and background apply without restarting the session.
+
+If the phone says it is waiting for the game, keep the iPad app visible and its screen unlocked. If either device cannot connect, check Wi-Fi and local-network permission, and use the current address printed by `npm run local`; the computer’s address may change after switching networks.
+
+To test without Expo Go, open the printed game address with `/?surface=ipad` in iPad Safari. The same companion and automatic game-code reload work there.
 
 Saved addresses persist. If you previously saved another address, replace it with the current one printed by `npm run local`. Hold **app settings** at the bottom right for 1.2 seconds to leave the game. The screen stays awake during active play.
 
