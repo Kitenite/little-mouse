@@ -12,16 +12,30 @@ Root owns main integration, iPad setup, checks, source publication and Sites dep
 Parallel edits require isolated worktrees or deliberately disjoint file ownership.
 Workers may delegate bounded independent reviews through Superset; preserve their IDs.
 
-| Role | Terminal | Scope/status |
+| Role | Terminal | Current batch |
 | --- | --- | --- |
-| Audio implementation | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Recorded-only and surface-rustle integrated; game-start-recovery integrated at `0ae2101`; independent failure-path review passed |
-| Sound curation lead | `49671af0-6882-4117-999f-3ffa3f788f01` | Isolated `audio-realism-variety` branch; completed inventory/source audit; 10 excerpts integrated, 3 crawl excerpts held for listening |
-| Physics prototype lead | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Prototype at `6c1633e` deferred; drag, fur attachment/resource and startup-recovery reviews passed |
+| Physics builder | `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` | Running `cycle-physics`: bounded drag/secondary motion; delegate independent critic |
+| Anatomy builder | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Running `cycle-anatomy`: connected anatomy/poses; owns renderer hooks; delegate critic |
+| Coat builder | `37be8626-484b-4e27-b7af-1786121687f7` | Running `cycle-coat`: softer fur silhouette, stable roots and render cost; delegate critic |
+| Environment builder | `1906036a-b32e-42b0-8678-76be0b6050f7` | Running `cycle-environment`: backgrounds, light/material response; reuse/delegate critic |
+| Audio builder | `aeb88079-ac0b-42b5-a31a-df623e6f3eeb` | Running `cycle-audio`: recorded cue variety, contextual routing and mix |
+| Audio critic | `49671af0-6882-4117-999f-3ffa3f788f01` | Running `cycle-audio-critic`: independent source/routing/mix review paired with audio builder |
+| Behavior builder | `ce1b794a-1fc4-4b52-b9d6-9dee3c7f5cf0` | Running `cycle-behavior`: seeded prey policy and paw avoidance; delegate critic |
+| Reliability builder | `be76f581-7262-4c17-b14c-8a9797b16141` | Running `cycle-reliability`: reproducible failures, diagnostics and recovery; delegate critic |
+| Reference realism critic | `b1905a2f-48ee-4727-9351-ce92957abbd8` | Dispatched `cycle-realism-critic`: actual rendered/reference comparisons sent to domain leads |
 
-| Reactive environment lead | `1906036a-b32e-42b0-8678-76be0b6050f7` | Integrated at `20313f4`; material-aware impressions, settling fragments, controls and independent review |
+Batch baseline: `cf064cc`. Each builder creates a new isolated worktree from this baseline.
+Independent domain critics and worktree IDs are recorded in `docs/cycles/<domain>.md`.
+Scope: up to three focused build/review/repair iterations per domain, then exact commit
+handoffs and next ranked findings. Submitted tasks are not evidence of completed changes.
+Physics owns drag/secondary/contact modules; anatomy owns shared renderer hooks; coat owns
+fur/material modules; environment owns background/light/response; behavior owns policy;
+audio owns samples/routing; reliability owns boot/game diagnostics. Shared hooks require
+peer coordination and separate commits. Root owns final integration and publication.
 
-| Anatomy lead | `1d55772c-e1b1-439a-abb3-a31dfebcd3c2` | Part-drag-flop integrated at `68a8337`; landscape configuration integrated; root signed build installed on connected iPad |
-| Texture lead | `37be8626-484b-4e27-b7af-1786121687f7` | Regional surfaces integrated at `722f366`; continuous-limb-skin integrated; fur-depth/Fuzziness integrated; independent attachment, shader and resource review passed |
+Previously integrated: part-drag `68a8337`, limb skin `8bdc57b`, fur/Fuzziness `3c71dab`,
+environment `20313f4`, surface rustle `655eab4`, web recovery `0ae2101`, landscape `46eaeb9`.
+World-engine prototype `6c1633e` remains deferred after failing drag/joint/overshoot gates.
 
 New messages are additive. Do not cancel or replace these tasks merely because another request arrives.
 
@@ -43,4 +57,7 @@ Separate waveform/source analysis from actual listening; do not claim physical s
 Require a SUPERSET_WORKER_DONE or SUPERSET_WORKER_BLOCKED envelope with task, summary,
 files, checks and remaining work. Inspect evidence before integrating or claiming completion.
 Keep completed terminals for continuation. Update this ledger when ownership or status changes.
-No recurring unattended service or automatic merge is authorized by this ledger.
+The owner now requests continuing builder/critic improvement. Follow
+[the cycle contract](improvement-cycles.md): three focused iterations per active batch,
+independent criticism, reproducible cases and root-owned integration. This does not
+install a recurring unattended service or authorize worker merges into main.

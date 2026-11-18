@@ -20,6 +20,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | [Playground](playground.md) | Dedicated testing, forcing scenarios and controlled simulation time |
 | [Realism review](realism-review.md) | Reference comparisons, ranked visible gaps and review acceptance |
 | [Worker coordination](workers.md) | Persistent Superset roles, task ownership and handoff status |
+| [Improvement cycles](improvement-cycles.md) | Builder/critic loop, failure reproductions and domain acceptance |
 | [Current verification](verification.md) | Latest checks, release boundaries and remaining device checks |
 | [Maintenance](maintenance.md) | Ownership, document limits, pruning and release claims |
 | [Primary research notes](mouse-behavior-research.md) | Sources, observations and separate design inferences |
