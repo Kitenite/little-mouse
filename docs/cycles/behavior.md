@@ -65,24 +65,45 @@
   excluded), priority checks pass, 64 focused tests pass, diff clean. Fix: `b6cfec4ca5e6ab7ff3f72b70a0c156ca7d736550`.
 - No session/pairing/owner setting changes.
 
-## Ranked follow-up
+## B4 follow-up: hold/toss stale cue — medium, verified
 
-- B4 (medium, reproduced, not repaired): pre-hold queued cue replays after a toss.
+- Follow-up authorization after root integrated previous four commits at `4fc4dab`.
+- Local baseline `8c8d74e632703419cddc8c2d927d73d36cdf50fb`: pre-hold cue replays on landing.
 - Seed42, one active mouse (512,384), 1024×768,60Hz; Hunt size2.2 speed1.2 hide2.5
   tempo1 variation=true runThrough=.3. Tick .016667; remember touch (562,384); tick again.
 - Body-claim pointer1 at (512,384) at .033333; hold until .3; move pointer to (562,384);
   tick twice; release at .333333 creates toss through .983333 (real contact+physics).
 - Pending retreat deadline .3127817 survives and enters retreat at .983333,
   startledUntil=2.183333; no-cue control watches. Critic reproduced twice.
-- Expected: hold/toss supersedes the queued pre-contact cue. No fourth iteration started.
+- Expected: hold/toss supersedes the queued pre-contact cue. New B4 regression failed on
+  baseline: landing retreat != watch; canceled hold retained deadline .3127817.
+- Repair: hold consumes pending decisions/current touch serial; toss discards pending
+  decisions and strictly older cues, including when the game skips airborne policy updates.
+- New release-timestamp/airborne cues react once; repeated release does not produce an outcome.
+- 18 combinations: 30/60/120Hz × none/release/airborne cue × held policy on/off, plus cancel.
+- Final local focused suite40 pass, full suite240 pass (including minimal claim dependency).
+  Same hunt-policy tests with read-only imports
+  of root physics AND contact:18 pass; mixed old physics/new contact is invalid for recency.
+- Physics lead `04bacc27-b0f8-4f2d-9a9a-1e7a5b815fba` confirmed no contract concern.
+- Critic caught claim+cancel between policy ticks; expanded regression failed on that path.
+  Physics owner supplies successful-claim-only reset of reactAt/reactKind/lookAt, with no
+  sensed/director changes and no effect on rejected claims. Original dependency:
+  `6bef5ac7ab6e646e7e4ce4d0a5194325ad51b6f1` (independently accepted by physics).
+- Equal simulation-time cues cannot reveal event order; retain release-timestamp cues to
+  protect fresh post-release input. Critic accepts this boundary; not queued-decision replay.
+- Behavior critic ACCEPT: committed hook matches review, resolved local focused40/40,
+  six cancellation/fresh-cue cases and seven rejected-claim cases pass, diff clean.
+- Current workspace/critic retained. No unrelated cases opened; no main/build/device changes.
 - Critic DONE envelope received; retain its terminal for future review. Root should register
   this lead/workspace in the shared workers ledger during integration; no root terminal guessed.
 - Device/cat response remains unverified; authored avoidance is a design inference.
 
 ## Integration
 
-- Apply branch commits in order: `629121971d941505ca2fb257043dd1c24f94e96e`,
+- Previous stack (already integrated by root; do not apply again): `629121971d941505ca2fb257043dd1c24f94e96e`,
   `af9142b7798f7299c1830b8d7efa77d260cbb9ee`, `b6cfec4ca5e6ab7ff3f72b70a0c156ca7d736550`,
-  then the report-only handoff commit at branch HEAD.
+  then `8c8d74e632703419cddc8c2d927d73d36cdf50fb` (report).
+- Only new B4 behavior commits should be applied for this follow-up; exact code SHA below.
+  Do not apply local dependency equivalent `0ce4ffa`; root uses original physics SHA above.
 - All edits are isolated here. No shared hooks or changes outside policy/tests/docs required.
 - Root performs combined integration/build and browser/device/cat validation.

@@ -58,6 +58,7 @@ The rich preset is a design choice for this cat to try, not a scientifically opt
 validated engagement setting. Its comparative quality still requires observing Mouse for Cats
 and this cat's response.
 
-Known limit: a queued pre-contact retreat can survive a hold/toss and replay on landing.
-This is reproduced, not repaired in the current bounded batch; see
-[behavior cycle evidence](cycles/behavior.md) for the exact seed and next case.
+Hold updates consume pending pre-contact reactions. Toss recovery discards queued decisions
+and older pre-release cues even when policy updates were skipped while airborne. New cues
+at or after the release timestamp remain available on landing and react once; cancellation
+does not create a release outcome. See [behavior cycle evidence](cycles/behavior.md).

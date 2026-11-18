@@ -1,3 +1,4 @@
+import {createContacts,beginContact,moveContact,endContact,cancelContact,updateContacts} from '../public/contact.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createHuntDirector,rememberTouch,clearHunt,updateHunt} from '../public/enrichment.js';
@@ -196,5 +197,38 @@ test('seed 42 paw arriving during peek backs out and reenters through clear cove
   assert.ok(Math.hypot(s.m.x-prev[0],s.m.y-prev[1])<40,'no teleport during withdrawal');
  }
  assert.ok(withdrew&&hidden&&reentered,'newly blocked peek must return through clear cover within 20 seconds');
+ }
+});
+
+
+test('hold/toss supersedes pre-contact threat while new release cues react exactly once',()=>{
+ for(const hz of [30,60,120])for(const cue of ['none','release','airborne'])for(const heldPolicy of [true,false]){
+  const fresh=cue!=='none';
+  const s=simulation({hz,seed:42,state:'active',settings:{hide:2.5,runThroughChance:.3}}),contacts=createContacts();
+  const tick=()=>{s.time+=1/hz;updateContacts(contacts,s.time);if(!(s.m.tossUntil>s.time)&&(heldPolicy||!s.m.hold))updateHunt(s.m,s.config,s.time,s.w,s.h,false,s.rng,s.director);stepMice([s.m],s.config,s.time,1/hz,s.w,s.h);};
+  tick();rememberTouch(s.director,s.m.x+50,s.m.y,s.time,s.w,s.h);tick();
+  assert.equal(s.m.hunt.reactKind,'retreat');
+  assert.ok(beginContact(contacts,s.m,{part:'body'},1,s.m.x,s.m.y,s.time,s.config,s.config.size));
+  while(s.time<.3)tick();
+  moveContact(contacts,1,562,384,s.config.size,s.time);tick();tick();
+  const result=endContact(contacts,1,s.time,s.w,s.h,s.config.size,s.config,()=>.8);
+  assert.equal(result.outcome,'tossed');assert.equal(endContact(contacts,1,s.time,s.w,s.h,s.config.size,s.config),null);
+  const release=s.time,lands=s.m.tossUntil;
+  if(cue==='airborne')while(s.time<release+.1)tick();
+  if(fresh)rememberTouch(s.director,s.m.x,s.m.y,s.time,s.w,s.h);
+  while(s.time<lands)tick();
+  assert.equal(s.m.hunt.phase,'watch','landing must not replay a stale queued retreat');
+  assert.equal(s.m.hunt.reactKind,fresh?'retreat':undefined,'post-release cue retained until landing');
+  if(fresh){const reacts=s.m.hunt.reactAt;while(s.time<reacts)tick();assert.equal(s.m.hunt.phase,'retreat');assert.equal(s.m.hunt.reactAt,undefined);const started=s.m.hunt.since;tick();assert.equal(s.m.hunt.since,started,'same cue cannot restart retreat');}
+ }
+});
+
+test('canceled hold discards queued flight but fresh cancellation-time cue still reacts',()=>{
+ for(const heldPolicy of [false,true]){
+ const s=simulation({seed:42,state:'active'}),contacts=createContacts();s.tick();
+ rememberTouch(s.director,s.m.x,s.m.y,s.time,s.w,s.h);s.tick();
+ beginContact(contacts,s.m,{part:'body'},1,s.m.x,s.m.y,s.time,s.config,s.config.size);if(heldPolicy)s.tick();
+ cancelContact(contacts,1);assert.equal(s.m.hunt.reactAt,undefined);
+ rememberTouch(s.director,s.m.x,s.m.y,s.time,s.w,s.h);s.tick();assert.equal(s.m.hunt.reactKind,'retreat');
  }
 });

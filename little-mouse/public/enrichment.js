@@ -103,6 +103,9 @@ function choose(a, rng, config, time) {
   let roll=rng()*options.reduce((sum,p)=>sum+p[1],0);
   return options.find(p=>(roll-=p[1])<=0)?.[0]||'watch';
 }
+function discardReaction(a) {
+  delete a.reactAt;delete a.reactKind;delete a.lookAt;
+}
 export function clearHunt(m,time) {
   delete m.hunt;delete m.huntSpeed;m.restUntil=Math.min(m.restUntil||0,time);
 }
@@ -110,7 +113,10 @@ export function clearHunt(m,time) {
 // Injury/manual control have priority. Timing uses paused simulation time only.
 export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,director=createHuntDirector()) {
   m.physicalBounds=physicalBounds(m.identity,config);
-  if(m.hold)return true;
+  if(m.hold){
+    if(m.hunt){discardReaction(m.hunt);m.hunt.sensed=director.serial;}
+    return true;
+  }
   director.pawBaseRadius=Number(config.pawAvoidanceRadius)||50;
   director.pawClearance=Math.max(10,Math.min(150,Number(config.pawAvoidanceRadius)||50))+Math.min(39*config.size,Math.min(w,h)*.18);
   if(config.mode!=='hunt'||manual){if(m.hunt)clearHunt(m,time);return false;}
@@ -121,6 +127,12 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     else enter(m,'watch',time,config,w,h,rng,director);
   }
   const a=m.hunt;
+  if(a.phase==='toss'){
+    // The game may skip policy updates while airborne. Reset on landing too,
+    // consuming only pre-release cues so a new paw strike is still noticed.
+    discardReaction(a);
+    for(const p of director.touches)if(p.time<m.tossAt)a.sensed=Math.max(a.sensed,p.serial);
+  }
   if((m.tossUntil||0)>time)return true;
   if(a.phase==='toss'){
     if(m.x<0||m.x>w||m.y<0||m.y>h){sendOffscreen(m,time,w,h,config.size,rng,m.x<0?0:m.x>w?1:m.y<0?2:3);a.phase='injury';}
