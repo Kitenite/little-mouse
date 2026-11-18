@@ -21,3 +21,10 @@ export const sampleMix={eat:.3,groom:.08,facewipe:.07,hindlegscratch:.12,stretch
 
 // Match friction RMS without flattening individual transients; final mix is limited.
 export const sampleTrim={'paper-01':.8,'paper-02':1,'paper-03':1.5,'paper-04':2};
+
+// Quiet paper-recording substitute, not recordings of these physical materials.
+export function surfaceFriction(background){
+ if(['photo-linen','linen','felt','woven','denim','cork','paper'].includes(background))return 1;
+ if(['photo-clearing','earth','sand','grass'].includes(background))return .65;
+ return .08; // Hard/unknown floors keep friction almost inaudible.
+}

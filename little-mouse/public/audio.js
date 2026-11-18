@@ -1,4 +1,4 @@
-import{recordedSamples,sampleBanks,sampleMix,sampleTrim}from'./audio-samples.js';
+import{recordedSamples,sampleBanks,sampleMix,sampleTrim,surfaceFriction}from'./audio-samples.js';
 // Real rodent recordings and explicitly credited light-friction foley.
 // Every source buffer is a collected recording; missing assets remain silent.
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -15,9 +15,15 @@ export class PreyAudio {
   constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,audioSession=globalThis.navigator?.audioSession}={}) {
     this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleErrors=[];this.sampleChoice={};this.context=null;this.master=null;
     this.enabled=false;this.active=false;this.voices=new Set();this.lastVariant={};this.lastCue=-Infinity;
-    this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;
+    this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;this.surface={background:'photo-clearing',strength:.55};this.surfaceMotion=new WeakMap();
   }
   configure(config={}){
+    const value=Number(config.environmentStrength??.55),strength=Number.isFinite(value)?clamp(value,0,1):.55;
+    const background=config.background??'photo-clearing';
+    if(strength!==this.surface.strength||background!==this.surface.background){
+      this.surface={background,strength};this.surfaceMotion=new WeakMap();
+      for(const voice of [...this.voices])if(voice.surface)voice.cancel();
+    }
     for(const [key,schema] of Object.entries(audioControlSchema)){const value=Number(config[key]??schema.default);this.settings[key]=Number.isFinite(value)?clamp(value,schema.min,schema.max):schema.default;}
     if(this.settings.soundVolume===0)this.stop();
     const volume=this.settings.soundVolume*OUTPUT_GAIN;
@@ -50,7 +56,7 @@ export class PreyAudio {
     }catch(error){this.pendingContacts=[];this.lastError=String(error?.message||error);return Promise.resolve(false);}
   }
   stop(){
-    this.auditionGeneration++;this.pendingReply=null;this.pendingContacts=[];this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;
+    this.auditionGeneration++;this.pendingReply=null;this.pendingContacts=[];this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.surfaceMotion=new WeakMap();
     for(const voice of [...this.voices])voice.cancel();
   }
   reset(){this.stop();this.observations=new WeakMap();this.lastCue=this.lastHit=-Infinity;this.nextSocial=null;this.pendingReply=null;}
@@ -73,7 +79,7 @@ export class PreyAudio {
     if(index===this.lastVariant[kind])index=(index+1)%bank.length;
     this.lastVariant[kind]=index;return bank[index];
   }
-  cue(kind,x=.5,owner=null,{priority=0,bypassCooldown=false,pointerId=null}={}){
+  cue(kind,x=.5,owner=null,{priority=0,bypassCooldown=false,pointerId=null,gainScale=1,surface=false}={}){
     if(globalThis.document?.hidden||!sampleBanks[kind]||!this.enabled||(!this.active&&!this.testing)||!this.ready||this.settings.soundVolume===0)return false;
     const context=this.context,t=context.currentTime;
     if(priority<2&&t<this.foleyUntil)return false;
@@ -97,16 +103,16 @@ export class PreyAudio {
       source=context.createBufferSource();source.buffer=this.sampleBuffers.get(sampleId);
       source.playbackRate.value=.96+this.rng()*.08;
       duration=source.buffer.duration/source.playbackRate.value;
-      const level=(sampleMix[kind]??.2)*(sampleTrim[sampleId]??1)*(.9+this.rng()*.15);
+      const level=(sampleMix[kind]??.2)*(sampleTrim[sampleId]??1)*(.9+this.rng()*.15)*clamp(gainScale,0,1);
       gain.gain.setValueAtTime(.0001,t);gain.gain.linearRampToValueAtTime(level,t+.008);gain.gain.setValueAtTime(level,t+Math.max(.01,duration-.018));gain.gain.linearRampToValueAtTime(.0001,t+duration);
       source.connect(gain);
     }
     if(priority===2){this.foleyUntil=Math.max(this.foleyUntil,t+Math.max(.45,duration));for(const voice of [...this.voices])if(voice.priority<2)voice.cancel();}
     nodes.push(source);let cleaned=false;
     const cleanup=()=>{if(cleaned)return;cleaned=true;for(const node of nodes)node.disconnect();this.voices.delete(voice);};
-    const voice={owner,priority,pointerId,kind,cancel:()=>{try{source.stop();}catch{}cleanup();}};
+    const voice={owner,priority,pointerId,kind,surface,cancel:()=>{try{source.stop();}catch{}cleanup();}};
     this.voices.add(voice);source.onended=cleanup;source.start(t);source.stop(t+duration);
-    this.played++;this.lastPlayed={kind,variant:this.lastVariant[kind],sample:sampleId,priority,source:'recording',at:t};
+    this.played++;this.lastPlayed={kind,variant:this.lastVariant[kind],sample:sampleId,priority,source:'recording',surface,gainScale,at:t};
     return true;
   }
   contactFeedback(mouse,width,outcome='touch',pointerId=null){
@@ -150,8 +156,29 @@ export class PreyAudio {
     if(cancelHold){const seen=this.observations.get(mouse);if(seen)seen.held=false;}
   }
   hit(mouse,width,outcome,pointerId=null){const seen=this.observations.get(mouse);if(seen)seen.held=false;return this.contactFeedback(mouse,width,outcome,pointerId);}
+  updateSurface(mouse,time,width,height,visible){
+    const previous=this.surfaceMotion.get(mouse),held=!!mouse.hold?.active;
+    const current={x:mouse.x,y:mouse.y,time,width,height,visible,held,distance:0,next:previous?.next??time};
+    this.surfaceMotion.set(mouse,current);
+    const dt=time-(previous?.time??time),distance=previous?Math.hypot(mouse.x-previous.x,mouse.y-previous.y):0;
+    const valid=visible&&previous?.visible&&previous.held===held&&previous.width===width&&previous.height===height&&dt>0&&dt<=.25&&Number.isFinite(distance)&&distance/dt<=1000;
+    const moving=valid&&distance/dt>12&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time);
+    if(!moving||!this.surface.strength){
+      for(const voice of [...this.voices])if(voice.owner===mouse&&voice.surface)voice.cancel();
+      return false;
+    }
+    current.distance=(previous.distance||0)+distance;
+    if(current.distance>=8&&time>=current.next){
+      const kind=held?'dragloop':mouse.hunt?.phase==='retreat'?'retreat':'patter';
+      if(this.cue(kind,clamp(mouse.x/Math.max(1,width),0,1),mouse,{priority:held?1:0,surface:true,gainScale:this.surface.strength*surfaceFriction(this.surface.background)})){
+        current.distance=0;current.next=time+Math.max(.9,(1.2+this.rng()*.8)/this.settings.soundFrequency);
+      }
+    }
+    return true;
+  }
   update(mice,time,width,height=Infinity){
     if(!this.enabled||!this.active||!this.ready)return;
+    for(const voice of [...this.voices])if(voice.surface&&!mice.includes(voice.owner))voice.cancel();
     const density=this.settings.soundFrequency,visible=mouse=>mouse.state==='active'&&!(mouse.hiddenUntil>time)&&mouse.x>=0&&mouse.x<=width&&mouse.y>=0&&mouse.y<=height;
     const calm=mouse=>visible(mouse)&&!mouse.hold&&!(mouse.activity?.until>time)&&!(mouse.injuredUntil>time)&&!['retreat','dart','injury','toss'].includes(mouse.hunt?.phase);
     for(const mouse of mice){
@@ -159,9 +186,10 @@ export class PreyAudio {
       let seen=this.observations.get(mouse);
       if(!seen){seen={phase:null,next:time+.5+this.rng(),nibbling:false};this.observations.set(mouse,seen);}
       const x=clamp(mouse.x/Math.max(1,width),0,1),held=!!mouse.hold?.active;
+      const displaced=this.updateSurface(mouse,time,width,height,visible(mouse));
       const activity=visible(mouse)&&!mouse.hold&&!mouse.moving&&(mouse.speed||0)<12&&phase==='watch'&&(mouse.hunt?.fear||0)<.3&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time)&&mouse.activity?.at<=time&&mouse.activity.until>time?mouse.activity:null;
       const activityKey=activity?`${activity.kind}:${activity.at}`:null;
-      if(seen.activityKey&&seen.activityKey!==activityKey)for(const voice of [...this.voices])if(voice.owner===mouse&&voice.priority===0)voice.cancel();
+      if(seen.activityKey&&seen.activityKey!==activityKey)for(const voice of [...this.voices])if(voice.owner===mouse&&voice.priority===0&&!voice.surface)voice.cancel();
       if(activity){
         const kind=({nibble:'nibble',groom:'groom',scratch:'hindlegscratch',stretch:'stretch',roll:'roll'})[activity.kind];
         const entered=seen.activityKey!==activityKey;if(entered)seen.activityPlayed=false;
@@ -172,10 +200,6 @@ export class PreyAudio {
       }
       seen.activityKey=null;
       if(held){
-        const hold=mouse.hold,dragSpeed=Math.hypot(hold.anchorVX||0,hold.anchorVY||0);
-        if(!seen.held){this.cue('dragstart',x,mouse,{priority:1,bypassCooldown:true});seen.dragNext=time+.7;seen.scratchNext=time+1.2;}
-        else if(dragSpeed>45&&time>=seen.dragNext){this.cue('dragloop',x,mouse,{priority:1,bypassCooldown:true});seen.dragNext=time+.7+this.rng()*.7;}
-        else if(['tail','forepaw','hindpaw'].includes(hold.part)&&time>=seen.scratchNext){this.cue('scratch',x,mouse,{priority:1,bypassCooldown:true});seen.scratchNext=time+1.4+this.rng()*1.5;}
         seen.held=true;seen.next=time+2;continue;
       }
       if(seen.held){seen.held=false;this.cue('dragrelease',x,mouse,{priority:1,bypassCooldown:true});}
@@ -187,12 +211,11 @@ export class PreyAudio {
       if(nibbling&&!seen.nibbling&&visible(mouse)){this.cue('nibble',x);seen.next=time+2/density;}
       seen.nibbling=nibbling;
       if(changed&&['peek','dart','retreat'].includes(phase)){
-        this.cue(phase==='dart'?'patter':phase,x);seen.next=time+(1+this.rng()*1.8)/density;
-      }else if(time>=seen.next&&mouse.state!=='defeated'&&phase!=='injury'){
-        const moving=mouse.moving&&phase!=='hidden'&&(mouse.speed??Math.hypot(mouse.vx||0,mouse.vy||0))>35;
-        const roll=this.rng(),kind=nibbling?'nibble':moving?'patter':phase==='hidden'?'rustle':phase==='watch'&&roll<.3?'tease':roll<.55?'sniff':'rustle';
+        if(phase==='peek')this.cue('peek',x);seen.next=time+(1+this.rng()*1.8)/density;
+      }else if(!displaced&&!mouse.moving&&time>=seen.next&&mouse.state!=='defeated'&&phase!=='injury'){
+        const roll=this.rng(),kind=nibbling?'nibble':phase==='hidden'?'rustle':phase==='watch'&&roll<.3?'tease':roll<.55?'sniff':'rustle';
         this.cue(kind,x);
-        seen.next=time+(moving?1.7+this.rng()*2.2:2.5+this.rng()*3.5)/density;
+        seen.next=time+(2.5+this.rng()*3.5)/density;
       }
     }
     // Sparse movement textures between nearby calm mice. Legacy call/reply

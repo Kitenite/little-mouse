@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {PreyAudio,createLimiterCurve} from '../public/audio.js';
-import{recordedSamples,sampleBanks,sampleTrim,sampleMix}from'../public/audio-samples.js';
+import{recordedSamples,sampleBanks,sampleTrim,sampleMix,surfaceFriction}from'../public/audio-samples.js';
 class Param {
   value=0;
   setValueAtTime(value,time){assert.ok(Number.isFinite(value)&&Number.isFinite(time));this.value=value;}
@@ -55,13 +55,14 @@ test('mute/pause/background stops already scheduled phrases immediately',async()
 });
 test('concealed mice rustle occasionally, active transitions get specific cues',async()=>{
   const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
-  const mouse={x:0,state:'away',hunt:{phase:'hidden'},moving:false};
+  const mouse={x:0,y:100,state:'away',hunt:{phase:'hidden'},moving:false};
   audio.update([mouse],0,1000);assert.equal(audio.played,0);
   context.advance(1.1);audio.update([mouse],1.1,1000);assert.equal(audio.lastPlayed.kind,'rustle');
   context.advance(2);audio.update([mouse],2,1000);assert.equal(audio.played,1);
   mouse.state='active';mouse.hunt.phase='peek';context.advance(3);audio.update([mouse],3,1000);assert.equal(audio.lastPlayed.kind,'peek');
-  mouse.hunt.phase='dart';context.advance(4);audio.update([mouse],4,1000);assert.equal(audio.lastPlayed.kind,'patter');
-  mouse.hunt.phase='retreat';context.advance(5);audio.update([mouse],5,1000);assert.equal(audio.lastPlayed.kind,'retreat');
+  mouse.hunt.phase='dart';context.advance(4);audio.update([mouse],4,1000);assert.equal(audio.lastPlayed.kind,'peek');
+  mouse.x+=20;context.advance(4.1);audio.update([mouse],4.1,1000);assert.equal(audio.lastPlayed.kind,'patter');
+  mouse.hunt.phase='retreat';context.advance(6);audio.update([mouse],6,1000);mouse.x+=20;context.advance(6.1);audio.update([mouse],6.1,1000);assert.equal(audio.lastPlayed.kind,'retreat');
 });
 test('interruption can be recovered by another gesture without a stale voice backlog',async()=>{
   const {audio,context}=setup();audio.setState(true,true);await audio.unlock();audio.cue('patter');
@@ -148,12 +149,13 @@ test('loading accepts available recordings despite individual download failures'
  const audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async id=>{inFlight++;maximum=Math.max(maximum,inFlight);await Promise.resolve();inFlight--;if(id==='mouse-01')throw Error('404');return{duration:.35};}});
  audio.setState(true,true);await audio.unlock();await audio.loadSamples();assert.equal(audio.sampleBuffers.size,recordedSamples.length-1);assert.equal(audio.sampleErrors.length,1);assert.ok(maximum<=4);assert.equal(audio.cue('peek'),true);assert.notEqual(audio.lastPlayed.sample,'mouse-01');
 });
-test('drag sounds follow actual anchor motion, releases resolve once, idle mouse has no foot beat',async()=>{
+test('drag sounds require actual displacement, releases resolve once, stationary struggle is silent',async()=>{
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
  const m={x:200,y:200,state:'active',moving:false,speed:0,hunt:{phase:'watch'}};
- audio.update([m],0,1000,700);m.hold={active:true,part:'body',anchorVX:0,anchorVY:0};context.advance(1);audio.update([m],1,1000,700);assert.equal(audio.lastPlayed.kind,'dragstart');
+ audio.update([m],0,1000,700);m.hold={active:true,part:'body',anchorVX:0,anchorVY:0};context.advance(1);audio.update([m],1,1000,700);assert.equal(audio.played,0);
  const count=audio.played;context.advance(2);audio.update([m],2,1000,700);assert.equal(audio.played,count);
- m.hold.anchorVX=90;context.advance(3);audio.update([m],3,1000,700);assert.equal(audio.lastPlayed.kind,'dragloop');
+ m.hold.anchorVX=90;context.advance(3);audio.update([m],3,1000,700);assert.equal(audio.played,count);
+ m.x+=20;context.advance(3.1);audio.update([m],3.1,1000,700);assert.equal(audio.lastPlayed.kind,'dragloop');
  delete m.hold;context.advance(4);audio.hit(m,1000,'tossed');const releaseCount=audio.played;assert.equal(audio.lastPlayed.kind,'dragrelease');audio.update([m],4,1000,700);assert.equal(audio.played,releaseCount);
 });
 test('supported Safari session requests playback only during activation and preserves app mute',async()=>{
@@ -278,7 +280,7 @@ test('hold friction preempts ambience but cannot steal voices from direct contac
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
  const mouse={x:100,y:100,state:'active',hold:{active:true,part:'tail',anchorVX:100,anchorVY:0}};
  for(let i=0;i<3;i++){context.currentTime=i;audio.cue('rustle');}
- audio.update([mouse],2,1000,700);assert.equal(audio.lastPlayed.kind,'dragstart');assert.equal(audio.lastPlayed.priority,1);
+ audio.update([mouse],2,1000,700);mouse.x+=20;context.currentTime=2.4;audio.update([mouse],2.2,1000,700);assert.equal(audio.lastPlayed.kind,'dragloop');assert.equal(audio.lastPlayed.priority,1);
  for(let i=0;i<3;i++)audio.contactFeedback(mouse,1000);
  const contacts=[...audio.voices],played=audio.played;context.currentTime=3;audio.update([mouse],3,1000,700);
  assert.equal(audio.played,played);assert.ok(contacts.every(v=>audio.voices.has(v)));
@@ -410,4 +412,58 @@ test('runtime uses mouse-eating cracker cuts and excludes archived rat, hamster 
  for(const id of Object.values(sampleBanks).flat())assert.ok(!/^(rat|chew|crawl)-/.test(id),id);
  assert.ok(sampleBanks.hit.every(id=>/^(mouse|floor)-/.test(id)));assert.ok(sampleBanks.hurt.every(id=>/^(mouse|floor)-/.test(id)));
  assert.equal(sampleMix.nibble,.3);assert.equal(sampleMix.eat,.3);
+});
+
+test('surface friction scales existing recorded movement by material and strength, never adds a voice',async()=>{
+ for(const background of ['photo-linen','linen','felt','woven','denim','cork','paper','photo-clearing','earth','sand','grass','photo-boards','marble']){
+  const {audio,context}=setup();audio.configure({background,environmentStrength:.55});audio.setState(true,true);await audio.unlock();
+  const mouse={x:100,y:100,state:'active',moving:true,speed:0,vx:0,vy:0,hunt:{phase:'creep'}};
+  audio.update([mouse],0,1000,700);mouse.x+=20;context.advance(.1);audio.update([mouse],.1,1000,700);
+  assert.equal(audio.played,1);assert.equal(audio.voices.size,1);assert.equal(audio.lastPlayed.kind,'patter');assert.equal(audio.lastPlayed.source,'recording');
+  assert.equal(audio.lastPlayed.gainScale,.55*surfaceFriction(background));assert.ok(audio.lastPlayed.sample.startsWith('paper-'));
+ }
+ assert.equal(surfaceFriction('photo-boards'),.08);assert.ok(surfaceFriction('photo-boards')<surfaceFriction('grass'));
+});
+test('stationary anchor struggle is silent but actual zero-velocity dragging rustles sparsely',async()=>{
+ const {audio,context}=setup();audio.configure({background:'linen',environmentStrength:1});audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',vx:0,vy:0,speed:0,hold:{active:true,part:'tail',anchorVX:800,anchorVY:800}};
+ for(let i=0;i<=100;i++){context.advance(i/10);audio.update([mouse],i/10,5000,700);}
+ assert.equal(audio.played,0);
+ const starts=[];for(let i=101;i<=300;i++){mouse.x+=10;context.advance(i/10);const before=audio.played;audio.update([mouse],i/10,5000,700);if(audio.played>before)starts.push(i/10);assert.ok(audio.voices.size<=1);}
+ assert.ok(starts.length>=8&&starts.length<=14);for(let i=1;i<starts.length;i++)assert.ok(starts[i]-starts[i-1]>=.9);
+ assert.equal(audio.lastPlayed.kind,'dragloop');const played=audio.played;context.advance(30.1);audio.update([mouse],30.1,5000,700);assert.equal(audio.voices.size,0);assert.equal(audio.played,played);
+});
+test('material changes, zero strength, pause and mute cancel surface voices without replaying movement',async()=>{
+ const {audio,context}=setup();audio.configure({background:'linen'});audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hold:{active:true,part:'body'}};
+ const tick=(t,dx=20)=>{mouse.x+=dx;context.advance(t);audio.update([mouse],t,5000,700);};
+ tick(0,0);tick(.1);assert.equal(audio.voices.size,1);
+ audio.configure({background:'marble'});assert.equal(audio.voices.size,0);tick(.3);tick(.5);assert.equal(audio.lastPlayed.gainScale,.55*.08);
+ audio.configure({background:'linen',environmentStrength:0});assert.equal(audio.voices.size,0);const count=audio.played;tick(.6);tick(.7);assert.equal(audio.played,count);
+ audio.configure({background:'linen',environmentStrength:1});tick(.9);tick(1.1);assert.equal(audio.voices.size,1);
+ let time=2;for(const state of [[true,false],[false,true]]){audio.setState(...state);assert.equal(audio.voices.size,0);const before=audio.played;tick(time);audio.setState(true,true);tick(time+.1);assert.equal(audio.played,before);tick(time+.2);assert.equal(audio.played,before+1);time+=2;}
+});
+test('contact ducking blocks surface friction for at least 450 ms despite ongoing displacement',async()=>{
+ const {audio,context}=setup();audio.configure({background:'linen'});audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hold:{active:true,part:'body'}};audio.update([mouse],0,5000,700);audio.contactFeedback(mouse,5000,'touch',1);const count=audio.played;
+ for(let i=1;i<=4;i++){mouse.x+=20;context.advance(i/10);audio.update([mouse],i/10,5000,700);assert.equal(audio.played,count);assert.equal([...audio.voices].some(v=>v.surface),false);}
+ mouse.x+=20;context.advance(.6);audio.update([mouse],.6,5000,700);assert.equal(audio.played,count+1);assert.equal(audio.lastPlayed.kind,'dragloop');
+});
+test('surface travel ignores teleport, hidden, resized and discontinuous frames',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();const mouse={x:100,y:100,state:'active',hold:{active:true,part:'body'}};
+ const tick=(t,x,w=5000)=>{mouse.x=x;context.advance(t);audio.update([mouse],t,w,700);};
+ tick(0,100);tick(.1,4000);tick(2,4100);tick(2.1,4120,5100);mouse.hiddenUntil=10;tick(2.2,4140);mouse.hiddenUntil=0;tick(2.3,4160);assert.equal(audio.played,0);
+ tick(2.4,4180);assert.equal(audio.played,1);
+});
+
+
+test('irregular update cadence preserves bounded displacement-driven friction spacing',async()=>{
+ const counts=[];
+ for(const intervals of [[1/30],[1/60],[.01,.04,.025,.1]]){
+  const {audio,context}=setup();audio.configure({background:'felt',soundFrequency:2});audio.setState(true,true);await audio.unlock();
+  const mouse={x:100,y:100,state:'active',moving:true,hunt:{phase:'creep'}};audio.update([mouse],0,10000,700);let time=0,index=0,last=-Infinity;
+  while(time<10){const dt=Math.min(intervals[index++%intervals.length],10-time);time+=dt;mouse.x+=100*dt;context.advance(time);const before=audio.played;audio.update([mouse],time,10000,700);if(audio.played>before){assert.ok(time-last>=.9-1e-9);last=time;}assert.ok(audio.voices.size<=1);}
+  counts.push(audio.played);
+ }
+ assert.ok(Math.min(...counts)>=10);assert.ok(Math.max(...counts)-Math.min(...counts)<=1);
 });

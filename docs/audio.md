@@ -26,8 +26,16 @@ patter 0.025, retreat 0.04 and drag-loop 0.035; this lowers those layers by abou
 11–12 dB without changing squeak 0.28, tap 0.20, hit 0.38 or hurt 0.32. Gain-weighted
 recording RMS puts these movement layers at least 22 dB below the squeak bank;
 that is a digital comparison, not a physical loudness or perceptual guarantee.
-Running friction is sparse rather than one sound per footfall. Drag friction requires
-actual movement. Activity cues require visible safe poses; social textures recheck current context.
+Surface friction reuses recorded `patter`/`retreat`/`dragloop`, never an additional bed.
+It requires visible observed displacement, including held mice with zero velocity;
+stationary struggle, teleports, resize and pause gaps do not trigger it. Moving at least
+8 px above 12 px/s allows a phrase, spaced at least 0.9 s apart per mouse. Stopping,
+material changes, zero strength, pause and mute cancel surface voices.
+`environmentStrength` defaults to 0.55, clamped 0–1. Soft linen/felt/woven/denim/cork/
+paper scale friction by 1; clearing/earth/sand/grass by 0.65; hard/unknown floors by
+0.08. These are quiet paper-foley substitutes, not authentic material recordings.
+`environmentPersistence` controls visual marks elsewhere; it adds no audio tail.
+Activity cues require visible safe poses; social textures recheck current context.
 `mouse.activity={kind,at,until}` triggers one entry cue with sparse repeats for
 nibble/groom/scratch. Interrupted activities cancel their own sounding voice.
 Calm arrival, teasing, idle and grooming contain no distress vocals. Explicit taps and
