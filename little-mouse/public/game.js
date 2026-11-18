@@ -52,7 +52,7 @@ for(const type of ['gesturestart','gesturechange','touchmove'])$('game').addEven
 if(document.documentElement.dataset.surface==='ipad')$('home').querySelector('.brand').removeAttribute('href');
 else $('tabletSettings').open=true;
 $('tabletSettings').addEventListener('toggle',()=>preview?.resize());
-$('start').addEventListener('click',()=>{try{unlockAudio();start();}catch(error){recoverBoot(error);}});
+$('start').addEventListener('click',()=>{try{unlockAudio();start();}catch(error){recoverBoot(error,'start');}});
 const ownerGesture=createOwnerGesture(),ownerPointers=new Set();
 function clearHold(){ownerGesture.cancel();ownerPointers.clear();}
 $('board').addEventListener('pointerdown',e=>{ownerPointers.add(e.pointerId);const r=$('board').getBoundingClientRect();ownerGesture.down(e.pointerId,e.clientX-r.left,e.clientY-r.top,r.width,r.height,performance.now()/1000,ownerPointers.size===1);});
@@ -93,7 +93,7 @@ const resume=read('mouse-resume',null);if(resume&&Date.now()-resume.at<60000&&re
 function frame(now){if(bootFailed||window.mouseBoot?.recovering)return;const dt=last?Math.min((now-last)/1000,.05):0;last=now;if(!document.hidden&&scene&&preview){if(!playing){if($('game').hidden&&renderDue(previewCadence,now,30)){const t=now/1000;Object.assign(previewMouse,{x:preview.w*.56,y:preview.h*.5,angle:Math.sin(t*.2)*.25-.5});preview.render([previewMouse],{...config,size:2.1},t);}}else{elapsed+=dt;renderDt+=dt;updateContacts(contacts,elapsed,mice);for(const m of mice){if((m.tossUntil||0)>elapsed)continue;const manual=config.mode==='manual'||elapsed<manualUntil;if(updateHunt(m,config,elapsed,scene.w,scene.h,manual,Math.random,huntDirector))continue;if(!updateLifecycle(m,elapsed,scene.w,scene.h,config.size,config.hide,Math.random,config)){m.moving=false;continue;}if(m.leaving||m.entering||m.state==='hurt')continue;if(!manual&&elapsed>=m.next){if(Math.random()<(config.hide?.24:.13)){sendOffscreen(m,elapsed,scene.w,scene.h,config.size);continue;}m.targetX=65+Math.random()*Math.max(1,scene.w-130);m.targetY=90+Math.random()*Math.max(1,scene.h-160);m.restUntil=config.mode==='stalk'?elapsed+.4+Math.random()*1.8:elapsed;m.next=elapsed+(config.mode==='scurry'?.35+Math.random()*.75:2+Math.random()*3);}}stepMice(mice,config,elapsed,dt,scene.w,scene.h,contacts.obstacles.values());for(const m of mice)updateIdleBehavior(m,elapsed,config);preyAudio.update(mice,elapsed,scene.w,scene.h);syncAudio();if(renderDue(gameCadence,now,60)){scene.render(mice,config,elapsed,renderDt);renderDt=0;}$('gameHint').style.opacity=Math.max(0,1-(elapsed-3)/2);}}requestAnimationFrame(runFrame);}
 requestAnimationFrame(runFrame);
 // Read-only diagnostics for device validation and companion support.
-window.mouseDiagnostics=()=>({playing,recovering:bootFailed||!!window.mouseBoot?.recovering,catches,elapsed,config:{...config},room,version,mice:mice.map(m=>({...m})),webgl:!!scene,renderer:scene?.diagnostics?.(),previewRenderer:preview?.diagnostics?.(),renderLimits:{game:60,preview:30},audio:preyAudio.diagnostics(),gaits:scene?.models?.map(m=>({...m.gait,feet:m.feet.map(f=>({x:f.position.x,z:f.position.z}))}))});
+window.mouseDiagnostics=()=>({playing,recovering:bootFailed||!!window.mouseBoot?.recovering,catches,elapsed,config:{...config},paired:!!room,version,mice:mice.map(m=>({...m})),webgl:!!scene,renderer:scene?.diagnostics?.(),previewRenderer:preview?.diagnostics?.(),renderLimits:{game:60,preview:30},audio:preyAudio.diagnostics(),gaits:scene?.models?.map(m=>({...m.gait,feet:m.feet.map(f=>({x:f.position.x,z:f.position.z}))}))});
 
 // A failed render/context must not leave a visible but inert play surface.
 function stopForRecovery(){
@@ -104,7 +104,7 @@ function stopForRecovery(){
  for(const cleanup of [()=>cancelTouchSounds(),()=>clearContacts(contacts),()=>clearHold(),()=>preyAudio.setState(config.sound,false),()=>preyAudio.stop(),()=>wake?.release().catch(()=>{})])try{cleanup();}catch(error){console.error(error);}
  wake=null;
 }
-function recoverBoot(error){if(window.mouseBoot)window.mouseBoot.fail(error);else stopForRecovery();}
-function runFrame(now){try{frame(now);}catch(error){recoverBoot(error);}}
+function recoverBoot(error,reason='runtime'){if(window.mouseBoot)window.mouseBoot.fail(error,false,reason);else stopForRecovery();}
+function runFrame(now){try{frame(now);}catch(error){recoverBoot(error,'runtime-frame');}}
 window.mouseStopForRecovery=stopForRecovery;
-for(const canvas of [$('preview'),$('board')])canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();recoverBoot(Error('Graphics context lost'));});
+for(const canvas of [$('preview'),$('board')])canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();recoverBoot(Error('Graphics context lost'),'context-loss');});

@@ -50,3 +50,19 @@ test('late import rejection cannot reopen a pending retry or cause duplicate nav
  h.reject(Error('late module failure'));await settle();assert.equal(h.window.mouseBoot.state,'checking');h.window.mouseBoot.fail(Error('repeat context loss'));assert.equal(h.window.mouseBoot.state,'checking');
  h.click();assert.equal(h.requests,1);release();await settle();assert.equal(h.reloads,1);assert.equal(h.window.mouseBoot.state,'reloading');h.click();assert.equal(h.requests,1);
 });
+
+test('failure export captures bounded sanitized evidence before cleanup and works without modules',async()=>{
+ const h=harness();
+ assert.equal(typeof h.window.mouseBoot.exportReport,'function','startup failures need an export independent of game modules');
+ const secret='0123456789abcdef';
+ h.window.mouseDiagnostics=()=>({playing:true,catches:7,elapsed:42,room:secret,version:'abcdef123456',config:{count:2,size:2.2,speed:1.2,mode:'hunt',secret},mice:[{hold:{pointerId:secret}},{seed:secret}],audio:{lastError:secret}});
+ h.window.mouseStopForRecovery=()=>{h.window.mouseDiagnostics=()=>({playing:false,recovering:true});};
+ h.window.mouseBoot.fail(Error('https://host/private?token='+secret),false,'context-loss');
+ const report=h.window.mouseBoot.exportReport();
+ assert.equal(report.failure.reason,'context-loss');assert.equal(report.failure.snapshot.playing,true);assert.equal(report.failure.snapshot.held,1);assert.equal(report.failure.snapshot.elapsed,42);
+ assert.equal(report.failure.snapshot.runtimeVersion,'abcdef123456');assert.equal(report.deterministic,false);
+ assert.ok(!JSON.stringify(report).includes(secret));assert.ok(!JSON.stringify(report).includes('https://'));
+ report.failure.snapshot.elapsed=999;assert.equal(h.window.mouseBoot.exportReport().failure.snapshot.elapsed,42,'exports cannot mutate retained evidence');
+ h.setResponse('offline');for(let i=0;i<30;i++){h.click();await settle();}
+ const repeated=h.window.mouseBoot.exportReport();assert.ok(repeated.events.length<=12);assert.ok(JSON.stringify(repeated).length<5000);assert.equal(repeated.failure.reason,'context-loss');assert.equal(h.reloads,0);
+});

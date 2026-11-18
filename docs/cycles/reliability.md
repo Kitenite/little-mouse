@@ -27,10 +27,32 @@
   an older conflicting POST; regression failed writes `[2]` versus `[2,1.2]`. Acknowledgement
   now waits while a conflicting value is in flight.
 - Checks: enrichment + network 26/26 passed, including malformed and other-room queue inputs.
-- Independent critic accepted after adverse success/failure/reload checks; commit follows.
+- Independent critic accepted after adverse success/failure/reload checks.
+- Fix commit: `a2eae09e69ef83bfd8b1f743cd7d9dbb40ee1081`.
+
+## R2 — P2 unsafe/unavailable shared failure evidence
+
+- Baseline: `a2eae09e69ef83bfd8b1f743cd7d9dbb40ee1081`; Node VM, 800×600 game doubles.
+- No deterministic seed for live game; test fixes mouse position/input for held-contact cases.
+- Before: boot export regression fails `undefined` vs `function`; paired raw diagnostic includes
+  bearer code. Expected shareable startup evidence without importing a failed module.
+- Added inline `mouseBoot.exportReport()`: first-failure snapshot before cleanup, category,
+  last 12 transitions, bounded numeric/enum settings, viewport, 12-hex runtime fingerprint.
+- No raw error/URL, pairing credential, storage, mouse or audio detail; exports are detached.
+  Raw diagnostic now reports `paired` boolean. No new ordinary-play UI or automatic upload.
+- Injected: missing module, hung import, offline/503/HTML Retry response, context/render failure,
+  cleanup failure, deferred stale responses, held contact then reload. No automatic retry loop.
+- Hold+reload sequence: manual/sound-off/count=1; mouse at (400,300), pointer 7 down there,
+  frame times 1000..1400ms by 20ms; remote reload. Pairing/elapsed survive, hold clears, no hit.
+- Focused boot/enrichment/network checks: 35/35 pass; 30 failed retries remain <=12 events,
+  <5KB and retain the original failure. Export mutated by caller cannot mutate retained evidence.
+- Device/OS/browser is Node VM only; no real GPU context loss or installed app claim.
+- Independent critic accepted: malformed/throwing diagnostics, 100-retry bound, full web suite
+  and native checkpoint tests pass. Null snapshot on diagnostic failure documented.
+- Collect report before Retry: in-memory navigation limit. Accepted commit follows.
 
 ## Next ranked work
 
-- R2: bounded sanitized failure export available even when startup modules fail; raw diagnostic
-  snapshots currently expose pairing code and cannot be safely shared as reproduction evidence.
+- Corrupted saved pairing/resume values can make repeated startup retries unproductive;
+  reproduce before deciding a bounded repair.
 - Native/WebKit context loss and physical-device behavior remain pending root verification.

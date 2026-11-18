@@ -41,6 +41,14 @@ the native bridge skips resume-storage writes then, while still posting actual
 until the full diagnostic function is installed. Cleanup failures cannot hide Retry.
 This covers a plausible web failure mode, not a confirmed diagnosis of the reported iPad
 incident. The initial HTML must load; device/WebKit validation remains separate.
+Developer console `mouseBoot.exportReport()` returns a bounded schema-1 report before Retry:
+first-failure category/pre-cleanup state plus the last 12 recovery transitions. It works even
+when game modules fail. Only allowlisted numeric/enum settings, viewport and a 12-hex runtime
+fingerprint are included; snapshot is null if diagnostics throw. No error text, URLs,
+pairing codes, storage dumps or raw mouse objects are included.
+`mouseDiagnostics()` exposes pairing presence, not the bearer code. Exported evidence is
+in-memory and resets on navigation; collect it before Retry. It is not deterministic replay
+or an automatic upload. Browser/OS, source SHA and ordered actions are recorded separately.
 The native home opens the game without awaiting the connection preference write, preventing
 slow storage from blocking navigation. Saving the address is best-effort; URL validation remains.
 

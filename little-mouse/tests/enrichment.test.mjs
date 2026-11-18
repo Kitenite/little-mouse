@@ -210,3 +210,20 @@ test('a matching old server snapshot cannot acknowledge an edit behind a conflic
  release();await first;await g.flushSettings();await g.poll();
  assert.deepEqual(writes,[2,1.2]);assert.equal(speed,1.2);assert.equal(g.config.speed,1.2);
 });
+
+test('diagnostics expose pairing presence without the bearer credential',async()=>{
+ const h=await gameHarness('offline'),diagnostic=h.context.window.mouseDiagnostics();
+ assert.equal(diagnostic.paired,true);assert.ok(!JSON.stringify(diagnostic).includes(JSON.parse(h.storage.get('mouse-room'))));
+});
+
+test('held contact reload preserves session and pairing without resurrecting a grab or awarding a hit',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;Object.assign(g.config,{mode:'manual',count:1,sound:false});g.sync();g.start();
+ const m=g.mice[0];Object.assign(m,{x:400,y:300,angle:0});
+ h.e('board').listeners.pointerdown({pointerId:7,clientX:400,clientY:300,width:22,height:22,preventDefault(){}});
+ for(let now=1000;now<=1400;now+=20)g.frame(now);assert.equal(m.hold.active,true);
+ let reloads=0;h.context.location.reload=()=>reloads++;
+ g.applyCommand({action:'reload',nonce:'held-reload'},'reload');
+ assert.equal(reloads,1);assert.equal(g.contacts.paws.size,0);assert.equal(m.hold,undefined);assert.equal(g.catches,0);
+ const saved=JSON.parse(h.storage.get('mouse-resume'));assert.equal(saved.playing,true);assert.ok(saved.elapsed>.3);
+ const restored=await gameHarness('offline','web',{storage:h.storage});assert.equal(restored.context.testGame.elapsed,saved.elapsed);assert.equal(restored.context.testGame.catches,0);assert.equal(restored.context.testGame.contacts.paws.size,0);assert.equal(restored.storage.get('mouse-room'),h.storage.get('mouse-room'));
+});

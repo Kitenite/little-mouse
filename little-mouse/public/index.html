@@ -5,9 +5,26 @@
 (()=>{
  const button=document.getElementById('start'),status=document.getElementById('bootStatus');
  let state='loading',recovering=false,timer;
- const fail=(error,retryFailure=false)=>{
+ // Developer-only export: bounded allowlisted evidence, never raw errors/URLs/storage.
+ const began=Date.now(),events=[];let failure=null;
+ const number=(value,max=1e9)=>typeof value==='number'&&Number.isFinite(value)?Math.max(0,Math.min(max,value)):null;
+ function snapshot(){
+  try{
+   const d=window.mouseDiagnostics?.()||{},c=d.config||{};
+   return {playing:d.playing===true,recovering:d.recovering===true,catches:number(d.catches),elapsed:number(d.elapsed),
+    paired:d.paired===true,held:Array.isArray(d.mice)?d.mice.slice(0,8).filter(m=>m?.hold).length:0,
+    viewport:{width:number(window.innerWidth,16384),height:number(window.innerHeight,16384)},
+    runtimeVersion:typeof d.version==='string'&&/^[a-f0-9]{12}$/.test(d.version)?d.version:null,
+    settings:{count:number(c.count,8),size:number(c.size,3),speed:number(c.speed,4),mode:['hunt','stalk','scurry','manual'].includes(c.mode)?c.mode:null}};
+  }catch{return null;}
+ }
+ function record(kind){events.push({kind,state,ms:number(Date.now()-began)});if(events.length>12)events.shift();}
+ function exportReport(){return JSON.parse(JSON.stringify({schema:1,deterministic:false,state,failure,events}));}
+ const fail=(error,retryFailure=false,reason='runtime')=>{
   if(state==='failed'||(['checking','reloading'].includes(state)&&!retryFailure))return;
   clearTimeout(timer);
+  if(!failure)failure={reason:['startup-module','startup-timeout','context-loss','runtime-frame','start','runtime'].includes(reason)?reason:'runtime',snapshot:snapshot()};
+  record(retryFailure?'retry-failed':'failure');
   try{window.mouseStopForRecovery?.();}catch(cleanupError){console.error('Recovery cleanup:',cleanupError);}
   recovering=true;state='failed';
   document.getElementById('home').hidden=false;document.getElementById('game').hidden=true;
@@ -17,17 +34,17 @@
  };
  async function retry(){
   if(state!=='failed')return;
-  state='checking';button.disabled=true;button.textContent='Checking connection…';
+  state='checking';record('retry-check');button.disabled=true;button.textContent='Checking connection…';
   try{
    const response=await fetch('./game.js',{cache:'no-store',signal:AbortSignal.timeout(5000)});
    if(!response.ok||!/(java|ecma)script/i.test(response.headers.get('content-type')||''))throw Error('Game server is not ready');
    // Fresh navigation clears failed module-map entries; never re-import a partly
    // initialized game or register its handlers twice in the same document.
    if(state!=='checking')return;
-   state='reloading';location.reload();
+   state='reloading';record('retry-reload');location.reload();
   }catch(error){if(state==='checking')fail(error,true);}
  }
- window.mouseBoot={get state(){return state},get recovering(){return recovering},fail};
+ window.mouseBoot={get state(){return state},get recovering(){return recovering},fail,exportReport};
  // The native checkpoint bridge must not replace saved resume with empty startup
  // state before game.js has installed its full diagnostic snapshot.
  window.mouseDiagnostics=()=>({playing:false,recovering:true,catches:0,elapsed:0});
@@ -36,11 +53,11 @@
   event.preventDefault();event.stopImmediatePropagation();retry();
  },true);
  window.addEventListener('online',()=>{if(state==='failed')status.textContent='Connection returned. Tap Retry loading game.';});
- timer=setTimeout(()=>fail(Error('Game startup timed out')),15000);
+ record('loading');timer=setTimeout(()=>fail(Error('Game startup timed out'),false,'startup-timeout'),15000);
  import('./game.js').then(()=>{
   if(state!=='loading')return;
-  clearTimeout(timer);state='ready';button.disabled=false;
+  clearTimeout(timer);state='ready';record('ready');button.disabled=false;
   button.textContent='Let’s play ↗';status.hidden=true;
- }).catch(error=>{if(state==='loading')fail(error);});
+ }).catch(error=>{if(state==='loading')fail(error,false,'startup-module');});
 })();
 </script></body></html>
