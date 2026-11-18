@@ -5,7 +5,7 @@
     "owner": "flyakiet",
     "version": "1.0.0",
     "scheme": "littlemouse",
-    "orientation": "default",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {

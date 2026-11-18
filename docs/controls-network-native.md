@@ -6,6 +6,7 @@ Use the iPad as the play surface and a separate phone/laptop web companion for l
 Keep useful local iPad controls too. Expose meaningful numeric behavior, anatomy, motion,
 audio and visual settings. Preserve profiles and allow fast wireless iteration with the cat.
 Support testing an installed app on a wired device; Expo Go must not be the only route.
+The native app must remain horizontal: allow both landscape sides and no portrait orientation.
 
 ## Implemented surfaces and settings
 
@@ -52,7 +53,8 @@ A wired connection alone does not demonstrate that signing, installation or laun
 - Pair phone and iPad; verify settings both directions, steering, pause, profiles and recovery.
 - Save a web change and observe the correct version load with pairing/session continuity.
 - Cancel all held contacts before pause, reload, app hiding or manual commands.
-- Verify portrait/landscape and owner exit with real simultaneous paw-like touches.
+- Verify both landscape sides, refusal to rotate into portrait, and owner exit with real
+  simultaneous paw-like touches in a newly rebuilt native app.
 - Test installed-device launch, local-network permission, audio unlock, hosted authentication
   and update delivery separately; simulator success does not prove device success.
 - First load needs the local or hosted server; the wrapper has no bundled offline game.
@@ -64,3 +66,19 @@ and native connection tests. Public-repository permission is not proof of a publ
 Development server: `npm run dev` watches the API plus shared settings/migration modules.
 Schema edits restart the local API so new companion sliders validate immediately; static
 asset changes use the source-version reload. Existing room data persists in `.local/rooms.sqlite`.
+
+## Native orientation
+
+**Implemented in source:** `ipad/app.json` sets `orientation: landscape`, retaining
+`ios.supportsTablet: true` and `ios.requireFullScreen: true`. No runtime orientation library
+is needed. Expo SDK 58 generates only landscape-left/right in the iOS orientation mask.
+See [Expo 58 app config](https://docs.expo.dev/versions/v58.0.0/config/app/).
+
+**Rebuild required:** regenerate any existing ignored native project with
+`cd ipad && npx expo prebuild --platform ios --no-install`, then build/sign/install a new
+binary through the existing local or EAS workflow. Preserve/recheck the existing signing
+team and provisioning. EAS builds from source without native folders generate them via
+[Continuous Native Generation](https://docs.expo.dev/workflow/continuous-native-generation/).
+Web reload, Metro refresh and an OTA JavaScript update do not replace the installed mask.
+Generated native files stay ignored; this config change does not itself install or publish.
+Physical-device rotation and landscape layout acceptance remain pending after rebuild.

@@ -73,7 +73,7 @@ npx eas-cli@latest build --platform ios --profile production
 
 Physical standalone installation requires Apple signing and provisioning for your device. EAS can guide you through device registration and Apple Developer credentials. No App Store/TestFlight submission is performed by this setup.
 
-The app ID is `com.flyakiet.littlemouse`. Native projects are generated from `app.json` using Expo prebuild and ignored in Git. Both portrait and landscape are enabled, with full-screen iPad support. Local HTTP is allowed only in WebView; user-entered public URLs require HTTPS.
+The app ID is `com.flyakiet.littlemouse`. Native projects are generated from `app.json` using Expo prebuild and ignored in Git. The native app supports landscape-left and landscape-right only, retaining full-screen iPad support. Orientation is native configuration: existing generated projects must run `npx expo prebuild --platform ios --no-install` before the next signed binary rebuild/install; web reload and EAS Update alone cannot change the installed orientation mask. Local HTTP is allowed only in WebView; user-entered public URLs require HTTPS.
 
 ## Checks
 
