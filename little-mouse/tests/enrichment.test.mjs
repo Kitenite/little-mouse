@@ -14,7 +14,7 @@ test('API validates hunt controls and migrates to the teasing defaults',()=>{
 import{readFile}from'node:fs/promises';
 import vm from'node:vm';
 import{huntDefaults}from'../public/enrichment.js';
-import{settingsDefaults,settingsSchema}from'../public/settings.js';
+import{settingsDefaults,settingsSchema,validateSettings}from'../public/settings.js';
 import{updateIdleBehavior}from'../public/idle-animation.js';
 import{PreyAudio,audioDefaults}from'../public/audio.js';
 import{stepMice,flee}from'../public/physics.js';
@@ -22,10 +22,10 @@ import{sendOffscreen,pressMouse,updateLifecycle}from'../public/behavior.js';
 import * as contact from '../public/contact.js';
 import{createOwnerGesture}from'../public/owner-gesture.js';
 async function gameHarness(failure,surface='web',fault={}){
- const elements=new Map(),storage=new Map([['mouse-room',JSON.stringify('0123456789abcdef')],['mouse-command',JSON.stringify({steer:'old'})]]),calls=[];
+ const elements=new Map(),storage=new Map(fault.storage||[['mouse-room',JSON.stringify('0123456789abcdef')],['mouse-command',JSON.stringify({steer:'old'})]]),calls=[];
  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',style:{setProperty(){}},dataset:{},options:[],listeners:{},addEventListener(name,fn){const old=this.listeners[name];this.listeners[name]=old?e=>{old(e);fn(e);}:fn;},setAttribute(){},setPointerCapture(){},getBoundingClientRect(){return{left:0,top:0,width:800,height:600};},getContext(){return{};},querySelector(){return{removeAttribute(){}};}});return elements.get(id);};
  let response=failure,pendingResponse=null;
- const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,createOwnerGesture,...contact,settingsDefaults,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,radius:()=>40,
+ const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,radius:()=>40,
  document:{documentElement:{dataset:{surface}},hidden:false,getElementById:element,querySelectorAll:()=>[],addEventListener(){}},
  window:{addEventListener(){}},navigator:{},location:{origin:'http://local'},
  localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
@@ -159,4 +159,54 @@ test('in-flight missing-room response after context loss cannot clear retained p
  const h=await gameHarness('offline'),g=h.context.testGame;g.start();const room=g.room,stored=h.storage.get('mouse-room');
  const release=h.deferResponse(404),polling=g.poll();h.context.window.mouseBoot={state:'ready',fail(){h.context.window.mouseStopForRecovery();this.state='failed';this.recovering=true;}};
  h.e('board').listeners.webglcontextlost({preventDefault(){}});release();await polling;assert.equal(g.room,room);assert.equal(h.storage.get('mouse-room'),stored);assert.equal(h.context.window.mouseDiagnostics().recovering,true);
+});
+
+
+test('offline owner settings survive reload, retry, and stale polling until server acknowledgement',async()=>{
+ const first=await gameHarness('offline'),g=first.context.testGame;
+ g.config.speed=2;g.sync();await g.sendSettings({speed:2});
+ const second=await gameHarness(0,'web',{storage:first.storage}),restored=second.context.testGame;
+ assert.equal(restored.config.speed,2,'stale startup polling must not overwrite an unsent owner setting');
+ let revision=1,remote={...upgradeSettings(defaults)},writes=[];
+ second.context.fetch=async(path,options)=>{
+  if(path.endsWith('/settings')){writes.push(JSON.parse(options.body));return Response.json({ok:true});}
+  if(path.endsWith('/telemetry'))return Response.json({ok:true});
+  return Response.json({version:'v1',revision,settings:remote,command:{}});
+ };
+ await restored.flushSettings();assert.equal(writes[0].speed,2);
+ await restored.poll();assert.equal(restored.config.speed,2,'write response alone does not acknowledge server snapshot');
+ remote.speed=2;revision++;await restored.poll();
+ remote.speed=.8;revision++;await restored.poll();assert.equal(restored.config.speed,.8,'acknowledged setting yields to later companion changes');
+ const third=await gameHarness(0,'web',{storage:second.storage});assert.equal(third.context.testGame.config.speed,1.2,'acknowledged override must not be replayed after another reload');
+ assert.equal(second.storage.get('mouse-room'),first.storage.get('mouse-room'));
+});
+
+test('acknowledgement cancels queued replay before a newer companion setting arrives',async()=>{
+ const first=await gameHarness('offline'),g=first.context.testGame;
+ g.config.speed=2;g.sync();await g.sendSettings({speed:2});
+ const h=await gameHarness('offline','web',{storage:first.storage}),restored=h.context.testGame;
+ let revision=1,speed=2,writes=0;
+ h.context.fetch=async(path)=>{if(path.endsWith('/settings')){writes++;return Response.json({ok:true});}if(path.endsWith('/telemetry'))return Response.json({ok:true});return Response.json({version:'v1',revision,settings:{...upgradeSettings(defaults),speed},command:{}});};
+ await restored.poll();speed=.8;revision++;await restored.poll();await restored.flushSettings();
+ assert.equal(restored.config.speed,.8);assert.equal(writes,0,'acknowledged queued write cannot overwrite a newer companion choice');
+});
+
+test('malformed and other-room pending queues do not alter current room settings',async()=>{
+ for(const saved of [{room:'other',patch:{speed:2}},{room:'0123456789abcdef',patch:{speed:99}},null]){
+  const storage=new Map([['mouse-room',JSON.stringify('0123456789abcdef')],['mouse-pending-settings',JSON.stringify(saved)]]);
+  const h=await gameHarness(0,'web',{storage});assert.equal(h.context.testGame.config.speed,1.2);assert.equal(h.context.testGame.room,'0123456789abcdef');
+ }
+});
+
+test('a matching old server snapshot cannot acknowledge an edit behind a conflicting in-flight write',async()=>{
+ const h=await gameHarness(0),g=h.context.testGame;let speed=1.2,revision=1,release,writes=[];
+ h.context.fetch=async(path,options)=>{
+  if(path.endsWith('/settings')){const patch=JSON.parse(options.body);writes.push(patch.speed);if(writes.length===1)await new Promise(resolve=>{release=resolve;});speed=patch.speed;revision++;return Response.json({ok:true});}
+  if(path.endsWith('/telemetry'))return Response.json({ok:true});
+  return Response.json({version:'v1',revision,settings:{...upgradeSettings(defaults),speed},command:{}});
+ };
+ g.config.speed=2;const first=g.sendSettings({speed:2});
+ g.config.speed=1.2;await g.sendSettings({speed:1.2});await g.poll();
+ release();await first;await g.flushSettings();await g.poll();
+ assert.deepEqual(writes,[2,1.2]);assert.equal(speed,1.2);assert.equal(g.config.speed,1.2);
 });

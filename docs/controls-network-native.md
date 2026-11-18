@@ -17,7 +17,9 @@ persisted numeric `furSoftness` key (0–1), with tuft loft/spread distinct from
 Profiles persist locally. Pairing uses a 16-character code or companion link.
 The game polls at 400 ms; the companion at 500 ms. This is live polling, not hard realtime.
 Commands include play, pause, steer, recall and reload. Stale commands are rejected.
-Unsaved local changes survive stale polling until acknowledged; failures preserve local play.
+Unacknowledged local changes persist in a validated, pairing-scoped queue across reloads.
+Stale polling cannot erase them; acknowledgement clears both durable overrides and queued
+replays so a later companion choice wins. Storage denial still permits in-memory local play.
 
 The current rich starting preset uses two large mice, woodland clearing, varied hunt/idle
 behavior and moderate secondary motion. It is a design starting point to test with this cat,
