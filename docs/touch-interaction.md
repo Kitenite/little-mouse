@@ -40,6 +40,9 @@ screen; retain those touch areas and route around them instead of running undern
   smoothly decay pose and translation without adding throw energy or another hit. Pending
   re-grabs freeze residual pose until activation. Hidden/teleport/backwards-time resets clear
   drag history; zero/invalid dt preserves it. No new roll/lift or ground penetration is added.
+- Released tail bows relax segment directions and lengths before free-chain limits resume;
+  material fractions transition continuously. Re-grab/reset clears this geometric bridge;
+  pause freezes it. This avoids constraint snaps without injecting throw/Verlet energy.
 - Existing maximum limb/tail reach remains authoritative: impossible targets project onto
   reachable geometry rather than stretch. Exact pin claims apply to reachable anchors only.
 - Zero/invalid time steps preserve positions, velocities and anchors; catch-up work is bounded.

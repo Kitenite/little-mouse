@@ -34,7 +34,7 @@ Independent freeze/reset matrices: baseline failures 10/20; repaired failures 0/
 
 ## PHYS-02: event-independent toss
 
-Severity medium; verified; fix is this PHYS-02 commit.
+Severity medium; verified; fix `e5747534368fc86bc77ee7d01e8afd009a736272`.
 Baseline `33a0f48` contact code unchanged from cf064cc. Node/macOS; viewport2048x1536.
 Mouse (300,300), angle0, seed1; size2.2, speed1.2, threshold.25, harmlessChance1.
 Claim body at t0; step 60Hz to .3; one target move to (900,300); step to .6.
@@ -52,10 +52,47 @@ competing ownership, invalid dt, cancel/regrab and recency bounds; no blockers.
 No persistence changes; normal clear/regrab lifecycle retained.
 Limit: stale coordinates are still accepted as targets; timestamp neutrality is verified.
 
+## PHYS-03: held-tail release continuity
+
+Severity medium; verified by independent critic; fix is this PHYS-03 commit.
+Baseline `e574753`; Node/macOS, no GPU/viewport, deterministic defaults.
+Initialize60 frames stationary held tail x=-36-87*.73*.5,y=0,fraction=.73.
+Release at30/60/120Hz with no pointer/body motion. Expected continuous relaxation.
+Critic confirms first release node jump49.8494 at120Hz,55.7600 at60Hz,45.2765 at30Hz.
+Free angular constraints conflict with the held bow, despite previous==current points.
+Repair relaxes segment directions at2rad/s and segment lengths toward the free chain;
+rear-plane directions preserve lengths. Material-fraction mapping relaxes continuously.
+Constraint-only movement is copied to previous points, adding no Verlet impulse.
+No per-frame array allocation, new engine, renderer hook, audio or persistence change.
+Tests release5 seconds for fractions .125/.5/.73/1, three sides and30/60/120Hz.
+All first/subsequent node steps <=100/hz; rendered arc stays85..89 model units.
+Root remains(-36,0,5); tail stays rearward/grounded; bridge ends within5seconds.
+Pause is full-state exact; regrab immediately pins; hidden/teleport clears release state.
+Critic blocked initial repair: moving100 units/s stretched arc to99.1812 (sway2:111.33).
+Correction stores release segment lengths before body-frame transport and re-pinning;
+frame-induced angular motion is separate from the2rad/s release correction budget.
+Moving/rotating/combined regression at30/60/120Hz, sway1/2 now keeps every segment3..4
+and rendered arc85..89, with bridge completion within5seconds. No per-frame buffers.
+Original case after at30/60/120Hz: first node1.12190/.51924/.24089 model units;
+first rendered vertex1.08664/.51662/.24930.16 model/held-paw integration tests pass.
+Critic accepts corrected blob `eb0b9b1d5ae1bce47498e25335d8588fd2c24a3b`.
+Original moving repro now arc87.04987, first segment3.62596; bridge ends1.58333s.
+37 focused tests plus54 independent moving cases and25 lifecycle cases pass.
+Motion cases include30/60/120Hz, sway0/1/2, reverse/sideways/negative turns and
+combined800units/s+8rad/s; aggregate rendered arc86.81544..87.11519, buffers stable.
+Ten-minute simulated stationary hold: max pin drift1.78e-15, release step.24089.
+Full builder suite239/239 passes; build succeeds(hash10c97913bf28). Build metadata
+was restored; no generated release files committed. No device/browser evidence added.
+The100/hz bound is stationary half-reach nodes only.
+Tightly folded curves can move rendered vertices faster (critic found4.12 units/step);
+low-resolution held-curve length and48-segment bridge-exit behavior remain limits.
+
 ## Queue and validation limits
 
-Next: PHYS-03 held-tail release snap. Critic reproduces stationary .73 half-reach bow:
-first release node jump49.8494 at120Hz,55.7600 at60Hz,45.2765 at30Hz.
-Free angular constraints conflict with held curve; no stored velocity causes the snap.
+Three focused iterations accepted; no fourth iteration in this batch.
+Next ranked issue: tightly folded rendered-vertex continuity and nondefault-resolution
+bounds; distinguish inherited held-curve sampling limits from release regressions.
+Anatomy4b863dc reports renderer-only profile/jaw edits, unchanged feet/tail contract;
+no hook dependency or cherry-pick into this worktree. Root runs combined integration.
 Numerical attachment invariants do not establish biological motion or iPad performance.
 Root integrates this report into the cycle index; no shared root document edited here.

@@ -6,8 +6,8 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const setting=(c,k)=>Number.isFinite(c[k])?clamp(c[k],secondaryMotionControls[k].min,secondaryMotionControls[k].max):secondaryMotionDefaults[k];
 const angleDelta=a=>Math.atan2(Math.sin(a),Math.cos(a));
 const ROOT_X=-36,ROOT_Z=5,LENGTH=87;
-export function createSecondaryMotion(segments=24){segments=clamp(Math.round(segments),8,48);return{segments,points:new Float64Array((segments+1)*3),previous:new Float64Array((segments+1)*3),fur:new Float64Array(3),furVelocity:new Float64Array(3),holdSamples:new Float64Array(65*3),whiskers:new Float64Array(6),whiskerVelocity:new Float64Array(6),whiskerTime:0,ears:new Float64Array(6),earVelocity:new Float64Array(6),ready:false,active:false,x:0,y:0,heading:0,size:1,vx:0,vy:0,revision:0};}
-export function resetSecondaryMotion(s,motion={}){for(let i=0;i<=s.segments;i++){const f=i/s.segments,k=i*3;s.points[k]=ROOT_X-LENGTH*f;s.points[k+1]=0;s.points[k+2]=ROOT_Z-2*f;}s.previous.set(s.points);s.fur.fill(0);s.furVelocity.fill(0);s.ears.fill(0);s.earVelocity.fill(0);s.whiskers.fill(0);s.whiskerVelocity.fill(0);s.whiskerTime=0;s.holdSide=0;s.holdFraction=0;s.holdIndex=0;s.x=Number.isFinite(motion.x)?motion.x:0;s.y=Number.isFinite(motion.y)?motion.y:0;s.heading=Number.isFinite(motion.heading)?motion.heading:0;s.size=Math.max(.1,motion.size||1);s.vx=s.vy=0;s.ready=true;s.active=true;s.revision++;return s;}
+export function createSecondaryMotion(segments=24){segments=clamp(Math.round(segments),8,48);return{segments,points:new Float64Array((segments+1)*3),previous:new Float64Array((segments+1)*3),fur:new Float64Array(3),furVelocity:new Float64Array(3),holdSamples:new Float64Array(65*3),releasing:false,releaseFraction:0,releaseIndex:0,releaseLengths:new Float64Array(segments),releaseAngles:new Float64Array(segments),whiskers:new Float64Array(6),whiskerVelocity:new Float64Array(6),whiskerTime:0,ears:new Float64Array(6),earVelocity:new Float64Array(6),ready:false,active:false,x:0,y:0,heading:0,size:1,vx:0,vy:0,revision:0};}
+export function resetSecondaryMotion(s,motion={}){for(let i=0;i<=s.segments;i++){const f=i/s.segments,k=i*3;s.points[k]=ROOT_X-LENGTH*f;s.points[k+1]=0;s.points[k+2]=ROOT_Z-2*f;}s.previous.set(s.points);s.fur.fill(0);s.furVelocity.fill(0);s.ears.fill(0);s.earVelocity.fill(0);s.whiskers.fill(0);s.whiskerVelocity.fill(0);s.whiskerTime=0;s.holdSide=0;s.holdFraction=0;s.holdIndex=0;s.releasing=false;s.releaseFraction=0;s.releaseIndex=0;s.releaseLengths.fill(0);s.releaseAngles.fill(0);s.x=Number.isFinite(motion.x)?motion.x:0;s.y=Number.isFinite(motion.y)?motion.y:0;s.heading=Number.isFinite(motion.heading)?motion.heading:0;s.size=Math.max(.1,motion.size||1);s.vx=s.vy=0;s.ready=true;s.active=true;s.revision++;return s;}
 export function suspendSecondaryMotion(s){s.active=false;}
 export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
  // Pause preserves a live pose, even when a hidden reset or teleport is pending.
@@ -20,6 +20,11 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
   return s;
  }
  if(dt<=0)return s;
+ if(s.holdFraction&&!motion.tailHold){
+  s.releasing=true;s.releaseFraction=s.holdFraction;s.releaseIndex=s.holdIndex;
+  // Capture metric lengths before body-frame transport re-pins the root.
+  for(let i=1;i<=s.segments;i++){const k=i*3;s.releaseLengths[i-1]=Math.hypot(s.points[k]-s.points[k-3],s.points[k+1]-s.points[k-2],s.points[k+2]-s.points[k-1]);}
+ }
  const elapsed=Math.min(dt,1/15),steps=Math.max(1,Math.ceil(elapsed*120)),h=elapsed/steps;
  const dx=(x-s.x)/size,dy=(y-s.y)/size,rotation=angleDelta(heading-s.heading),vx=dx/elapsed,vy=dy/elapsed;
  const ca=Math.cos(heading),sa=Math.sin(heading),localVX=vx*ca+vy*sa,localVY=-vx*sa+vy*ca;
@@ -27,6 +32,7 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
  const stiffness=setting(config,'tailStiffness'),damping=setting(config,'tailDamping'),sway=setting(config,'tailSway'),furSway=setting(config,'furSway'),earStiffness=setting(config,'earStiffness'),earDamping=setting(config,'earDamping'),earSway=setting(config,'earSway'),whiskerMotion=setting(config,'whiskerMotion'),whisking=clamp(Number.isFinite(motion.whisking)?motion.whisking:0,0,1),whiskerOffset=Number.isFinite(motion.whiskerOffset)?motion.whiskerOffset:0,impact=clamp(Number.isFinite(motion.impact)?motion.impact:0,0,1),attention=clamp(Number.isFinite(motion.attention)?motion.attention:0,-1,1),struggle=clamp(Number.isFinite(motion.struggle)?motion.struggle:0,-1,1);
  const p=s.points,previous=s.previous,segmentLength=Math.hypot(LENGTH,2)/s.segments;
  for(let step=0;step<steps;step++){
+  if(s.releasing)for(let i=1;i<=s.segments;i++){const k=i*3;s.releaseAngles[i-1]=angleDelta(Math.atan2(p[k+1]-p[k-2],p[k]-p[k-3])-Math.PI);}
   // Convert the free tail into the moving body's new frame. Both current and
   // previous points move together so a camera/frame change creates no impulse.
   const a=s.heading+rotation*(step+1)/steps,c=Math.cos(a),sn=Math.sin(a),dr=-rotation/steps*sway,cr=Math.cos(dr),sr=Math.sin(dr),tx=(dx*c+dy*sn)/steps*sway,ty=(-dx*sn+dy*c)/steps*sway;
@@ -38,7 +44,8 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
    p[k+2]+=Math.min(100,Math.abs(ax)*.025+Math.abs(ay)*.012)*f*h*h*sway;
   }
   p[0]=ROOT_X;p[1]=0;p[2]=ROOT_Z;previous[0]=ROOT_X;previous[1]=0;previous[2]=ROOT_Z;
-  for(let pass=0;pass<2;pass++){
+  if(s.releasing&&!motion.tailHold)relaxReleasedTail(s,segmentLength,h);
+  else for(let pass=0;pass<2;pass++){
    let previousBend=0;
    for(let i=1;i<=s.segments;i++){const k=i*3,b=k-3,f=i/s.segments,xx=p[k]-p[b],yy=p[k+1]-p[b+1],desired=angleDelta(Math.atan2(yy,xx)-Math.PI),maxBend=.10+.12*f;
     // Angular limits act like bending stiffness and prevent the free chain
@@ -82,11 +89,41 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
  // Sway changes inertial forcing inside the length-constrained solver.
  s.sway=motion.tailHold?1:sway;s.x=x;s.y=y;s.heading=heading;s.size=size;s.vx=vx;s.vy=vy;s.revision++;return s;
 }
+// A held bow can exceed free-tail bend limits. Relax directions and segment
+// lengths, not point positions, so release cannot collapse or snap the chain.
+function relaxReleasedTail(s,segmentLength,h){
+ const p=s.points,q=s.previous,blend=1-Math.exp(-8*h);let previousBend=0,pending=false;
+ for(let i=1;i<=s.segments;i++){
+  const k=i*3,b=k-3,f=i/s.segments,dx=q[k]-q[b],dy=q[k+1]-q[b+1],oldLength=s.releaseLengths[i-1];
+  const oldBend=angleDelta(Math.atan2(dy,dx)-Math.PI),maxBend=.10+.12*f;
+  const target=clamp(clamp(oldBend,previousBend-maxBend,previousBend+maxBend),-1.4,1.4);
+  // Body-frame transport is external motion, not release correction. Allow
+  // its angular contribution so continuous turning cannot stall recovery.
+  const maxTurn=2*h+Math.abs(angleDelta(oldBend-s.releaseAngles[i-1]));
+  const turn=angleDelta(target-oldBend),bend=oldBend+clamp(turn,-maxTurn,maxTurn);
+  const length=oldLength+(segmentLength-oldLength)*blend;s.releaseLengths[i-1]=length;
+  const targetZ=clamp(clamp(q[k+2],p[b+2]-.3,p[b+2]+.3),1.4,7-2*f);
+  const z=q[k+2]+clamp(targetZ-q[k+2],-2*h,2*h),rise=clamp(z-p[b+2],-length*.9,length*.9),horizontal=Math.sqrt(Math.max(0,length*length-rise*rise));
+  // Rear-plane constraint acts on direction, retaining the segment length.
+  const rearLimit=Math.acos(clamp((p[b]-ROOT_X+.2)/(horizontal||1),-1,1));
+  const safeBend=clamp(bend,-rearLimit,rearLimit);
+  p[k]=p[b]-Math.cos(safeBend)*horizontal;p[k+1]=p[b+1]-Math.sin(safeBend)*horizontal;p[k+2]=p[b+2]+rise;previousBend=safeBend;
+  if(Math.abs(turn)>maxTurn||Math.abs(segmentLength-length)>1e-6||Math.abs(targetZ-z)>1e-6)pending=true;
+ }
+ // Keep the rendered material parametrization continuous while lengths relax.
+ const fraction=s.releaseIndex/s.segments;
+ s.releaseFraction+=(fraction-s.releaseFraction)*blend;
+ if(Math.abs(s.releaseFraction-fraction)>1e-7)pending=true;
+ if(!pending){s.releasing=false;s.releaseFraction=0;s.releaseIndex=0;s.releaseLengths.fill(0);s.releaseAngles.fill(0);}
+ // Constraint relaxation is geometric; it must not become a Verlet impulse.
+ q.set(p);
+}
 // A held section is a smooth, two-anchor curve with measured arc length.
 // This is a geometric constraint during a grab, not a force-based muscle model.
 // Its root tangent stays behind the rump; surplus length forms a broad bend
 // instead of folding individual links into corners.
 export function applyTailHold(s,hold){
+ s.releasing=false;s.releaseFraction=0;s.releaseIndex=0;s.releaseLengths.fill(0);s.releaseAngles.fill(0);
  const p=s.points,fraction=clamp(Number.isFinite(hold.fraction)?hold.fraction:1,.125,1),n=clamp(Math.ceil(fraction*s.segments),3,s.segments),length=LENGTH*fraction;
  let gx=Math.min(ROOT_X-.5,hold.x),gy=hold.y,gz=ROOT_Z-2*fraction,dx=gx-ROOT_X,distance=Math.hypot(dx,gy),reach=length;
  if(distance>reach){const scale=reach/distance;gx=ROOT_X+dx*scale;gy*=scale;}
@@ -108,7 +145,7 @@ export function writeTailGeometry(s,positions,normals,rings=48,sides=8){
  for(let i=0;i<=rings;i++){
   // Preserve the exact material fraction selected by contactAt, including
   // rings between solver nodes. Quantizing this fraction makes grabs slide.
-  const f=i/rings,n=s.holdFraction?(f<=s.holdFraction?f/s.holdFraction*s.holdIndex:s.holdIndex+(f-s.holdFraction)/Math.max(.000001,1-s.holdFraction)*(s.segments-s.holdIndex)):f*s.segments,lo=Math.floor(n),hi=Math.min(s.segments,lo+1),u=n-lo,k=lo*3,j=hi*3,b=Math.max(0,lo-1)*3,a=Math.min(s.segments,hi+1)*3;
+  const f=i/rings,fraction=s.holdFraction||s.releaseFraction,index=s.holdFraction?s.holdIndex:s.releaseIndex,n=fraction?(f<=fraction?f/fraction*index:index+(f-fraction)/Math.max(.000001,1-fraction)*(s.segments-index)):f*s.segments,lo=Math.floor(n),hi=Math.min(s.segments,lo+1),u=n-lo,k=lo*3,j=hi*3,b=Math.max(0,lo-1)*3,a=Math.min(s.segments,hi+1)*3;
   // Cubic Hermite interpolation smooths the constrained chain's short links.
   // The analytical derivative also supplies a genuinely perpendicular tube.
   const u2=u*u,u3=u2*u,h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2;

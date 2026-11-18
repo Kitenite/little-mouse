@@ -39,3 +39,49 @@ test('cold zero-time and long-gap resets preserve reachable tail material fracti
  }
  const cold=createSecondaryMotion(),before=structuredClone(cold);for(const dt of [-1,NaN,Infinity]){advanceSecondaryMotion(cold,{},dt);assert.deepEqual(cold,before);}
 });
+
+
+test('held-tail release relaxes bends without a frame jump, length collapse or correction energy',()=>{
+ for(const hz of [30,60,120])for(const fraction of [.125,.5,.73,1])for(const side of [-1,0,1]){
+  const s=createSecondaryMotion(),motion={x:0,y:0,size:1},hold={x:-36-87*fraction*.5,y:side*87*fraction*.1,fraction};
+  for(let i=0;i<60;i++)advanceSecondaryMotion(s,{...motion,tailHold:hold},1/60);
+  let before=s.points.slice();const p=new Float32Array(49*27),n=new Float32Array(p.length);
+  for(let frame=0;frame<hz*5;frame++){
+   advanceSecondaryMotion(s,motion,1/hz);assert.deepEqual(Array.from(s.points.slice(0,3)),[-36,0,5]);
+   for(let k=0;k<s.points.length;k+=3){assert.ok(Math.hypot(s.points[k]-before[k],s.points[k+1]-before[k+1],s.points[k+2]-before[k+2])<=100/hz,`bounded release at ${hz}Hz fraction${fraction}`);assert.ok(s.points[k]<=-36&&s.points[k+2]>=1.4);}
+   if(s.releasing)assert.deepEqual(s.previous,s.points,'constraint recovery cannot become a velocity impulse');
+   before.set(s.points);writeTailGeometry(s,p,n);assert.ok(p.every(Number.isFinite));let length=0;
+   for(let ring=1;ring<=48;ring++){const k=ring*27,b=k-27;length+=Math.hypot((p[k]+p[k+12]-p[b]-p[b+12])/2,(p[k+1]+p[k+13]-p[b+1]-p[b+13])/2,(p[k+2]+p[k+14]-p[b+2]-p[b+14])/2);}
+   assert.ok(length>85&&length<89,`rendered release arc ${length}`);
+  }
+  assert.equal(s.releasing,false,'finite recovery returns control to the free chain');assert.equal(s.releaseFraction,0);
+ }
+});
+test('release bridge pauses exactly and yields immediately to regrab or reset',()=>{
+ for(const action of ['regrab','hidden','teleport']){
+  const s=createSecondaryMotion(),motion={x:0,y:0,size:1},hold={x:-68,y:5,fraction:.73};
+  for(let i=0;i<60;i++)advanceSecondaryMotion(s,{...motion,tailHold:hold},1/60);
+  advanceSecondaryMotion(s,motion,1/60);assert.equal(s.releasing,true);const paused=structuredClone(s);
+  for(const dt of [0,-1,NaN,Infinity]){advanceSecondaryMotion(s,{x:10000,y:0,size:1},dt);assert.deepEqual(s,paused);}
+  if(action==='regrab'){
+   const next={x:-65,y:-8,fraction:.5};advanceSecondaryMotion(s,{...motion,tailHold:next},1/60);
+   assert.equal(s.holdFraction,.5);assert.ok(Math.hypot(s.points[s.holdIndex*3]-next.x,s.points[s.holdIndex*3+1]-next.y)<1e-8);assert.deepEqual(s.previous,s.points);
+  }else{if(action==='hidden')suspendSecondaryMotion(s);advanceSecondaryMotion(s,{...motion,x:action==='teleport'?10000:0},1/60);assert.equal(s.holdFraction,0);}
+  assert.equal(s.releasing,false);assert.equal(s.releaseFraction,0);assert.equal(s.releaseIndex,0);
+ }
+});
+
+
+test('body-frame transport cannot stretch a released tail under translation or rotation',()=>{
+ for(const hz of [30,60,120])for(const tailSway of [1,2])for(const mode of ['translate','rotate','both']){
+  const s=createSecondaryMotion(),hold={x:-67.755,y:0,fraction:.73};
+  for(let i=0;i<60;i++)advanceSecondaryMotion(s,{x:0,y:0,size:1,tailHold:hold},1/60,{tailSway});
+  const p=new Float32Array(49*27),n=new Float32Array(p.length);
+  for(let i=1;i<=5*hz;i++){
+   advanceSecondaryMotion(s,{x:mode==='rotate'?0:100*i/hz,y:0,heading:mode==='translate'?0:2*i/hz,size:1},1/hz,{tailSway});
+   for(let j=1;j<=s.segments;j++){const k=j*3,length=Math.hypot(s.points[k]-s.points[k-3],s.points[k+1]-s.points[k-2],s.points[k+2]-s.points[k-1]);assert.ok(length>3&&length<4,`moving release segment ${j}: ${length}`);}
+   writeTailGeometry(s,p,n);let length=0;for(let ring=1;ring<=48;ring++){const k=ring*27,b=k-27;length+=Math.hypot((p[k]+p[k+12]-p[b]-p[b+12])/2,(p[k+1]+p[k+13]-p[b+1]-p[b+13])/2,(p[k+2]+p[k+14]-p[b+2]-p[b+14])/2);}assert.ok(length>85&&length<89,`moving release arc ${length}`);
+  }
+  assert.equal(s.releasing,false,`release ends under ${mode}, sway${tailSway}`);
+ }
+});
