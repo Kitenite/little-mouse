@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Little Mouse",
+    "slug": "little-mouse-ipad",
+    "owner": "flyakiet",
+    "version": "1.0.0",
+    "scheme": "littlemouse",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.flyakiet.littlemouse",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocalNetworkUsageDescription": "Connect to your computer to play and update Little Mouse on your home network.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true,
+          "NSAllowsArbitraryLoadsInWebContent": true
+        }
+      },
+      "requireFullScreen": true
+    },
+    "android": {
+      "package": "com.flyakiet.littlemouse"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/b119faf1-d200-4a43-99f9-a114e55398df"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b119faf1-d200-4a43-99f9-a114e55398df"
+      }
+    }
+  }
+}

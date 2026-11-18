@@ -1,0 +1,16 @@
+.DS_Store
+.paradev/
+.claude/
+node_modules/
+.local/
+.expo/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+*.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision

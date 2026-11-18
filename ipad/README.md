@@ -1,0 +1,76 @@
+# Little Mouse for iPad
+
+An Expo / React Native iPad app hosting the existing Three.js game in WKWebView. It preserves the live companion, game releases, hit reactions, and settings without maintaining a second renderer.
+
+## Play on your iPad now
+
+Install **Expo Go** on the iPad, connect it to the same Wi-Fi as this computer, then run:
+
+```sh
+cd ipad
+npm install
+npm run local
+```
+
+Scan the terminal QR code with the iPad Camera. The launcher also prints an iOS browser link that opens the project in Expo Go. Tap **Let’s play** in the app, then the game’s play button. Allow local-network access if iOS asks. The script discovers this computer’s LAN address, starts the game server if necessary, and runs Expo on port 8088. The computer must remain running for local play.
+
+The phone/laptop companion is at the printed game address followed by `/companion`. Create a pairing code inside the game and enter it in the companion. The native **Share companion** button shares that address.
+
+Saved addresses persist. If you previously saved another address, replace it with the current one printed by `npm run local`. Hold **app settings** at the bottom right for 1.2 seconds to leave the game. The screen stays awake during active play.
+
+## Hosted play
+
+The default for builds is:
+
+https://little-mouse-cat-play-kietho.weedypiece1.chatgpt.site
+
+Select **Use the hosted game** in the app to switch back. The site remains private, so it may require owner sign-in; no credentials or private-site bypass token are bundled. The complete hosted sign-in flow still needs testing on a physical iPad. There is no bundled offline copy: first load requires the hosted site or local server.
+
+## Updates
+
+- **Game, textures, movement, backgrounds, companion while testing:** save files in `../little-mouse/public`. The LAN server detects changes and the iPad reloads automatically, preserving pairing and session progress. No deployment or native rebuild is required. Changes to server API code restart the local server automatically.
+- **Live tuning:** change settings or steer mice on the phone/laptop companion; paired iPads poll every 400 ms. Controls also remain on the iPad.
+- **Hosted game releases:** deploy the `../little-mouse` site. The same version polling reloads the game when a release arrives.
+- **App TypeScript and styles during development:** Expo Fast Refresh.
+- **Installed app JavaScript:** EAS Update. Preview builds use the `preview` channel. Publish with `npm run update:preview -- --message "Describe change" --environment preview`. The app checks on launch; the owner can also tap **Update app** to download/apply immediately. Expo Go uses Metro instead.
+- **Native libraries, permissions, SDK changes:** create a new binary. Increase the app version when changing native runtime compatibility; `runtimeVersion` uses `appVersion`.
+
+Expo project: https://expo.dev/accounts/flyakiet/projects/little-mouse-ipad
+
+## Builds
+
+```sh
+# Local Xcode simulator or connected device build
+npm run ios -- --device
+
+# EAS simulator development build (no Apple device signing)
+npm run build:simulator
+
+# Standalone preview install on a registered physical iPad
+npm run build:ipad
+
+# TestFlight / App Store binary (submission is separate)
+npx eas-cli@latest build --platform ios --profile production
+```
+
+Physical standalone installation requires Apple signing and provisioning for your device. EAS can guide you through device registration and Apple Developer credentials. No App Store/TestFlight submission is performed by this setup.
+
+The app ID is `com.flyakiet.littlemouse`. Native projects are generated from `app.json` using Expo prebuild and ignored in Git. Both portrait and landscape are enabled, with full-screen iPad support. Local HTTP is allowed only in WebView; user-entered public URLs require HTTPS.
+
+## Checks
+
+```sh
+npm run lint
+npm run typecheck
+npm test
+npx expo-doctor
+npx expo export --platform ios
+```
+
+SDK versions follow the generated Expo 58 template and `expo install` compatibility resolution. `npm audit` currently reports transitive Expo/Metro glob-tooling advisories; its suggested automatic fix would downgrade the SDK. These are not suppressed or force-downgraded. Recheck upstream updates before distributing broadly.
+
+## Verification completed
+
+On 2026-11-17, the iPad simulator build succeeded and rendered the fullscreen game. Expo lint/typecheck, 2 connection tests, 20 Expo Doctor checks and the iOS export passed. The browser companion also paired with the native iPad simulator and remotely started/paused it. Browser QA verified paired controls in both directions, remote pause, portrait/landscape layout and saved-file reload preserving pairing and elapsed time. The game suite passes 34 tests.
+
+The initial iOS preview update (runtime 1.0.0) is published: https://expo.dev/accounts/flyakiet/projects/little-mouse-ipad/updates/e8bcd8b8-a5e0-4899-9f29-78cb5e69dfd2 . Publication does not verify delivery to a signed physical preview build; physical iPad performance, permissions and hosted login remain to test.
