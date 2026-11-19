@@ -2,7 +2,9 @@ const TAU=Math.PI*2;
 export const MAX_CADENCE=4.5;
 // Travel arrives in CSS pixels; the rig is expressed in unscaled model units.
 export function advanceGait(state,speed,size,moving,dt,config={}){
- const localSpeed=moving?Math.max(0,speed)/Math.max(.1,size):0;
+ // Travel gain changes distance, not animation time or foot cadence.
+ const travel=Math.max(1,Math.min(4,Number(config.travelSpeed)||1));
+ const localSpeed=moving?Math.max(0,speed)/Math.max(.1,size)/travel:0;
  const maxCadence=Math.max(2,Math.min(6,config.gaitCadence??MAX_CADENCE)),stride=Math.max(.5,Math.min(1.5,config.strideLength??1));
  const targetCadence=Math.min(maxCadence,localSpeed/(72*stride));
  state.stepHeight=Math.max(.5,Math.min(2,config.stepHeight??1));

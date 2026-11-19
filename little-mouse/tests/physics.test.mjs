@@ -21,3 +21,16 @@ test('legacy version 3 mute repairs once without resetting movement or appearanc
  const muted={...migrated,sound:false};assert.deepEqual(upgradeSettings(muted),muted);
  assert.deepEqual(upgradeSettings(upgradeSettings(muted)),muted);
 });
+
+test('travel gain covers at least twice the distance without speeding the gait clock',async()=>{
+ const{advanceGait}=await import('../public/gait.js');
+ const run=travelSpeed=>{const m=mouse(500,500);m.targetX=100000;
+  const cfg={size:2.86,speed:2.8,variation:false,travelSpeed};
+  const gait={phase:0,cadence:0,activity:0,reach:0};
+  for(let i=0;i<120;i++){stepMice([m],cfg,1+i/60,1/60,200000,2000);advanceGait(gait,m.speed,cfg.size,true,1/60,cfg);}
+  return{distance:m.x-500,gait};};
+ const old=run(1),fast=run(2.2);
+ assert.ok(fast.distance/old.distance>=2.19);
+ assert.ok(Math.abs(fast.gait.cadence-old.gait.cadence)<1e-9);
+ assert.ok(Math.abs(fast.gait.phase-old.gait.phase)<1e-9);
+});

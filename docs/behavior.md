@@ -38,6 +38,11 @@ watch duration 0.6, creep speed 1.6 and dart speed 1.4 favor faster screen cover
 shorter pauses and more full-screen runs while preserving teasing and paw avoidance.
 One-time play-style migration increases each saved size by 30% (maximum 3.9), applies
 these movement values, and preserves sound/background choices. Later tuning survives reload.
+Travel speed now defaults to 2.2× in addition to that pace: actual free-running
+velocity is multiplied, while gait uses the unmultiplied speed. Simulation time, pauses,
+holds and tossed motion are not accelerated. Existing saved settings inherit the new
+control when absent; later local adjustments persist. Straight-run regression measures
+2.2× distance over equal simulation time with unchanged gait cadence/phase.
 `settings.js` owns actual ranges/defaults; gait cadence remains independently capped.
 No old saved session-duration value may stop the game automatically.
 

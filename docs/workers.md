@@ -94,4 +94,8 @@ were retired. Only main worktree remains; roles, handoffs and selected captures 
 
 Root follow-up: faster/more active hunt, 30% larger mice, minimal copy and stronger UI contrast.
 No new worker workspace needed for this scoped preset/presentation change. 269 web tests, production build and Worker syntax checks pass; browser confirms new preset
-and ready startup. Hosted publication succeeded. Guided Access remains the native restart dependency.
+and ready startup. Hosted publication succeeded. Connected iPad relaunch subsequently succeeded.
+
+Root follow-up: 2.2× actual travel gain independent of gait; distance/cadence regression
+and all 270 web tests pass. Connected iPad relaunch succeeded; hosted publication succeeded.
+No agent/workspace dispatch needed for this focused change.
