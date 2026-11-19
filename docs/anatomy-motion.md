@@ -27,6 +27,11 @@ restrained appendage motion is our inference, not a measured property of that ga
 
 - Persistent seeded identities supply bounded morphology and coat variation. Defeat/replacement
   may introduce a new identity; ordinary hiding must preserve the individual.
+- Ears now vary independently in size, width and resting tilt, with occasional softer,
+  folded pinnae. Seed-derived traits preserve coats and identity through hiding/reload.
+  Body variety controls this spread; zero gives matching upright ears. Ear size scales both;
+  existing movement/stiffness/damping controls remain active. Larger/softer ears lag more
+  within the same bounded spring angles, without a decorative idle flap.
 - Geometry, articulated legs, contacts and exit bounds use the same morphology.
 - Speed-sensitive gait controls cadence, stride and foot lift; the rich-preset cadence cap is 4.2 Hz.
 - Secondary motion gives the tail, ears, fur and whiskers bounded motion with reset behavior

@@ -98,3 +98,15 @@ test('fast 90-degree running turns bend smoothly without constraint-driven tail 
   assert.ok(Math.abs(last)<.01,'tail settles after the turn and stop');
  }
 });
+test('large floppy ears remain bounded and settle after motion at multiple frame rates',()=>{
+ for(const hz of [30,60,120]){
+  const s=createSecondaryMotion(),earTraits=[{size:2.2,flop:1},{size:.7,flop:.05}];
+  for(let i=0;i<hz*2;i++){
+   advanceSecondaryMotion(s,{x:i*300/hz,y:0,heading:i/hz,size:1,earTraits},1/hz,{earSway:2,earStiffness:180,earDamping:4});
+   assert.ok([...s.ears].every(v=>Number.isFinite(v)&&Math.abs(v)<=.34));
+  }
+  const motion={x:s.x,y:s.y,heading:s.heading,size:1,earTraits};
+  for(let i=0;i<hz*8;i++)advanceSecondaryMotion(s,motion,1/hz,{});
+  assert.ok([...s.ears,...s.earVelocity].every(v=>Math.abs(v)<.00001));
+ }
+});

@@ -540,7 +540,7 @@
       "step": 0.05,
       "default": 1,
       "unit": "×",
-      "hypothesis": "Changes ear silhouette; larger ears may stand out or appear disproportionate.",
+      "hypothesis": "Larger pinnae may increase silhouette salience; stable individual size, width, asymmetry and softness interact with body variety and ear inertia.",
       "interactions": [
         "headScale",
         "earSway"

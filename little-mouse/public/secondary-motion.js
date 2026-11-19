@@ -76,11 +76,11 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
   // Each pinna is hinged at its base. Slightly different mass/stiffness makes
   // a stop or pivot resolve asymmetrically without continuous decorative sway.
   for(let ear=0;ear<2;ear++){
-   const side=ear===0?-1:1,mass=ear===0?.94:1.06;
+   const side=ear===0?-1:1,shape=motion.earTraits?.[ear],flop=clamp(Number(shape?.flop)||0,0,1),earSize=clamp(Number(shape?.size)||1,.4,2.5),mass=(ear===0?.94:1.06)/(1+(earSize-1)*.45+flop*.65);
    for(let axis=0;axis<3;axis++){
     const k=ear*3+axis,limit=axis===0?.34:axis===1?.27:.17;
     const inertial=axis===0?side*(ax*.000055+Math.abs(localVX)*.00005+impact*.20+struggle*.12)+ay*.000035:axis===1?-ax*.00004+side*ay*.000035-impact*.11:rotation/elapsed*.012+attention*.07;
-    const target=clamp(inertial*earSway,-limit,limit);
+    const target=clamp(inertial*earSway*(1+flop*.6),-limit,limit);
     s.earVelocity[k]+=(target-s.ears[k])*earStiffness*mass*h;
     s.earVelocity[k]*=Math.exp(-earDamping*h);
     s.ears[k]=clamp(s.ears[k]+s.earVelocity[k]*h,-limit,limit);

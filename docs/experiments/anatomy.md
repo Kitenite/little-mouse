@@ -24,7 +24,7 @@ Measurement definitions and staging: [protocol](protocol.md). Runtime applicabil
 | `bodyWidth` | 1; 0.8–1.25; step 0.025 × | Changes target area; wider bodies may aid catching but obscure limbs. | ribcageWidth, pelvisWidth | tracking, contact, geometry | 3 |
 | `legLength` | 1; 0.8–1.25; step 0.025 × | Changes foot reach and silhouette; can improve visibility or introduce skating. | armLength, strideLength, stepHeight | tracking, geometry | 3 |
 | `tailLength` | 1; 0.7–1.4; step 0.05 × | Changes trailing cue and total exit bounds; long tails can delay full concealment. | size, tailSway | tracking, exposure, geometry | 3 |
-| `earSize` | 1; 0.7–1.4; step 0.05 × | Changes ear silhouette; larger ears may stand out or appear disproportionate. | headScale, earSway | tracking, geometry | 3 |
+| `earSize` | 1; 0.7–1.4; step 0.05 × | Larger pinnae may increase silhouette salience; stable individual size, width, asymmetry and softness interact with body variety and ear inertia. | headScale, earSway | tracking, geometry | 3 |
 | `eyeSize` | 1; 0.8–1.3; step 0.025 × | Changes small facial detail; likely subtle from cat viewing distance, may distort face. | headScale, coatBrightness | tracking, geometry | 3 |
 | `furLength` | 1; 0.5–1.8; step 0.05 × | Changes outline detail and overlap; may add softness or clutter. | bodyHairiness, furSoftness | tracking, performance, geometry | 3 |
 | `coatVariation` | 1; 0–1; step 0.05  | Changes individual pattern variety; may renew interest but confounds paired comparisons. | coatPalette, coatSaturation | tracking | 2 |

@@ -3,9 +3,15 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
+## Ear variation
+
+Stable per-ear dimensions, tilt and softness now produce larger and mildly lopsided ears,
+with occasional folded pinnae. Population, renderer pause/geometry and bounded settling
+at 30/60/120 Hz pass. Physical iPad appearance remains pending.
+
 ## Local sensory pilot
 
-309 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
+312 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
 checks pass. Production build: `eec877e6b147`.
 Implemented 15 optional sensory comparisons, recorded repertoire control, bounded local
 logging/export and a 77-variable catalog. Browser smoke check confirmed controls, explicit

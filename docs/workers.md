@@ -131,11 +131,12 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
+Root completed ear variation: stable asymmetry, soft pinnae, bounded lag; 312 tests pass.
+
 ## Sensory experiments implementation
 
 Root owns game integration, owner controls, catalog/docs and combined checks. Scope: local
 sensory comparisons, recorded sound variation, logging/export; no trained preference model.
-Same main workspace, deliberately disjoint files; no worker commits/deploys or touches iPad.
 
 | Task | Local terminal | Ownership / status |
 | --- | --- | --- |
@@ -145,5 +146,4 @@ Same main workspace, deliberately disjoint files; no worker commits/deploys or t
 
 Existing [research critique](cycles/feline-play-critique.md) and [catalog review](experiments/review.md)
 are complete. Runtime review findings and remedies: [review](experiments/runtime-review.md).
-Root verified 309 web tests, four eligibility tests, catalog freshness and build.
 No trained model, recurring automation, hosted update or new iPad verification in this change.

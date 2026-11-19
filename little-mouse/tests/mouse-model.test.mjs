@@ -179,3 +179,14 @@ test('embedded jaw stays attached through nibbling and both head turns at morpho
   assert.ok(high-low>1,'nibble displacement remains active');disposeMouse(model);
  }
 });
+test('individual ear shapes keep fixed base attachments through motion and pause',()=>{
+ const model=makeMouse(0,createMouseIdentity(71),{morphologyVariation:1});
+ for(let i=0;i<2;i++)assert.equal(model.ears[i].scale.y,model.traits.ears[i].size);
+ const positions=model.ears.map(e=>e.children[0].geometry.attributes.position.array.slice());
+ for(let frame=0;frame<60;frame++)model.animate(frame/60,true,300,1/60,1,.5,false,{x:frame*5,y:0,heading:frame*.02,size:1},{});
+ model.ears.forEach((e,i)=>{assert.deepEqual(e.children[0].geometry.attributes.position.array,positions[i]);assert.ok(e.position.toArray().every(Number.isFinite));});
+ const rotations=model.ears.map(e=>e.quaternion.toArray());
+ model.animate(1,true,300,0,1,.5,false,{x:300,y:0,heading:1.2,size:1},{});
+ model.ears.forEach((e,i)=>assert.deepEqual(e.quaternion.toArray(),rotations[i]));
+ disposeMouse(model);
+});

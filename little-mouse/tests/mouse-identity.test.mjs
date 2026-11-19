@@ -40,3 +40,14 @@ test('persisted pre-regional identities keep coat and finite morphology after re
  for(let x=-39;x<51;x+=1){const p=morphologyPoint(x,12,20,traits),inverse=unmorphologyPoint(p[0],p[1],traits);assert.ok(p.every(Number.isFinite));assert.ok(Math.hypot(inverse[0]-x,inverse[1]-12)<1e-10);}
  assert.equal(JSON.stringify(legacy),before);
 });
+test('ear variation is stable, asymmetric and includes large soft individuals without altering saved identity',()=>{
+ const population=Array.from({length:300},(_,i)=>physicalTraits(createMouseIdentity(i+1),{morphologyVariation:1}));
+ assert.ok(population.some(t=>Math.max(...t.ears.map(e=>e.size))>1.5));
+ assert.ok(population.some(t=>Math.abs(t.ears[0].size-t.ears[1].size)>.2));
+ assert.ok(population.some(t=>t.ears.some(e=>e.flop>.7)));
+ const identity=createMouseIdentity(71),saved=JSON.stringify(identity);
+ assert.deepEqual(physicalTraits(identity).ears,physicalTraits(JSON.parse(saved)).ears);
+ assert.equal(JSON.stringify(identity),saved);
+ const neutral=physicalTraits(identity,{morphologyVariation:0});
+ assert.deepEqual(neutral.ears,[{size:1,width:1,flop:0,tilt:0},{size:1,width:1,flop:0,tilt:0}]);
+});
