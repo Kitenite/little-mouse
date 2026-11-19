@@ -1,9 +1,9 @@
 import { normalizeProfile } from './settings.js';
 import { sensoryTrials } from './experiment-trials.js';
 
-export const EXPERIMENT_SCHEMA_VERSION = 'sensory-pilot-v1';
+import { parseExperimentStorage, EXPERIMENT_SCHEMA_VERSION, EXPERIMENT_LIMITS } from './vendor/experiment-schema.js';
+export { EXPERIMENT_SCHEMA_VERSION, EXPERIMENT_LIMITS };
 export const EXPERIMENT_STORAGE_KEY = 'little-mouse-sensory-pilot-v1';
-export const EXPERIMENT_LIMITS = Object.freeze({ sessions: 40, records: 256, episodes: 256, bytes: 1000000, flushMs: 5000 });
 const WINDOW_MS = 60000;
 const copy = value => JSON.parse(JSON.stringify(value));
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -28,15 +28,6 @@ function baseline(input) {
   result.soundVariety = ['focused', 'varied'].includes(input?.soundVariety) ? input.soundVariety : 'varied';
   return result;
 }
-function validStoredSession(s) {
-  return s && typeof s.id === 'string' && s.schemaVersion === EXPERIMENT_SCHEMA_VERSION &&
-    s.trainingReady === false && ['active', 'ended', 'interrupted'].includes(s.status) &&
-    s.baseline && s.effectiveSettings && s.assignment && Array.isArray(s.records) &&
-    s.records.length <= EXPERIMENT_LIMITS.records && finite(s.lastElapsedMs) &&
-    s.window && finite(s.window.elapsedMs) && s.exposure && finite(s.exposure.simulationSeconds) &&
-    s.contacts && finite(s.contacts.episodes) && finite(s.droppedRecords);
-}
-
 /** Local pilot only. start() returns a patch; the caller applies it on a new Play cast.
  * tick dt is simulation seconds; now is monotonic milliseconds. No timers/game mutations.
  * Wall window includes hidden/paused time; interruptions invalidate complete observation.
@@ -51,10 +42,7 @@ export class ExperimentSession {
       const raw = storage?.getItem(EXPERIMENT_STORAGE_KEY);
       if (raw) {
         if (raw.length > EXPERIMENT_LIMITS.bytes) throw Error('Stored pilot exceeds size limit');
-        const data = JSON.parse(raw);
-        if (data.schemaVersion !== EXPERIMENT_SCHEMA_VERSION || !Array.isArray(data.sessions) ||
-            data.sessions.length > EXPERIMENT_LIMITS.sessions || !data.sessions.every(validStoredSession) ||
-            !Number.isSafeInteger(data.serial) || data.serial < 0) throw Error('Invalid pilot storage');
+        const data = parseExperimentStorage(JSON.parse(raw));
         this.sessions = data.sessions; this.serial = data.serial;
         this.droppedSessions = Number.isSafeInteger(data.droppedSessions) ? data.droppedSessions : 0;
         for (const trial of sensoryTrials) {

@@ -32,7 +32,7 @@ export function stepMice(mice,config,time,dt,w,h,obstacles=[]){if(!Number.isFini
    // Stop on swept arrival, rather than orbiting a target passed between frames.
    if(!m.hold&&!threatened){const sx=m.x-oldX,sy=m.y-oldY,len=sx*sx+sy*sy;
     const u=len>0?clamp(((m.targetX-oldX)*sx+(m.targetY-oldY)*sy)/len,0,1):0;
-    if(arrived||Math.hypot(oldX+u*sx-m.targetX,oldY+u*sy-m.targetY)<=5){m.arrivalTarget={x:m.targetX,y:m.targetY};m.vx=m.vy=m.turnRate=0;}
+    if(arrived||Math.hypot(oldX+u*sx-m.targetX,oldY+u*sy-m.targetY)<=5){m.x=oldX+u*sx;m.y=oldY+u*sy;m.arrivalTarget={x:m.targetX,y:m.targetY};m.vx=m.vy=m.turnRate=0;}
    }
    if(config.bounded&&(m.x<r||m.x>w-r)){m.x=clamp(m.x,r,w-r);m.vx*=-.85;m.targetX=clamp(m.x+Math.sign(m.vx)*250,r,w-r);m.next=time+.45;}
    if(config.bounded&&(m.y<r||m.y>h-r)){m.y=clamp(m.y,r,h-r);m.vy*=-.85;m.targetY=clamp(m.y+Math.sign(m.vy)*250,r,h-r);m.next=time+.45;}

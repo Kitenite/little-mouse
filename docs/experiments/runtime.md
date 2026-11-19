@@ -45,7 +45,9 @@ living identity. Baseline remains saved; transient treatments are not persisted 
 Storage is bounded to 40 sessions, 256 records and 256 contact episodes per session, and about
 1 MB. Drops and storage errors are exported. Busy sessions may lose detailed events; this is
 not a complete replay. Reload marks unfinished records interrupted. Denied storage permits
-in-memory operation. Export before clearing browser data or removing the app.
+in-memory operation. Nested checkpoint fields and record attribution are validated with Valibot
+before adoption; invalid checkpoints report an error without blocking a fresh round.
+Export before clearing browser data or removing the app.
 
 Schema `sensory-pilot-v1` always exports `trainingReady:false`. It does not conform to the
 planned full research record schema. Cast/seed balancing, measured attention, validated analysis,

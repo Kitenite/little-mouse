@@ -1,6 +1,6 @@
 # Worker coordination
 
-Reviewed 2026-11-18. Use persistent Superset terminal workers for ongoing core work;
+Reviewed 2026-11-19. Use persistent Superset terminal workers for ongoing core work;
 built-in subagents are not the default orchestration surface requested by the owner.
 Read the superset-orchestrate skill before dispatching. Keep this file a current ledger,
 not an append-only activity log. Terminal existence does not establish completion.
@@ -131,7 +131,8 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
-Root integrated official Babylon fur comparison; existing renderer wins current adapter checks.
+Root owns library adoption: persistence schema and generated regression tests complete;
+Babylon comparison complete, renderer unchanged. No dependent worker edits pending.
 
 ## Sensory experiments implementation
 

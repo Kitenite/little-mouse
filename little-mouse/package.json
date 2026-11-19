@@ -5,16 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch --watch-path=worker --watch-path=scripts/dev.mjs --watch-path=public/settings.js --watch-path=public/settings-migration.js scripts/dev.mjs",
-    "build": "node scripts/build-babylon.mjs && node scripts/build.mjs",
+    "build": "node scripts/build-validation.mjs && node scripts/build-babylon.mjs && node scripts/build.mjs",
     "test": "node --test tests/*.test.mjs",
-    "build:fur-library": "node scripts/build-babylon.mjs"
+    "build:fur-library": "node scripts/build-babylon.mjs",
+    "build:validation": "node scripts/build-validation.mjs"
   },
   "dependencies": {
     "@babylonjs/core": "9.37.1",
     "@babylonjs/materials": "9.37.1",
-    "three": "^0.181.0"
+    "three": "^0.181.0",
+    "valibot": "1.5.0"
   },
   "devDependencies": {
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "fast-check": "4.10.3"
   }
 }

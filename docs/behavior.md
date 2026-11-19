@@ -33,6 +33,9 @@ These are product requirements, not claims about the reference game's source cod
 preference. Existing destination/exit logic and steering repairs support them; continuous
 rendered and physical-iPad comparison remains pending. No trailer-derived timing is prescribed.
 
+Fast swept arrivals stop at the closest point on the actual substep path, so a high-speed
+mouse cannot latch arrival beyond its destination. Generated regression cases cover 30/60/120 Hz.
+
 ## Implemented policy
 
 `enrichment.js` owns an authored state policy with hidden, peek, watch, creep, dart,

@@ -3,6 +3,14 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
+## Library adoption
+
+324 web tests pass, including 600 generated storage/movement cases and a swept-arrival fix.
+Valibot checkpoint validation is live; its 11,398-byte bundle matches source.
+Production build `23ece97a8032`, Worker syntax, 77-variable catalog and four eligibility checks pass.
+Browser reload starts two mice with WebGL and no recovery; checkpoint round-trip passed.
+See [adoption decisions](library-adoption.md). Physical iPad validation remains pending.
+
 ## Library-backed comparison
 
 Official Babylon FurMaterial 9.37.1 runs on the actual body/limb mesh in the side-by-side
@@ -13,7 +21,7 @@ The production renderer remains Three.js; no physical iPad migration or verifica
 
 ## Regional fur
 
-318 web tests pass. Desktop fur review rendered eight top/side poses without console errors:
+Desktop fur review rendered eight top/side poses without console errors:
 39 calls / 53,708 triangles per fixture, unchanged by this update. Viewed screenshot shows
 short coat depth and readable limbs; the underlying angular rump/muzzle remain visible limits.
 Compression/recovery and seed stability have numerical coverage; physical iPad performance,

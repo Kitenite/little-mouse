@@ -7,6 +7,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | --- | --- |
 | [Behavior](behavior.md) | Teasing, hiding, risk, movement, injury and session policy |
 | [Anatomy and motion](anatomy-motion.md) | Body proportions, gait, fur, tails, ears, whiskers and contact geometry |
+| [Library adoption](library-adoption.md) | Dependencies, production integration, generated tests and replacement decisions |
 | [Physics engine decision](physics-engine-decision.md) | World solver comparison, current repairs and engine adoption gate |
 | [Touch interaction](touch-interaction.md) | Tap, hold, drag, toss, resting paws and touch memory |
 | [Audio](audio.md) | Recorded cues, silence, activation, mixing and provenance |

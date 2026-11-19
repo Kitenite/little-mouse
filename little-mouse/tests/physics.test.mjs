@@ -51,3 +51,9 @@ test('watching does not retain a spinning angular velocity',()=>{
  const m={...mouse(500,500),turnRate:7,restUntil:100,targetX:800};
  stepMice([m],config,1,1/60,1366,1024);assert.equal(m.angle,0);assert.equal(m.turnRate,0);
 });
+
+test('a high-speed swept arrival stops at the path crossing, not beyond the destination',()=>{
+ const m={...mouse(500,500,1855),targetX:506,targetY:500};
+ stepMice([m],{size:.6,speed:0,travelSpeed:1,variation:false},0,1/30,10000,10000);
+ assert.equal(m.x,506);assert.equal(m.y,500);assert.equal(m.speed,0);assert.equal(m.angle,0);
+});
