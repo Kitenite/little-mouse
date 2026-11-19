@@ -13,19 +13,27 @@ export function stepMice(mice,config,time,dt,w,h,obstacles=[]){if(!Number.isFini
    const limpPace=injured?.48*(.8+.2*Math.sin((time-m.hitAt)*12)):1;
    const pace=m.hold?65:(115+config.speed*130)*travel*(m.huntSpeed??1)*(m.hunt?1:variation)*escape*limpPace;
    const threatened=paws.some(p=>!p.recent&&Math.hypot(m.x-p.x,m.y-p.y)<clearance+Math.max(0,(p.radius||0)-(Number(config.pawAvoidanceRadius)||50))+25);
-   const ready=d>5&&(time>=m.restUntil||threatened);
+   if(m.arrivalTarget&&(threatened||m.hold||Math.hypot(m.targetX-m.arrivalTarget.x,m.targetY-m.arrivalTarget.y)>1))delete m.arrivalTarget;
+   const arrived=!!m.arrivalTarget;
+   const ready=!arrived&&d>5&&(time>=m.restUntil||threatened);
    const error=ready?Math.atan2(Math.sin(Math.atan2(dy,dx)-m.angle),Math.cos(Math.atan2(dy,dx)-m.angle)):0;
    const speed=Math.hypot(m.vx,m.vy),localSpeed=speed/Math.max(.1,config.size)/(m.hold?1:travel);
    // Brake for reversals; at speed, a wider arc replaces a sideways slide.
    const maxTurn=(m.hold?1.6:scared?9:7)/(1+localSpeed/240);
    const targetTurn=ready?clamp(error*9,-maxTurn,maxTurn):0;
    m.turnRate??=0;m.turnRate+=clamp(targetTurn-m.turnRate,-32*step,32*step);
-   const rotation=m.turnRate*step;m.angle+=Math.abs(rotation)>Math.abs(error)&&rotation*error>0?error:rotation;
+   const rotation=m.turnRate*step;
+   if(!ready){m.turnRate=0;}else if(Math.abs(rotation)>=Math.abs(error)&&rotation*error>=0){m.angle+=error;m.turnRate=0;}else m.angle+=rotation;
    const alignment=Math.max(0,Math.cos(error));
-   const desired=ready?Math.min(pace,d*6*(m.hold?1:travel))*(.06+.94*alignment*alignment):0;
+   const desired=ready?Math.min(pace,d*3)*alignment*alignment:0;
    const blend=1-Math.exp(-step*(scared?18:12));
    m.vx+=(Math.cos(m.angle)*desired-m.vx)*blend;m.vy+=(Math.sin(m.angle)*desired-m.vy)*blend;
-   m.x+=m.vx*step;m.y+=m.vy*step;
+   const oldX=m.x,oldY=m.y;m.x+=m.vx*step;m.y+=m.vy*step;
+   // Stop on swept arrival, rather than orbiting a target passed between frames.
+   if(!m.hold&&!threatened){const sx=m.x-oldX,sy=m.y-oldY,len=sx*sx+sy*sy;
+    const u=len>0?clamp(((m.targetX-oldX)*sx+(m.targetY-oldY)*sy)/len,0,1):0;
+    if(arrived||Math.hypot(oldX+u*sx-m.targetX,oldY+u*sy-m.targetY)<=5){m.arrivalTarget={x:m.targetX,y:m.targetY};m.vx=m.vy=m.turnRate=0;}
+   }
    if(config.bounded&&(m.x<r||m.x>w-r)){m.x=clamp(m.x,r,w-r);m.vx*=-.85;m.targetX=clamp(m.x+Math.sign(m.vx)*250,r,w-r);m.next=time+.45;}
    if(config.bounded&&(m.y<r||m.y>h-r)){m.y=clamp(m.y,r,h-r);m.vy*=-.85;m.targetY=clamp(m.y+Math.sign(m.vy)*250,r,h-r);m.next=time+.45;}
   }

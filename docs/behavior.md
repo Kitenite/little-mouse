@@ -46,6 +46,14 @@ control when absent; later local adjustments persist. Straight-run regression me
 `settings.js` owns actual ranges/defaults; gait cadence remains independently capped.
 No old saved session-duration value may stop the game automatically.
 
+## Arrival and steering
+
+Free travel still uses the faster pace, but close-range approach is capped at distance × 3
+without the travel multiplier. Targets behind the mouse receive zero forward thrust while
+it turns. Swept arrival within 5 px stops velocity and holds that destination until it
+changes or a nearby live paw requires escape. Watch/arrival clears residual turn rate.
+This repairs repeated loops caused by overshooting short targets at high travel speed.
+
 ## Acceptance criteria
 
 - Seeded multi-minute phone and iPad simulations exercise concealment, visible observation,

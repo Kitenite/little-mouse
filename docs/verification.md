@@ -5,6 +5,12 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 
 ## Integrated and checked
 
+- Fixed-target steering reproduction started at 1,000 px/s with destinations 20/60/150/300 px
+  ahead: prior loop accumulated 1.77–1.94 turns. Arrival braking/swept stop now reaches
+  each without rotating in the same aligned approach at 30/60/120 Hz. New targets resume
+  travel; watch clears turn rate; fast free-running distance regression still passes.
+  This reproduces an engine cause, not a direct recording of the owner’s observed incident.
+
 - Ambient recorded vocals: one randomized global schedule, native playback rate, quieter
   than contact feedback; held/hidden/injured exclusions and pause reset covered by tests.
   No iPad relaunch for this update: owner is running the reference game for recording.
@@ -37,8 +43,8 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 - Recorded stock/found audio only, native playback rate, silent missing-recording fallback.
   Tap/squeak gain is 0.48; movement uses sparse quiet crawl excerpts. See
   [audio curation report](cycles/podrick-audio.md) for source confidence and mix math.
-- Root combined checks: 275 web tests, four native tests, native lint and TypeScript pass.
-  Production build `693e3f6a79f8` and built Worker syntax check pass.
+- Root combined checks: 277 web tests, four native tests, native lint and TypeScript pass.
+  Production build `20794f4c1253` and built Worker syntax check pass.
 - UI worker inspected desktop/tablet/phone layout, settings, Play, synthetic corner exit,
   Escape and injected failure/Retry. Root inspected final tablet capture and exercised
   integrated Play via DOM click: playing=true, no error; no remote resource requests observed.
@@ -64,7 +70,7 @@ of naturalness follows from waveform checks. No synthesis is used to fill covera
 
 ## Release
 
-Sites source `7b2c646381f33affe693220e97b31ef5ae2d48e9`, build `693e3f6a79f8`.
-Hosted deployment `appgdep_6afe8cf5ab288191b94e15e38969eece` succeeded; owner-only access
+Sites source `dd269eba9505df02afd7d7281953f53b0346e9a1`, build `20794f4c1253`.
+Hosted deployment `appgdep_6afe8d90fc6c8191a645eeadadb16f22` succeeded; owner-only access
 preserved. Native installation and hosted web deployment are separate. Source changes are
 integrated on main; publication is recorded by the corresponding GitHub commit.

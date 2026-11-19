@@ -34,3 +34,20 @@ test('travel gain covers at least twice the distance without speeding the gait c
  assert.ok(Math.abs(fast.gait.cadence-old.gait.cadence)<1e-9);
  assert.ok(Math.abs(fast.gait.phase-old.gait.phase)<1e-9);
 });
+
+test('fast arrival does not overshoot into repeated spins and a new target releases arrival',async()=>{
+ const{settingsDefaults}=await import('../public/settings.js');
+ for(const hz of [30,60,120])for(const distance of [20,60,150,300]){
+  const m={...mouse(500,500,1000),targetX:500+distance,targetY:500,state:'active'};let turns=0;
+  for(let i=0;i<hz*6;i++){const angle=m.angle;stepMice([m],settingsDefaults,i/hz,1/hz,1366,1024);turns+=Math.abs(m.angle-angle);}
+  assert.ok(turns<.1,`${hz}Hz target ${distance}: ${turns} radians`);
+  assert.ok(Math.hypot(m.targetX-m.x,m.targetY-m.y)<8);assert.equal(m.speed,0);
+  const x=m.x;m.targetX+=300;
+  for(let i=0;i<hz;i++)stepMice([m],settingsDefaults,6+i/hz,1/hz,1366,1024);
+  assert.ok(m.x>x+200,'new destination must resume travel');
+ }
+});
+test('watching does not retain a spinning angular velocity',()=>{
+ const m={...mouse(500,500),turnRate:7,restUntil:100,targetX:800};
+ stepMice([m],config,1,1/60,1366,1024);assert.equal(m.angle,0);assert.equal(m.turnRate,0);
+});
