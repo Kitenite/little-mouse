@@ -19,7 +19,7 @@ export function beginContact(contacts,m,hit,pointerId,x,y,time,config,size){
  if(!m||!hit||m.hold||contacts.has(pointerId)||m.state==='away'||m.state==='defeated'||m.hiddenUntil>time||(m.invulnerableUntil||0)>time)return false;
  const local=localContact(m,x,y,size);
  const traits=m.identity?physicalTraits(m.identity,config):{bodyLength:config.bodyLength||1,tailLength:config.tailLength||1};
- const hold={part:hit.part,x,y,targetX:x,targetY:y,anchorVX:0,anchorVY:0,lastAnchorMoveAt:time,lastMoveAt:time,localX:hit.localX??local.localX,localY:hit.localY??local.localY,fraction:hit.fraction??.5,legIndex:hit.legIndex,pawOffsetX:hit.pawOffsetX,pawOffsetY:hit.pawOffsetY,startedAt:time,pointerId,active:false,angle:m.angle,originX:x,originY:y,threshold:clamp(Number(config.holdThreshold)||.25,.15,1)};
+ const hold={part:hit.part,x,y,targetX:x,targetY:y,anchorVX:0,anchorVY:0,lastAnchorMoveAt:time,lastMoveAt:time,localX:hit.localX??local.localX,localY:hit.localY??local.localY,fraction:hit.fraction??.5,legIndex:hit.legIndex,pawOffsetX:hit.pawOffsetX,pawOffsetY:hit.pawOffsetY,startedAt:time,pointerId,active:false,angle:m.angle,originX:x,originY:y,dragSeconds:0,dragDefeatAfter:clamp(Number(config.dragDefeatAfter)||4,2,15),threshold:clamp(Number(config.holdThreshold)||.25,.15,1)};
  m.hold=hold;m.vx=m.vy=m.speed=0;m.moving=false;m.turnRate=0;
  hold.tailRoot=hit.tailRoot??-36*traits.bodyLength;hold.tailRootX=hit.tailRootX??hold.tailRoot;hold.tailRootY=hit.tailRootY??0;hold.tailLength=hit.tailLength??87*traits.tailLength;
  contacts.set(pointerId,{m,hold});
@@ -33,9 +33,13 @@ export function moveContact(contacts,pointerId,x,y,size,time){const record=conta
  record.hold.targetX=x;record.hold.targetY=y;record.hold.lastMoveAt=time??record.hold.lastMoveAt;return true;
 }
 export function advanceContactAnchor(m,time,dt){const hold=m.hold;if(!hold||!Number.isFinite(dt)||dt<=0)return;const dx=hold.targetX-hold.x,dy=hold.targetY-hold.y,d=Math.hypot(dx,dy),limit=800*dt,scale=d>0?Math.min(1,limit/d):0;
+ if(hold.active&&d*scale>20*dt)hold.dragSeconds+=dt;
  const vx=dx*scale/dt,vy=dy*scale/dt;hold.x+=dx*scale;hold.y+=dy*scale;if(d*scale>1e-9)hold.lastAnchorMoveAt=time;if(hold.active&&hold.part!=='body'&&hold.part!=='head'){m.x+=dx*scale;m.y+=dy*scale;}hold.anchorVX+=(vx-hold.anchorVX)*Math.min(1,dt*30);hold.anchorVY+=(vy-hold.anchorVY)*Math.min(1,dt*30);}
 function refreshObstacles(contacts,time){contacts.obstacles.clear();for(const[id,p]of contacts.paws)contacts.obstacles.set(id,p);for(const[id,p]of contacts.recentPaws){const memory=clamp(1-(time-p.releasedAt)/4,0,1);if(memory<=0){contacts.recentPaws.delete(id);continue;}if(contacts.obstacles.size<10)contacts.obstacles.set(`recent:${id}`,{...p,memory,recent:true});}}
-export function updateContacts(contacts,time,mice){refreshObstacles(contacts,time);for(const[id,{m,hold}]of contacts){if(m.hold!==hold||(mice&&!mice.includes(m))){cancelContact(contacts,id);continue;}hold.active=time-hold.startedAt>=hold.threshold;}}
+export function updateContacts(contacts,time,mice){const outcomes=[];refreshObstacles(contacts,time);for(const[id,{m,hold}]of contacts){if(m.hold!==hold||(mice&&!mice.includes(m))){cancelContact(contacts,id);continue;}hold.active=time-hold.startedAt>=hold.threshold;
+ if(hold.dragSeconds>=hold.dragDefeatAfter){cancelContact(contacts,id);Object.assign(m,{state:'defeated',reaction:'squash',hitPart:hold.part,hitAt:time,defeatedUntil:time+.95,leaving:false,restUntil:time+2,vx:0,vy:0,speed:0,moving:false,harmlessUntil:0,invulnerableUntil:time+.8});
+ outcomes.push({mouse:m,outcome:'defeated',part:hold.part,held:true,x:hold.x,y:hold.y,pointerId:id});}
+ }return outcomes;}
 export function endContact(contacts,pointerId,time,w,h,size,config,rng=Math.random){
  const paw=contacts.paws.get(pointerId);if(paw){contacts.recentPaws.delete(pointerId);contacts.recentPaws.set(pointerId,{...paw,releasedAt:time});while(contacts.recentPaws.size>10)contacts.recentPaws.delete(contacts.recentPaws.keys().next().value);}
  contacts.paws.delete(pointerId);refreshObstacles(contacts,time);
@@ -52,7 +56,9 @@ export function endContact(contacts,pointerId,time,w,h,size,config,rng=Math.rand
 // A short geometric detour keeps a travelling mouse from aiming through a
 // stationary touch. At most ten active pointers are considered per substep.
 export function avoidPaws(m,dx,dy,paws,clearance,baseRadius=50){
- const distance=Math.hypot(dx,dy);if(distance<1||m.hold)return[dx,dy];const ux=dx/distance,uy=dy/distance;
+ if(m.hold)return[dx,dy];
+ for(const p of paws){if(p.recent)continue;const reach=clearance+Math.max(0,(p.radius||0)-baseRadius),ox=m.x-p.x,oy=m.y-p.y,d=Math.hypot(ox,oy);if(d<reach+25){const nx=d>.01?ox/d:Math.cos(m.angle),ny=d>.01?oy/d:Math.sin(m.angle);return[nx*(reach+60),ny*(reach+60)];}}
+ const distance=Math.hypot(dx,dy);if(distance<1)return[dx,dy];const ux=dx/distance,uy=dy/distance;
  let closest=null,nearest=Infinity;
  for(const p of paws){const reach=(clearance+Math.max(0,(p.radius||0)-baseRadius))*(p.memory??1),ox=p.x-m.x,oy=p.y-m.y,along=ox*ux+oy*uy,side=ox*-uy+oy*ux;
   if(along>0&&along<Math.min(distance,reach+180)&&Math.abs(side)<reach+10&&along<nearest){closest={p,side,reach};nearest=along;}}

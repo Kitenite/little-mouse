@@ -12,7 +12,8 @@ export function stepMice(mice,config,time,dt,w,h,obstacles=[]){if(!Number.isFini
    const escape=(m.scrambleUntil||0)>time?(m.reaction==='dash'?2.35:1.95):scared?1.65:1;
    const limpPace=injured?.48*(.8+.2*Math.sin((time-m.hitAt)*12)):1;
    const pace=m.hold?65:(115+config.speed*130)*travel*(m.huntSpeed??1)*(m.hunt?1:variation)*escape*limpPace;
-   const ready=d>5&&time>=m.restUntil;
+   const threatened=paws.some(p=>!p.recent&&Math.hypot(m.x-p.x,m.y-p.y)<clearance+Math.max(0,(p.radius||0)-(Number(config.pawAvoidanceRadius)||50))+25);
+   const ready=d>5&&(time>=m.restUntil||threatened);
    const error=ready?Math.atan2(Math.sin(Math.atan2(dy,dx)-m.angle),Math.cos(Math.atan2(dy,dx)-m.angle)):0;
    const speed=Math.hypot(m.vx,m.vy),localSpeed=speed/Math.max(.1,config.size)/(m.hold?1:travel);
    // Brake for reversals; at speed, a wider arc replaces a sideways slide.

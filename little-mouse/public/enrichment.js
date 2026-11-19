@@ -195,6 +195,11 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   if(a.phase==='traverse')target=edgePoint(a.crossEdge,a.crossSlot,a.depth,w,h);
   else if(a.phase==='peek'||a.phase==='retreat')target=edgePoint(a.edge,a.slot,a.depth,w,h);
   else target=[a.goal[0]*w,a.goal[1]*h];
+  // A live paw is never an investigation destination, even after its original tap is old.
+  for(let pass=0;pass<3;pass++)for(const p of director.paws?.values()||[]){if(p.recent)continue;
+    const reach=pawReach(p,director)+35,dx=target[0]-p.x,dy=target[1]-p.y,d=Math.hypot(dx,dy);
+    if(d<reach){const ax=m.x-p.x,ay=m.y-p.y,a=Math.hypot(ax,ay);const nx=a>.01?ax/a:Math.cos(m.angle),ny=a>.01?ay/a:Math.sin(m.angle);target=[p.x+nx*reach,p.y+ny*reach];}
+  }
   [m.targetX,m.targetY]=target;
   const distance=Math.hypot(m.x-m.targetX,m.y-m.targetY);
   if(a.phase!=='retreat'&&a.visibleSince===null&&silhouetteVisible(m,config.size,w,h))a.visibleSince=time;

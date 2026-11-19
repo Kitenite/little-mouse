@@ -181,3 +181,11 @@ test('successful local audio unlock activates without a synthetic peek cue',asyn
  h.e('enableSound').listeners.click();await new Promise(resolve=>setImmediate(resolve));
  assert.equal(h.context.audioUnlocks,1);assert.equal(h.context.audioCues,0);
 });
+
+test('iPad migrates a saved large cast to two once, then preserves owner tuning',async()=>{
+ const saved={...upgradeSettings(defaults),playStyleVersion:1,count:7};
+ const first=await gameHarness('offline','ipad',{storage:new Map([['little-mouse',JSON.stringify(saved)]])});
+ assert.equal(first.context.testGame.config.count,2);
+ first.context.testGame.config.count=3;first.context.testGame.sync();
+ const second=await gameHarness('offline','ipad',{storage:first.storage});assert.equal(second.context.testGame.config.count,3);
+});

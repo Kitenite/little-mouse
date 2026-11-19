@@ -25,7 +25,8 @@ choice is absent from visible controls. Developer playground forcing remains sep
 Existing legacy browser keys and local database files are not destructively purged; runtime
 never reads pairing keys or opens the old database. Hosting no longer requests a D1 binding.
 
-The current rich starting preset uses two large mice, woodland clearing, varied hunt/idle
+A one-time iPad count migration sets previously saved casts to two mice; later owner
+adjustments persist. The current rich starting preset uses two large mice, woodland clearing, varied hunt/idle
 behavior and moderate secondary motion. It is a design starting point to test with this cat,
 not a scientifically established optimum. The connected iPad also has a saved
 `Rich woodland hunt` profile; custom settings remain adjustable.

@@ -27,7 +27,11 @@ screen; retain those touch areas and route around them instead of running undern
   arrival; redundant no-displacement events cannot change the outcome. Release uses
   recent filtered actual anchor motion for a
   bounded toss; zero-time events and huge pointer jumps cannot create unbounded velocity.
-- Each completed tap/hold release counts once. Move events never repeatedly injure a mouse.
+- Actual capped anchor travel above 20 CSS px/s accumulates drag time while active. After
+  four seconds (local control: 2–15), any held part enters defeat once before release,
+  with existing recorded hit audio/visual feedback. Stationary holds do not accumulate.
+  The claim clears but the pointer remains a paw obstacle; release cannot score/toss again.
+- Each completed tap/hold release or drag defeat counts once.
 - Cancel, lost capture, blur, pause, hide, resize and reload clear claims without hit outcomes.
 - Successful claims immediately discard that mouse’s queued hunt reaction/attention;
   cancellation before a policy tick cannot revive it. Director cues and later reactions
@@ -51,8 +55,8 @@ screen; retain those touch areas and route around them instead of running undern
 - Zero/invalid time steps preserve positions, velocities and anchors; catch-up work is bounded.
 
 Harmless probability defaults to 0.35 with region modifiers. Harmless flinch/freeze/dodge
-and held-release escape remain distinct from injury. Paw/tail harmful reactions favor
-limp or escape and cannot select body squash/defeat. Head responses favor stun/escape.
+and held-release escape remain distinct from injury. Ordinary paw/tail harmful release reactions favor
+limp or escape; prolonged active dragging can defeat any part. Head responses favor stun/escape.
 Blood is excluded for harmless and tossed outcomes. `behavior.js` owns exact weights.
 
 ## Spatial memory
@@ -64,7 +68,9 @@ Contact width/height contributes to radius; configurable resting-paw clearance d
 On release, a timestamped footprint remains for four simulation seconds with decaying
 avoidance. Active footprints take precedence in the ten-obstacle budget. Remembered
 footprints affect steering and cover/reentry; they do not act as physical walls.
-No route target resets every frame solely because a paw remains down.
+Live paw overlap overrides watch/rest and steers outward. Hunt destinations inside a live
+paw clearance are projected outside it, so old tap investigation does not approach a held
+area. This geometric avoidance is bounded; it is not a global pathfinding solver.
 
 ## Acceptance criteria
 

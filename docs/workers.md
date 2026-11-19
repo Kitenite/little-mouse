@@ -99,3 +99,7 @@ and ready startup. Hosted publication succeeded. Connected iPad relaunch subsequ
 Root follow-up: 2.2× actual travel gain independent of gait; distance/cadence regression
 and all 270 web tests pass. Connected iPad relaunch succeeded; hosted publication succeeded.
 No agent/workspace dispatch needed for this focused change.
+
+Root follow-up: live-paw goal exclusion and watch escape, iPad two-mouse migration,
+actual-drag timeout defeat with one sound/score event. All 273 tests and build pass;
+browser startup and iPad launch checked. Hosted publication succeeded.

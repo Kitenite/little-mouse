@@ -133,3 +133,20 @@ test('rejected claims leave queued hunt cues untouched',()=>{
  m.invulnerableUntil=0;assert.equal(beginContact(c,m,{part:'body'},1,400,300,0,cfg,cfg.size),true);
  Object.assign(m.hunt,before);assert.equal(beginContact(c,m,{part:'head'},2,400,300,.1,cfg,cfg.size),false);assert.deepEqual(m.hunt,before);
 });
+
+test('sustained actual dragging defeats once while stationary holds stay alive',()=>{
+ for(const part of ['body','head','forepaw','hindpaw','tail']){
+  const m=mouse(),c=createContacts();recordPointer(c,1,m.x,m.y,0);
+  beginContact(c,m,{part},1,m.x,m.y,0,{...cfg,dragDefeatAfter:2},cfg.size);
+  let outcomes=[];for(let i=1;i<240;i++){const t=i/60;moveContact(c,1,400+Math.sin(t*3)*150,300,cfg.size,t);outcomes.push(...updateContacts(c,t,[m]));stepMice([m],cfg,t,1/60,1024,768);}
+  assert.equal(outcomes.length,1,part);assert.equal(m.state,'defeated',part);assert.equal(c.has(1),false);assert.ok(c.paws.has(1),'paw persists after defeat');assert.equal(endContact(c,1,4,1024,768,cfg.size,cfg),null);
+ }
+ const m=mouse(),c=createContacts();beginContact(c,m,{part:'body'},1,m.x,m.y,0,cfg,cfg.size);
+ for(let i=0;i<600;i++){assert.equal(updateContacts(c,i/60,[m]).length,0);stepMice([m],cfg,i/60,1/60,1024,768);}assert.equal(m.state,'active');
+});
+test('a live paw interrupts watching and repels a mouse instead of attracting it',()=>{
+ const m={...mouse(),x:500,y:300,angle:0,targetX:450,targetY:300,restUntil:100};
+ const paw={x:450,y:300,radius:50};const before=m.x;
+ for(let i=0;i<60;i++)stepMice([m],{...cfg,travelSpeed:2.2},i/60,1/60,1024,768,[paw]);
+ assert.ok(m.x>before+80);assert.ok(m.vx>=0);
+});

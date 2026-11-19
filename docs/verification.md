@@ -5,6 +5,12 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 
 ## Integrated and checked
 
+- Active paw repulsion overrides watch/rest; hunt goals exclude live held areas.
+  All-part dragging defeats once after four seconds of actual motion; stationary hold
+  remains alive and the paw persists after defeat. Release cannot duplicate the outcome.
+- iPad count migration sets two once. Regression checks and browser confirm count 2,
+  dragDefeatAfter 4 and ready startup; connected iPad game-route launch succeeded.
+
 - Travel gain defaults to 2.2×; equal-time straight-run regression confirms 2.2× distance
   with unchanged gait cadence and phase. Browser startup reports ready, travelSpeed 2.2
   and unchanged gait cadence cap 4.2. Holds, tosses and simulation time are unaffected.
@@ -21,8 +27,8 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 - Recorded stock/found audio only, native playback rate, silent missing-recording fallback.
   Tap/squeak gain is 0.48; movement uses sparse quiet crawl excerpts. See
   [audio curation report](cycles/podrick-audio.md) for source confidence and mix math.
-- Root combined checks: 270 web tests, four native tests, native lint and TypeScript pass.
-  Production build `e45c8b010943` and built Worker syntax check pass.
+- Root combined checks: 273 web tests, four native tests, native lint and TypeScript pass.
+  Production build `b382ef7b060b` and built Worker syntax check pass.
 - UI worker inspected desktop/tablet/phone layout, settings, Play, synthetic corner exit,
   Escape and injected failure/Retry. Root inspected final tablet capture and exercised
   integrated Play via DOM click: playing=true, no error; no remote resource requests observed.
@@ -48,7 +54,7 @@ of naturalness follows from waveform checks. No synthesis is used to fill covera
 
 ## Release
 
-Sites source `c7e9efe97b547dbfdffc5988497389bc4cc1d649`, build `e45c8b010943`.
-Hosted deployment `appgdep_6afe89d54134819186adae67fb582e83` succeeded; owner-only access
+Sites source `1452005fcccca037f40975736a33372d08a2e0e8`, build `b382ef7b060b`.
+Hosted deployment `appgdep_6afe8aaa33488191a89a555e5c73f6d0` succeeded; owner-only access
 preserved. Native installation and hosted web deployment are separate. Source changes are
 integrated on main; publication is recorded by the corresponding GitHub commit.
