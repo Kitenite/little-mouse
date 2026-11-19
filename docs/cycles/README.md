@@ -1,5 +1,12 @@
 # Improvement batches
 
+## Feline-play critique — 2026-11-18
+
+[Research critic report](feline-play-critique.md) ranks six owner-led comparisons against
+current behavior. Review complete; suggested changes remain unimplemented and unvalidated.
+Start with watch duration while holding fast travel constant. Root checked primary evidence
+and corrected stale companion/default guidance; no device or cat preference claims.
+
 ## Podrick simplification — 2026-11-18
 
 Three Superset builders and an audio critic delivered the current local-only game.

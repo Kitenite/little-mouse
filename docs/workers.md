@@ -130,3 +130,11 @@ Root owns preservation; next behavior/anatomy critics own continuous rendered/iP
 of steady routes, deliberate turns/exits, restrained secondary motion and readable contacts.
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
+
+## Active feline-play critique
+
+Task `feline-play-critic`: completed; no dependencies; local main workspace above.
+Terminal `0cabd4fa-e351-458b-a77b-743b7f75f617` (Codex via Superset).
+Owns only `docs/cycles/feline-play-critique.md`; source read-only, no deployment/device actions.
+Root checked citations/source evidence and accepted six ranked comparisons with explicit limits.
+Report indexed; stale companion/default documentation corrected. No gameplay changes or device trials.

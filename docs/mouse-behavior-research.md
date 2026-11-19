@@ -14,7 +14,7 @@ Research checked 17 November 2026. This is a targeted review of primary studies,
 | Clark, Hamilton and Whishaw (2006), [Motor activity and formation of home bases in mice](https://pubmed.ncbi.nlm.nih.gov/16530235/), Physiology & Behavior, DOI 10.1016/j.physbeh.2006.01.026 | Contextual visual and tactile cues influenced home-base location, movement paths, speeds and stops. Mice organized excursions around home bases. | Stable cover and repeated excursions produce a more coherent agent than unrelated random destinations. Our tease/peek motif is an artistic interpretation, not a demonstrated intention by real mice to tease cats. |
 | Hall, Bradshaw and Robinson (2002), [Object play in adult domestic cats: the roles of habituation and disinhibition](https://www.sciencedirect.com/science/article/pii/S0168159102001533), Applied Animal Behaviour Science, DOI 10.1016/S0168-1591(02)00153-3 | Repeated presentation of an unchanged toy reduced play; a changed toy could restore interest. The interval between presentations affected the response. | Vary movement motifs and offer breaks or different toys. This supports testing novelty, not an assertion that randomized animation prevents habituation or makes a game addictive. Physical toys and rendered mice are different stimuli. |
 | Ellis and Wells (2008), [The influence of visual stimulation on the behaviour of cats housed in a rescue shelter](https://www.sciencedirect.com/science/article/pii/S0168159107003619), Applied Animal Behaviour Science | The experiment compared visual conditions in 125 shelter cats. Attention declined during extended daily presentation, indicating habituation; welfare benefits were not established by that study. | Let the owner choose when sessions end and avoid treating longer screen exposure as automatically better. No automatic timeout is required by this evidence. Screen attention is a measurable response, not proof of positive welfare. |
-| Payne, Kleinberger and Hirskyj-Douglas (2025), [Look What the Cat Tapped In](https://eprints.gla.ac.uk/365042/2/365042.pdf), ACI 2025, DOI 10.1145/3768539.3768541 | A five-month cat-café study involved 28 humans and 16 cats. Human enjoyment was similar across tablet and traditional-toy conditions, while toy interactions produced stronger reported connection. Cats differed in how they watched or touched screens. | Preserve phone/laptop adjustment and observe the individual cat. Count looking, following and voluntary return as well as tapping. Treat the game as one possible play activity; tap count alone is not a happiness measure. |
+| Payne, Kleinberger and Hirskyj-Douglas (2025), [Look What the Cat Tapped In](https://eprints.gla.ac.uk/365042/2/365042.pdf), ACI 2025, DOI 10.1145/3768539.3768541 | A five-month cat-café study involved 28 humans and 16 cats. Human enjoyment was similar across tablet and traditional-toy conditions, while toy interactions produced stronger reported connection. Cats differed in how they watched or touched screens. | Preserve local owner adjustment and observe the individual cat; remote controls are removed by current product direction. Count looking, following and voluntary return as well as tapping. Treat the game as one possible play activity; tap count alone is not a happiness measure. |
 
 ## Policy derived from that evidence
 
@@ -24,17 +24,8 @@ Close taps prompt escape after a brief delay. Moderately distant taps cause a sh
 
 Some direct hits cause a harmless flinch, freeze or dodge. Other hits retain the requested injury/defeat reactions. The harmless probability is configurable. Blood, squashing and injury are cosmetic game choices; none of the studies above establishes that those effects improve feline engagement.
 
-Behavior controls consumed by the policy:
-
-| Setting | Range / intended default | Meaning |
-| --- | --- | --- |
-| `harmlessChance` | 0–1 / 0.35 | Probability that a direct hit causes a non-injury reaction. |
-| `touchSensitivity` | 0.5–2 / 1 | Multiplier on close and moderate touch-perception distances. |
-| `reactionDelay` | 0.5–2 / 1 | Multiplier on the 0.16–0.30 second reaction delay. |
-| `peekDuration` | 0.5–2 / 1 | Multiplier on visible edge-peek dwell time. |
-| `watchDuration` | 0.5–2 / 1 | Multiplier on ordinary observation pauses. |
-| `creepSpeed` | 0.5–2 / 1 | Multiplier on exploratory creep speed. |
-| `dartSpeed` | 0.5–2 / 1 | Multiplier on dart speed. |
+Numeric defaults and ranges belong to `little-mouse/public/settings.js`; avoid treating
+study-inspired design choices as experimentally fitted values.
 
 The current behavior and contact contracts live in [behavior](behavior.md) and [touch interaction](touch-interaction.md); these notes own the evidence rather than every implementation parameter. Global speed, hide duration, mouse size/count and Hunt tempo remain separate controls. The approach through fully invisible space is faster than the visible peek so the cat does not face an accidentally empty screen. The exploration budget starts when the silhouette appears. A blocked dart yields to watch instead of pushing indefinitely; injury and manual steering retain priority. These safeguards address software failure modes, not biological rules.
 
