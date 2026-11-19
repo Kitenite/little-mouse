@@ -1,0 +1,1360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Podrick experiment event v1 (proposed collector contract)",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "eventId": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "wallMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "simulationSeconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "kind": {
+      "enum": [
+        "session",
+        "decision",
+        "exposure",
+        "contact",
+        "behavior",
+        "audio",
+        "observation",
+        "outcome",
+        "end"
+      ]
+    },
+    "payload": {}
+  },
+  "required": [
+    "schemaVersion",
+    "eventId",
+    "sessionId",
+    "sequence",
+    "wallMs",
+    "simulationSeconds",
+    "kind",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "session"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "catId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "actor": {
+                "enum": [
+                  "cat",
+                  "human",
+                  "unknown",
+                  "test"
+                ]
+              },
+              "startedAtUtc": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "build": {
+                "type": "string"
+              },
+              "policyVersion": {
+                "type": "string"
+              },
+              "catalogHash": {
+                "type": "string"
+              },
+              "assetVersion": {
+                "type": "string"
+              },
+              "settings": {
+                "$ref": "#/$defs/settings"
+              },
+              "device": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "number",
+                    "string",
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "context": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "number",
+                    "string",
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "catId",
+              "actor",
+              "startedAtUtc",
+              "build",
+              "policyVersion",
+              "catalogHash",
+              "assetVersion",
+              "settings",
+              "device",
+              "context"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "decision"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "experimentId": {
+                "type": "string"
+              },
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": "string"
+              },
+              "origin": {
+                "enum": [
+                  "randomized",
+                  "adaptive",
+                  "manual"
+                ]
+              },
+              "opeEligible": {
+                "type": "boolean"
+              },
+              "contextBefore": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "number",
+                    "string",
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "candidates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "actionId": {
+                      "type": "string"
+                    },
+                    "probability": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "settings": {
+                      "$ref": "#/$defs/settings"
+                    }
+                  },
+                  "required": [
+                    "actionId",
+                    "probability",
+                    "settings"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1
+              },
+              "chosenAction": {
+                "type": "string"
+              },
+              "chosenProbability": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 1
+              },
+              "assignedSettings": {
+                "$ref": "#/$defs/settings"
+              },
+              "effectiveSettings": {
+                "$ref": "#/$defs/settings"
+              },
+              "rngVersion": {
+                "type": "string"
+              },
+              "seed": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "assignment": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "scheme": {
+                    "enum": [
+                      "paired-AB-BA",
+                      "independent",
+                      "adaptive",
+                      "manual"
+                    ]
+                  },
+                  "pairId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "sequence": {
+                    "enum": [
+                      "AB",
+                      "BA",
+                      null
+                    ]
+                  },
+                  "sequencePosition": {
+                    "enum": [
+                      1,
+                      2,
+                      null
+                    ]
+                  },
+                  "sequenceProbability": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "scheme",
+                  "pairId",
+                  "sequence",
+                  "sequencePosition",
+                  "sequenceProbability"
+                ]
+              },
+              "featureProvenance": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "feature": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "string"
+                    },
+                    "sourceStartWallMs": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "sourceEndWallMs": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "availableAtWallMs": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "feature",
+                    "version",
+                    "sourceStartWallMs",
+                    "sourceEndWallMs",
+                    "availableAtWallMs"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "experimentId",
+              "boutId",
+              "decisionId",
+              "origin",
+              "opeEligible",
+              "contextBefore",
+              "candidates",
+              "chosenAction",
+              "chosenProbability",
+              "assignedSettings",
+              "effectiveSettings",
+              "rngVersion",
+              "seed",
+              "assignment",
+              "featureProvenance"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "exposure"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": "string"
+              },
+              "startWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "endWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "startSimulationSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "endSimulationSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "activeWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "visibleMouseSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "hiddenMouseSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "pausedWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "pawAreaFraction": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "performance": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": [
+                    "number",
+                    "string",
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "boutId",
+              "decisionId",
+              "startWallMs",
+              "endWallMs",
+              "startSimulationSeconds",
+              "endSimulationSeconds",
+              "activeWallMs",
+              "visibleMouseSeconds",
+              "hiddenMouseSeconds",
+              "pausedWallMs",
+              "pawAreaFraction",
+              "performance"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "contact"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "episodeId": {
+                "type": "string"
+              },
+              "pointerId": {
+                "type": "string"
+              },
+              "phase": {
+                "enum": [
+                  "down",
+                  "move",
+                  "up",
+                  "cancel"
+                ]
+              },
+              "actor": {
+                "enum": [
+                  "cat",
+                  "human",
+                  "unknown",
+                  "test"
+                ]
+              },
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "width": {
+                "type": "number",
+                "minimum": 0
+              },
+              "height": {
+                "type": "number",
+                "minimum": 0
+              },
+              "mouseId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "region": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "outcome": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "boutId",
+              "decisionId",
+              "episodeId",
+              "pointerId",
+              "phase",
+              "actor",
+              "x",
+              "y",
+              "width",
+              "height",
+              "mouseId",
+              "region",
+              "outcome"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "behavior"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": "string"
+              },
+              "mouseId": {
+                "type": "string"
+              },
+              "identityId": {
+                "type": "string"
+              },
+              "fromPhase": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "toPhase": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "motifId": {
+                "type": "string"
+              },
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "heading": {
+                "type": "number"
+              },
+              "targetX": {
+                "type": "number"
+              },
+              "targetY": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "boutId",
+              "decisionId",
+              "mouseId",
+              "identityId",
+              "fromPhase",
+              "toPhase",
+              "reason",
+              "motifId",
+              "x",
+              "y",
+              "heading",
+              "targetX",
+              "targetY"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "audio"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "clipId": {
+                "type": "string"
+              },
+              "cueFamily": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "scheduled",
+                  "played",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "gain": {
+                "type": "number",
+                "minimum": 0
+              },
+              "playbackRate": {
+                "const": 1
+              },
+              "outputRoute": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "boutId",
+              "decisionId",
+              "clipId",
+              "cueFamily",
+              "status",
+              "gain",
+              "playbackRate",
+              "outputRoute"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "observation"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "observerId": {
+                "type": "string"
+              },
+              "label": {
+                "enum": [
+                  "present",
+                  "absent",
+                  "orienting",
+                  "tracking",
+                  "approaching",
+                  "departed",
+                  "returned",
+                  "interested",
+                  "not-interested",
+                  "unknown"
+                ]
+              },
+              "startWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "endWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "confidence": {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "boutId",
+              "decisionId",
+              "observerId",
+              "label",
+              "startWallMs",
+              "endWallMs",
+              "confidence",
+              "note"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "outcome"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": "string"
+              },
+              "decisionId": {
+                "type": "string"
+              },
+              "metricId": {
+                "type": "string"
+              },
+              "metricVersion": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "denominator": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "observedWallMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "missingReason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "censorReason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "boutId",
+              "decisionId",
+              "metricId",
+              "metricVersion",
+              "value",
+              "denominator",
+              "observedWallMs",
+              "missingReason",
+              "censorReason"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "end"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "boutId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "scope": {
+                "enum": [
+                  "session",
+                  "bout"
+                ]
+              },
+              "reason": {
+                "enum": [
+                  "owner-ended",
+                  "window-complete",
+                  "settings-change",
+                  "background",
+                  "technical-failure",
+                  "export-truncation",
+                  "other"
+                ]
+              },
+              "complete": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "boutId",
+              "scope",
+              "reason",
+              "complete"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coatPalette",
+        "coatSaturation",
+        "coatBrightness",
+        "dragCompliance",
+        "dragDamping",
+        "spineBendAmount",
+        "ribcageWidth",
+        "waistWidth",
+        "pelvisWidth",
+        "armLength",
+        "armWidth",
+        "bodyHairiness",
+        "armHairiness",
+        "furSoftness",
+        "headTurnAmount",
+        "pelvisTurnAmount",
+        "morphologyVariation",
+        "headScale",
+        "bodyLength",
+        "bodyWidth",
+        "legLength",
+        "tailLength",
+        "earSize",
+        "eyeSize",
+        "furLength",
+        "coatVariation",
+        "mode",
+        "travelSpeed",
+        "count",
+        "speed",
+        "size",
+        "hide",
+        "huntTempo",
+        "harmlessChance",
+        "variation",
+        "whiskerLength",
+        "whiskerMotion",
+        "earStiffness",
+        "earDamping",
+        "earSway",
+        "tailStiffness",
+        "tailDamping",
+        "tailSway",
+        "furSway",
+        "idleActivityFrequency",
+        "nibbleFrequency",
+        "gaitCadence",
+        "strideLength",
+        "stepHeight",
+        "dragDefeatAfter",
+        "runThroughChance",
+        "holdThreshold",
+        "pawAvoidanceRadius",
+        "touchSensitivity",
+        "reactionDelay",
+        "peekDuration",
+        "watchDuration",
+        "creepSpeed",
+        "dartSpeed",
+        "environmentStrength",
+        "environmentPersistence",
+        "background",
+        "backgroundColor",
+        "backgroundScale",
+        "backgroundContrast",
+        "brightness",
+        "lighting",
+        "lightAzimuth",
+        "lightElevation",
+        "lightIntensity",
+        "shadowStrength",
+        "shadowSoftness",
+        "materialRoughness",
+        "sound",
+        "soundVolume",
+        "soundFrequency"
+      ],
+      "properties": {
+        "coatPalette": {
+          "enum": [
+            "mixed",
+            "natural",
+            "highcontrast",
+            "playful"
+          ]
+        },
+        "coatSaturation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.8
+        },
+        "coatBrightness": {
+          "type": "number",
+          "minimum": 0.45,
+          "maximum": 1.6
+        },
+        "dragCompliance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "dragDamping": {
+          "type": "number",
+          "minimum": 6,
+          "maximum": 24
+        },
+        "spineBendAmount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "ribcageWidth": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.2
+        },
+        "waistWidth": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.2
+        },
+        "pelvisWidth": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.2
+        },
+        "armLength": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.25
+        },
+        "armWidth": {
+          "type": "number",
+          "minimum": 0.7,
+          "maximum": 1.35
+        },
+        "bodyHairiness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "armHairiness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "furSoftness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "headTurnAmount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "pelvisTurnAmount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        },
+        "morphologyVariation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "headScale": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.2
+        },
+        "bodyLength": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.2
+        },
+        "bodyWidth": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.25
+        },
+        "legLength": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.25
+        },
+        "tailLength": {
+          "type": "number",
+          "minimum": 0.7,
+          "maximum": 1.4
+        },
+        "earSize": {
+          "type": "number",
+          "minimum": 0.7,
+          "maximum": 1.4
+        },
+        "eyeSize": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.3
+        },
+        "furLength": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 1.8
+        },
+        "coatVariation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "mode": {
+          "enum": [
+            "hunt",
+            "stalk",
+            "scurry"
+          ]
+        },
+        "travelSpeed": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "size": {
+          "type": "number",
+          "minimum": 0.6,
+          "maximum": 3.9
+        },
+        "hide": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "huntTempo": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "harmlessChance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "variation": {
+          "type": "boolean"
+        },
+        "whiskerLength": {
+          "type": "number",
+          "minimum": 0.6,
+          "maximum": 1.5
+        },
+        "whiskerMotion": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "earStiffness": {
+          "type": "number",
+          "minimum": 30,
+          "maximum": 180
+        },
+        "earDamping": {
+          "type": "number",
+          "minimum": 4,
+          "maximum": 28
+        },
+        "earSway": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "tailStiffness": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 24
+        },
+        "tailDamping": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 18
+        },
+        "tailSway": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "furSway": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "idleActivityFrequency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "nibbleFrequency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "gaitCadence": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 6
+        },
+        "strideLength": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 1.5
+        },
+        "stepHeight": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "dragDefeatAfter": {
+          "type": "number",
+          "minimum": 2,
+          "maximum": 15
+        },
+        "runThroughChance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "holdThreshold": {
+          "type": "number",
+          "minimum": 0.15,
+          "maximum": 1
+        },
+        "pawAvoidanceRadius": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 150
+        },
+        "touchSensitivity": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "reactionDelay": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "peekDuration": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "watchDuration": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "creepSpeed": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "dartSpeed": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "environmentStrength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "environmentPersistence": {
+          "type": "number",
+          "minimum": 0.2,
+          "maximum": 6
+        },
+        "background": {
+          "enum": [
+            "photo-linen",
+            "photo-clearing",
+            "photo-boards",
+            "chalk",
+            "ink",
+            "pale-blue",
+            "warm-yellow",
+            "linen",
+            "plain",
+            "wood",
+            "walnut",
+            "birch",
+            "weathered",
+            "parquet",
+            "marble",
+            "limestone",
+            "slate",
+            "terrazzo",
+            "ceramic",
+            "terracotta",
+            "concrete",
+            "cork",
+            "felt",
+            "woven",
+            "denim",
+            "paper",
+            "grass",
+            "earth",
+            "sand",
+            "night"
+          ]
+        },
+        "backgroundColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "backgroundScale": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2.5
+        },
+        "backgroundContrast": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "brightness": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 1.3
+        },
+        "lighting": {
+          "enum": [
+            "daylight",
+            "overcast",
+            "sunset",
+            "moonlight",
+            "studio"
+          ]
+        },
+        "lightAzimuth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 360
+        },
+        "lightElevation": {
+          "type": "number",
+          "minimum": 20,
+          "maximum": 85
+        },
+        "lightIntensity": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 2
+        },
+        "shadowStrength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.7
+        },
+        "shadowSoftness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "materialRoughness": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 1
+        },
+        "sound": {
+          "type": "boolean"
+        },
+        "soundVolume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "soundFrequency": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 2
+        }
+      }
+    }
+  }
+}

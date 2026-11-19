@@ -1,0 +1,1091 @@
+{
+  "mode": {
+    "hypothesis": "Changes the entire movement policy; may change pursuit rhythm but confounds many behaviors.",
+    "interactions": [
+      "huntTempo",
+      "runThroughChance"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "travelSpeed": {
+    "hypothesis": "More distance per second may invite pursuit but exceed tracking or catch ability.",
+    "interactions": [
+      "speed",
+      "dartSpeed",
+      "creepSpeed",
+      "size"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "motion"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "count": {
+    "hypothesis": "More targets may increase opportunities but divide attention and increase collisions.",
+    "interactions": [
+      "size",
+      "travelSpeed"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "performance"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "speed": {
+    "hypothesis": "Changes base locomotion pace; may improve pursuit but also alter gait and approach dynamics.",
+    "interactions": [
+      "travelSpeed",
+      "gaitCadence"
+    ],
+    "measurements": [
+      "tracking",
+      "motion"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "size": {
+    "hypothesis": "Larger silhouettes may be easier to see and hit but reduce available travel space.",
+    "interactions": [
+      "count",
+      "bodyLength",
+      "tailLength",
+      "backgroundContrast"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "hide": {
+    "hypothesis": "Longer absence may build anticipation or lose attention; zero changes hiding semantics.",
+    "interactions": [
+      "peekDuration",
+      "runThroughChance"
+    ],
+    "measurements": [
+      "tracking",
+      "return",
+      "exposure"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "huntTempo": {
+    "hypothesis": "Compresses multiple dwell and deadline timings; may increase activity but erase readable pauses.",
+    "interactions": [
+      "watchDuration",
+      "peekDuration"
+    ],
+    "measurements": [
+      "tracking",
+      "motion",
+      "exposure"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "variation": {
+    "hypothesis": "Pace modulation may add variety but disrupt steady pursuit.",
+    "interactions": [
+      "speed",
+      "travelSpeed"
+    ],
+    "measurements": [
+      "tracking",
+      "motion"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "runThroughChance": {
+    "hypothesis": "More full crossings may aid tracking but replace edge teasing opportunities.",
+    "interactions": [
+      "peekDuration",
+      "hide"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "peekDuration": {
+    "hypothesis": "Longer partial entry may permit anticipation but delay rewarding travel.",
+    "interactions": [
+      "huntTempo",
+      "hide"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "watchDuration": {
+    "hypothesis": "Longer still pauses may permit stalking but interrupt pursuit.",
+    "interactions": [
+      "huntTempo",
+      "idleActivityFrequency"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "creepSpeed": {
+    "hypothesis": "Changes slow exploration contrast against bursts; too slow may lose attention.",
+    "interactions": [
+      "travelSpeed",
+      "speed",
+      "dartSpeed"
+    ],
+    "measurements": [
+      "tracking",
+      "motion"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "dartSpeed": {
+    "hypothesis": "Stronger bursts may provoke pursuit but make contact harder.",
+    "interactions": [
+      "travelSpeed",
+      "speed",
+      "creepSpeed"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "motion"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "harmlessChance": {
+    "hypothesis": "More noninjury responses preserve live pursuit; too many instant escapes may obscure catches.",
+    "interactions": [
+      "reactionDelay",
+      "holdThreshold"
+    ],
+    "measurements": [
+      "contact",
+      "reacquisition"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "dragDefeatAfter": {
+    "hypothesis": "Changes termination of prolonged active dragging; may affect release/reacquisition but depends on rare holds.",
+    "interactions": [
+      "holdThreshold",
+      "dragCompliance"
+    ],
+    "measurements": [
+      "contact",
+      "reacquisition"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "holdThreshold": {
+    "hypothesis": "Changes tap versus restraint classification; can misclassify resting paws or slow taps.",
+    "interactions": [
+      "dragDefeatAfter",
+      "touchSensitivity"
+    ],
+    "measurements": [
+      "contact",
+      "motion"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "pawAvoidanceRadius": {
+    "hypothesis": "More clearance prevents overlap but can leave little traversable space.",
+    "interactions": [
+      "size",
+      "count"
+    ],
+    "measurements": [
+      "motion",
+      "exposure"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "touchSensitivity": {
+    "hypothesis": "Wider near-tap response may improve apparent responsiveness but trigger unnecessary retreats.",
+    "interactions": [
+      "reactionDelay",
+      "pawAvoidanceRadius"
+    ],
+    "measurements": [
+      "contact",
+      "reacquisition"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "reactionDelay": {
+    "hypothesis": "Faster escape response may feel contingent but reduce catch opportunity.",
+    "interactions": [
+      "touchSensitivity",
+      "harmlessChance"
+    ],
+    "measurements": [
+      "contact",
+      "reacquisition"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "coatPalette": {
+    "hypothesis": "Coat categories change pattern/color diversity and contrast; mixed selection confounds individual appearance.",
+    "interactions": [
+      "background",
+      "coatVariation"
+    ],
+    "measurements": [
+      "tracking",
+      "contact"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "coatSaturation": {
+    "hypothesis": "Stronger chroma changes appearance; human vividness need not improve feline salience.",
+    "interactions": [
+      "coatPalette",
+      "lighting"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "coatBrightness": {
+    "hypothesis": "Changes silhouette contrast; benefit depends on background luminance.",
+    "interactions": [
+      "background",
+      "brightness"
+    ],
+    "measurements": [
+      "tracking",
+      "contact"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "ribcageWidth": {
+    "hypothesis": "Changes torso silhouette and hit geometry; may improve visibility but crowd limbs.",
+    "interactions": [
+      "bodyWidth",
+      "waistWidth"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "waistWidth": {
+    "hypothesis": "Changes torso narrowing and bend readability; extremes can distort joints.",
+    "interactions": [
+      "ribcageWidth",
+      "pelvisWidth",
+      "spineBendAmount"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "pelvisWidth": {
+    "hypothesis": "Changes rump silhouette and articulation; can alter anatomical coherence.",
+    "interactions": [
+      "bodyWidth",
+      "pelvisTurnAmount"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "armLength": {
+    "hypothesis": "Changes limb reach and contact shape; may alter visible gait or attachment quality.",
+    "interactions": [
+      "legLength",
+      "strideLength"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "armWidth": {
+    "hypothesis": "Changes limb silhouette; thicker arms may read better or obscure paws.",
+    "interactions": [
+      "armHairiness",
+      "bodyWidth"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "bodyHairiness": {
+    "hypothesis": "Adds body hairs; may soften silhouette but add visual noise and rendering load.",
+    "interactions": [
+      "furLength",
+      "furSoftness"
+    ],
+    "measurements": [
+      "tracking",
+      "performance",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "armHairiness": {
+    "hypothesis": "Changes limb coat coverage; can hide attachment defects or obscure foot motion.",
+    "interactions": [
+      "armWidth",
+      "furLength"
+    ],
+    "measurements": [
+      "tracking",
+      "performance",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "furSoftness": {
+    "hypothesis": "Changes tuft loft/spread; may soften outline or blur movement cues.",
+    "interactions": [
+      "furLength",
+      "bodyHairiness"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "morphologyVariation": {
+    "hypothesis": "Broadens individual shapes; may offer novelty but confounds size and silhouette.",
+    "interactions": [
+      "size",
+      "bodyLength",
+      "bodyWidth"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "headScale": {
+    "hypothesis": "Changes head salience and contact area; may distort recognizable proportions.",
+    "interactions": [
+      "bodyWidth",
+      "earSize"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "bodyLength": {
+    "hypothesis": "Changes silhouette and turn clearance; longer bodies may emphasize travel or impede turns.",
+    "interactions": [
+      "size",
+      "spineBendAmount"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "bodyWidth": {
+    "hypothesis": "Changes target area; wider bodies may aid catching but obscure limbs.",
+    "interactions": [
+      "ribcageWidth",
+      "pelvisWidth"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "legLength": {
+    "hypothesis": "Changes foot reach and silhouette; can improve visibility or introduce skating.",
+    "interactions": [
+      "armLength",
+      "strideLength",
+      "stepHeight"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "tailLength": {
+    "hypothesis": "Changes trailing cue and total exit bounds; long tails can delay full concealment.",
+    "interactions": [
+      "size",
+      "tailSway"
+    ],
+    "measurements": [
+      "tracking",
+      "exposure",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "earSize": {
+    "hypothesis": "Changes ear silhouette; larger ears may stand out or appear disproportionate.",
+    "interactions": [
+      "headScale",
+      "earSway"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "eyeSize": {
+    "hypothesis": "Changes small facial detail; likely subtle from cat viewing distance, may distort face.",
+    "interactions": [
+      "headScale",
+      "coatBrightness"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "furLength": {
+    "hypothesis": "Changes outline detail and overlap; may add softness or clutter.",
+    "interactions": [
+      "bodyHairiness",
+      "furSoftness"
+    ],
+    "measurements": [
+      "tracking",
+      "performance",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "coatVariation": {
+    "hypothesis": "Changes individual pattern variety; may renew interest but confounds paired comparisons.",
+    "interactions": [
+      "coatPalette",
+      "coatSaturation"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "whiskerLength": {
+    "hypothesis": "Adds fine silhouette cues; may be imperceptible or overlap other features.",
+    "interactions": [
+      "whiskerMotion",
+      "headScale"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "dragCompliance": {
+    "hypothesis": "Changes body yielding under drag; too much obscures contact anchoring.",
+    "interactions": [
+      "dragDamping",
+      "holdThreshold"
+    ],
+    "measurements": [
+      "contact",
+      "geometry"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "dragDamping": {
+    "hypothesis": "Controls settling after drag; low damping risks oscillation, high damping suppresses response.",
+    "interactions": [
+      "dragCompliance"
+    ],
+    "measurements": [
+      "geometry",
+      "motion"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "spineBendAmount": {
+    "hypothesis": "Changes torso flexion in turns; can clarify heading or add distracting wriggle.",
+    "interactions": [
+      "headTurnAmount",
+      "pelvisTurnAmount"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "headTurnAmount": {
+    "hypothesis": "Changes head-leading cue; excessive movement can conflict with travel direction.",
+    "interactions": [
+      "spineBendAmount",
+      "pelvisTurnAmount"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "pelvisTurnAmount": {
+    "hypothesis": "Changes rear follow-through; excess lag can look disconnected.",
+    "interactions": [
+      "spineBendAmount",
+      "headTurnAmount"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "whiskerMotion": {
+    "hypothesis": "Changes secondary facial motion; may add detail or distracting jitter.",
+    "interactions": [
+      "whiskerLength",
+      "travelSpeed"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "earStiffness": {
+    "hypothesis": "Changes spring response frequency; unstable or abrupt motion reduces coherence.",
+    "interactions": [
+      "earDamping",
+      "earSway"
+    ],
+    "measurements": [
+      "geometry",
+      "motion"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "earDamping": {
+    "hypothesis": "Changes ear settling; insufficient damping sustains oscillation.",
+    "interactions": [
+      "earStiffness",
+      "earSway"
+    ],
+    "measurements": [
+      "geometry",
+      "motion"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "earSway": {
+    "hypothesis": "Changes ear movement amplitude; could increase salience or compete with body motion.",
+    "interactions": [
+      "earStiffness",
+      "earDamping"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "tailStiffness": {
+    "hypothesis": "Changes tail constraint response; affects stability and follow-through.",
+    "interactions": [
+      "tailDamping",
+      "tailSway"
+    ],
+    "measurements": [
+      "geometry",
+      "motion"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "tailDamping": {
+    "hypothesis": "Changes tail settling; insufficient damping may reintroduce whipping.",
+    "interactions": [
+      "tailStiffness",
+      "tailSway"
+    ],
+    "measurements": [
+      "geometry",
+      "motion"
+    ],
+    "stage": "E",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "tailSway": {
+    "hypothesis": "Changes tail movement amplitude; too much competes with heading and path.",
+    "interactions": [
+      "tailLength",
+      "tailDamping",
+      "travelSpeed"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "furSway": {
+    "hypothesis": "Changes inertial coat motion; may soften motion or produce shimmering.",
+    "interactions": [
+      "furLength",
+      "bodyHairiness"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "idleActivityFrequency": {
+    "hypothesis": "More grooming creates varied pauses but interrupts chase cues.",
+    "interactions": [
+      "watchDuration",
+      "nibbleFrequency"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "nibbleFrequency": {
+    "hypothesis": "More nibbling may add stationary interest but reduce running time.",
+    "interactions": [
+      "watchDuration",
+      "idleActivityFrequency"
+    ],
+    "measurements": [
+      "tracking",
+      "exposure"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "gaitCadence": {
+    "hypothesis": "Changes footfall cap, not world distance; faster feet can look unnatural.",
+    "interactions": [
+      "speed",
+      "strideLength"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "strideLength": {
+    "hypothesis": "Changes foot excursion; can improve gait readability or produce skating.",
+    "interactions": [
+      "gaitCadence",
+      "legLength"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "stepHeight": {
+    "hypothesis": "Changes foot lift; may read better or look bouncy and ungrounded.",
+    "interactions": [
+      "legLength",
+      "gaitCadence"
+    ],
+    "measurements": [
+      "tracking",
+      "geometry"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "environmentStrength": {
+    "hypothesis": "Adds ground response; may reveal movement or distract from prey.",
+    "interactions": [
+      "environmentPersistence",
+      "background"
+    ],
+    "measurements": [
+      "tracking",
+      "performance"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "environmentPersistence": {
+    "hypothesis": "Longer traces preserve movement history but create clutter.",
+    "interactions": [
+      "environmentStrength",
+      "background"
+    ],
+    "measurements": [
+      "tracking",
+      "performance"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "background": {
+    "hypothesis": "Changes floor texture, luminance and response semantics together; may improve contrast or camouflage.",
+    "interactions": [
+      "coatPalette",
+      "backgroundContrast",
+      "lighting"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "performance"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "backgroundColor": {
+    "hypothesis": "Changes eligible plain/linen floor color; may have no effect on other surfaces.",
+    "interactions": [
+      "background",
+      "coatBrightness"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "backgroundScale": {
+    "hypothesis": "Changes texture feature size; can compete with mouse silhouette.",
+    "interactions": [
+      "background",
+      "backgroundContrast",
+      "size"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "backgroundContrast": {
+    "hypothesis": "Changes texture clutter; lower contrast may improve figure-ground separation or remove useful cues.",
+    "interactions": [
+      "background",
+      "coatBrightness"
+    ],
+    "measurements": [
+      "tracking",
+      "contact"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "brightness": {
+    "hypothesis": "Changes rendered scene brightness, not hardware screen brightness; may alter visibility or wash out contrast.",
+    "interactions": [
+      "lighting",
+      "lightIntensity",
+      "coatBrightness"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "lighting": {
+    "hypothesis": "Changes a bundle of light color/direction settings; affects appearance without isolating one physical cue.",
+    "interactions": [
+      "lightIntensity",
+      "lightAzimuth",
+      "lightElevation"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "lightAzimuth": {
+    "hypothesis": "Changes shading direction; may clarify volume or obscure silhouette.",
+    "interactions": [
+      "lightElevation",
+      "shadowStrength"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "lightElevation": {
+    "hypothesis": "Changes illumination height and shadows; low angles may produce confusing forms.",
+    "interactions": [
+      "lightAzimuth",
+      "shadowStrength"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "lightIntensity": {
+    "hypothesis": "Changes illumination strength; can increase visibility or highlights/clipping.",
+    "interactions": [
+      "brightness",
+      "materialRoughness"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "shadowStrength": {
+    "hypothesis": "Changes grounding contrast; may clarify mouse location or create a competing dark target.",
+    "interactions": [
+      "shadowSoftness",
+      "background"
+    ],
+    "measurements": [
+      "tracking",
+      "contact"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "shadowSoftness": {
+    "hypothesis": "Changes shadow edge definition; may soften competing shapes or weaken grounding.",
+    "interactions": [
+      "shadowStrength",
+      "lightElevation"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "materialRoughness": {
+    "hypothesis": "Changes fur highlights; shininess can improve separation or create distracting glints.",
+    "interactions": [
+      "lightIntensity",
+      "lighting"
+    ],
+    "measurements": [
+      "tracking"
+    ],
+    "stage": "3",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "sound": {
+    "hypothesis": "Tests recorded audio contribution; silence may reduce orientation or improve tolerance.",
+    "interactions": [
+      "soundVolume",
+      "soundFrequency"
+    ],
+    "measurements": [
+      "tracking",
+      "return",
+      "audio"
+    ],
+    "stage": "1",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "soundVolume": {
+    "hypothesis": "Changes software gain, not calibrated speaker loudness; louder may orient or cause withdrawal.",
+    "interactions": [
+      "sound",
+      "soundFrequency"
+    ],
+    "measurements": [
+      "tracking",
+      "return",
+      "audio"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  },
+  "soundFrequency": {
+    "hypothesis": "Changes cue activity; more cues may help orientation or become repetitive.",
+    "interactions": [
+      "sound",
+      "soundVolume",
+      "nibbleFrequency"
+    ],
+    "measurements": [
+      "tracking",
+      "return",
+      "audio"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
+  }
+}

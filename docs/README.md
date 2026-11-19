@@ -17,6 +17,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | [Fur volume](fur-volume.md) | Geometric coat depth, Fuzziness, deformation and rendering budgets |
 | [Controls, network and native app](controls-network-native.md) | Local settings, owner exit, asset iteration and installed app |
 | [Validation and research](validation-research.md) | Acceptance evidence, critique agents, device checks and scientific limits |
+| [Experiments and learning](experiments/README.md) | All controls, experimental design, data contract and future model review |
 | [Playground](playground.md) | Dedicated testing, forcing scenarios and controlled simulation time |
 | [Realism review](realism-review.md) | Reference comparisons, ranked visible gaps and review acceptance |
 | [Worker coordination](workers.md) | Persistent Superset roles, task ownership and handoff status |

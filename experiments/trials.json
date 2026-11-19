@@ -1,0 +1,328 @@
+{
+  "version": 1,
+  "status": "proposed-not-running",
+  "assignmentUnit": "owner-started observation bout",
+  "defaultAssignment": "randomized AB or BA pairs; logged before exposure",
+  "baseline": "full effective settings snapshot; default schema values are reference only",
+  "trials": [
+    {
+      "id": "watch-01",
+      "status": "proposed",
+      "variable": "watchDuration",
+      "variants": [
+        {
+          "id": "A",
+          "settings": {
+            "watchDuration": 0.6
+          }
+        },
+        {
+          "id": "B",
+          "settings": {
+            "watchDuration": 1
+          }
+        }
+      ],
+      "secondary": "owner-observed tracking fraction",
+      "primary": "tracking_fraction_60s",
+      "prerequisites": [
+        {
+          "field": "settings.mode",
+          "operator": "eq",
+          "value": "hunt"
+        },
+        {
+          "field": "observed.ownerReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.catPresentAtStart",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.appReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.watchDuration",
+          "operator": "eq",
+          "value": 0.6
+        }
+      ]
+    },
+    {
+      "id": "peek-01",
+      "status": "proposed",
+      "variable": "peekDuration",
+      "variants": [
+        {
+          "id": "A",
+          "settings": {
+            "peekDuration": 0.7
+          }
+        },
+        {
+          "id": "B",
+          "settings": {
+            "peekDuration": 1.2
+          }
+        }
+      ],
+      "secondary": "owner-observed tracking through entry",
+      "primary": "tracking_fraction_60s",
+      "prerequisites": [
+        {
+          "field": "settings.mode",
+          "operator": "eq",
+          "value": "hunt"
+        },
+        {
+          "field": "observed.ownerReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.catPresentAtStart",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.appReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.peekDuration",
+          "operator": "eq",
+          "value": 0.7
+        }
+      ]
+    },
+    {
+      "id": "contrast-01",
+      "status": "proposed",
+      "variable": "backgroundContrast",
+      "variants": [
+        {
+          "id": "A",
+          "settings": {
+            "backgroundContrast": 0.8
+          }
+        },
+        {
+          "id": "B",
+          "settings": {
+            "backgroundContrast": 0.4
+          }
+        }
+      ],
+      "secondary": "owner-observed tracking fraction",
+      "primary": "tracking_fraction_60s",
+      "prerequisites": [
+        {
+          "field": "settings.mode",
+          "operator": "eq",
+          "value": "hunt"
+        },
+        {
+          "field": "observed.ownerReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.catPresentAtStart",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.appReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.background",
+          "operator": "eq",
+          "value": "photo-clearing"
+        },
+        {
+          "field": "observed.contrastChangeVerified",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.backgroundContrast",
+          "operator": "eq",
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "id": "sound-01",
+      "status": "proposed",
+      "variable": "sound",
+      "variants": [
+        {
+          "id": "A",
+          "settings": {
+            "sound": true
+          }
+        },
+        {
+          "id": "B",
+          "settings": {
+            "sound": false
+          }
+        }
+      ],
+      "secondary": "owner-observed orientation latency",
+      "primary": "tracking_fraction_60s",
+      "prerequisites": [
+        {
+          "field": "settings.mode",
+          "operator": "eq",
+          "value": "hunt"
+        },
+        {
+          "field": "observed.ownerReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.catPresentAtStart",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.appReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.soundVolume",
+          "operator": "gt",
+          "value": 0
+        },
+        {
+          "field": "observed.audioReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.sound",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "crossing-01",
+      "status": "proposed",
+      "variable": "runThroughChance",
+      "variants": [
+        {
+          "id": "A",
+          "settings": {
+            "runThroughChance": 0.6
+          }
+        },
+        {
+          "id": "B",
+          "settings": {
+            "runThroughChance": 0.3
+          }
+        }
+      ],
+      "secondary": "owner-observed tracking through exit",
+      "primary": "tracking_fraction_60s",
+      "prerequisites": [
+        {
+          "field": "settings.mode",
+          "operator": "eq",
+          "value": "hunt"
+        },
+        {
+          "field": "observed.ownerReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.catPresentAtStart",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.appReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.runThroughChance",
+          "operator": "eq",
+          "value": 0.6
+        }
+      ]
+    },
+    {
+      "id": "harmless-01",
+      "status": "proposed",
+      "variable": "harmlessChance",
+      "variants": [
+        {
+          "id": "A",
+          "settings": {
+            "harmlessChance": 0.35
+          }
+        },
+        {
+          "id": "B",
+          "settings": {
+            "harmlessChance": 0.7
+          }
+        }
+      ],
+      "secondary": "owner-observed post-contact reacquisition",
+      "primary": "tracking_fraction_60s",
+      "prerequisites": [
+        {
+          "field": "settings.mode",
+          "operator": "eq",
+          "value": "hunt"
+        },
+        {
+          "field": "observed.ownerReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.catPresentAtStart",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "observed.appReady",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "settings.harmlessChance",
+          "operator": "eq",
+          "value": 0.35
+        }
+      ]
+    }
+  ],
+  "assignment": {
+    "scheme": "paired-AB-BA",
+    "sequenceProbabilities": {
+      "AB": 0.5,
+      "BA": 0.5
+    },
+    "secondBoutConditionalProbability": 1,
+    "boutOffPolicyEligible": false
+  },
+  "analysisWindowWallMs": 60000,
+  "metricVersion": "owner-observation-v1"
+}
