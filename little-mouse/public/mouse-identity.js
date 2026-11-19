@@ -28,7 +28,19 @@ export function ensureMouseIdentity(mouse){
  return mouse.identity;
 }
 export function identitySettings(config={}){const out={};for(const key of Object.keys(identityDefaults)){const c=identityControls[key];out[key]=Number.isFinite(config[key])?clamp(config[key],c.min,c.max):identityDefaults[key];}return {...out,...coatSettings(config)};}
-export function physicalTraits(identity=createMouseIdentity(0),config={}){const settings=identitySettings(config),out={};for(const key of Object.keys(identityDefaults)){if(['morphologyVariation','coatVariation'].includes(key))continue;const spread=key==='furLength'?.32:key==='tailLength'?.22:key==='earSize'?.32:.14;const profile=MOUSE_PROFILES[identity.profile??0];out[key]=settings[key]*(1+(identity.traits[key]??0)*settings.morphologyVariation*spread)*(1+((profile[key]??1)-1)*settings.morphologyVariation);}const ears=identityRandom(identity.seed^0xeab19f31);ears();ears();const v=settings.morphologyVariation,asym=(ears()*2-1)*.18*v,soft=ears()>.68?(.45+ears()*.55)*v:ears()*.16*v;out.ears=[-1,1].map(side=>({size:out.earSize*(1+side*asym),width:1+(ears()*2-1)*.14*v,flop:clamp(soft+(ears()*2-1)*.25*v,0,1),tilt:(ears()*2-1)*.12*v||0}));out.profile=MOUSE_PROFILES[identity.profile??0].name;Object.assign(out,resolveCoat(identity,{...settings,coatVariation:settings.coatVariation}));return out;}
+// Separate stream preserves all existing coat, body and ear identity draws.
+export function limbVariation(identity,variation=0){
+ const random=identityRandom(identity.seed^0x71baf903);random();random();
+ const v=clamp(Number.isFinite(variation)?variation:0,0,1),out=[];
+ for(let pair=0;pair<2;pair++){
+  const length=1+(random()*2-1)*.12*v,width=1+(random()*2-1)*.18*v;
+  const ratio=(random()*2-1)*.10*v,paw=1+(random()*2-1)*.20*v;
+  const asymmetry=(random()*2-1)*.025*v,pawWidth=1+(random()*2-1)*.10*v;
+  for(const side of [-1,1])out.push({length:length*(1+side*asymmetry),width:width*(1+side*asymmetry),ratio,pawLength:paw*(1+side*asymmetry),pawWidth:paw*pawWidth*(1+side*asymmetry)});
+ }
+ return out;
+}
+export function physicalTraits(identity=createMouseIdentity(0),config={}){const settings=identitySettings(config),out={};for(const key of Object.keys(identityDefaults)){if(['morphologyVariation','coatVariation'].includes(key))continue;const spread=key==='furLength'?.32:key==='tailLength'?.22:key==='earSize'?.32:.14;const profile=MOUSE_PROFILES[identity.profile??0];out[key]=settings[key]*(1+(identity.traits[key]??0)*settings.morphologyVariation*spread)*(1+((profile[key]??1)-1)*settings.morphologyVariation);}out.limbs=limbVariation(identity,settings.morphologyVariation);const ears=identityRandom(identity.seed^0xeab19f31);ears();ears();const v=settings.morphologyVariation,asym=(ears()*2-1)*.18*v,soft=ears()>.68?(.45+ears()*.55)*v:ears()*.16*v;out.ears=[-1,1].map(side=>({size:out.earSize*(1+side*asym),width:1+(ears()*2-1)*.14*v,flop:clamp(soft+(ears()*2-1)*.25*v,0,1),tilt:(ears()*2-1)*.12*v||0}));out.profile=MOUSE_PROFILES[identity.profile??0].name;Object.assign(out,resolveCoat(identity,{...settings,coatVariation:settings.coatVariation}));return out;}
 // Continuous deformation: torso and muzzle remain one surface. The same map
 // moves every attachment and the hit-test's inverse uses these exact lengths.
 const smooth=n=>{const t=clamp(n,0,1);return t*t*(3-2*t);};
@@ -41,6 +53,12 @@ export function regionalWidth(x,traits){const pelvis=traits.pelvisWidth??1,waist
 }
 export function morphologyPoint(x,y,z,traits){const head=Math.max(0,x-17),body=Math.min(x,17),headBlend=clamp(head/22,0,1),headWidth=1+(traits.headScale-1)*headBlend;return[body*traits.bodyLength+head*traits.headScale,y*traits.bodyWidth*headWidth*regionalWidth(x,traits),z+(traits.legLength-1)*12+(traits.headScale-1)*headBlend*(z-10)];}
 export function unmorphologyPoint(x,y,traits){const seam=17*traits.bodyLength,originalX=x<=seam?x/traits.bodyLength:17+(x-seam)/traits.headScale,headBlend=clamp((originalX-17)/22,0,1);return[originalX,y/(traits.bodyWidth*(1+(traits.headScale-1)*headBlend)*regionalWidth(originalX,traits))];}
-export function morphologyLeg(layout,traits){return{...layout,x:morphologyPoint(layout.x,0,0,traits)[0],y:morphologyPoint(layout.x,layout.y,0,traits)[1],anchor:morphologyPoint(...layout.anchor,traits),upper:layout.upper*traits.legLength*(layout.x>0?traits.armLength:1),lower:layout.lower*traits.legLength*(layout.x>0?traits.armLength:1),width:layout.x>0?traits.armWidth:1,nibblePoint:morphologyPoint(35,Math.sign(layout.y)*5.2,11,traits)};}
+export function morphologyLeg(layout,traits){
+ const front=layout.x>0,index=(front?2:0)+(layout.y>0?1:0),shape=traits.limbs?.[index]||{};
+ const length=traits.legLength*(front?traits.armLength:1)*(shape.length??1);
+ // Shift the elbow/knee ratio without changing total reach for that individual.
+ const upper=layout.upper*(1+(shape.ratio??0)),lower=layout.upper+layout.lower-upper;
+ return{...layout,x:morphologyPoint(layout.x,0,0,traits)[0],y:morphologyPoint(layout.x,layout.y,0,traits)[1],anchor:morphologyPoint(...layout.anchor,traits),upper:upper*length,lower:lower*length,width:(front?traits.armWidth:1)*(shape.width??1),pawLength:shape.pawLength??1,pawWidth:shape.pawWidth??1,nibblePoint:morphologyPoint(35,Math.sign(layout.y)*5.2,11,traits)};
+}
 // Conservative dimensions available to steering and hide margins.
 export function physicalBounds(identity,config={}){const t=physicalTraits(identity,config);return{front:17*t.bodyLength+35*t.headScale,rear:39*t.bodyLength,width:Math.max(25*t.bodyWidth*Math.max(1,t.ribcageWidth,t.waistWidth,t.pelvisWidth),9*t.bodyWidth+12*Math.max(...t.ears.map(e=>e.size*Math.max(1,e.width)))),tail:36*t.bodyLength+90*t.tailLength};}

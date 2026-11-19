@@ -51,3 +51,22 @@ test('ear variation is stable, asymmetric and includes large soft individuals wi
  const neutral=physicalTraits(identity,{morphologyVariation:0});
  assert.deepEqual(neutral.ears,[{size:1,width:1,flop:0,tilt:0},{size:1,width:1,flop:0,tilt:0}]);
 });
+test('limb proportions vary independently by pair with restrained asymmetry and stable identity',()=>{
+ const identity=createMouseIdentity(72),before=JSON.stringify(identity),t=physicalTraits(identity,{morphologyVariation:1});
+ assert.deepEqual(t.limbs,physicalTraits(JSON.parse(before),{morphologyVariation:1}).limbs);
+ assert.equal(JSON.stringify(identity),before);
+ assert.notEqual(t.limbs[0].length,t.limbs[2].length);
+ for(let i=0;i<4;i++){
+  const leg=morphologyLeg(LEG_LAYOUT[i],t),base=LEG_LAYOUT[i];
+  const total=(base.upper+base.lower)*t.legLength*(i<2?1:t.armLength)*t.limbs[i].length;
+  assert.ok(Math.abs(leg.upper+leg.lower-total)<1e-10);
+  assert.ok(leg.upper>0&&leg.lower>0&&leg.pawLength>0&&leg.pawWidth>0);
+ }
+ for(const i of [0,2])assert.ok(Math.abs(t.limbs[i].length/t.limbs[i+1].length-1)<.052);
+ const neutral=physicalTraits(identity,{morphologyVariation:0});
+ for(let i=0;i<4;i++){
+  const leg=morphologyLeg(LEG_LAYOUT[i],neutral);
+  assert.equal(leg.upper,LEG_LAYOUT[i].upper);assert.equal(leg.lower,LEG_LAYOUT[i].lower);
+  assert.equal(leg.pawLength,1);assert.equal(leg.pawWidth,1);
+ }
+});

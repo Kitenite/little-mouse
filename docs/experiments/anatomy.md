@@ -18,7 +18,7 @@ Measurement definitions and staging: [protocol](protocol.md). Runtime applicabil
 | `bodyHairiness` | 1; 0–1.5; step 0.05 × | Adds body hairs; may soften silhouette but add visual noise and rendering load. | furLength, furSoftness | tracking, performance, geometry | 3 |
 | `armHairiness` | 0.7; 0–1.5; step 0.05 × | Changes limb coat coverage; can hide attachment defects or obscure foot motion. | armWidth, furLength | tracking, performance, geometry | 3 |
 | `furSoftness` | 0.5; 0–1; step 0.05  | Changes tuft loft/spread; may soften outline or blur movement cues. | furLength, bodyHairiness | tracking, geometry | 3 |
-| `morphologyVariation` | 0.8; 0–1; step 0.05  | Broadens individual shapes; may offer novelty but confounds size and silhouette. | size, bodyLength, bodyWidth | tracking, geometry | 3 |
+| `morphologyVariation` | 0.8; 0–1; step 0.05  | Stable variation in body, ears and front/hind limb proportions, paw dimensions and restrained asymmetry may improve individual salience; bundled anatomical changes can also distract or alter apparent motion. | size, bodyLength, bodyWidth | tracking, geometry | 3 |
 | `headScale` | 1; 0.8–1.2; step 0.02 × | Changes head salience and contact area; may distort recognizable proportions. | bodyWidth, earSize | tracking, contact, geometry | 3 |
 | `bodyLength` | 1; 0.8–1.2; step 0.02 × | Changes silhouette and turn clearance; longer bodies may emphasize travel or impede turns. | size, spineBendAmount | tracking, geometry | 3 |
 | `bodyWidth` | 1; 0.8–1.25; step 0.025 × | Changes target area; wider bodies may aid catching but obscure limbs. | ribcageWidth, pelvisWidth | tracking, contact, geometry | 3 |

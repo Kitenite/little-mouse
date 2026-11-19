@@ -439,7 +439,7 @@
     "automaticLearningEligible": false
   },
   "morphologyVariation": {
-    "hypothesis": "Broadens individual shapes; may offer novelty but confounds size and silhouette.",
+    "hypothesis": "Stable variation in body, ears and front/hind limb proportions, paw dimensions and restrained asymmetry may improve individual salience; bundled anatomical changes can also distract or alter apparent motion.",
     "interactions": [
       "size",
       "bodyLength",

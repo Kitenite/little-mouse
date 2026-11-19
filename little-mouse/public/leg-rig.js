@@ -19,7 +19,7 @@ export function createLegRig(T,group,{fur,skin},ellipsoid,layouts=LEG_LAYOUT){
   const shoulder=ellipsoid(group,fur,...layout.anchor,(layout.x<0?8:5)*(layout.width||1),5*(layout.width||1),6);
   const upper=ellipsoid(group,fur,0,0,0,1,1,1),lower=ellipsoid(group,fur,0,0,0,1,1,1);
   const knee=ellipsoid(group,fur,0,0,0,3.3,3.3,3.3);
-  const paw=new T.Group();group.add(paw);ellipsoid(paw,skin,2,0,0,5,2.8,1.4);
+  const paw=new T.Group();paw.scale.set(layout.pawLength||1,layout.pawWidth||1,Math.sqrt((layout.pawLength||1)*(layout.pawWidth||1)));group.add(paw);ellipsoid(paw,skin,2,0,0,5,2.8,1.4);
   for(let j=0;j<4;j++)ellipsoid(paw,skin,6.2+j*.16,-2.3+j*1.5,-.15,2.7,.64,.7,false);
   const surface=createLimbSurface(T,group,fur,layout);for(const mesh of [shoulder,upper,lower,knee])mesh.visible=false;
   return{surface,layout,anchor:[...layout.anchor],shoulder,upper,lower,knee,paw,target:[0,0,0],solution:{joint:[0,0,0],foot:[0,0,0]}};

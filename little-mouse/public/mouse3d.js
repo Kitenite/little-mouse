@@ -66,7 +66,7 @@ contactAt(mice,x,y,size=1,{includeUnclaimable=false}={}){
   let tailContact=null;{const p=model.tail.geometry.attributes.position.array;let best=Infinity,fraction=0;for(let ring=6;ring<48;ring++){const a=ring*27,b=(ring+1)*27,ax=(p[a]+p[a+12])*.5,ay=(p[a+1]+p[a+13])*.5,bx=(p[b]+p[b+12])*.5,by=(p[b+1]+p[b+13])*.5,vx=bx-ax,vy=by-ay,u=Math.max(0,Math.min(1,((localX-ax)*vx+(localY-ay)*vy)/(vx*vx+vy*vy||1))),distance=Math.hypot(localX-ax-vx*u,localY-ay-vy*u);if(distance<best){best=distance;fraction=(ring+u)/48;}}
    if(best<Math.max(4,8/size)){const root=articulatePoint(-36*model.traits.bodyLength,0,5,model.articulation);tailContact={...hit('tail'),fraction,tailRoot:root[0],tailRootX:root[0],tailRootY:root[1],tailLength:87*model.traits.tailLength};}
   }
-  for(let pawIndex=0;pawIndex<model.feet.length;pawIndex++){const paw=model.feet[pawIndex];if(Math.hypot((localX-paw.position.x-3)*.8,localY-paw.position.y)<6)return{...hit(pawIndex<2?'hindpaw':'forepaw'),legIndex:pawIndex,pawOffsetX:localX-paw.position.x,pawOffsetY:localY-paw.position.y};}
+  for(let pawIndex=0;pawIndex<model.feet.length;pawIndex++){const paw=model.feet[pawIndex];if(Math.hypot(((localX-paw.position.x)/paw.scale.x-3)*.8,(localY-paw.position.y)/paw.scale.y)<6)return{...hit(pawIndex<2?'hindpaw':'forepaw'),legIndex:pawIndex,pawOffsetX:localX-paw.position.x,pawOffsetY:localY-paw.position.y};}
   const [bodyX,bodyY]=unmorphologyPoint(...unarticulatePoint(localX,localY,model.articulation),model.traits);if(bodyX>=-39&&bodyX<=52){const radius=section(Math.min(50,bodyX)).r;if(Math.abs(bodyY)<=Math.max(3,radius))return hit(bodyX>23?'head':'body');}
   if(tailContact)return tailContact;
  }

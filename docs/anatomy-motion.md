@@ -32,6 +32,8 @@ restrained appendage motion is our inference, not a measured property of that ga
   Body variety controls this spread; zero gives matching upright ears. Ear size scales both;
   existing movement/stiffness/damping controls remain active. Larger/softer ears lag more
   within the same bounded spring angles, without a decorative idle flap.
+- Limbs vary by front/hind pair in length, thickness, segment ratio and paw size, with
+  subtle side asymmetry. IK, skin and paw picking share the dimensions; see [limbs](limb-surfaces.md).
 - Geometry, articulated legs, contacts and exit bounds use the same morphology.
 - Speed-sensitive gait controls cadence, stride and foot lift; the rich-preset cadence cap is 4.2 Hz.
 - Secondary motion gives the tail, ears, fur and whiskers bounded motion with reset behavior

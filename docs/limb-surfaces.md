@@ -13,11 +13,22 @@ Each envelope has 21 rings × 12 radial segments, plus two cap vertices: 275 ver
 504 triangles. A rounded connector occupies the middle fifth of the chain; upper/lower
 shafts follow the actual solved bones. Radius decreases from shoulder/thigh through the
 elbow/knee to the wrist/ankle. Hind thighs are fuller than forearms; layout width scales
-radius, while solved bone length incorporates armLength/legLength.
+radius, while solved bone length incorporates armLength/legLength and stable individual ratios.
+
+Each mouse now has independently seeded fore/hind length (±12%), thickness (±18%),
+upper/lower segment ratio and paw dimensions (length ±20%, additional width ±10%).
+Left/right length and thickness differences stay within ±2.5% of the pair value.
+Body variety scales all these differences; zero restores symmetric standard proportions.
+The ratio shifts the elbow/knee while preserving the pair’s total chain reach.
+Existing leg length, arm length/width and hair controls compose with the individual factors.
+Identity generation uses a separate random stream, preserving existing coats and ear traits.
+Paw geometry and rendered-paw picking share the same dimensions; captured drag offsets
+remain in model coordinates. Gait cadence is unchanged and anatomy does not imply injury.
 
 Former shoulder, upper, lower and knee meshes are hidden, including their shadows. Their
 transforms remain available for existing invariants and tools; they cannot protrude visually.
-Paw groups and toes retain their distinct fine skin, transforms and contact dimensions.
+Paw groups and toes retain their distinct fine skin and transforms, with individual scaling
+applied to both the geometry and contact dimensions.
 The new surface uses the existing fine limb coat material and stable UVs. No new textures.
 
 The runtime uses opaque tapered `createFurVolume` tufts on the final solved surface, driven by

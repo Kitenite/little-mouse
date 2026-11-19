@@ -190,3 +190,19 @@ test('individual ear shapes keep fixed base attachments through motion and pause
  model.ears.forEach((e,i)=>assert.deepEqual(e.quaternion.toArray(),rotations[i]));
  disposeMouse(model);
 });
+test('individual paw sizes affect geometry and picking while held paw offsets stay in model units',async()=>{
+ const {MouseScene}=await import('../public/mouse3d.js');
+ const model=makeMouse(0,createMouseIdentity(72),{morphologyVariation:1});
+ model.animate(0,false,0,1/60,1,0,false,{x:0,y:0,heading:0,size:1},{});
+ for(let i=0;i<4;i++){
+  const leg=model.legRig.legs[i];assert.equal(leg.paw.scale.x,leg.layout.pawLength);assert.equal(leg.paw.scale.y,leg.layout.pawWidth);
+ }
+ // Isolate a paw beyond the torso so a miss cannot fall through to a body hit.
+ const paw=model.feet[2];paw.position.set(100,100,3);paw.scale.set(1.5,1.5,1.5);
+ const mouse={x:300,y:300,angle:0,state:'active',hiddenUntil:0},scene={models:[model]};
+ const hit=MouseScene.prototype.contactAt.call(scene,[mouse],300+112,300-100,1);
+ assert.equal(hit?.part,'forepaw');assert.equal(hit.legIndex,2);assert.equal(hit.pawOffsetX,12);
+ paw.scale.set(0.8,0.8,0.8);
+ assert.equal(MouseScene.prototype.contactAt.call(scene,[mouse],300+112,300-100,1),null);
+ disposeMouse(model);
+});
