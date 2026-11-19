@@ -114,10 +114,13 @@ succeeded. No iPad restart while reference game is open.
 
 Reference-game observation: owner requests recording current iPad game and behavior comparison.
 Xcode screen-record unsupported on this iPad; QuickTime lists the iPad screen but fails
-with “The operation couldn’t be completed.” No gameplay recorded or behavioral findings yet.
+with “The operation couldn’t be completed.” No physical gameplay recorded; official preview evidence is now available.
 Asked owner to reconnect data cable/unlock, leaving reference game open. Do not relaunch ours.
 
 Root steering fix: reproduced nearly two full turns around fixed nearby targets; repaired
 approach braking, swept arrival and residual watch turning. All 277 tests and build pass;
 hosted publication succeeded. Physical behavior review remains pending.
-Reference-game capture remains blocked; do not switch the iPad away from it.
+Reference-game physical capture remains blocked; do not switch the iPad away from it.
+Root downloaded and decoded both official App Store previews; sampled-frame observations,
+source URLs and remaining comparison limits are in [reference notes](reference-game-observation.md).
+Simulator cannot run its App Store binary; Mac compatibility is listed, installation untested.
