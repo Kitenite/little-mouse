@@ -24,7 +24,7 @@ ears, nose, paws and tail retain their separate roughness contracts.
 
 The user-visible **Fuzziness** control reuses `furSoftness` (0–1, default .5), preserving
 saved profiles and numeric API. Both shared settings registry and legacy identity labels agree.
-Game, companion and playground expose the same control. At zero the tufts lie close to the
+Game and playground expose the same control. At zero the tufts lie close to the
 surface; at one they spread and lift to varied shoulder heights, with curled tips.
 Existing seeded shade variation supplies loft diversity without additional random draws,
 buffers or triangles. Counts, nominal lengths, roots and UVs stay unchanged
@@ -35,6 +35,23 @@ Changing body density consumes a different number of coat RNG draws and resample
 limb tufts; this is coat appearance only, not an individual/geometry identity reroll.
 Zero density hides the five volume draws and skips tuft update loops. Empty resources and the
 body source-area table still exist; zero density is not literally zero initialization cost.
+
+## Regional coats and touch response
+
+Stable seed-derived sleek, fluffy, coarse and scruffy treatments vary length, loft and
+irregularity without changing mouse identity or markings. Body variety scales these treatments.
+Back hairs sweep rearward, cheek hairs fan outward, and limb hairs shorten toward paws.
+Most tufts form a shorter undercoat; about 16% are longer, finer guard hairs within the same
+mesh/count. Smooth UV patches vary coverage through length, not random flickering or extra draws.
+This is an authored approximation, not individual strands or a simulated layered follicle model.
+
+Body/head contact flattens a local patch; limb contact uses the same recovering pressure area.
+Compression approaches a bounded 82% reduction, recovers exponentially after release, and
+freezes with zero simulation time. Tail grabs do not compress the bare tail. A single patch
+per mouse is supported. Roots/UVs stay attached; body compression runs in the shader using a
+static hair-root attribute, while limb compression uses the existing envelope update.
+No additional triangles/draws; body root attributes add at most 648,000 bytes per mouse.
+Compression shading retains approximate tuft normals rather than recomputing exact bent normals.
 
 ## Deformation contract
 
@@ -55,8 +72,8 @@ materials, texture creation or per-tuft arrays occur per frame. Pause preserves 
 - Limbs: 300 × armHairiness per limb, capped at 520 each. Four share one material.
 - Each tuft: five vertices, three triangles, opaque double-sided material; five total draws.
 - Hard cap: 12,880 tufts, 38,640 added triangles. Body maximum 54,000 vertices fits Uint16.
-- Maximum volume GPU geometry buffers: 4,095,840 bytes (~3.91 MiB), excluding driver overhead.
-- Retained CPU typed arrays: 4,508,000 bytes (~4.30 MiB), plus temporary body area CDF
+- Maximum volume GPU geometry buffers: 4,743,840 bytes (~4.52 MiB), excluding driver overhead.
+- Retained CPU typed arrays: 5,156,000 bytes (~4.92 MiB), plus temporary body area CDF
   28,800 bytes for the current body topology. Geometry buffers are included in that CPU sum.
 - Body geometry is uploaded once. Maximum limb update uploads: 374,400 bytes/frame for
   position, normal and hairNormal, plus existing envelope updates. No new coat-map allocations.
@@ -86,5 +103,15 @@ Tests cover barycentric root positions and UV values, stable identity, count/len
 Fuzziness, posed-normal sway, pause, shared uniforms, live roughness, exact disposal and pins.
 Independent read-only reviewer found no remaining blocker after the projection fix and
 Fuzziness tests; three-UI/resource-cycle browser checks were lead-run, not independently rerun.
-Full local suite: 220 tests passed; build passed. No deployment, physical-device quality,
+Historical suite totals are superseded by [current verification](verification.md). No deployment, physical-device quality,
 photorealism or feline-response claim.
+
+## Library assessment
+
+[Babylon.js FurMaterial](https://github.com/BabylonJS/Babylon.js/blob/master/packages/dev/materials/src/fur/furMaterial.ts)
+is a maintained-engine source implementation of shell-based fur. It depends on Babylon
+materials/meshes; it is not directly usable as a Three.js material. A port or renderer
+migration needs separate comparison of articulation, shadowing and physical iPad fill cost.
+[Three.js InstancedMesh](https://threejs.org/docs/pages/InstancedMesh.html) supplies reusable
+instancing infrastructure, not a complete fur system. Current tufts already batch into five
+volume draws per mouse. No library migration or measured performance superiority is claimed.

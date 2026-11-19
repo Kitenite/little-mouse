@@ -27,13 +27,13 @@ test('Fuzziness changes spread and loft independently of root identity, count an
  assert.deepEqual(sleek.roots,fuzzy.roots);assert.deepEqual(sleek.weights,fuzzy.weights);assert.deepEqual(sleek.lengths,fuzzy.lengths);assert.equal(sleek.geometry.index.count,fuzzy.geometry.index.count);assert.ok(fuzzy.widths.every((v,i)=>v>sleek.widths[i]*2));
  const a=sleek.geometry.attributes.position.array,b=fuzzy.geometry.attributes.position.array;let moved=0;for(let i=0;i<300;i++)moved+=Math.hypot(a[i*15+12]-b[i*15+12],a[i*15+13]-b[i*15+13],a[i*15+14]-b[i*15+14]);assert.ok(moved/300>.5);sleek.geometry.dispose();fuzzy.geometry.dispose();source.dispose();material.dispose();
 });
-test('fuzzy tufts curl toward the coat with varied loft, fixed roots and unchanged buffer budget',()=>{
+test('fuzzy tufts curl toward the coat with varied loft, fixed roots and bounded root-attribute budget',()=>{
  const source=new T.PlaneGeometry(10,10,2,2),material=new T.MeshStandardMaterial();
  const volume=createFurVolume(T,source,material,{count:400,random:identityRandom(14),softness:1,body:true});volume.update();checkRoots(volume,source);
  const p=volume.geometry.attributes.position.array;let low=Infinity,high=-Infinity;
  for(let i=0;i<400;i++){const middle=p[i*15+8]/volume.lengths[i],tip=p[i*15+14]/volume.lengths[i];assert.ok(tip>0,'tip stays above surface');assert.ok(tip<middle,'tip curls below tuft shoulder');low=Math.min(low,middle);high=Math.max(high,middle);}
  assert.ok(high-low>.2,'mixed loft avoids uniform bristle rim');
- assert.equal(Object.values(volume.geometry.attributes).reduce((sum,a)=>sum+a.array.byteLength,0)+volume.geometry.index.array.byteLength,400*318);
+ assert.equal(Object.values(volume.geometry.attributes).reduce((sum,a)=>sum+a.array.byteLength,0)+volume.geometry.index.array.byteLength,400*378);
  const before=p.slice();volume.update();assert.deepEqual(p,before,'updates do not resample tuft shape');volume.geometry.dispose();source.dispose();material.dispose();
 });
 
@@ -55,4 +55,20 @@ test('body to muzzle coat length and width grade continuously without changing r
  for(const v of [.60,.65,.70,.73,.78,.83])assert.ok(Math.abs(bodyFurScale(v+1e-6)-bodyFurScale(v-1e-6))<.00002);
  const source=new T.PlaneGeometry(10,10),material=new T.MeshStandardMaterial(),random=identityRandom(44);let calls=0;
  const volume=createFurVolume(T,source,material,{count:100,random:()=>{calls++;return random();},body:true});assert.equal(calls,700,'same seven RNG draws per body tuft');volume.update();checkRoots(volume,source);volume.geometry.dispose();source.dispose();material.dispose();
+});
+
+test('coat families are stable and contact compression settles without moving roots',async()=>{
+ const {furStyle,createFurCompression,advanceFurCompression}=await import('../public/fur-style.js');
+ assert.deepEqual(furStyle(77),furStyle(77));assert.equal(new Set(Array.from({length:300},(_,i)=>furStyle(i).name)).size,4);
+ for(const hz of [30,60,120]){
+  const state=createFurCompression();for(let i=0;i<hz;i++)advanceFurCompression(state,{x:1,y:2,part:'body',pointer:1},1/hz);
+  assert.ok(state.strength>.8&&state.strength<=.82);const saved={...state};advanceFurCompression(state,null,0);assert.deepEqual(state,saved);
+  for(let i=0;i<hz*3;i++)advanceFurCompression(state,null,1/hz);assert.equal(state.strength,0);
+ }
+ const source=new T.PlaneGeometry(10,10),material=new T.MeshStandardMaterial();
+ const volume=createFurVolume(T,source,material,{count:100,random:identityRandom(99),softness:1});volume.update();const old=volume.geometry.attributes.position.array.slice();
+ volume.compression={x:0,y:0,radius:20,strength:.82};volume.update();checkRoots(volume,source);
+ const compressed=volume.geometry.attributes.position.array;let flattened=0;for(let i=0;i<100;i++)if(compressed[i*15+14]<old[i*15+14])flattened++;assert.equal(flattened,100);
+ volume.compression.strength=0;volume.update();assert.deepEqual(compressed,old);
+ volume.geometry.dispose();source.dispose();material.dispose();
 });

@@ -3,6 +3,15 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
+## Regional fur
+
+316 web tests pass. Desktop fur review rendered eight top/side poses without console errors:
+39 calls / 53,708 triangles per fixture, unchanged by this update. Viewed screenshot shows
+short coat depth and readable limbs; the underlying angular rump/muzzle remain visible limits.
+Compression/recovery and seed stability have numerical coverage; physical iPad performance,
+timbre and cat engagement are not established. No extra volume draws/triangles; maximum body
+root buffer overhead is 648,000 bytes per mouse. Library comparison is in the fur document.
+
 ## Limb variation
 
 Independent front/hind proportions, segment ratios, subtle side asymmetry and scaled paws
@@ -18,7 +27,7 @@ at 30/60/120 Hz pass. Physical iPad appearance remains pending.
 
 ## Local sensory pilot
 
-314 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
+316 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
 checks pass. Production build: `eec877e6b147`.
 Implemented 15 optional sensory comparisons, recorded repertoire control, bounded local
 logging/export and a 77-variable catalog. Browser smoke check confirmed controls, explicit

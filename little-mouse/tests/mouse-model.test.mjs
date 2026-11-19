@@ -206,3 +206,12 @@ test('individual paw sizes affect geometry and picking while held paw offsets st
  assert.equal(MouseScene.prototype.contactAt.call(scene,[mouse],300+112,300-100,1),null);
  disposeMouse(model);
 });
+test('body fur compression shares the live contact uniform and freezes on pause',()=>{
+ const model=makeMouse(0,createMouseIdentity(77)),shader={uniforms:{},vertexShader:'#include <beginnormal_vertex>\n#include <begin_vertex>'};model.bodyFur.mesh.material.onBeforeCompile(shader);
+ const motion={x:0,y:0,heading:0,size:1,held:true,holdReference:{part:'body',pointerId:2,localX:0,localY:5}};
+ for(let i=0;i<60;i++)model.animate(i/60,false,0,1/60,1,0,false,motion,{});
+ assert.ok(shader.uniforms.furContact.value.z>.8);assert.ok(model.bodyFur.geometry.attributes.hairRoot);
+ const saved={...model.compression};model.animate(1,false,0,0,1,0,false,{},{});assert.deepEqual(model.compression,saved);
+ for(let i=0;i<180;i++)model.animate(1+i/60,false,0,1/60,1,0,false,{},{});
+ assert.equal(shader.uniforms.furContact.value.z,0);disposeMouse(model);
+});

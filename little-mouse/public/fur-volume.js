@@ -4,8 +4,9 @@ export function bodyFurScale(v){
  const smooth=(a,b)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
  return 1-.45*smooth(.60,.70)-.31*smooth(.73,.83);
 }
-export function createFurVolume(T,source,material,{count,random,length=1,softness=.5,body=false,triangleCount=source.index.count/3}={}){
+export function createFurVolume(T,source,material,{count,random,length=1,softness=.5,body=false,style={},triangleCount=source.index.count/3}={}){
  softness=Math.max(0,Math.min(1,softness));
+ const hairRoots=body?new Float32Array(count*15):null;
  const positions=new Float32Array(count*15),normals=new Float32Array(count*15),uv=new Float32Array(count*10),colors=new Float32Array(count*15),flex=new Float32Array(count*5),rootNormals=new Float32Array(count*15),indices=new Uint16Array(count*9);
  const roots=new Uint32Array(count*3),weights=new Float32Array(count*3),lengths=new Float32Array(count),widths=new Float32Array(count);
  const srcUV=source.attributes.uv.array,index=source.index.array;
@@ -18,13 +19,19 @@ export function createFurVolume(T,source,material,{count,random,length=1,softnes
   for(let k=0;k<3;k++)roots[i*3+k]=index[tri+k];
   let v=0,u=0;for(let k=0;k<3;k++){u+=srcUV[roots[i*3+k]*2]*weights[i*3+k];v+=srcUV[roots[i*3+k]*2+1]*weights[i*3+k];}
   // Muzzle is finer and shorter; distal limbs thin toward bare paw skin.
-  const regional=body?bodyFurScale(v):(.8-.4*v);
+  const patch=.85+.15*Math.sin(u*19+(style.phase||0))*Math.sin(v*23);
+  const regional=(body?bodyFurScale(v):(.65-.4*v))*(style.length||1)*patch;
   lengths[i]=Math.min(6,(1.5+random()*3)*length)*regional;widths[i]=(.12+random()*.12)*(.7+softness)*regional;
   const shade=.94+random()*.2;
+  // Guard hairs share the same draw; most tufts form the short undercoat.
+  const guard=(shade-.94)/.2>.84;
+  lengths[i]*=guard?1.3:.68;widths[i]*=guard?.65:1;
+
   for(let k=0;k<5;k++){uv.set([u,v],i*10+k*2);const brightness=shade*(k<2?.93:k<4?1:1.08);colors.set([brightness,brightness,brightness],i*15+k*3);flex[i*5+k]=k<2?0:k<4?.15:.25;}
   const n=i*5;indices.set([n,n+1,n+2,n+1,n+3,n+2,n+2,n+3,n+4],i*9);
  }
  const geometry=new T.BufferGeometry();for(const [name,data,size]of [['position',positions,3],['normal',normals,3],['uv',uv,2],['color',colors,3],['hairFlex',flex,1],['hairNormal',rootNormals,3]])geometry.setAttribute(name,new T.BufferAttribute(data,size).setUsage(body?T.StaticDrawUsage:T.DynamicDrawUsage));geometry.setIndex(new T.BufferAttribute(indices,1));
+ if(hairRoots)geometry.setAttribute('hairRoot',new T.BufferAttribute(hairRoots,3));
  const mesh=new T.Mesh(geometry,material);mesh.frustumCulled=false;mesh.receiveShadow=true;mesh.visible=count>0;
  const point=new T.Vector3(),normal=new T.Vector3(),tangent=new T.Vector3(),side=new T.Vector3(),faceNormal=new T.Vector3();
  const volume={mesh,geometry,roots,weights,lengths,widths,update};
@@ -36,13 +43,20 @@ export function createFurVolume(T,source,material,{count,random,length=1,softnes
    const ia=roots[i*3],ib=roots[i*3+1],ic=roots[i*3+2],du1=srcUV[ib*2]-srcUV[ia*2],du2=srcUV[ic*2]-srcUV[ia*2],dv1=srcUV[ib*2+1]-srcUV[ia*2+1],dv2=srcUV[ic*2+1]-srcUV[ia*2+1],det=du1*dv2-du2*dv1;
    tangent.set((du1*(p[ic*3]-p[ia*3])-du2*(p[ib*3]-p[ia*3]))/(det||1),(du1*(p[ic*3+1]-p[ia*3+1])-du2*(p[ib*3+1]-p[ia*3+1]))/(det||1),(du1*(p[ic*3+2]-p[ia*3+2])-du2*(p[ib*3+2]-p[ia*3+2]))/(det||1));
    tangent.addScaledVector(normal,-tangent.dot(normal));if(tangent.lengthSq()<1e-8)tangent.set(1,0,0).addScaledVector(normal,-normal.x);tangent.normalize().multiplyScalar(body?-1:1);side.crossVectors(tangent,normal).normalize();
+   // Fan cheek hairs outward; back hairs sweep rearward. Stable irregularity only.
+   const u=uv[i*10],v=uv[i*10+1],fan=body?Math.max(0,1-Math.abs(v-.72)/.16):0;
+   tangent.addScaledVector(side,fan*Math.sin(u*Math.PI*2)*.55+(style.roughness||0)*.22*Math.sin(u*31+v*17+(style.phase||0))).normalize();side.crossVectors(tangent,normal).normalize();
    const len=lengths[i],width=widths[i];
+   const pressure=volume.compression,dist=pressure?Math.hypot(point.x-pressure.x,point.y-pressure.y)/pressure.radius:2;
+   const flatten=body?1:1-(pressure?.strength||0)*Math.max(0,1-dist*dist);
+
    // Reuse seeded shade variation: mixed loft without extra RNG draws or buffers.
    // Mixed shoulder heights break up the rim; tips curl back toward the coat.
    const variation=Math.max(0,Math.min(1,(colors[i*15]/.93-.94)/.2));
-   const loft=.55+.45*variation, curl=softness*(.16+.18*(1-variation));
+   const loft=(.55+.45*variation)*(style.loft||1), curl=softness*(.16+.18*(1-variation));
    for(let k=0;k<5;k++){const advance=k<2?0:k<4?.55*(1-softness*.2):1-softness*.2,rise=k<2?.015:k<4?.15+softness*.5*loft:.08+softness*.6*loft-curl,spread=k===4?0:(k%2?1:-1)*(k<2?width:width*.55),at=i*15+k*3;
-    positions[at]=point.x+tangent.x*len*advance+normal.x*len*rise+side.x*spread;positions[at+1]=point.y+tangent.y*len*advance+normal.y*len*rise+side.y*spread;positions[at+2]=point.z+tangent.z*len*advance+normal.z*len*rise+side.z*spread;
+    const height=k<2?rise:Math.max(.02,rise*flatten);if(hairRoots){hairRoots[at]=point.x;hairRoots[at+1]=point.y;hairRoots[at+2]=point.z;}
+    positions[at]=point.x+tangent.x*len*advance+normal.x*len*height+side.x*spread;positions[at+1]=point.y+tangent.y*len*advance+normal.y*len*height+side.y*spread;positions[at+2]=point.z+tangent.z*len*advance+normal.z*len*height+side.z*spread;
     // Curved normal profile catches light; no translucent halo or billboard blending.
     faceNormal.copy(normal).addScaledVector(tangent,k<2?-.25:k<4?-.08:.18+curl).normalize();normals[at]=faceNormal.x;normals[at+1]=faceNormal.y;normals[at+2]=faceNormal.z;rootNormals[at]=normal.x;rootNormals[at+1]=normal.y;rootNormals[at+2]=normal.z;
    }

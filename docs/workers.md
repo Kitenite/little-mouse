@@ -131,7 +131,7 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
-Root completed ear/limb variation, stable proportions and scaled paw picking; 314 tests pass.
+Root completed fur regions/styles/compression plus library assessment; device validation pending.
 
 ## Sensory experiments implementation
 
