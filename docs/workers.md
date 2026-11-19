@@ -67,19 +67,19 @@ The owner now requests continuing builder/critic improvement. Follow
 independent criticism, reproducible cases and root-owned integration. This does not
 install a recurring unattended service or authorize worker merges into main.
 
-Current root task: publish and verify integrated Podrick’s Violin rebrand, artwork splash, simplified
-storybook UI, removal of remote control, and improved recorded audio. Rebuild/install
-on iPad after combined checks. New explicit owner direction supersedes companion policy.
+Podrick’s Violin rebrand, artwork splash, simplified storybook UI, local-only runtime
+and recorded audio are integrated and published. Renamed native shell installed; final
+relaunch awaits exit from Guided Access. Current owner direction supersedes companion policy.
 Completed assignments: UI (HTML/CSS + native home), local-only (game networking + native
-Game wrapper), audio (recorded sample curation/mix). Root owns final deployment and cleanup.
+Game wrapper), audio (recorded sample curation/mix). Root completed deployment and cleanup.
 Keep the base game and local owner controls; remove pairing, steering and companion UI/API.
 Live development asset updates remain for iteration; no remote gameplay control.
 
 | Task | Workspace (local) | Terminal | Status |
 | --- | --- | --- | --- |
-| ui | `1cdd768e-7a48-4a06-a46e-f66d0838c204` | `ef6a072f-ed57-4054-8a71-f79bca72f302` | completed; integrated |
-| local | `a7f96f69-497b-4888-a869-e5969da687f2` | `ee9cec0a-24cf-4c8c-bfdd-cd38ebff6986` | completed; integrated |
-| audio | `c4b3d12d-6447-4349-b55b-381ecae24e95` | `f69ded84-16aa-4d32-bbbe-00b25c347a1c` | completed; integrated |
+| ui | `1cdd768e-7a48-4a06-a46e-f66d0838c204` | `ef6a072f-ed57-4054-8a71-f79bca72f302` | completed; integrated; retired |
+| local | `a7f96f69-497b-4888-a869-e5969da687f2` | `ee9cec0a-24cf-4c8c-bfdd-cd38ebff6986` | completed; integrated; retired |
+| audio | `c4b3d12d-6447-4349-b55b-381ecae24e95` | `f69ded84-16aa-4d32-bbbe-00b25c347a1c` | completed; integrated; retired |
 
 Audio acceptance: recorded stock/found sources only; no artificial synthesis or
 unnatural pitch/rate effects. Silence if no suitable recording. Squeaks more prominent.
@@ -88,3 +88,6 @@ Integrated UI `504867e`, local-only `fa03cc5` / `58e5066`, audio `69bb434`.
 Audio critic terminal `f0c5e35b-7540-475e-86ba-3af60e254976` shared the audio workspace.
 Pending physical checks: listening and native appearance. Final restart blocked by Guided Access;
 owner asked to exit it. This does not block source publication or hosted deployment.
+
+After GitHub preservation `254f5a6`, all four batch sessions and three auxiliary workspaces
+were retired. Only main worktree remains; roles, handoffs and selected captures are in code.
