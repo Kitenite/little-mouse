@@ -74,3 +74,9 @@ Pending assignments: UI (HTML/CSS + native home), local-only (game networking + 
 Game wrapper), audio (recorded sample curation/mix). Root owns splash config and integration.
 Keep the base game and local owner controls; remove pairing, steering and companion UI/API.
 Live development asset updates remain for iteration; no remote gameplay control.
+
+| Task | Workspace (local) | Terminal | Status |
+| --- | --- | --- | --- |
+| ui | `1cdd768e-7a48-4a06-a46e-f66d0838c204` | `ef6a072f-ed57-4054-8a71-f79bca72f302` | running |
+| local | `a7f96f69-497b-4888-a869-e5969da687f2` | `ee9cec0a-24cf-4c8c-bfdd-cd38ebff6986` | running |
+| audio | `c4b3d12d-6447-4349-b55b-381ecae24e95` | `f69ded84-16aa-4d32-bbbe-00b25c347a1c` | running |

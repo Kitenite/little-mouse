@@ -201,7 +201,7 @@
         "docs/controls-network-native.md"
       ],
       "report": "docs/cycles/reliability.md",
-      "objective": "Owner UI and numeric tuning, companion settings, startup/retry, sanitized diagnostics and replay. Preserve pairing and pending settings; coordinate native changes under ipad/AGENTS.md.",
+      "objective": "Simple local owner UI and numeric tuning, startup/retry, sanitized diagnostics and replay. Preserve local settings and checkpoints; no companion, pairing or remote gameplay control. Coordinate native changes under ipad/AGENTS.md.",
       "coordinateWith": [
         "behavior",
         "audio"
@@ -241,6 +241,7 @@
     "Only root integrates main, publishes, restarts devices or changes production settings. Workers hand off exact commits, files, checks, limits and next ranked issues.",
     "Keep topical Markdown within 120 lines where possible, maximum 150; index maximum 80. Replace stale requirements rather than appending logs.",
     "Finish with SUPERSET_WORKER_DONE (task, summary, files, checks, handoff) or SUPERSET_WORKER_BLOCKED (task, reason, needs).",
-    "No recurring daemon is installed. After integration and explicit cleanup authorization, retire sessions and auxiliary workspaces; preserve evidence and role definitions in main."
+    "No recurring daemon is installed. After integration and explicit cleanup authorization, retire sessions and auxiliary workspaces; preserve evidence and role definitions in main.",
+    "Current product is Podrick\u2019s Violin: base game with local owner controls, parchment/ink storybook UI and owner-provided cat artwork. Remove remote gameplay control; keep development asset updates. Recorded squeaks should dominate very quiet natural movement sounds."
   ]
 }

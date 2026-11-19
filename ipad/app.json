@@ -32,7 +32,16 @@
       "url": "https://u.expo.dev/b119faf1-d200-4a43-99f9-a114e55398df"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icon.png",
+          "backgroundColor": "#19150f",
+          "imageWidth": 320,
+          "resizeMode": "contain"
+        }
+      ]
     ],
     "extra": {
       "eas": {

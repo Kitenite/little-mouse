@@ -37,8 +37,11 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 
 Create a convincing, textured 3D prey game for this cat, inspired by the teasing and
 hide/reentry behavior of Mouse for Cats. Favor one engaging mouse over a busy swarm.
-The iPad is the play surface; a phone or laptop can tune and control it live.
-The owner controls when play ends. Rapid iteration and durable adjustable settings matter.
+The iPad is the play surface. Keep a simple base game with local owner controls;
+remote gameplay control and companion pairing are removed by the latest owner direction.
+The owner controls when play ends. Rapid development updates and durable local settings matter.
+Use the owner’s two-cat artwork for app icon and splash, with a dark ink/parchment
+storybook UI. Recorded squeaks take priority over quiet, natural movement sounds.
 Cat engagement takes priority over strict biological realism; playful broad coat/color palettes
 are allowed while movement and interaction remain coherent.
 
