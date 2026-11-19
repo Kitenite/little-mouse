@@ -142,7 +142,7 @@
         "docs/audio.md"
       ],
       "report": "docs/cycles/audio.md",
-      "objective": "Recorded-only cues and provenance; diverse touch squeaks above very quiet footsteps. Verify hold/drag/hit/idle/eating/scurry routing, cancellation, download retry and mixing. No synthesized fallback.",
+      "objective": "Recorded stock or found sounds only, with provenance. No artificial sounds or synthesis fallback; silence if no suitable recording. Preserve natural playback pitch/rate. Make diverse touch squeaks prominent above very quiet sparse movement; verify hold/drag/hit/idle/eating/scurry routing, cancellation, download retry and clipping-safe mixing.",
       "coordinateWith": [
         "environment",
         "behavior"
