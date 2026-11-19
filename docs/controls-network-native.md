@@ -58,6 +58,9 @@ The native WebView keeps Retry after load failures and uses the supplied cat art
 loading, with a dark background. Native connection-settings overlays are removed. The UI
 entry screen is owned separately and is integrated by the coordinator.
 
+Audio unlock activates the audio system only; it does not schedule a peek/foley cue.
+Direct pointer contact feedback remains responsible for touch squeaks.
+
 ## Ending play
 
 Current owner exit: briefly tap corners **top-left, top-right, bottom-right, bottom-left**

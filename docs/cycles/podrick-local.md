@@ -10,6 +10,7 @@ rebrand baseline `111d371`. No device restart, installation, deployment or liste
 - Retained read-only `/api/version` fingerprint checks, checkpointed reload and offline play.
 - Preserved settings/profiles, rich numeric defaults, local play/pause, four-corner exit,
   pointer audio activation/feedback, contacts, physics, behavior and boot recovery hooks.
+- Audio unlock activates only; removed its automatic peek cue, retaining direct touch feedback.
 - Removed visible remote Manual choice; legacy manual saves start in normal local hunt.
 - Settings start collapsed on web and iPad. Existing grouped controls remain available.
 - Removed native companion URL helper and connection overlay. Game uses `url`; optional
@@ -20,7 +21,7 @@ rebrand baseline `111d371`. No device restart, installation, deployment or liste
 
 ## Checks
 
-- `npm --prefix little-mouse test`: 265 passed, including local mode migration, local settings,
+- `npm --prefix little-mouse test`: 266 passed, including local mode migration, local settings,
   play/pause, recovery, contacts, version reload, absence of endpoints and database usage.
 - `npm --prefix little-mouse run build`: passed.
 - Built-worker and isolated dev-server HTTP smoke: companion paths and room/command paths

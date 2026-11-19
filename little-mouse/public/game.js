@@ -32,7 +32,7 @@ function spawn(){const castIndex=mice.length;const w=scene.w,h=scene.h,r=radius(
 function ensureCount(){while(mice.length<config.count)mice.push(spawn());mice.length=config.count;}
 async function awake(){try{if(playing&&navigator.wakeLock)wake=await navigator.wakeLock.request('screen')}catch{}}
 function syncAudio(){preyAudio.configure(config);preyAudio.setState(config.sound,playing&&!document.hidden);$('enableSound').hidden=!playing||!config.sound||preyAudio.ready;const audio=preyAudio.diagnostics();controls.setSoundStatus(`${config.sound?'Sound on':'Muted'} · ${audio.state==='locked'?'tap Test sound to enable':audio.state} · volume ${Math.round(config.soundVolume*100)}%${audio.lastError?' · '+audio.lastError:''}${audio.signalPeak>0?' · signal generated':''}`);}
-function unlockAudio(){if(!config.sound)return;preyAudio.unlock().then(ready=>{syncAudio();if(ready&&playing)preyAudio.cue('peek',.5);});}
+function unlockAudio(){if(!config.sound)return;preyAudio.unlock().then(()=>syncAudio());}
 $('enableSound').addEventListener('click',unlockAudio);
 // Native navigation and resumed play are not gestures inside this web document.
 // Retry from the actual board touch, including pointerup for iOS activation.

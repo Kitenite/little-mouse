@@ -173,3 +173,10 @@ test('legacy remote manual mode returns to active local hunt without changing ot
  assert.ok(active,'local hunt progresses out of hiding');
  assert.ok(!settingsSchema.mode.options.some(o=>o.value==='manual'));
 });
+
+test('successful local audio unlock activates without a synthetic peek cue',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;g.start();
+ vm.runInContext("globalThis.audioUnlocks=0;globalThis.audioCues=0;preyAudio.unlock=async()=>{audioUnlocks++;return true;};preyAudio.cue=()=>audioCues++;",h.context);
+ h.e('enableSound').listeners.click();await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(h.context.audioUnlocks,1);assert.equal(h.context.audioCues,0);
+});
