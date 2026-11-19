@@ -11,6 +11,18 @@ and coat. Fur should look soft and fuzzy around the silhouette rather than a har
 Head, ribcage, waist and pelvis shaping, arm sizing and arm hairiness are adjustable. Calm watch bouts
 should include eating, face wiping, hindleg scratching, stretching and occasional rolling.
 
+## Readability policy
+
+Body travel and heading are the primary animation cues. Tail, ears, whiskers and fur follow
+actual starts, stops, turns and contact with bounded, damped lag; decorative motion must not
+obscure the silhouette or suggest a different travel direction. A turn must not create
+sustained tail whipping, expanding oscillations or constraint-generated energy.
+Keep tail-root and limb attachments coherent, preserve held-part pins and let free parts
+settle after release. Faster world travel must not automatically accelerate feet or amplify
+appendage flopping. Assess these at normal play speed as well as in slow motion.
+This owner-approved design direction comes from the [reference comparison](reference-game-observation.md);
+restrained appendage motion is our inference, not a measured property of that game's solver.
+
 ## Implemented foundation
 
 - Persistent seeded identities supply bounded morphology and coat variation. Defeat/replacement
@@ -81,7 +93,11 @@ source/tests do not establish photorealism.
 
 ## Acceptance criteria
 
-- Compare front, side and top silhouettes, then slow-motion runs, starts, stops and turns.
+- Compare front, side and top silhouettes, then normal-speed and slow-motion runs,
+  starts, stops and turns. Heading and body travel must stay easy to read.
+- Exercise 90°/180° turns at fast travel, stop/settle and held-tail release at 30/60/120 Hz;
+  require bounded, decaying secondary motion without attachment jumps. Existing numerical
+  tail regressions support stability; visual restraint still needs iPad review.
 - Feet do not skate excessively, spin rapidly at rest, pass through the body or continue a
   normal running cycle while the same paw is pinned.
 - Hair and appendages stay attached under every supported morphology extreme.

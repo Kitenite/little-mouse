@@ -9,6 +9,30 @@
 - Allow offscreen travel. Hidden mice must return, and visible pauses must remain visible.
 - No automatic breather, mandatory break screen or session timeout. The owner stops play.
 
+## Readable movement policy
+
+Owner-approved direction from the [reference review](reference-game-observation.md):
+steady heading → clear run → deliberate turn, stop or complete exit.
+
+- Commit to a destination during an unobstructed run. Do not add frame-by-frame heading
+  noise or repeatedly pick nearby goals merely to make the mouse look busy.
+- Turns must serve a destination, avoidance, contact reaction or deliberate phase change.
+  Brake when necessary, complete the turn and resume useful travel. Repeated target orbits,
+  stationary spinning and alternating correction turns are defects in ordinary hunting.
+- Active paws, collisions, contact and injury may interrupt a run; route commitment must
+  never make a mouse run toward a held area or ignore a new threat.
+- Preserve both sustained screen-crossing runs and shorter teasing bouts. Judge intensity
+  by distance covered and readable starts/stops, not foot cadence or rotational activity.
+- Make disappearance intentional: the full body and tail clear the screen before hiding.
+  Allow a visible absence before reentry, retaining identity and respecting blocked entrances.
+  Do not substitute a mid-screen vanish or indefinite offscreen absence for an exit.
+- Prioritize path readability over adding joints, faster feet or decorative motion. Secondary
+  motion follows the [anatomy policy](anatomy-motion.md); hits follow the [contact policy](touch-interaction.md).
+
+These are product requirements, not claims about the reference game's source code or feline
+preference. Existing destination/exit logic and steering repairs support them; continuous
+rendered and physical-iPad comparison remains pending. No trailer-derived timing is prescribed.
+
 ## Implemented policy
 
 `enrichment.js` owns an authored state policy with hidden, peek, watch, creep, dart,
@@ -59,6 +83,12 @@ This repairs repeated loops caused by overshooting short targets at high travel 
 - Seeded multi-minute phone and iPad simulations exercise concealment, visible observation,
   investigation and escape without an indefinitely invisible approach or blocked run.
 - Watch/freeze phases actually stop travel; fast turning slows movement appropriately.
+- At 30/60/120 Hz, an unobstructed fixed goal is approached without repeated orbits;
+  after arrival, heading stays settled until a new goal or threat requires a response.
+- Review straight runs, 90°/180° turns, short goals, collisions and new paw obstacles:
+  distinguish justified detours from unexplained repeated correction turns.
+- In continuous footage, compare distance covered, heading reversals, turn-to-run transitions
+  and visible/hidden intervals. Include fast travel and large morphology extremes.
 - A full-screen run exits beyond the complete silhouette before becoming hidden.
 - Crowded or blocked routes recover; a covered entrance waits or chooses viable cover.
 - Pause freezes simulation time; resume does not spend hidden/hold/recovery budgets in wall time.

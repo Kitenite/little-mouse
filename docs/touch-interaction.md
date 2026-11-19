@@ -9,6 +9,19 @@ Contact location matters: head, body, forepaw, hindpaw and tail behave different
 A sustained paw can restrain, drag and release/toss a mouse. A cat may sit or stand on the
 screen; retain those touch areas and route around them instead of running underneath.
 
+## Readable contact policy
+
+Every accepted live-mouse touch must have perceptible feedback: a brief flinch/freeze,
+a directional dodge/escape, or the selected injury/defeat pose, plus recorded audio when
+sound is enabled. Harmless must not mean visually ignored. Pending holds may communicate
+restraint through the anchored pause and audio; active dragging preserves part-specific physics.
+Surviving free mice should transition from the bounded reaction into a readable escape or
+resumed run, avoiding the active paw. A turn should communicate that response, not become
+an indefinite spin. Do not force flight while held, defeated or in a deliberate short stun.
+Preserve varied outcomes, immunity, one-owner claims and one outcome/score per interaction.
+The [reference review](reference-game-observation.md) motivates clarity, not a requirement
+that every hit damages the mouse or reproduces the reference game's exact response.
+
 ## Implemented lifecycle
 
 - Pointerdown claims a mouse without immediate injury, death or score. Hold activation defaults
@@ -80,6 +93,9 @@ area. This geometric avoidance is bounded; it is not a global pathfinding solver
 - Fully covered entry waits; partial obstruction produces a bounded detour.
 - Actual event contact sizes increase clearance. Released memory never physically pushes a mouse.
 - Long presses do not accidentally trigger owner menus; normal release resolves once.
+- Inspect harmless, harmful, immune and held contacts at normal speed: feedback is readable,
+  surviving releases resume travel after the bounded response, and escape avoids live paws.
+  Recorded-only audio and visual feedback must agree without duplicate outcome events.
 - Rotated renderer hit coordinates anchor the correct side; tail/paw identity survives the claim.
 
 Source owners: `contact.js`, `behavior.js`, `physics.js`, `enrichment.js`, game pointer/frame

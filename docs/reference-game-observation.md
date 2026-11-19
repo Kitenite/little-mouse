@@ -48,6 +48,15 @@ Next acceptance: continuous current-game recording with known settings, then mat
 capture; compare path length, repeated heading changes, visible/hidden intervals and
 responses to taps/held paws. Cat attention needs a separate observation of the cat.
 
+## Adopted requirements
+
+The owner approved the animation takeaways as project policies. Canonical requirements live
+in [behavior](behavior.md#readable-movement-policy),
+[anatomy](anatomy-motion.md#readability-policy) and
+[touch interaction](touch-interaction.md#readable-contact-policy).
+Their acceptance criteria separate existing implementation from pending visual/device review.
+This adoption does not turn design hypotheses into scientifically measured preferences.
+
 ## Device and simulator limits
 
 Physical recording remains blocked: devicectl reports screen recording unsupported;

@@ -124,3 +124,9 @@ Reference-game physical capture remains blocked; do not switch the iPad away fro
 Root downloaded and decoded both official App Store previews; sampled-frame observations,
 source URLs and remaining comparison limits are in [reference notes](reference-game-observation.md).
 Simulator cannot run its App Store binary; Mac compatibility is listed, installation untested.
+
+Root policy follow-up: reference takeaways adopted in behavior, anatomy and touch documents.
+Root owns preservation; next behavior/anatomy critics own continuous rendered/iPad acceptance
+of steady routes, deliberate turns/exits, restrained secondary motion and readable contacts.
+Existing runtime support inspected; this policy-only change makes no new deployment claim.
+Physical capture remains the dependency for a matched current-game comparison.
