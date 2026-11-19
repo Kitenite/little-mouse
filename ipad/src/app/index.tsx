@@ -39,7 +39,7 @@ export default function Home() {
     <ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
       <View style={styles.card}>
         <Text style={styles.eyebrow}>A LITTLE WORLD TO CHASE</Text>
-        <Text style={styles.title}>Little Mouse</Text>
+        <Text style={styles.title}>Podrick’s Violin</Text>
         <Text style={styles.subtitle}>Your cat’s game, on iPad.</Text>
         <Text style={styles.detail}>Real-time mice, familiar controls, and a companion on your phone or laptop.</Text>
         <Pressable accessibilityRole="button" style={styles.primary} onPress={play}><Text style={styles.primaryText}>Let’s play ↗</Text></Pressable>

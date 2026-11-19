@@ -1,4 +1,4 @@
-# Little Mouse for iPad
+# Podrick’s Violin for iPad
 
 An Expo / React Native iPad app hosting the existing Three.js game in WKWebView. It preserves the live companion, game releases, hit reactions, and settings without maintaining a second renderer.
 

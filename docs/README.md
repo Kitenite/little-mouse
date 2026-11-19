@@ -1,4 +1,4 @@
-# Little Mouse requirements and policies
+# Podrick’s Violin requirements and policies
 
 These documents preserve the owner's decisions and the current implementation contract.
 Source review: 2026-11-17. They describe the working tree, not proof of a deployed release.

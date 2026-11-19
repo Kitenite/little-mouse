@@ -66,3 +66,11 @@ The owner now requests continuing builder/critic improvement. Follow
 [the cycle contract](improvement-cycles.md): three focused iterations per active batch,
 independent criticism, reproducible cases and root-owned integration. This does not
 install a recurring unattended service or authorize worker merges into main.
+
+Current root task: integrate Podrick’s Violin rebrand, artwork splash, simplified
+storybook UI, removal of remote control, and improved recorded audio. Rebuild/install
+on iPad after combined checks. New explicit owner direction supersedes companion policy.
+Pending assignments: UI (HTML/CSS + native home), local-only (game networking + native
+Game wrapper), audio (recorded sample curation/mix). Root owns splash config and integration.
+Keep the base game and local owner controls; remove pairing, steering and companion UI/API.
+Live development asset updates remain for iteration; no remote gameplay control.

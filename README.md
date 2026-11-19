@@ -1,4 +1,4 @@
-# Little Mouse
+# Podrick’s Violin
 
 A 3D mouse-chasing game for cats, with an Expo iPad app and a phone/laptop companion for live control and wireless iteration.
 

@@ -1,5 +1,12 @@
 # Controls, network and installed app
 
+## App identity
+
+Display name: **Podrick’s Violin**. The owner-supplied two-cat artwork is preserved
+unchanged in `ipad/assets/icon.png`; Expo generates the square native icon from it.
+Keep existing bundle ID, Expo project, URL scheme and storage keys to preserve installs,
+pairing and updates. Home-screen name/icon changes require a signed native rebuild.
+
 ## Owner requirements
 
 Use the iPad as the play surface and a separate phone/laptop web companion for live tuning.
