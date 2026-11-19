@@ -107,3 +107,12 @@ browser startup and iPad launch checked. Hosted publication succeeded.
 Root tail-turn fix: remove constraint-generated Verlet velocity, soften angular forcing,
 discount gameplay travel gain. Turn reproduction at 30/60/120 Hz and all 274 tests pass.
 Published hosted update and relaunched iPad route; physical visual review remains pending.
+
+Root ambient vocal follow-up: occasional native-rate recorded squeaks with a global
+randomized schedule, quieter than contact vocals; 275 tests and build pass, hosted publish
+succeeded. No iPad restart while reference game is open.
+
+Reference-game observation: owner requests recording current iPad game and behavior comparison.
+Xcode screen-record unsupported on this iPad; QuickTime lists the iPad screen but fails
+with “The operation couldn’t be completed.” No gameplay recorded or behavioral findings yet.
+Asked owner to reconnect data cable/unlock, leaving reference game open. Do not relaunch ours.

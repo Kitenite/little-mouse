@@ -54,7 +54,7 @@ test('mute/pause/background stops already scheduled phrases immediately',async()
   }
 });
 test('phase transitions stay silent until actual movement earns a sparse texture',async()=>{
- const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();audio.nextAmbient=Infinity;
  const mouse={x:100,y:100,state:'active',hunt:{phase:'peek'},moving:true};
  audio.update([mouse],0,1000,700);context.advance(1);audio.update([mouse],1,1000,700);assert.equal(audio.played,0);
  mouse.x+=20;context.advance(1.1);audio.update([mouse],1.1,1000,700);assert.equal(audio.lastPlayed.kind,'patter');
@@ -71,7 +71,9 @@ test('idle, hidden and nearby mice do not trigger generic crawl aliases',async()
  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
  const mice=[{x:100,y:100,state:'active',hunt:{phase:'watch'}},{x:190,y:100,state:'active',hunt:{phase:'watch'}},{x:-20,y:100,state:'away',hunt:{phase:'hidden'}}];
  for(let time=0;time<60;time++){context.advance(time);audio.update(mice,time,1000,700);}
- assert.equal(audio.played,0);
+ assert.ok(audio.played>=3&&audio.played<=12);assert.equal(audio.lastPlayed.kind,'squeak');
+ assert.equal(audio.lastPlayed.source,'recording');assert.equal(audio.lastPlayed.gainScale,.65);
+ assert.ok(context.sources.every(source=>source.playbackRate.value===1));
 });
 test('nibble sound requires the explicit visible nibbling animation contract',async()=>{
   const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
@@ -186,11 +188,11 @@ test('paused audition selects an event family and repeated impact previews are n
  await audio.testSound('constructor');assert.equal(audio.lastPlayed.kind,'squeak');assert.equal(audio.active,false);
 });
 
-test('calm idle banks remain nonvocal; explicit touch uses collected vocals',async()=>{
+test('idle foley aliases stay separate from ambient recorded vocals',async()=>{
   for(const kind of ['peek','tease','call','reply','flinch','groom','facewipe','hindlegscratch','stretch','roll'])assert.ok(sampleBanks[kind].every(id=>id.startsWith('crawl-')),kind);
   const {audio,context}=setup();audio.rng=()=>.99;audio.setState(true,true);await audio.unlock();
   const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'}};
-  for(let time=0;time<60;time++){context.advance(time);audio.update([mouse],time,1000,700);if(audio.lastPlayed)assert.ok(audio.lastPlayed.sample.startsWith('crawl-'));}
+  for(let time=0;time<60;time++){context.advance(time);audio.update([mouse],time,1000,700);if(audio.lastPlayed){assert.equal(audio.lastPlayed.kind,'squeak');assert.ok(sampleBanks.squeak.includes(audio.lastPlayed.sample));}}
 });
 test('animated activities cue once on entry with sparse repeats and cancel their own voice on interruption',async()=>{
   for(const [activity,kind] of [['nibble','nibble'],['groom','groom'],['scratch','hindlegscratch'],['stretch','stretch'],['roll','roll']]){
@@ -442,7 +444,7 @@ test('surface travel ignores teleport, hidden, resized and discontinuous frames'
 test('irregular update cadence preserves bounded displacement-driven friction spacing',async()=>{
  const counts=[];
  for(const intervals of [[1/30],[1/60],[.01,.04,.025,.1]]){
-  const {audio,context}=setup();audio.configure({background:'felt',soundFrequency:2});audio.setState(true,true);await audio.unlock();
+  const {audio,context}=setup();audio.configure({background:'felt',soundFrequency:2});audio.setState(true,true);await audio.unlock();audio.nextAmbient=Infinity;
   const mouse={x:100,y:100,state:'active',moving:true,hunt:{phase:'creep'}};audio.update([mouse],0,10000,700);let time=0,index=0,last=-Infinity;
   while(time<10){const dt=Math.min(intervals[index++%intervals.length],10-time);time+=dt;mouse.x+=100*dt;context.advance(time);const before=audio.played;audio.update([mouse],time,10000,700);if(audio.played>before){assert.ok(time-last>=2.4-1e-9);last=time;}assert.ok(audio.voices.size<=1);}
   counts.push(audio.played);
@@ -540,4 +542,14 @@ test('sustained hold vocal ducks movement, respects contact priority, and cancel
  mouse.hiddenUntil=10;context.advance(3.1);audio.update([mouse],3.1,1000,700);assert.equal(audio.voices.size,0);
  mouse.hiddenUntil=0;audio.setState(false,true);context.advance(10);audio.update([mouse],10,1000,700);assert.equal(audio.voices.size,0);
  audio.setState(true,true);audio.update([mouse],10,1000,700);assert.equal(audio.voices.size,0);
+});
+
+test('ambient squeaks exclude held and hidden mice and stop on hide or pause',async()=>{
+ const{audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const m={x:100,y:100,state:'active',hunt:{phase:'watch'}};
+ audio.update([m],0,1000,700);context.advance(4);audio.update([m],4,1000,700);
+ assert.equal(audio.lastPlayed.kind,'squeak');assert.equal(audio.voices.size,1);
+ m.state='away';audio.update([m],4.1,1000,700);assert.equal(audio.voices.size,0);
+ const played=audio.played;for(let t=5;t<30;t++){context.advance(t);audio.update([m],t,1000,700);}assert.equal(audio.played,played);
+ audio.setState(true,false);assert.equal(audio.nextAmbient,null);assert.equal(audio.voices.size,0);
 });

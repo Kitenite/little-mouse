@@ -16,7 +16,7 @@ export class PreyAudio {
   constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,audioSession=globalThis.navigator?.audioSession}={}) {
     this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleLoading=false;this.sampleRetryAt=0;this.sampleErrors=[];this.sampleChoice={};this.sampleRounds={};this.context=null;this.master=null;
     this.enabled=false;this.active=false;this.voices=new Set();this.lastVariant={};this.lastCue=-Infinity;
-    this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;this.surface={background:'photo-clearing',strength:.55};this.surfaceMotion=new WeakMap();
+    this.nextAmbient=null;this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;this.surface={background:'photo-clearing',strength:.55};this.surfaceMotion=new WeakMap();
   }
   configure(config={}){
     const value=Number(config.environmentStrength??.55),strength=Number.isFinite(value)?clamp(value,0,1):.55;
@@ -58,7 +58,7 @@ export class PreyAudio {
     }catch(error){this.pendingContacts=[];this.lastError=String(error?.message||error);return Promise.resolve(false);}
   }
   stop(){
-    this.auditionGeneration++;this.observations=new WeakMap();this.pendingReply=null;this.pendingContacts=[];this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.surfaceMotion=new WeakMap();
+    this.nextAmbient=null;this.auditionGeneration++;this.observations=new WeakMap();this.pendingReply=null;this.pendingContacts=[];this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.surfaceMotion=new WeakMap();
     for(const voice of [...this.voices])voice.cancel();
   }
   reset(){this.stop();this.observations=new WeakMap();this.lastCue=this.lastHit=-Infinity;this.nextSocial=null;this.pendingReply=null;}
@@ -187,6 +187,9 @@ export class PreyAudio {
     if(!this.enabled||!this.active||!this.ready)return;
     for(const voice of [...this.voices])if(voice.owner&&(voice.surface||voice.priority<2)&&!mice.includes(voice.owner))voice.cancel();
     const density=this.settings.soundFrequency,visible=mouse=>mouse.state==='active'&&!(mouse.hiddenUntil>time)&&mouse.x>=0&&mouse.x<=width&&mouse.y>=0&&mouse.y<=height;
+    const ambientEligible=mouse=>visible(mouse)&&!mouse.hold&&!mouse.activity&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time);
+    for(const voice of [...this.voices])if(voice.kind==='squeak'&&voice.priority===0&&voice.owner&&!ambientEligible(voice.owner))voice.cancel();
+    if(this.nextAmbient===null)this.nextAmbient=time+(2+this.rng()*3)/density;
     for(const mouse of mice){
       const phase=mouse.hunt?.phase||(mouse.state==='away'?'hidden':mouse.leaving?'retreat':mouse.entering?'peek':mouse.moving?'creep':'watch');
       let seen=this.observations.get(mouse);
@@ -222,10 +225,17 @@ export class PreyAudio {
       }
       if(seen.held){seen.held=false;this.cue('dragrelease',x,mouse,{priority:1,bypassCooldown:true});}
       seen.phase=phase;
-      // No idle/social/phase-change foley: source variety is too limited to
-      // justify pretending these aliases are different recorded behaviors.
+      // No idle footsteps or phase-change foley. Ambient vocals are scheduled globally.
       if(legacyNibbling&&!wasLegacyNibbling)this.cue('nibble',x,mouse);
       seen.nibbling=legacyNibbling;
+    }
+    if(time>=this.nextAmbient){
+      // One shared schedule prevents a large cast from becoming a chorus.
+      this.nextAmbient=time+(5+this.rng()*6)/density;
+      const candidates=mice.filter(ambientEligible);
+      if(candidates.length&&!this.voices.size){const mouse=candidates[Math.floor(this.rng()*candidates.length)%candidates.length];
+        this.cue('squeak',clamp(mouse.x/Math.max(1,width),0,1),mouse,{gainScale:.65});
+      }
     }
   }
 

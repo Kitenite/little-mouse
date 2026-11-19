@@ -37,7 +37,11 @@ held out for quietness/noise risk and absent listening; promotion is provisional
 approval. Even at maximum volume, prepared crawl gain × movement gain × jitter × master is
 at most 1.331 before surface attenuation; default material/strength makes it lower still.
 Low playback level cannot improve the source signal/noise ratio. Prefer omission to boosting it.
-Automatic idle, hidden, social and phase-change foley is removed; no phantom footsteps at rest.
+Occasional ambient recorded squeaks now play for visible, unheld, uninjured mice.
+A single global schedule uses an initial 2–5 s delay and randomized 5–11 s gaps divided
+by sound activity (default 1.25); ambient gain is 65% of the vocal bank. Busy voices
+skip that opportunity. Hiding/holding cancels the ambient voice; pause resets the timer.
+No hidden/social/phase-change foley or phantom footsteps at rest.
 Visible safe nibble/groom/scratch/stretch/roll poses retain short recorded activity cues.
 Crawl is a texture substitute for non-eating poses, not verified recordings of those activities.
 
