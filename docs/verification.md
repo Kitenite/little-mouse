@@ -3,9 +3,17 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
+## Library-backed comparison
+
+Official Babylon FurMaterial 9.37.1 runs on the actual body/limb mesh in the side-by-side
+review route. Pinned-library shell sharing/disposal tests pass; desktop comparison, repeated
+quality changes and console checks passed. Measured cost and limitations are recorded in
+[the comparison](fur-library-comparison.md). Build `090655f24dad` passes Worker syntax checking.
+The production renderer remains Three.js; no physical iPad migration or verification claimed.
+
 ## Regional fur
 
-316 web tests pass. Desktop fur review rendered eight top/side poses without console errors:
+318 web tests pass. Desktop fur review rendered eight top/side poses without console errors:
 39 calls / 53,708 triangles per fixture, unchanged by this update. Viewed screenshot shows
 short coat depth and readable limbs; the underlying angular rump/muzzle remain visible limits.
 Compression/recovery and seed stability have numerical coverage; physical iPad performance,
@@ -27,7 +35,7 @@ at 30/60/120 Hz pass. Physical iPad appearance remains pending.
 
 ## Local sensory pilot
 
-316 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
+318 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
 checks pass. Production build: `eec877e6b147`.
 Implemented 15 optional sensory comparisons, recorded repertoire control, bounded local
 logging/export and a 77-variable catalog. Browser smoke check confirmed controls, explicit

@@ -14,6 +14,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | [Visuals and backgrounds](visuals-backgrounds.md) | Realism target, materials, lighting and iPad rendering |
 | [Coat surfaces](coat-surfaces.md) | Region material contract, memory budget and reference comparison |
 | [Limb surfaces](limb-surfaces.md) | Continuous arm/leg skin, solved-joint attachment and visual evidence |
+| [Fur library comparison](fur-library-comparison.md) | Official Babylon option, measurements and renderer decision |
 | [Fur volume](fur-volume.md) | Geometric coat depth, Fuzziness, deformation and rendering budgets |
 | [Controls, network and native app](controls-network-native.md) | Local settings, owner exit, asset iteration and installed app |
 | [Validation and research](validation-research.md) | Acceptance evidence, critique agents, device checks and scientific limits |

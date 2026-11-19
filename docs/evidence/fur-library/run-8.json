@@ -1,0 +1,30 @@
+{
+  "result": {
+    "current": {
+      "medianMs": 0.10000002384185791,
+      "p95Ms": 0.20000004768371582
+    },
+    "library": {
+      "medianMs": 1,
+      "p95Ms": 1.2000000476837158
+    },
+    "libraryMetrics": {
+      "library": "@babylonjs/materials@9.37.1 FurMaterial",
+      "shells": 8,
+      "drawCalls": 67,
+      "triangles": 92976,
+      "meshes": 67,
+      "materials": 67,
+      "textures": 6,
+      "ready": true,
+      "compressionSupported": false,
+      "regionalGroomingSupported": false
+    },
+    "frames": 120,
+    "gpuSynchronized": true,
+    "alternatingOrder": true,
+    "includesLibraryAdapter": true,
+    "pose": "run",
+    "device": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+  }
+}

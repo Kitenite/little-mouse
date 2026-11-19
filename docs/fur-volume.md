@@ -106,12 +106,9 @@ Fuzziness tests; three-UI/resource-cycle browser checks were lead-run, not indep
 Historical suite totals are superseded by [current verification](verification.md). No deployment, physical-device quality,
 photorealism or feline-response claim.
 
-## Library assessment
+## Library comparison
 
-[Babylon.js FurMaterial](https://github.com/BabylonJS/Babylon.js/blob/master/packages/dev/materials/src/fur/furMaterial.ts)
-is a maintained-engine source implementation of shell-based fur. It depends on Babylon
-materials/meshes; it is not directly usable as a Three.js material. A port or renderer
-migration needs separate comparison of articulation, shadowing and physical iPad fill cost.
-[Three.js InstancedMesh](https://threejs.org/docs/pages/InstancedMesh.html) supplies reusable
-instancing infrastructure, not a complete fur system. Current tufts already batch into five
-volume draws per mouse. No library migration or measured performance superiority is claimed.
+The official Babylon.js FurMaterial is installed, pinned and runnable on the real mouse rig
+at `/review/fur-library.html`. See [comparison and measurements](fur-library-comparison.md).
+The current renderer remains the game default based on measured desktop adapter cost and
+feature coverage. This is an implemented comparison, not a completed engine migration.
