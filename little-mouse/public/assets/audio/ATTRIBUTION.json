@@ -61,9 +61,20 @@
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
       "verified": "2026-11-17",
       "previewSha256": "c8a5f595d2a719545bd25a9547bc9f67d545b9f04c2f824e7741d676f77062f9"
+    },
+    "crawl": {
+      "title": "mouse.wav",
+      "author": "jimmyfisher",
+      "url": "https://freesound.org/people/jimmyfisher/sounds/415230/",
+      "download": "https://cdn.freesound.org/previews/415/415230_6502466-hq.mp3",
+      "recording": "Uploader identifies a mouse crawling in a kitchen, DR-05 recorder. Very quiet source; species and isolated sound content not independently verified. Listening pending.",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "verified": "2026-11-17",
+      "previewSha256": "6ef7a62f4ea008617efed2cc834276ef51b4e8b7c8425938a4f9655a4bb13ff9"
     }
   },
-  "processing": "Public HQ MP3 previews decoded; mono 22050 Hz PCM; 180 Hz high-pass / 10.5 kHz low-pass; excerpting; bounded peak/RMS gain; 12 ms endpoint fades. Slight playback-rate variation occurs at runtime.",
+  "processing": "Public HQ MP3 previews decoded; mono 22050 Hz PCM; 180 Hz high-pass / 10.5 kHz low-pass; excerpting; bounded peak/RMS gain; 12 ms endpoint fades. Playback remains at recorded pitch and timing (rate 1).",
   "auditionLimitation": "Waveforms, spectrograms and peaks checked. This agent runtime cannot hear audio; no subjective listening approval is claimed.",
   "clips": [
     {
@@ -545,6 +556,43 @@
       "rms": 0.0276177521176783,
       "bytes": 22094,
       "sha256": "a3b7339c675850ed8353acf04bc9b321e64a4d7b88f0bdaf88fae6c80cd32e96"
+    },
+    {
+      "id": "crawl-01",
+      "file": "crawl-01.wav",
+      "source": "crawl",
+      "start": 5.0,
+      "duration": 0.5500226757369614,
+      "gain": 27.95939,
+      "peak": 0.32745361328125,
+      "rms": 0.02499923097755242,
+      "bytes": 24300,
+      "sha256": "cecdd2150d59d44aa1804660763b65a5778ecffeefb501a70fa6ca1062333a1c"
+    },
+    {
+      "id": "crawl-02",
+      "file": "crawl-02.wav",
+      "source": "crawl",
+      "start": 6.5,
+      "duration": 0.4500226757369615,
+      "gain": 32,
+      "peak": 0.228668212890625,
+      "rms": 0.01133407197239602,
+      "bytes": 19890,
+      "sha256": "4f1c06c588aac1cdee799e1cdeec4134cfbf1ec64116c2c9d3b5ce726360bdb1"
+    },
+    {
+      "id": "crawl-03",
+      "file": "crawl-03.wav",
+      "source": "crawl",
+      "start": 9.0,
+      "duration": 0.5,
+      "gain": 32,
+      "peak": 0.21063232421875,
+      "rms": 0.012749197296379114,
+      "bytes": 22094,
+      "sha256": "278ff28c7d649dc7aeb224d077a920ce6f1f5634364cd8865e615ed13511ec6f"
     }
-  ]
+  ],
+  "status": "Runtime: floor, mouse, cracker and crawl. Paper, rat and hamster archived only. Physical listening pending."
 }

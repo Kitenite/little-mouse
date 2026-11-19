@@ -53,16 +53,12 @@ test('mute/pause/background stops already scheduled phrases immediately',async()
     assert.equal(audio.voices.size,0);assert.equal(audio.cue('hit'),false);
   }
 });
-test('concealed mice rustle occasionally, active transitions get specific cues',async()=>{
-  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
-  const mouse={x:0,y:100,state:'away',hunt:{phase:'hidden'},moving:false};
-  audio.update([mouse],0,1000);assert.equal(audio.played,0);
-  context.advance(1.1);audio.update([mouse],1.1,1000);assert.equal(audio.lastPlayed.kind,'rustle');
-  context.advance(2);audio.update([mouse],2,1000);assert.equal(audio.played,1);
-  mouse.state='active';mouse.hunt.phase='peek';context.advance(3);audio.update([mouse],3,1000);assert.equal(audio.lastPlayed.kind,'peek');
-  mouse.hunt.phase='dart';context.advance(4);audio.update([mouse],4,1000);assert.equal(audio.lastPlayed.kind,'peek');
-  mouse.x+=20;context.advance(4.1);audio.update([mouse],4.1,1000);assert.equal(audio.lastPlayed.kind,'patter');
-  mouse.hunt.phase='retreat';context.advance(6);audio.update([mouse],6,1000);mouse.x+=20;context.advance(6.1);audio.update([mouse],6.1,1000);assert.equal(audio.lastPlayed.kind,'retreat');
+test('phase transitions stay silent until actual movement earns a sparse texture',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hunt:{phase:'peek'},moving:true};
+ audio.update([mouse],0,1000,700);context.advance(1);audio.update([mouse],1,1000,700);assert.equal(audio.played,0);
+ mouse.x+=20;context.advance(1.1);audio.update([mouse],1.1,1000,700);assert.equal(audio.lastPlayed.kind,'patter');
+ mouse.hunt.phase='retreat';context.advance(6);audio.update([mouse],6,1000,700);mouse.x+=20;context.advance(6.1);audio.update([mouse],6.1,1000,700);assert.equal(audio.lastPlayed.kind,'retreat');
 });
 test('interruption can be recovered by another gesture without a stale voice backlog',async()=>{
   const {audio,context}=setup();audio.setState(true,true);await audio.unlock();audio.cue('patter');
@@ -71,16 +67,11 @@ test('interruption can be recovered by another gesture without a stale voice bac
   audio.reset();assert.equal(audio.voices.size,0);assert.equal(audio.lastCue,-Infinity);
 });
 
-test('social calls require two nearby visible mice; reply rechecks visibility',async()=>{
-  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
-  const mice=[{x:100,y:100,state:'active',hunt:{phase:'watch'}},{x:190,y:100,state:'active',hunt:{phase:'watch'}}];
-  audio.update(mice,0,1000,700);
-  // Silence incidental cues to isolate the proximity gate.
-  for(const mouse of mice)audio.observations.get(mouse).next=100;
-  context.advance(5);audio.update(mice,5,1000,700);assert.equal(audio.lastPlayed.kind,'call');
-  context.advance(6);audio.update(mice,6,1000,700);assert.equal(audio.lastPlayed.kind,'reply');
-  context.advance(15);audio.update(mice,15,1000,700);assert.equal(audio.lastPlayed.kind,'call');
-  const played=audio.played;mice[1].state='away';context.advance(16);audio.update(mice,16,1000,700);assert.equal(audio.played,played);
+test('idle, hidden and nearby mice do not trigger generic crawl aliases',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mice=[{x:100,y:100,state:'active',hunt:{phase:'watch'}},{x:190,y:100,state:'active',hunt:{phase:'watch'}},{x:-20,y:100,state:'away',hunt:{phase:'hidden'}}];
+ for(let time=0;time<60;time++){context.advance(time);audio.update(mice,time,1000,700);}
+ assert.equal(audio.played,0);
 });
 test('nibble sound requires the explicit visible nibbling animation contract',async()=>{
   const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
@@ -95,7 +86,7 @@ test('numeric sound settings clamp invalid values, volume zero mutes, activity c
   audio.configure({soundVolume:1,soundFrequency:.25});assert.equal(audio.master.gain.value,1.8);
   const mouse={x:0,y:0,state:'away',hunt:{phase:'hidden'}};
   audio.update([mouse],0,1000,700);context.advance(2);audio.update([mouse],2,1000,700);
-  assert.ok(audio.observations.get(mouse).next>=12);
+  assert.equal(audio.played,0); // Generic idle foley stays silent at any activity setting.
   audio.configure({soundVolume:NaN,soundFrequency:Infinity});assert.equal(audio.settings.soundVolume,.7);assert.equal(audio.settings.soundFrequency,1);
 });
 
@@ -168,16 +159,6 @@ test('muting during a paused preview cancels its voice immediately',async()=>{
  const {audio}=setup();audio.setState(true,false);await audio.testSound();assert.equal(audio.voices.size,1);
  audio.setState(false,false);assert.equal(audio.voices.size,0);
 });
-test('a pending calm reply is cancelled if its mouse is grabbed or injured',async()=>{
- for(const change of [m=>{m.hold={active:true,part:'body'};},m=>{m.injuredUntil=20;},m=>{m.hunt.phase='retreat';}]){
-  const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
-  const a={x:100,y:100,state:'active',hunt:{phase:'watch'}},b={x:180,y:100,state:'active',hunt:{phase:'watch'}};
-  audio.update([a,b],0,1000,700);for(const m of [a,b])audio.observations.get(m).next=100;
-  context.advance(5);audio.update([a,b],5,1000,700);assert.equal(audio.lastPlayed.kind,'call');change(b);
-  context.advance(6);audio.update([a,b],6,1000,700);assert.notEqual(audio.lastPlayed.kind,'reply');assert.equal(audio.pendingReply,null);
- }
-});
-
 test('shipped recording files match provenance, have faded endpoints and no near-silent vocal cuts',()=>{
   const base=new URL('../public/assets/audio/',import.meta.url),manifest=JSON.parse(readFileSync(new URL('ATTRIBUTION.json',base)));
   for(const id of recordedSamples)assert.equal(manifest.clips.filter(c=>c.id===id).length,1);
@@ -206,10 +187,10 @@ test('paused audition selects an event family and repeated impact previews are n
 });
 
 test('calm idle banks remain nonvocal; explicit touch uses collected vocals',async()=>{
-  for(const kind of ['peek','tease','call','reply','flinch','dragrelease','groom','facewipe','hindlegscratch','stretch','roll'])assert.ok(sampleBanks[kind].every(id=>id.startsWith('paper-')),kind);
+  for(const kind of ['peek','tease','call','reply','flinch','groom','facewipe','hindlegscratch','stretch','roll'])assert.ok(sampleBanks[kind].every(id=>id.startsWith('crawl-')),kind);
   const {audio,context}=setup();audio.rng=()=>.99;audio.setState(true,true);await audio.unlock();
   const mouse={x:100,y:100,state:'active',hunt:{phase:'watch'}};
-  for(let time=0;time<60;time++){context.advance(time);audio.update([mouse],time,1000,700);if(audio.lastPlayed)assert.ok(audio.lastPlayed.sample.startsWith('paper-'));}
+  for(let time=0;time<60;time++){context.advance(time);audio.update([mouse],time,1000,700);if(audio.lastPlayed)assert.ok(audio.lastPlayed.sample.startsWith('crawl-'));}
 });
 test('animated activities cue once on entry with sparse repeats and cancel their own voice on interruption',async()=>{
   for(const [activity,kind] of [['nibble','nibble'],['groom','groom'],['scratch','hindlegscratch'],['stretch','stretch'],['roll','roll']]){
@@ -248,10 +229,11 @@ test('a sounding activity cancels on expiry, removal, offscreen, toss or incompa
 });
 
 
-test('friction clip trims match RMS within one dB and retain bounded transient gain',()=>{
-  const manifest=JSON.parse(readFileSync(new URL('../public/assets/audio/ATTRIBUTION.json',import.meta.url)));
-  const levels=manifest.clips.filter(c=>c.source==='paper').map(c=>{assert.ok(sampleTrim[c.id]>0&&sampleTrim[c.id]<=2);return c.rms*sampleTrim[c.id];});
-  assert.ok(20*Math.log10(Math.max(...levels)/Math.min(...levels))<1);
+test('crawl textures retain source dynamics without runtime normalization or pitch changes',async()=>{
+ assert.deepEqual(sampleTrim,{});
+ const {audio,context}=setup();audio.rng=()=>.1;audio.setState(true,true);await audio.unlock();
+ audio.cue('patter');assert.equal(context.sources[0].playbackRate.value,1);
+ assert.ok(!recordedSamples.some(id=>id.startsWith('paper-')));
 });
 
 test('stopping while an audition awaits recordings prevents delayed playback after pause',async()=>{
@@ -354,7 +336,7 @@ test('walking and dragging stay substantially below squeaks while contact gain r
  const rms=new Map(manifest.clips.map(c=>[c.id,c.rms]));
  const power=kind=>Math.sqrt(sampleBanks[kind].reduce((sum,id)=>sum+(rms.get(id)*(sampleTrim[id]??1)*sampleMix[kind])**2,0)/sampleBanks[kind].length);
  for(const kind of ['patter','retreat','dragloop'])assert.ok(20*Math.log10(power(kind)/power('squeak')) < -22,kind);
- assert.equal(sampleMix.tap,.2);assert.equal(sampleMix.hit,.38);assert.equal(sampleMix.hurt,.32);assert.equal(sampleMix.squeak,.28);
+ assert.equal(sampleMix.tap,.48);assert.equal(sampleMix.hit,.48);assert.equal(sampleMix.hurt,.48);assert.equal(sampleMix.squeak,.48);
  assert.ok(power('tap')>power('patter')*5);
 });
 test('startup loads touch vocal recordings before movement textures',async()=>{
@@ -406,10 +388,10 @@ test('quick injury replaces queued down before activation instead of flushing bo
 });
 
 
-test('runtime uses mouse-eating cracker cuts and excludes archived rat, hamster and crawl recordings',()=>{
+test('runtime uses mouse-eating cracker cuts and uses crawl textures and excludes archived rat, hamster and paper recordings',()=>{
  assert.deepEqual(sampleBanks.nibble,Array.from({length:6},(_,i)=>`cracker-${String(i+1).padStart(2,'0')}`));
- assert.deepEqual(sampleBanks.eat,sampleBanks.nibble);assert.equal(recordedSamples.length,26);
- for(const id of Object.values(sampleBanks).flat())assert.ok(!/^(rat|chew|crawl)-/.test(id),id);
+ assert.deepEqual(sampleBanks.eat,sampleBanks.nibble);assert.equal(recordedSamples.length,25);
+ for(const id of Object.values(sampleBanks).flat())assert.ok(!/^(rat|chew|paper)-/.test(id),id);
  assert.ok(sampleBanks.hit.every(id=>/^(mouse|floor)-/.test(id)));assert.ok(sampleBanks.hurt.every(id=>/^(mouse|floor)-/.test(id)));
  assert.equal(sampleMix.nibble,.3);assert.equal(sampleMix.eat,.3);
 });
@@ -420,18 +402,18 @@ test('surface friction scales existing recorded movement by material and strengt
   const mouse={x:100,y:100,state:'active',moving:true,speed:0,vx:0,vy:0,hunt:{phase:'creep'}};
   audio.update([mouse],0,1000,700);mouse.x+=20;context.advance(.1);audio.update([mouse],.1,1000,700);
   assert.equal(audio.played,1);assert.equal(audio.voices.size,1);assert.equal(audio.lastPlayed.kind,'patter');assert.equal(audio.lastPlayed.source,'recording');
-  assert.equal(audio.lastPlayed.gainScale,.55*surfaceFriction(background));assert.ok(audio.lastPlayed.sample.startsWith('paper-'));
+  assert.equal(audio.lastPlayed.gainScale,.55*surfaceFriction(background));assert.ok(audio.lastPlayed.sample.startsWith('crawl-'));
  }
  assert.equal(surfaceFriction('photo-boards'),.08);assert.ok(surfaceFriction('photo-boards')<surfaceFriction('grass'));
 });
-test('stationary anchor struggle is silent but actual zero-velocity dragging rustles sparsely',async()=>{
+test('stationary holds squeak sparsely and actual zero-velocity dragging adds quiet sparse textures',async()=>{
  const {audio,context}=setup();audio.configure({background:'linen',environmentStrength:1});audio.setState(true,true);await audio.unlock();
  const mouse={x:100,y:100,state:'active',vx:0,vy:0,speed:0,hold:{active:true,part:'tail',anchorVX:800,anchorVY:800}};
  for(let i=0;i<=100;i++){context.advance(i/10);audio.update([mouse],i/10,5000,700);}
- assert.equal(audio.played,0);
- const starts=[];for(let i=101;i<=300;i++){mouse.x+=10;context.advance(i/10);const before=audio.played;audio.update([mouse],i/10,5000,700);if(audio.played>before)starts.push(i/10);assert.ok(audio.voices.size<=1);}
- assert.ok(starts.length>=8&&starts.length<=14);for(let i=1;i<starts.length;i++)assert.ok(starts[i]-starts[i-1]>=.9);
- assert.equal(audio.lastPlayed.kind,'dragloop');const played=audio.played;context.advance(30.1);audio.update([mouse],30.1,5000,700);assert.equal(audio.voices.size,0);assert.equal(audio.played,played);
+ assert.ok(audio.played>=1&&audio.played<=3);assert.equal(audio.lastPlayed.kind,'dragstart');
+ const starts=[];for(let i=101;i<=300;i++){mouse.x+=10;context.advance(i/10);const before=audio.played;audio.update([mouse],i/10,5000,700);if(audio.played>before&&audio.lastPlayed.surface)starts.push(i/10);assert.ok(audio.voices.size<=2);}
+ assert.ok(starts.length>=3&&starts.length<=6);for(let i=1;i<starts.length;i++)assert.ok(starts[i]-starts[i-1]>=2.4);
+ const played=audio.played;context.advance(30.1);audio.update([mouse],30.1,5000,700);assert.equal(audio.voices.size,0);assert.equal(audio.played,played);
 });
 test('material changes, zero strength, pause and mute cancel surface voices without replaying movement',async()=>{
  const {audio,context}=setup();audio.configure({background:'linen'});audio.setState(true,true);await audio.unlock();
@@ -462,10 +444,10 @@ test('irregular update cadence preserves bounded displacement-driven friction sp
  for(const intervals of [[1/30],[1/60],[.01,.04,.025,.1]]){
   const {audio,context}=setup();audio.configure({background:'felt',soundFrequency:2});audio.setState(true,true);await audio.unlock();
   const mouse={x:100,y:100,state:'active',moving:true,hunt:{phase:'creep'}};audio.update([mouse],0,10000,700);let time=0,index=0,last=-Infinity;
-  while(time<10){const dt=Math.min(intervals[index++%intervals.length],10-time);time+=dt;mouse.x+=100*dt;context.advance(time);const before=audio.played;audio.update([mouse],time,10000,700);if(audio.played>before){assert.ok(time-last>=.9-1e-9);last=time;}assert.ok(audio.voices.size<=1);}
+  while(time<10){const dt=Math.min(intervals[index++%intervals.length],10-time);time+=dt;mouse.x+=100*dt;context.advance(time);const before=audio.played;audio.update([mouse],time,10000,700);if(audio.played>before){assert.ok(time-last>=2.4-1e-9);last=time;}assert.ok(audio.voices.size<=1);}
   counts.push(audio.played);
  }
- assert.ok(Math.min(...counts)>=10);assert.ok(Math.max(...counts)-Math.min(...counts)<=1);
+ assert.ok(Math.min(...counts)>=4);assert.ok(Math.max(...counts)-Math.min(...counts)<=1);
 });
 
 test('a later local touch retries failed recording downloads after the server returns',async t=>{
@@ -479,13 +461,13 @@ test('a later local touch retries failed recording downloads after the server re
 
 test('recording recovery preserves successes, coalesces gestures and bounds repeated failures',async t=>{
  let now=10000,attempt=0,release;t.mock.method(Date,'now',()=>now);const requests=[];
- const context=new Context(),audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async id=>{requests.push(id);if(attempt===1)await new Promise(resolve=>{(release??=[]).push(resolve);});if(id!=='paper-01')throw Error('offline');return{duration:.3};}});
- audio.setState(true,true);await audio.unlock();await audio.loadSamples();const retained=audio.sampleBuffers.get('paper-01');
- for(let i=0;i<20;i++)audio.contactFeedback({x:10},1000);await audio.loadSamples();assert.equal(requests.length,26,'backoff blocks contact storms');
- now+=1001;await audio.loadSamples();assert.equal(requests.length,26,'time alone and read-only load await do not retry');
+ const context=new Context(),audio=new PreyAudio({contextFactory:()=>context,sampleLoader:async id=>{requests.push(id);if(attempt===1)await new Promise(resolve=>{(release??=[]).push(resolve);});if(id!=='crawl-01')throw Error('offline');return{duration:.3};}});
+ audio.setState(true,true);await audio.unlock();await audio.loadSamples();const retained=audio.sampleBuffers.get('crawl-01');
+ for(let i=0;i<20;i++)audio.contactFeedback({x:10},1000);await audio.loadSamples();assert.equal(requests.length,25,'backoff blocks contact storms');
+ now+=1001;await audio.loadSamples();assert.equal(requests.length,25,'time alone and read-only load await do not retry');
  attempt=1;audio.contactFeedback({x:10},1000);for(let i=0;i<20;i++)audio.contactFeedback({x:20},1000);
- assert.equal(requests.length,30,'one four-request flight shared by every touch');assert.equal(audio.pendingContacts.length,10);
- attempt=2;for(const resolve of release)resolve();await audio.loadSamples();assert.equal(requests.length,51);assert.equal(audio.sampleErrors.length,25);assert.equal(new Set(audio.sampleErrors.map(e=>e.id)).size,25);assert.equal(audio.sampleBuffers.get('paper-01'),retained);assert.equal(requests.filter(id=>id==='paper-01').length,1);
+ assert.equal(requests.length,29,'one four-request flight shared by every touch');assert.equal(audio.pendingContacts.length,10);
+ attempt=2;for(const resolve of release)resolve();await audio.loadSamples();assert.equal(requests.length,49);assert.equal(audio.sampleErrors.length,24);assert.equal(new Set(audio.sampleErrors.map(e=>e.id)).size,24);assert.equal(audio.sampleBuffers.get('crawl-01'),retained);assert.equal(requests.filter(id=>id==='crawl-01').length,1);
 });
 test('cancel, mute, pause and expired input remain silent when a retry finishes',async t=>{
  let now=10000;t.mock.method(Date,'now',()=>now);
@@ -529,4 +511,33 @@ test('removing a mouse cancels its activity phrase without cancelling other mice
  audio.update([a],0,1000,700);context.currentTime=.4;audio.update([a,b],.4,1000,700);assert.equal(audio.voices.size,2);
  audio.update([b],.41,1000,700);assert.equal([...audio.voices].some(v=>v.owner===a),false);assert.ok([...audio.voices].some(v=>v.owner===b));
  audio.contactFeedback(a,1000,'touch',1);audio.update([], .42,1000,700);assert.ok([...audio.voices].some(v=>v.owner===a&&v.priority===2));
+});
+
+test('every cue uses native-rate recordings and no synthesized fallback when all sources fail',async()=>{
+ const {audio,context}=setup();audio.rng=()=>.999;audio.setState(true,true);await audio.unlock();
+ context.createOscillator=()=>{throw Error('synthetic oscillator forbidden');};
+ context.createBuffer=()=>{throw Error('generated buffer forbidden');};
+ let time=0;for(const kind of Object.keys(sampleBanks)){context.advance(time+=1);assert.equal(audio.cue(kind),true);assert.equal(context.sources.at(-1).playbackRate.value,1);assert.ok([...audio.sampleBuffers.values()].includes(context.sources.at(-1).buffer));}
+ audio.sampleBuffers.clear();audio.stop();const count=context.sources.length;
+ for(const kind of Object.keys(sampleBanks)){context.advance(time+=1);assert.equal(audio.cue(kind),false);}
+ assert.equal(context.sources.length,count);
+});
+test('three loudest recorded peaks fit limiter input headroom and static output remains bounded',async()=>{
+ const {audio}=setup();audio.setState(true,true);await audio.unlock();assert.equal(audio.limiterInput.gain.value,.5);
+ const manifest=JSON.parse(readFileSync(new URL('../public/assets/audio/ATTRIBUTION.json',import.meta.url)));
+ const peaks=new Map(manifest.clips.map(c=>[c.id,c.peak]));
+ const voicePeak=Math.max(...Object.entries(sampleBanks).flatMap(([kind,ids])=>ids.map(id=>peaks.get(id)*sampleMix[kind]*(sampleTrim[id]??1)*1.05)));
+ const maximum=voicePeak*1.8*3;assert.ok(maximum>1&&maximum*.5<1);
+ const curve=audio.limiter.curve;assert.ok(curve.every(v=>Number.isFinite(v)&&Math.abs(v)<.85));
+ for(let i=1;i<curve.length;i++)assert.ok(curve[i]>=curve[i-1]);
+});
+test('sustained hold vocal ducks movement, respects contact priority, and cancels when hidden or muted',async()=>{
+ const {audio,context}=setup();audio.setState(true,true);await audio.unlock();
+ const mouse={x:100,y:100,state:'active',hold:{active:true}};audio.contactFeedback(mouse,1000,'touch',1);audio.update([mouse],0,1000,700);
+ context.advance(2.9);audio.update([mouse],2.9,1000,700);assert.equal(audio.played,1);
+ context.advance(3);audio.update([mouse],3,1000,700);assert.equal(audio.lastPlayed.kind,'dragstart');assert.ok(audio.lastPlayed.sample.startsWith('floor-'));
+ assert.equal(audio.cue('dragloop',.5,mouse,{priority:1,bypassCooldown:true}),false);
+ mouse.hiddenUntil=10;context.advance(3.1);audio.update([mouse],3.1,1000,700);assert.equal(audio.voices.size,0);
+ mouse.hiddenUntil=0;audio.setState(false,true);context.advance(10);audio.update([mouse],10,1000,700);assert.equal(audio.voices.size,0);
+ audio.setState(true,true);audio.update([mouse],10,1000,700);assert.equal(audio.voices.size,0);
 });

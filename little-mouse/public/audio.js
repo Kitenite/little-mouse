@@ -3,9 +3,10 @@ import{recordedSamples,sampleBanks,sampleMix,sampleTrim,surfaceFriction}from'./a
 // Every source buffer is a collected recording; missing assets remain silent.
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const OUTPUT_GAIN=1.8;
-// Identity through normal cue levels, a soft knee above .6, and a bounded
-// ceiling below .81 even if three unusually strong phrases overlap.
-export function createLimiterCurve(){const curve=new Float32Array(2049);for(let i=0;i<curve.length;i++){const x=i/(curve.length-1)*2-1,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.6?a:.6+.25*(1-Math.exp(-(a-.6)/.25)));}return curve;}
+// Identity through normal levels and a soft knee above .6. The graph scales
+// input by 1/2 and restores it in the curve, accommodating three loud voices
+// without hard clamping the waveshaper input. Static output stays below .85.
+export function createLimiterCurve(inputRange=1){const curve=new Float32Array(2049);for(let i=0;i<curve.length;i++){const x=(i/(curve.length-1)*2-1)*inputRange,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.6?a:.6+.25*(1-Math.exp(-(a-.6)/.25)));}return curve;}
 export const audioDefaults={soundVolume:.7,soundFrequency:1};
 export const audioControlSchema={
   soundVolume:{min:0,max:1,step:.05,default:.7,label:'Sound volume'},
@@ -44,7 +45,8 @@ export class PreyAudio {
       if(!this.context||this.context.state==='closed'){
         this.context=this.contextFactory();this.master=this.context.createGain();
         this.masterVolume=this.settings.soundVolume*OUTPUT_GAIN;this.master.gain.value=this.masterVolume;
-        this.limiter=this.context.createWaveShaper();this.limiter.curve=createLimiterCurve();this.limiter.oversample='2x';this.master.connect(this.limiter);
+        this.limiterInput=this.context.createGain();this.limiterInput.gain.value=.5;
+        this.limiter=this.context.createWaveShaper();this.limiter.curve=createLimiterCurve(2);this.limiter.oversample='2x';this.master.connect(this.limiterInput);this.limiterInput.connect(this.limiter);
         this.analyser=this.context.createAnalyser?.();
         if(this.analyser){this.analyser.fftSize=256;this.samples=new Float32Array(256);this.limiter.connect(this.analyser);this.analyser.connect(this.context.destination);}else this.limiter.connect(this.context.destination);
         this.context.onstatechange=()=>{if(!this.ready)this.stop();else this.flushContacts();};
@@ -56,7 +58,7 @@ export class PreyAudio {
     }catch(error){this.pendingContacts=[];this.lastError=String(error?.message||error);return Promise.resolve(false);}
   }
   stop(){
-    this.auditionGeneration++;this.pendingReply=null;this.pendingContacts=[];this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.surfaceMotion=new WeakMap();
+    this.auditionGeneration++;this.observations=new WeakMap();this.pendingReply=null;this.pendingContacts=[];this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.surfaceMotion=new WeakMap();
     for(const voice of [...this.voices])voice.cancel();
   }
   reset(){this.stop();this.observations=new WeakMap();this.lastCue=this.lastHit=-Infinity;this.nextSocial=null;this.pendingReply=null;}
@@ -106,13 +108,13 @@ export class PreyAudio {
       const choices=fresh.length?fresh:different.length?different:round.remaining;
       sampleId=choices[Math.min(choices.length-1,Math.floor(this.rng()*choices.length))];round.remaining=round.remaining.filter(id=>id!==sampleId);this.lastSample=sampleId;this.sampleChoice[kind]=sampleId;this.lastVariant[kind]=sampleBanks[kind].indexOf(sampleId);
       source=context.createBufferSource();source.buffer=this.sampleBuffers.get(sampleId);
-      source.playbackRate.value=.96+this.rng()*.08;
+      source.playbackRate.value=1; // Preserve recorded timing and pitch, including movement.
       duration=source.buffer.duration/source.playbackRate.value;
       const level=(sampleMix[kind]??.2)*(sampleTrim[sampleId]??1)*(.9+this.rng()*.15)*clamp(gainScale,0,1);
       gain.gain.setValueAtTime(.0001,t);gain.gain.linearRampToValueAtTime(level,t+.008);gain.gain.setValueAtTime(level,t+Math.max(.01,duration-.018));gain.gain.linearRampToValueAtTime(.0001,t+duration);
       source.connect(gain);
     }
-    if(priority===2){this.foleyUntil=Math.max(this.foleyUntil,t+Math.max(.45,duration));for(const voice of [...this.voices])if(voice.priority<2)voice.cancel();}
+    if(priority===2||kind==='dragstart'){this.foleyUntil=Math.max(this.foleyUntil,t+Math.max(.45,duration));for(const voice of [...this.voices])if(voice.priority<priority||voice.surface)voice.cancel();}
     nodes.push(source);let cleaned=false;
     const cleanup=()=>{if(cleaned)return;cleaned=true;for(const node of nodes)node.disconnect();this.voices.delete(voice);};
     const voice={owner,priority,pointerId,kind,surface,cancel:()=>{try{source.stop();}catch{}cleanup();}};
@@ -176,21 +178,21 @@ export class PreyAudio {
     if(current.distance>=8&&time>=current.next){
       const kind=held?'dragloop':mouse.hunt?.phase==='retreat'?'retreat':'patter';
       if(this.cue(kind,clamp(mouse.x/Math.max(1,width),0,1),mouse,{priority:held?1:0,surface:true,gainScale:this.surface.strength*surfaceFriction(this.surface.background)})){
-        current.distance=0;current.next=time+Math.max(.9,(1.2+this.rng()*.8)/this.settings.soundFrequency);
+        current.distance=0;current.next=time+Math.max(2.4,(3+this.rng()*3)/this.settings.soundFrequency);
       }
     }
     return true;
   }
   update(mice,time,width,height=Infinity){
     if(!this.enabled||!this.active||!this.ready)return;
-    for(const voice of [...this.voices])if(voice.owner&&(voice.surface||voice.priority===0)&&!mice.includes(voice.owner))voice.cancel();
+    for(const voice of [...this.voices])if(voice.owner&&(voice.surface||voice.priority<2)&&!mice.includes(voice.owner))voice.cancel();
     const density=this.settings.soundFrequency,visible=mouse=>mouse.state==='active'&&!(mouse.hiddenUntil>time)&&mouse.x>=0&&mouse.x<=width&&mouse.y>=0&&mouse.y<=height;
-    const calm=mouse=>visible(mouse)&&!mouse.hold&&!(mouse.activity?.until>time)&&!(mouse.injuredUntil>time)&&!['retreat','dart','injury','toss'].includes(mouse.hunt?.phase);
     for(const mouse of mice){
       const phase=mouse.hunt?.phase||(mouse.state==='away'?'hidden':mouse.leaving?'retreat':mouse.entering?'peek':mouse.moving?'creep':'watch');
       let seen=this.observations.get(mouse);
       if(!seen){seen={phase:null,next:time+.5+this.rng(),nibbling:false};this.observations.set(mouse,seen);}
       const x=clamp(mouse.x/Math.max(1,width),0,1),held=!!mouse.hold?.active;
+      for(const voice of [...this.voices])if(voice.owner===mouse&&voice.kind==='dragstart'&&(!held||!visible(mouse)))voice.cancel();
       const displaced=this.updateSurface(mouse,time,width,height,visible(mouse));
       const legacyNibbling=visible(mouse)&&!mouse.hold&&!mouse.activity&&phase==='watch'&&!mouse.moving&&!(mouse.tossUntil>time)&&!(mouse.injuredUntil>time)&&!(mouse.startledUntil>time)&&mouse.nibblingUntil>time;
       const wasLegacyNibbling=seen.legacyNibbling;
@@ -209,39 +211,24 @@ export class PreyAudio {
       }
       seen.activityKey=null;
       if(held){
-        seen.held=true;seen.next=time+2;continue;
+        // Pointer-down already supplies the immediate squeak. A sustained hold or
+        // drag gets a sparse recorded response, independent of foot movement.
+        if(!seen.held)seen.holdNext=time+3;
+        seen.held=true;seen.next=time+2;
+        if(visible(mouse)&&time>=seen.holdNext){
+          if(this.cue('dragstart',x,mouse,{priority:1}))seen.holdNext=time+4+this.rng()*3;
+        }
+        continue;
       }
       if(seen.held){seen.held=false;this.cue('dragrelease',x,mouse,{priority:1,bypassCooldown:true});}
-      const changed=seen.phase!==phase;
       seen.phase=phase;
-      // One concealed rustle suggests a hiding place, then leave several seconds
-      // of quiet. Faster movement earns short patter phrases, not a constant loop.
-      const nibbling=legacyNibbling;
-      if(nibbling&&!wasLegacyNibbling){this.cue('nibble',x,mouse);seen.next=time+2/density;}
-      seen.nibbling=nibbling;
-      if(changed&&['peek','dart','retreat'].includes(phase)){
-        if(phase==='peek')this.cue('peek',x);seen.next=time+(1+this.rng()*1.8)/density;
-      }else if(!displaced&&!mouse.moving&&time>=seen.next&&mouse.state!=='defeated'&&phase!=='injury'){
-        const roll=this.rng(),kind=nibbling?'nibble':phase==='hidden'?'rustle':phase==='watch'&&roll<.3?'tease':roll<.55?'sniff':'rustle';
-        this.cue(kind,x,nibbling?mouse:null);
-        seen.next=time+(2.5+this.rng()*3.5)/density;
-      }
-    }
-    // Sparse movement textures between nearby calm mice. Legacy call/reply
-    // identifiers deliberately contain no distress vocal recordings.
-    if(this.pendingReply&&time>=this.pendingReply.at){
-      const {mouse,caller}=this.pendingReply;this.pendingReply=null;
-      if(calm(mouse)&&calm(caller)&&Math.hypot(mouse.x-caller.x,mouse.y-caller.y)<Math.min(240,width*.3))this.cue('reply',mouse.x/width);
-    }
-    this.nextSocial??=time+4/density;
-    if(time>=this.nextSocial){
-      this.nextSocial=time+(6+this.rng()*6)/density;
-      const nearby=mice.filter(calm);
-      let pair;
-      for(let i=0;i<nearby.length&&!pair;i++)for(let j=i+1;j<nearby.length;j++)if(Math.hypot(nearby[i].x-nearby[j].x,nearby[i].y-nearby[j].y)<Math.min(240,width*.3)){pair=[nearby[i],nearby[j]];break;}
-      if(pair&&this.cue('call',pair[0].x/width))this.pendingReply={caller:pair[0],mouse:pair[1],at:time+.55+this.rng()*.35};
+      // No idle/social/phase-change foley: source variety is too limited to
+      // justify pretending these aliases are different recorded behaviors.
+      if(legacyNibbling&&!wasLegacyNibbling)this.cue('nibble',x,mouse);
+      seen.nibbling=legacyNibbling;
     }
   }
+
   async testSound(kind='squeak'){
     if(!Object.hasOwn(sampleBanks,kind))kind='squeak';
     // The caller must invoke this method directly from the local click handler.

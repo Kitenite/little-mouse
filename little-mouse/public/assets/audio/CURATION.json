@@ -34,7 +34,7 @@
       "previewSha256": "db10383e2a84c1018c5ee89a42ab5b2b562e5fc54a517dff5c1cacc994851ad4"
     }
   },
-  "processing": "Public HQ MP3 previews decoded; mono 22050 Hz PCM; 180 Hz high-pass / 10.5 kHz low-pass; excerpting; bounded peak/RMS gain; 12 ms endpoint fades. Slight playback-rate variation occurs at runtime.",
+  "processing": "Public HQ MP3 previews decoded; mono 22050 Hz PCM; 180 Hz high-pass / 10.5 kHz low-pass; excerpting; bounded peak/RMS gain; 12 ms endpoint fades. Playback remains at recorded pitch and timing (rate 1).",
   "auditionLimitation": "Waveforms, spectrograms and peaks checked. This agent runtime cannot hear audio; no subjective listening approval is claimed.",
   "clips": [
     {
@@ -194,5 +194,5 @@
       "sha256": "7690ee2914759dd155dc30eaa50be411795654a5455a7b03b5fef7a49343d9ba"
     }
   ],
-  "status": "Curated candidates only; not wired into runtime banks. Physical listening and integration pending."
+  "status": "Runtime: floor, mouse, cracker and crawl. Paper, rat and hamster archived only. Physical listening pending."
 }

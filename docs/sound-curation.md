@@ -1,96 +1,73 @@
-# Sound curation — bounded inventory and asset handoff
+# Sound curation
 
-**Status:** four new squeaks and six mouse-eating excerpts integrated; physical listening pending. Reviewed 2026-11-17.
-Scope: baseline `9e2f7e8` has 30 excerpts / four originals / 25 contextual banks, not 25 recordings.
-User policy: taps use recorded squeaks; no duplicate tap foley, foot layer, generated tone or noise fallback.
-Keep immediate contact priority, mute, interruption cancellation and the three-voice cap.
-The runtime uses 26 excerpts: floor (4), uncertain mouse/rat (12), cracker (6), paper (4).
-Confirmed rat and hamster clips are excluded from live playback; crawl candidates are held out.
+**Implemented, pending listening:** native-rate recordings, louder vocals, quieter sparse crawl,
+no paper footsteps or automatic idle/social foley. Scope: Podrick audio worker, 2026-11-18.
+Owner policy: no artificial sounds; found/stock real recordings only; silence is the fallback.
+Pitch processing is forbidden across every bank. Gain, fades and limiting are mixing tools.
 
-## Evidence and identity key
+## Active inventory and identity
 
-Source identity below is uploader metadata, not independent zoological verification. All four existing sources are CC0 1.0.
-- **M:** [shyguy014 463789](https://freesound.org/people/shyguy014/sounds/463789/): trapped mouse/rat, species uncertain; struggling context. Not calm communication.
-- **R:** [Zabuhailo 143125](https://freesound.org/people/Zabuhailo/sounds/143125/): pet rat, not mouse; scream tag, eliciting context unspecified. “Distress” is an interpretation, not confirmed metadata.
-- **H:** [Yuval 204762](https://freesound.org/people/Yuval/sounds/204762/): hamster eating at night, not mouse. Eating context documented.
-- **P:** [BenjaminNelan 353125](https://freesound.org/people/BenjaminNelan/sounds/353125/): page rustle, not animal. All four cuts share one 1.129-second original.
+All four active originals have CC0 1.0 provenance. Source identity is uploader metadata,
+not independently verified species, isolation, behavioral context or sound quality.
 
-## Exhaustive baseline inventory
+| Source | Runtime cuts | Evidence / permitted interpretation |
+| --- | ---: | --- |
+| [berboberbo 727114](https://freesound.org/people/berboberbo/sounds/727114/) | floor-01…04 | Mice beneath a floor; source page identifies STC3-X recording. Touch/held/release feedback, context unverified. |
+| [shyguy014 463789](https://freesound.org/people/shyguy014/sounds/463789/) | mouse-01…12 | Trapped mouse/rat, species uncertain. Injury and explicit vocal audition, not calm autonomous calls. |
+| [Jon285 75166](https://freesound.org/people/Jon285/sounds/75166/) | cracker-01…06 | Pet mouse eating a prawn cracker; ambient noise/birdsong disclosed. Nibble/eat. |
+| [jimmyfisher 415230](https://freesound.org/people/jimmyfisher/sounds/415230/) | crawl-01…03 | Kitchen crawling, DR-05, scratch tags. Very quiet movement/scratch texture; not verified isolated mouse feet. |
 
-Duration in seconds; RMS/peak are linear full-scale PCM measurements, before runtime gain.
-Redundancy is source-level: M12/R8/H6/P4 denote cuts sharing that original; these are not independent recordings.
-Keep means retain only for the stated restricted use. Replace/remove concerns runtime mapping, not destruction of provenance.
+25 active excerpts / four originals / 25 named banks. Seventeen legacy/audition texture banks
+share three crawl cuts; aliases do not create diversity. Automatic idle/hidden/social/phase
+playback is removed. Runtime crawl cues require displacement or an explicit safe activity pose.
+Crawl on grooming/stretch/roll is a generic texture substitute, not a recording of each act.
+Floor cuts are nonoverlapping at 1.46–1.70, 2.28–2.62, 4.28–4.80, 4.98–5.32 s.
+Crawl cuts are nonoverlapping at 5.00–5.55, 6.50–6.95, 9.00–9.50 s from one 9.695 s original.
+Mouse and cracker cut intervals also do not overlap. Hash differences alone do not prove
+independent performances; source/cut intervals are the relevant evidence.
 
-| Clip | Identity/context | Seconds | RMS / peak | Redundancy | Decision / proper mapping |
-| --- | --- | ---: | --- | --- | --- |
-| mouse-01 | M | 0.380 | 0.04433 / 0.48529 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-02 | M | 0.360 | 0.08537 / 0.45267 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-03 | M | 0.350 | 0.06780 / 0.54999 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-04 | M | 0.500 | 0.08999 / 0.36612 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-05 | M | 0.450 | 0.08042 / 0.54999 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-06 | M | 0.470 | 0.08902 / 0.40836 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-07 | M | 0.380 | 0.08999 / 0.47818 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-08 | M | 0.360 | 0.08999 / 0.46356 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-09 | M | 0.480 | 0.08999 / 0.51340 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-10 | M | 0.400 | 0.08880 / 0.43671 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-11 | M | 0.380 | 0.08927 / 0.31955 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| mouse-12 | M | 0.400 | 0.08787 / 0.30695 | M12 | Keep: explicit injury/vocal audition only; replace harmless tap with new source |
-| rat-01 | R | 0.320 | 0.06835 / 0.37109 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-02 | R | 0.300 | 0.05607 / 0.26154 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-03 | R | 0.300 | 0.08999 / 0.26868 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-04 | R | 0.240 | 0.08999 / 0.34018 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-05 | R | 0.300 | 0.08999 / 0.39172 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-06 | R | 0.290 | 0.08999 / 0.33499 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-07 | R | 0.330 | 0.08999 / 0.31210 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| rat-08 | R | 0.340 | 0.08999 / 0.32111 | R8 | Replace: mouse hit/hurt; retain labeled rat audition only |
-| chew-01 | H | 0.550 | 0.03120 / 0.29297 | H6 | Replace: nibble/eat with mouse eating; no vocal use |
-| chew-02 | H | 0.580 | 0.02235 / 0.43121 | H6 | Replace: nibble/eat with mouse eating; no vocal use |
-| chew-03 | H | 0.650 | 0.04189 / 0.38330 | H6 | Replace: nibble/eat with mouse eating; no vocal use |
-| chew-04 | H | 0.500 | 0.02597 / 0.40253 | H6 | Replace: nibble/eat with mouse eating; no vocal use |
-| chew-05 | H | 0.600 | 0.02503 / 0.48370 | H6 | Replace: nibble/eat with mouse eating; no vocal use |
-| chew-06 | H | 0.550 | 0.02793 / 0.54999 | H6 | Replace: nibble/eat with mouse eating; no vocal use |
-| paper-01 | P | 0.300 | 0.05018 / 0.54999 | P4 | Remove: tap/foot/activity aliases; retain provenance only |
-| paper-02 | P | 0.290 | 0.03789 / 0.54999 | P4 | Remove: tap/foot/activity aliases; retain provenance only |
-| paper-03 | P | 0.280 | 0.02478 / 0.54999 | P4 | Remove: tap/foot/activity aliases; retain provenance only |
-| paper-04 | P | 0.760 | 0.01881 / 0.54999 | P4 | Remove: tap/foot/activity aliases; retain provenance only |
+## Why crawl was held and what changed
 
-Four paper cuts supply most calm hunting mappings: peek, tease, call/reply, groom, facewipe, scratch, stretch, roll, sniff, rustle, patter, retreat, flinch, dodge and tap.
-They also appear in drag cues; dragstart mixes paper with `mouse-03`. Bank aliases do not add source variety.
-Different hashes prove different files, not different performances; source overlap and timbre still matter.
+The earlier curator withheld crawl because it was quiet, required 27.96–32× preparation gain,
+and had not been heard. Those limitations still apply; this is not retroactive listening approval.
+The primary crawl page was reopened and the original public HQ preview downloaded again;
+its SHA-256 matches `6ef7a62f4ea008617efed2cc834276ef51b4e8b7c8425938a4f9655a4bb13ff9`.
+Raw decoded mono RMS for the three cuts is 0.001883 / 0.000521 / 0.000991; the first second
+is 0.000757. This is a level comparison, not an SNR or cleanliness measurement.
+Prepared cut RMS is 0.024999 / 0.011334 / 0.012749, peaks 0.327454 / 0.228668 / 0.210632.
+No extra normalization is applied; the 6.87 dB RMS spread is preserved rather than lifting
+quieter cuts. Mix gains 0.018–0.022 and surface attenuation put movement far below vocals.
+Even the loudest movement cut is at least 32.75 dB below the quietest tap before surface gain
+with equal jitter. Low gain attenuates noise too, but cannot improve source signal/noise ratio.
+**Pending listening:** judge whether these textures are useful; omit them if noise is objectionable.
 
-## Curated additions
+## Archived recordings and rejected alternatives
 
-Exact source URLs, preview hashes, cut times, gains, PCM hashes and sizes: [CURATION.json](../little-mouse/public/assets/audio/CURATION.json).
-All additions are CC0 1.0; credits remain mandatory project provenance even for internal use.
+- Paper Rustle, BenjaminNelan 353125: four cuts from one 1.129 s page recording. Its broad
+  aliases and randomized pitch contributed to repetition risk; completely absent from live banks/preload.
+- Rat, Zabuhailo 143125, and hamster, Yuval 204762: assets/attribution retained, no runtime use.
+- [adamamazing 557703](https://freesound.org/people/adamamazing/sounds/557703/): source explicitly
+  identifies pitched human imitation; rejected, including its reuploads marketed as mice.
+- [Nakhas 328220](https://freesound.org/s/328220/): source identifies mouth foley; rejected.
+- [tjandrasounds 251949](https://freesound.org/people/tjandrasounds/sounds/251949/): terrarium
+  recording, noncommercial license; not acquired for unrestricted project use.
+No new independent original was acquired in this pass. Existing crawl candidates were wired
+with low levels; no new claim of audible purity or source variety is made.
 
-| Files | Primary source / metadata | Intended use / limitations |
-| --- | --- | --- |
-| floor-01…04.wav | [berboberbo 727114](https://freesound.org/people/berboberbo/sounds/727114/), Mice Squeaks; uploader identifies mice beneath floor | Recorded tap/vocal feedback candidate; behavior and exact species unknown, never claim calm communication. Four phrases, ONE new original. |
-| cracker-01…06.wav | [Jon285 75166](https://freesound.org/people/Jon285/sounds/75166/), Mouse eating cracker.wav; pet mouse eating prawn cracker | Visible nibble/eat; uploader discloses ambient noise/birdsong. Six bites, ONE new original. |
-| crawl-01…03.wav | [jimmyfisher 415230](https://freesound.org/people/jimmyfisher/sounds/415230/), mouse.wav; mouse crawling in kitchen | Hold out of runtime: very quiet source, noise risk; no foot layer requested. Three excerpts, ONE new original. |
+## Processing, routing and checks
 
-Files are mono 22,050 Hz PCM16 from public HQ previews: 180 Hz high-pass, 10.5 kHz low-pass, 12 ms fades.
-Bounded gain caps: floor 64x, cracker 8x, crawl 32x; peak ceiling 0.55. No generated sound or pitch synthesis.
-Floor cuts: 1.46–1.70, 2.28–2.62, 4.28–4.80, 4.98–5.32 seconds of source.
-Floor RMS: approximately 0.070, 0.050, 0.070, 0.070; exact values in manifest. High gain may expose noise.
+Exact source URLs, licenses, preview hashes, cut times, preparation gains, PCM hashes, peaks,
+RMS and sizes live in [CURATION.json](../little-mouse/public/assets/audio/CURATION.json) and
+[ATTRIBUTION.json](../little-mouse/public/assets/audio/ATTRIBUTION.json).
+Assets remain mono 22,050 Hz PCM16 from HQ previews, with the existing 180 Hz high-pass,
+10.5 kHz low-pass, bounded gain and 12 ms fades. No files were reprocessed this pass.
+Every runtime bank plays at rate 1. There are no oscillator/noise/generated-buffer paths.
+Missing sources stay silent. Existing gain jitter only varies level, never pitch or duration.
+The floor preparation gains of 47–64× also need listening for noise at the new louder mix.
 
-## Integration acceptance and limitations
-
-- All candidate files and provenance are copied; active additions also appear in ATTRIBUTION.json.
-- Map taps to floor recordings, with a second loaded recorded squeak as failure fallback; if none are available, stay silent. Never generate noise or play duplicate foley.
-- Remove foot-layer scheduling; any separately approved movement/drag texture must remain far below voices. Quiet gain alone does not remove a foot layer.
-- Maintain contact priority, first-gesture queue/cancellation, explicit mute/zero volume, pause and three voices. Avoid immediately repeating a clip when alternatives are loaded.
-- New vocal variety is four phrases from one new original; no second independently verified suitable vocal original was found in this bounded pass.
-- Never relabel human imitation, toy, balloon or computer-mouse recordings as real mice. Exclude reuploads of 463789 from distinct-source counts.
-- Test failed-download silence, every-touch squeak, no duplicate/foot voices, priority saturation and startup order after integration.
-- Listen on actual iPad for squeak identity, harshness/noise, birdsong, clipping, repetition and level. This agent did not hear any recording; PCM checks cannot approve timbre.
-
-## Checks and ownership
-
-`node --test tests/audio-curation.test.mjs tests/audio.test.mjs`: 43/43 passed; `git diff --check`: clean.
-The curation check verifies all candidate hashes, decoded PCM metrics, endpoints, format, unique IDs and source metadata.
-Baseline runtime tests validate unchanged branch behavior only; they do not validate another worker’s new runtime changes.
-Branch/worktree: `audio-realism-variety` / `/Users/kietho/workplace/mouse-audio-realism-variety`.
-Implementation terminal: `aeb88079-ac0b-42b5-a31a-df623e6f3eeb`; independent research: `682d26f2-da4c-427a-9eab-a476d9f964cd`.
-The root integrated the assets and mappings after the branch handoff. Source/device release
-evidence is recorded in verification.md; no physical listening approval is claimed.
+The independent read-only critic verified source/hash/format/endpoints for 43 retained assets,
+nonoverlapping active cuts, source alias counts, low movement levels and the recorded-only path.
+It correctly flagged broad idle aliases and limiter input saturation; both were addressed.
+Exact critic IDs, checks and remaining limitations: [audio handoff](cycles/podrick-audio.md).
+No agent heard the recordings. Tests and waveform/PCM analysis cannot approve timbre,
+speaker audibility, calibrated loudness, actual mouse identity or scientific efficacy.

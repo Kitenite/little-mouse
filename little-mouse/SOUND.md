@@ -1,124 +1,34 @@
-# Recorded prey sound
+# Recorded sound for Podrick’s Violin
 
-The game uses 26 short recording excerpts across 25 event families. The original
-synthetic squeaks and repeated footstep beats have been removed. Small playback
-rate changes (0.96–1.04), gain changes, and nonrepeating clip selection vary the
-phrases; they do not replace source recordings with oscillator tones.
+No artificial sound: only attributed real recordings, always at native playback rate 1.
+No synthesized tones, noise, generated primer or fallback; unavailable recordings stay silent.
+Gain, fades and soft limiting are allowed for mixing. No pitch shifting or randomized rate.
 
-## Sources and what they actually contain
+The current policy and implementation contract are maintained in [Audio](../docs/audio.md).
+The source audit, provisional crawl decision and listening limits are in
+[Sound curation](../docs/sound-curation.md). See those owning topics for current routing.
 
-All four active sources are **CC0 1.0**, verified on their primary Freesound pages on
-2026-11-17. They are reusable without attribution, but credits and exact source
-links are retained in [the attribution manifest](public/assets/audio/ATTRIBUTION.json).
+25 active excerpts come from four CC0 originals: floor squeaks (4), uncertain trapped
+mouse/rat vocals (12), pet-mouse cracker eating (6), and kitchen crawl/scratch texture (3).
+25 bank names are contextual/audition aliases, not 25 recordings. Paper, rat and hamster
+assets remain archived only. Automatic idle/hidden/social foley is removed.
 
-| Recording | Creator | Used for | Provenance limitation |
-| --- | --- | --- | --- |
-| [Mouse Squeaks.wav](https://freesound.org/people/shyguy014/sounds/463789/) | shyguy014 | 12 short vocal excerpts | Uploader identifies a trapped mouse/rat; species is uncertain and calls were agitated. |
-| [Mice Squeaks](https://freesound.org/people/berboberbo/sounds/727114/) | berboberbo | 4 tap squeaks | Uploader identifies mice beneath a floor; species/context unverified. |
-| [Mouse eating cracker](https://freesound.org/people/Jon285/sounds/75166/) | Jon285 | 6 nibbling excerpts | Uploader identifies a pet mouse; background birdsong disclosed. |
-| [Paper Rustle](https://freesound.org/people/BenjaminNelan/sounds/353125/) | BenjaminNelan | 4 friction excerpts | Paper foley for small movement/scratching; not recorded mouse footsteps. |
+Primary URLs, uploader descriptions, licenses, cut times, processing and hashes are in
+[ATTRIBUTION.json](public/assets/audio/ATTRIBUTION.json) and
+[CURATION.json](public/assets/audio/CURATION.json). Existing assets are filtered/faded
+mono 22.05 kHz PCM16 excerpts from public HQ previews; no ultrasound is reproduced.
+Crawl was previously withheld for quietness/noise risk and remains pending listening.
+Its low runtime level is intentional, not proof of clean source audio or authentic footsteps.
 
-This is a rodent-inspired game mix, not a scientifically validated model of mouse
-communication. Calm social, arrival, and teasing cues use quiet movement foley; agitated vocal
-recordings are reserved for explicit vocal audition and contact/distress events. We excluded an actual pet-rat running recording because its
-noncommercial license was unsuitable for this public project's unrestricted use.
+Tap gain rises from 0.20 to 0.48; generic squeak 0.28 to 0.48. Release/held feedback now
+uses floor vocals. Movement is quieter and at least 2.4 seconds apart, with no step loop.
+Direct touches retain priority, quick-release deduplication and cancellation ownership.
+At most three voices overlap. A range-2 limiter accommodates their conservative peak sum
+without hard input clipping; static output is below 0.85. Browser true peaks and physical
+speaker quality have not been measured in this worker pass.
 
-## Processing and mix
-
-Runtime clips use mono 22,050 Hz, 16-bit PCM WAV. Rat and hamster excerpts remain
-archived with provenance but are not loaded or selected. Three crawl candidates
-are also withheld pending listening; see [curation](../docs/sound-curation.md).
-They were extracted from the sources' public high-quality MP3 previews, filtered
-at 180 Hz and 10.5 kHz, adjusted toward a family RMS target with a bounded gain
-and 0.55 peak ceiling, and given 12 ms endpoint fades. The manifest records exact
-cut times, gain, final PCM peak/RMS, size, and SHA-256 for every excerpt.
-
-Surface friction sits below vocal cues. Running, retreat and drag-loop gains are
-approximately 11–12 dB quieter than the previous mix. Contact squeaks suppress
-movement layers for at least 450 ms. Small per-clip playback trims match its
-RMS within 1 dB, preserving transient shape and the final mix limiter. Running produces sparse short friction
-bursts only at meaningful movement speeds, with 1.7–3.9 seconds of spacing at
-normal activity. It is not synchronized individual paw impacts. The game never
-plays the old synthetic repeating footstep beat. Drag friction requires actual
-anchor movement; a held paw or tail can cause occasional scratching. Release and
-toss have their own cue. At most three voices overlap, with global and impact
-cooldowns. Clip selection avoids immediately repeating the same recording across
-events whenever another loaded clip is available.
-
-A shared master gain and soft-knee waveshaper bound the digital output below
-approximately 0.81. Ordinary cue levels stay below the knee. Volume is not a
-calibrated physical sound-pressure level; device volume and speaker routing still
-apply. Missing or failed assets do not block play: unavailable cues fall silent.
-There is no synthesized fallback or generated primer. Contact cues briefly queue
-while recordings load and take priority over movement audio. A quick harmless
-release does not add a second squeak; harmful outcomes replace their contact cue.
-
-## Behavior and controls
-
-`public/audio.js` exports `PreyAudio`, `audioDefaults`, and `audioControlSchema`.
-`public/audio-samples.js` defines the event banks and their relative levels.
-
-- `sound`: application mute, available locally and on the companion.
-- `soundVolume`: 0–1, default 0.7.
-- `soundFrequency`: 0.25–2, default 1.25; adjusts incidental spacing without raising
-  the concurrency ceiling.
-
-Arrival, teasing, contact, injury, concealment, running, dragging, scratching,
-release, and quiet idle behavior have distinct event mappings. Nibble audio
-requires a visible mouse with `nibblingUntil > simulationTime`; the renderer
-supplies the matching paw-to-mouth animation. Nearby calm visible mice may make
-sparse call/reply phrases. Their timing is game choreography, not a validated mouse conversation model. The reply rechecks proximity, injury, retreat, and
-restraint so a changed situation cancels it.
-
-The animation contract `mouse.activity = {kind, at, until}` drives nibble, groom,
-hind-leg scratch, stretch, and roll cues. Entry is keyed by kind/start time;
-nibbling, grooming, and scratching may repeat sparsely while their pose lasts.
-Changing/canceling the activity stops its own sound immediately. Holding, moving,
-injury, startle, and invisibility suppress these cues. The lab exposes all banks,
-including eat and facewipe audition aliases; these aliases reuse eating/friction
-recordings rather than adding synthetic sounds.
-
-Observed research: vocal categories vary strongly with mouse behavioral context
-([Grimsley et al., 2016](https://www.frontiersin.org/journals/behavioral-neuroscience/articles/10.3389/fnbeh.2016.00038/full)).
-Design inference: calm movements should not reuse the bank's documented agitated
-vocal recordings. This does not validate the foley as mouse communication. The
-22.05 kHz files cannot reproduce ultrasound; no ultrasonic playback is claimed.
-
-## iPad activation and diagnostics
-
-A real local pointer/click invokes audio activation synchronously. Native
-navigation and remote Play cannot supply the browser's required gesture. On
-supported Safari versions the game requests `navigator.audioSession.type =
-'playback'`, which is intended for media playback and can avoid ringer-switch
-silencing. It does not override physical zero volume, application mute, or all
-possible OS routing restrictions. See [AudioSession.type documentation](https://developer.mozilla.org/en-US/docs/Web/API/AudioSession/type)
-and [WebKit's silent-switch discussion](https://bugs.webkit.org/show_bug.cgi?id=251532).
-The native wrapper already allows inline playback without a media-element gesture.
-
-The local **Test sound** button activates and plays a recorded squeak even while
-paused, respecting mute and zero volume. It waits at most 800 ms for activation
-and a further 1.8 seconds for initial samples. Pause, mute, page hide, and iOS
-interruption stop voices; another local gesture can resume an interrupted context.
-
-`mouseDiagnostics().audio` reports decoded clip count, loading errors, the last
-sample ID/source, context state, active voices, and a measured signal peak after
-the master/limiter. A positive digital peak proves the graph produced audio; it
-does not prove the physical speaker is audible. In the local browser, all 26
-clips loaded without errors. A real pointerdown played one recorded floor squeak;
-quick harmless release left the cue count at one. Post-master peak was 0.0171.
-
-## Migration and verification
-
-Inspection of this session's physical iPad settings found `sound:false` persisted
-from an older default. An independent one-time `audioVersion:1` migration enables
-legacy audio once, preserving movement, appearance, volume, and activity settings.
-After that migration, subsequent intentional mute choices persist across reloads
-and companion polling.
-
-Run `node --test tests/audio.test.mjs`. Tests cover activation, recording selection,
-partial/failed downloads, rate/concurrency limits, drag/release, mute while previewing,
-interruption, nibble and social gates, playback-session support, and limiter behavior.
-An independent agent checked source licenses, PCM hashes, fades, peak/RMS, event
-routing, and repeat/mute edge cases. Waveforms and spectrograms were inspected;
-this agent environment cannot hear audio, so no subjective listening approval is
-claimed. Physical iPad listening remains the final check for timbre and loudness.
+Local gestures activate audio; local test works while paused, respecting mute/zero volume.
+Saved volume, activity and explicit version-1 mute remain unchanged by the relative mix upgrade.
+Run `node --test tests/audio.test.mjs tests/audio-curation.test.mjs tests/settings.test.mjs`.
+Bounded results and exact handoff are in [the cycle report](../docs/cycles/podrick-audio.md).
+No actual listening, device verification or deployment is claimed.

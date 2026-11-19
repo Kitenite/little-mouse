@@ -2,27 +2,27 @@
 const ids=(prefix,count)=>Array.from({length:count},(_,i)=>`${prefix}-${String(i+1).padStart(2,'0')}`);
 // Load direct-touch vocals first, before movement, eating and injury banks.
 const touchVocals=ids('floor',4);
-export const recordedSamples=[...touchVocals,...ids('mouse',12),...ids('paper',4),...ids('cracker',6)];
+export const recordedSamples=[...touchVocals,...ids('mouse',12),...ids('crawl',3),...ids('cracker',6)];
 export const sampleBanks={
- peek:['paper-01','paper-02','paper-03'],
+ peek:ids('crawl',3),
  squeak:['mouse-01','mouse-03','mouse-07','mouse-08','mouse-02','mouse-04','mouse-05','mouse-06','mouse-09','mouse-10','mouse-11','mouse-12'],
- tease:['paper-01','paper-03','paper-04'],
- call:['paper-01','paper-02'],reply:['paper-02','paper-03'],
+ tease:ids('crawl',3),
+ call:ids('crawl',3),reply:ids('crawl',3),
  hit:['mouse-10','mouse-12','floor-03','floor-04'],hurt:['mouse-02','mouse-05','mouse-09','mouse-11'],
- nibble:ids('cracker',6),eat:ids('cracker',6),groom:['paper-01','paper-03'],facewipe:['paper-01','paper-02'],hindlegscratch:['paper-02','paper-04'],stretch:['paper-01','paper-03'],roll:['paper-03','paper-04'],sniff:['paper-01','paper-02','paper-03'],
- rustle:ids('paper',4),patter:['paper-01','paper-02','paper-03'],retreat:['paper-02','paper-03','paper-04'],
- flinch:['paper-01','paper-03'],dodge:['paper-02','paper-03'],
- tap:touchVocals,scratch:['paper-01','paper-02','paper-04'],
- dragstart:['paper-01','paper-03','mouse-03'],dragloop:['paper-01','paper-02','paper-04'],dragrelease:['paper-02','paper-03'],
+ nibble:ids('cracker',6),eat:ids('cracker',6),groom:ids('crawl',3),facewipe:ids('crawl',3),hindlegscratch:ids('crawl',3),stretch:ids('crawl',3),roll:ids('crawl',3),sniff:ids('crawl',3),
+ rustle:ids('crawl',3),patter:ids('crawl',3),retreat:ids('crawl',3),
+ flinch:ids('crawl',3),dodge:ids('crawl',3),
+ tap:touchVocals,scratch:ids('crawl',3),
+ dragstart:touchVocals,dragloop:ids('crawl',3),dragrelease:touchVocals,
 };
 // Legacy call/reply keys are quiet social movement foley, not vocalizations.
 // Keep surface details behind vocal cues; avoid artificial footstep beat trains.
-export const sampleMix={eat:.3,groom:.08,facewipe:.07,hindlegscratch:.12,stretch:.07,roll:.14,peek:.06,squeak:.28,tease:.1,call:.08,reply:.07,hit:.38,hurt:.32,nibble:.3,sniff:.1,rustle:.16,patter:.025,retreat:.04,flinch:.16,dodge:.13,tap:.2,scratch:.14,dragstart:.19,dragloop:.035,dragrelease:.19};
+export const sampleMix={eat:.3,groom:.025,facewipe:.025,hindlegscratch:.035,stretch:.02,roll:.03,peek:.025,squeak:.48,tease:.025,call:.02,reply:.02,hit:.48,hurt:.48,nibble:.3,sniff:.02,rustle:.03,patter:.018,retreat:.022,flinch:.025,dodge:.025,tap:.48,scratch:.035,dragstart:.40,dragloop:.022,dragrelease:.48};
 
-// Match friction RMS without flattening individual transients; final mix is limited.
-export const sampleTrim={'paper-01':.8,'paper-02':1,'paper-03':1.5,'paper-04':2};
+// Preserve recorded transient/dynamic differences; no extra friction normalization.
+export const sampleTrim={};
 
-// Quiet paper-recording substitute, not recordings of these physical materials.
+// Recorded crawl texture; material scaling is a game mix, not material-specific recordings.
 export function surfaceFriction(background){
  if(['photo-linen','linen','felt','woven','denim','cork','paper'].includes(background))return 1;
  if(['photo-clearing','earth','sand','grass'].includes(background))return .65;

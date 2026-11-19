@@ -1,120 +1,86 @@
 # Audio requirements
 
-## Product policy
+## Owner policy
 
-Use varied prey-related recordings tied to actual events. Quiet intervals matter; avoid
-all synthetic audio, incessant footstep beats or audio continuing through pause.
-Audio must have local and companion mute, volume and activity controls, plus a local test.
-Every confirmed mouse touch uses a collected vocal squeak when audio is enabled,
-a recording is available and playback is allowed, including harmless,
-invulnerable, held and defeated prey. Missing recordings must never produce fake sound.
-This feedback does not apply additional damage. Explicit mute, zero volume, pause
-and background state remain authoritative. A cat's or owner's preference is an
-observation, not a scientific claim about the mix.
+No artificial sounds. Use stock or found real recordings with primary-source attribution.
+Every cue, including squeaks and movement, plays at native recorded pitch/timing (rate 1).
+No oscillators, generated noise, synthetic fallback, pitch shifts or randomized playback rate.
+Gain, trims, fades and limiting for mixing are allowed. When suitable recordings are absent,
+remain silent. Never label imitation, toy squeaks or synthetic effects as actual mice.
+Use quiet intervals; avoid rhythmic footsteps, constant background beds and sound during pause.
+The base game uses local activation, mute, volume/activity controls and a local test sound.
+A confirmed touch uses a recorded vocal when enabled, loaded and playback is permitted;
+this feedback adds no damage. Mute, zero volume, pause and background state are authoritative.
 
-## Implemented
+## Implemented routing and mix
 
-Recorded banks cover arrival, teasing, contact, injury, concealment, movement, drag,
-scratch, release/toss, nibbling, grooming, hind-leg scratching, stretching and rolling.
-Legacy call/reply banks are quiet social movement foley, not calm vocalizations. Selection avoids
-immediate repetition across banks; each bank cycles through loaded excerpts before
-refilling, with modest rate/gain variation. A sole remaining cross-bank repeat is deferred.
-There are 26 runtime excerpts and a maximum of three overlapping voices. Per-clip
-friction trims keep alternating texture RMS within 1 dB; final output is limited.
+25 runtime excerpts come from four originals: floor squeaks (4), uncertain trapped mouse/rat
+vocals (12), pet-mouse cracker eating (6), and kitchen crawl (3). Paper, confirmed rat and
+hamster assets remain archived with attribution but are absent from playback and preload.
+The 25 named banks are contextual/audition aliases, not distinct recordings or performances.
+Selection cycles loaded excerpts and avoids immediate cross-bank repetition when possible.
+Missing/failed clips stay silent; there is no generated primer or fallback.
 
-Walking friction is intentionally much quieter than vocal squeaks. Mix gains are
-patter 0.025, retreat 0.04 and drag-loop 0.035; this lowers those layers by about
-11–12 dB without changing squeak 0.28, tap 0.20, hit 0.38 or hurt 0.32. Gain-weighted
-recording RMS puts these movement layers at least 22 dB below the squeak bank;
-that is a digital comparison, not a physical loudness or perceptual guarantee.
-Surface friction reuses recorded `patter`/`retreat`/`dragloop`, never an additional bed.
-It requires visible observed displacement, including held mice with zero velocity;
-stationary struggle, teleports, resize and pause gaps do not trigger it. Moving at least
-8 px above 12 px/s allows a phrase, spaced at least 0.9 s apart per mouse. Stopping,
-material changes, zero strength, pause and mute cancel surface voices.
-`environmentStrength` defaults to 0.55, clamped 0–1. Soft linen/felt/woven/denim/cork/
-paper scale friction by 1; clearing/earth/sand/grass by 0.65; hard/unknown floors by
-0.08. These are quiet paper-foley substitutes, not authentic material recordings.
-`environmentPersistence` controls visual marks elsewhere; it adds no audio tail.
-Activity cues require visible safe poses; social textures recheck current context.
-`mouse.activity={kind,at,until}` triggers one entry cue with sparse repeats for
-nibble/groom/scratch. Interrupted/removed mice cancel owned activity phrases, including
-legacy `nibblingUntil`; direct-contact voices keep their separate priority.
-Calm arrival, teasing, idle and grooming contain no distress vocals. Explicit taps and
-harmless contact outcomes use the recorded vocal tap bank, never foot or paper sounds.
-This is a requested game response, not a claim of calm natural communication.
-`contactFeedback(mouse,width,outcome='touch',pointerId=null)` is the direct-pointer API; `hit` uses
-the same priority path for resolved harmless, injury and toss outcomes. Contact cues
-bypass ambient/impact debounce, replacing the lowest-priority/oldest voice if needed
-within the three-voice cap. A quick harmless release within 450 ms consumes its recent
-down feedback instead of playing a second squeak. Quick injury/toss outcomes replace
-the matching down voice or pending clip; other pointers retain their own voices.
-`hit(mouse,width,outcome,pointerId=null)` accepts explicit ownership; older callers
-resolve the oldest recent touch on that mouse. Injury and toss retain contextual cues.
-Direct contact stops existing ambience/hold foley and suppresses new noncontact cues
-for at least 450 ms, extended through the vocal duration; no foot bed accompanies it.
-Hold/drag textures have bounded timing and can replace ambience but cannot steal a
-contact voice. At saturation, the newest contact replaces an older contact.
-Raw `tossed` outcomes reach the release cue and do not become generic harmless taps.
-Pause, mute, page hide and audio interruptions stop voices. Failed samples do not block play.
-Defaults: sound enabled, volume 0.7, activity 1.25. Intentional mute survives reload after the
-one-time legacy audio migration. `settings.js` owns ranges and persisted controls.
+Tap and release use floor vocals. Injury uses uncertain mouse/rat and floor vocals.
+Tap gain is 0.48 (was 0.20); squeak 0.48 (0.28); hit 0.48 (0.38); hurt 0.48 (0.32).
+These are +7.60, +4.68, +2.03 and +3.52 dB respectively before limiting.
+Held/dragged mice receive the normal down squeak; after three seconds, a visible sustained
+hold can produce a floor vocal at gain 0.40, recurring every 4–7 seconds. It cannot steal
+priority from direct contacts. Hold vocals also duck movement/ambience through their duration
+or at least 450 ms. No hold cue survives hiding, mouse removal, cancellation, pause or mute.
+Release/toss is vocal, replacing the former paper release. Quick harmless releases within
+450 ms consume the down feedback instead of producing a duplicate.
 
-## Activation and provenance
+Movement uses very quiet crawl cuts at gains 0.018 patter, 0.022 retreat/drag-loop.
+No runtime friction normalization or pitch processing is applied. The source was previously
+held out for quietness/noise risk and absent listening; promotion is provisional, not timbre
+approval. Even at maximum volume, prepared crawl gain × movement gain × jitter × master is
+at most 1.331 before surface attenuation; default material/strength makes it lower still.
+Low playback level cannot improve the source signal/noise ratio. Prefer omission to boosting it.
+Automatic idle, hidden, social and phase-change foley is removed; no phantom footsteps at rest.
+Visible safe nibble/groom/scratch/stretch/roll poses retain short recorded activity cues.
+Crawl is a texture substitute for non-eating poses, not verified recordings of those activities.
 
-A local gesture unlocks browser audio. Remote Play cannot provide that browser gesture.
-The first contact synchronously requests activation and can queue the latest ten
-contacts for at most 800 ms while resume or recording loading completes. Recording
-arrival retries only live pending contacts; an expired contact never plays late. Pause, mute, zero volume, hide,
-interruption or explicit stop cancels this pending feedback; it cannot replay later.
-`cancelContactFeedback(mouse,pointerId=null,{cancelHold=true}={})` removes only
-that pointer's pending/direct feedback; a null ID means mouse-wide cleanup. Set
-`cancelHold` only when that pointer owns the hold, so canceling another touch leaves
-the held observation and hold audio intact. Owner cancellation clears both, avoiding
-a phantom release or restarted hold sound.
-There is no noise buffer, oscillator, synthesized fallback or generated silent primer.
-A new local activation/touch can retry failed downloads after a one-second backoff;
-successful clips are retained, concurrent retries coalesce, and no timer retries on its own.
-Unavailable recordings remain silent; diagnostics expose `unavailableKind`,
-`sample-unavailable`, sample load errors and pending count honestly. Browser denial or
-zero physical speaker volume cannot be overridden.
-Test sound must work while gameplay is paused and respect application mute/zero volume.
-A positive diagnostic signal peak proves generated audio, not audible physical speakers.
+Surface phrases require actual observed displacement: at least 8 px above 12 px/s, with
+2.4 s minimum spacing and `(3 + random*3)/soundFrequency` seconds between phrases.
+At the game activity default 1.25 this is 2.4–4.8 s; no paw-step synchronization or looping.
+Stationary struggle, teleports, resize and discontinuous frames cannot trigger surface audio.
+Stopping, material changes, zero environment strength, pause and mute cancel surface voices.
+`environmentStrength` defaults to 0.55; material factors remain 1 soft, 0.65 earth, 0.08 hard.
+These are mixing choices, not physical-material recording claims.
 
-Startup requests the four floor-source touch vocal excerpts first, then mouse-labelled
-vocals, friction and mouse-eating excerpts. Ordinary hunting mainly reuses four friction clips;
-25 bank names are contextual mappings, not 25 distinct source recordings. More
-authentic calm variety requires additional verified recordings, not louder walking.
-Runtime uses four source recordings: floor squeaks (4 cuts), uncertain mouse/rat vocals
-(12), pet-mouse cracker eating (6), and paper foley (4). Confirmed rat and hamster
-recordings retain their assets/provenance but are absent from live banks and preload.
-Do not label the whole collection authentic mouse communication or footsteps.
-Exact sources, licenses and processing are in [SOUND.md](../little-mouse/SOUND.md) and
-[the attribution manifest](../little-mouse/public/assets/audio/ATTRIBUTION.json).
-Retain source/license provenance for every replacement sample.
-Observed evidence: [Grimsley et al.](https://www.frontiersin.org/journals/behavioral-neuroscience/articles/10.3389/fnbeh.2016.00038/full)
-found vocal categories depend on behavioral context. Our design inference is to
-keep documented agitated excerpts out of autonomous calm behavior, not to label
-foley or requested touch squeaks natural calm communication. The tap bank has four phrases
-from one CC0 uploader-described mice-beneath-floor recording; exact species and
-behavioral context are unverified. Nibble/eat use six cuts from one uploader-described
-pet mouse eating a cracker; ambient birdsong is disclosed. Their gain remains 0.30.
-Injury uses uncertain mouse/rat vocals and floor variants, not confirmed rat recordings.
-Crawl candidates are copied for provenance tests but remain unwired.
-Existing mouse-labelled vocals have uncertain mouse/rat identity. Files at 22.05 kHz
-do not reproduce ultrasonic mouse calls.
+## Activation, priorities and output
 
-## Acceptance criteria and remaining validation
+A local gesture requests browser resume synchronously. First contacts can queue at most ten
+recorded cues for 800 ms while activation/loading finishes. Late, canceled, hidden, paused,
+muted or zero-volume contacts cannot replay. Failed downloads retry on a later local gesture
+with a one-second backoff; successful buffers remain loaded and concurrent retries coalesce.
+Direct contact stops lower-priority voices, suppresses ambience at least 450 ms, and can
+replace the oldest direct contact at the three-voice cap. Other pointers retain ownership.
+`contactFeedback`, `hit` and `cancelContactFeedback` retain their existing integration API.
+Canceling a nonowner pointer does not clear the owner's hold. Pause clears audio observations
+so a stale hold deadline cannot squeak immediately when playback resumes.
+Test sound can play while paused but respects application mute and zero volume.
 
-- Test every-contact priority under ambient saturation, quick consecutive contacts,
-  first-gesture delayed resume and canceled/expired pending feedback.
-- Test muted/paused playback, unlock failure/retry, interruption, partial asset failures,
-  rate limits, concurrency, nonrepetition and context cancellation.
-- Verify dragging/toss, every lab audition bank, synchronized activity cues, and no
-  stale sound after pause, grab, activity cancellation or leaving the visible play area.
-- Listen on the physical iPad for timbre, loudness, clipping and distracting repetition.
-- Check zero device volume, output route and OS state before claiming audio is broken.
-Source owners: `audio.js`, `audio-samples.js`, game activation/event integration and
-`assets/audio/`; automated checks: `audio.test.mjs`.
-Limit: digital gain is not calibrated sound-pressure level. Physical listening remains a
-separate check; source analysis or waveform review cannot substitute for it.
+Master gain stays 1.8 × saved volume. A 0.5 input gain and compensating range-2 waveshaper
+allow the conservative 1.497 three-voice peak sum without hard input clamping. The curve is
+linear below 0.6 and softly limits above it; its static ceiling is below 0.85.
+This is a mathematical/sample-domain bound, not measured browser true-peak or speaker proof.
+No saved volume/activity/mute values are changed by this mix upgrade: existing users get the
+new relative levels directly. The prior audioVersion:1 migration remains unchanged; its
+historical legacy-mute repair predates this work. Explicit version-1 mute still survives reload.
+
+## Provenance and acceptance
+
+See [sound curation](sound-curation.md), [SOUND.md](../little-mouse/SOUND.md) and
+[ATTRIBUTION.json](../little-mouse/public/assets/audio/ATTRIBUTION.json) for exact sources,
+licenses, cuts, processing and hashes. Uploader identity is evidence, not species verification.
+Floor/trapped recordings are explicit game feedback, not scientifically validated calm calls.
+22.05 kHz assets do not reproduce ultrasound.
+
+Tests cover every-bank rate 1/recording-only behavior, missing-source silence, limiter input
+headroom, touch ownership, pending cancellation, sustained hold ducking, sparse movement,
+load recovery, mute/zero volume and interruption. Bounded evidence is in
+[the audio handoff](cycles/podrick-audio.md).
+**Pending validation:** actual listening, physical iPad timbre/loudness, speaker route and
+true-peak/harshness checks. No listening, deployment, device or efficacy approval is claimed.
