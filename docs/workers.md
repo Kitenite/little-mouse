@@ -16,7 +16,7 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 
 The accepted batch is complete and integrated on main. All 14 remaining completed
 sessions and 20 auxiliary workspaces were retired after preservation commit
-`d1f687a` was verified on GitHub. A new Podrick simplification batch is active below.
+`d1f687a` was verified on GitHub. The Podrick simplification batch is integrated below.
 Reusable roles, ownership, delegation and handoff policies are stored in
 [`agents/roles.json`](../agents/roles.json); [`agents/prompt.mjs`](../agents/prompt.mjs)
 prints prompts for the next bounded assignment. Main workspace stays available.
@@ -67,19 +67,24 @@ The owner now requests continuing builder/critic improvement. Follow
 independent criticism, reproducible cases and root-owned integration. This does not
 install a recurring unattended service or authorize worker merges into main.
 
-Current root task: integrate Podrick’s Violin rebrand, artwork splash, simplified
+Current root task: publish and verify integrated Podrick’s Violin rebrand, artwork splash, simplified
 storybook UI, removal of remote control, and improved recorded audio. Rebuild/install
 on iPad after combined checks. New explicit owner direction supersedes companion policy.
-Pending assignments: UI (HTML/CSS + native home), local-only (game networking + native
-Game wrapper), audio (recorded sample curation/mix). Root owns splash config and integration.
+Completed assignments: UI (HTML/CSS + native home), local-only (game networking + native
+Game wrapper), audio (recorded sample curation/mix). Root owns final deployment and cleanup.
 Keep the base game and local owner controls; remove pairing, steering and companion UI/API.
 Live development asset updates remain for iteration; no remote gameplay control.
 
 | Task | Workspace (local) | Terminal | Status |
 | --- | --- | --- | --- |
-| ui | `1cdd768e-7a48-4a06-a46e-f66d0838c204` | `ef6a072f-ed57-4054-8a71-f79bca72f302` | running |
-| local | `a7f96f69-497b-4888-a869-e5969da687f2` | `ee9cec0a-24cf-4c8c-bfdd-cd38ebff6986` | running |
-| audio | `c4b3d12d-6447-4349-b55b-381ecae24e95` | `f69ded84-16aa-4d32-bbbe-00b25c347a1c` | running |
+| ui | `1cdd768e-7a48-4a06-a46e-f66d0838c204` | `ef6a072f-ed57-4054-8a71-f79bca72f302` | completed; integrated |
+| local | `a7f96f69-497b-4888-a869-e5969da687f2` | `ee9cec0a-24cf-4c8c-bfdd-cd38ebff6986` | completed; integrated |
+| audio | `c4b3d12d-6447-4349-b55b-381ecae24e95` | `f69ded84-16aa-4d32-bbbe-00b25c347a1c` | completed; integrated |
 
 Audio acceptance: recorded stock/found sources only; no artificial synthesis or
 unnatural pitch/rate effects. Silence if no suitable recording. Squeaks more prominent.
+
+Integrated UI `504867e`, local-only `fa03cc5` / `58e5066`, audio `69bb434`.
+Audio critic terminal `f0c5e35b-7540-475e-86ba-3af60e254976` shared the audio workspace.
+Pending physical checks: listening and native appearance. Final restart blocked by Guided Access;
+owner asked to exit it. This does not block source publication or hosted deployment.

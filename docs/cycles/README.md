@@ -1,4 +1,15 @@
-# Current improvement batch
+# Improvement batches
+
+## Podrick simplification — 2026-11-18
+
+Three Superset builders and an audio critic delivered the current local-only game.
+[UI](podrick-ui.md), [local-only runtime](podrick-local.md) and [recorded audio](podrick-audio.md)
+retain handoffs and limitations. Root integrated their commits and passed 268 web tests,
+four native tests, native lint/typecheck, production build and Worker syntax checks.
+[Selected UI captures](evidence/podrick/) preserve the reviewed tablet layout and recovery.
+Current device and release status belongs in [verification](../verification.md).
+
+## Previous domain improvement batch
 
 Baseline `cf064cc`; seven domain builders and independent Superset critics.
 The accepted stacks and held/toss cue follow-up are integrated at `d6c3409`.
