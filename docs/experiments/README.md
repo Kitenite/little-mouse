@@ -1,12 +1,12 @@
 # Experiment program
 
-Status: **catalog and protocol implemented; logging, assignment, learner and agent automation not implemented**.
-Owner: root; scientific/source review: feline-play critic. No trials have run and no model is trained.
+Status: **catalog, local pilot logging and assignment implemented; learner and agent automation pending**.
+Owner: root; scientific/source review: feline-play critic. No cat preference results or trained model are claimed.
 This program tests preferences for this individual cat; it does not establish welfare or universal efficacy.
 
 ## Catalog
 
-All 76 current configurable settings have an individual hypothesis, possible downside, interacting factors,
+All 77 current configurable settings have an individual hypothesis, possible downside, interacting factors,
 measurement families and experiment stage. Numeric defaults/domains are generated from the actual settings schema.
 Every setting is cataloged; that does not make every setting a suitable autonomous action.
 
@@ -23,10 +23,11 @@ Every setting is cataloged; that does not make every setting a suitable autonomo
 
 ## Execution and learning
 
+- [Runtime pilot](runtime.md): local comparisons, owner controls, exports and limits.
 - [Experiment protocol](protocol.md): stages, attribution, measurement and comparison rules.
 - [Metric definitions](metrics.md): common observation window, denominators and censoring.
 - [Data contract](data-contract.md): what to log now so future analyses are possible.
-- [Independent review](review.md): accepted artifact scope, checks and pending runtime work.
+- [Catalog review](review.md) and [runtime review](runtime-review.md): findings and validation boundaries.
 - [Learning and agent review](learning.md): staged model development, evaluation and rollback.
 - [Research critique](../cycles/feline-play-critique.md): evidence and limitations behind initial comparisons.
 
@@ -44,8 +45,7 @@ A new setting without an annotation fails validation instead of disappearing fro
 
 ## Current handoff
 
-Next implementation: local session/event logging and export with schema validation; verify deduplication,
-clock handling, interrupted sessions and settings attribution before running controlled comparisons.
-Then implement recorded assignment of one proposed pair at a time and owner observation entry.
-Do not train on fabricated/example records; do not mistake pointer events for independent trials.
-Use this index to keep every topic below 120 lines where possible; machine data belongs in JSON.
+Local sensory pilots now record assignments and bounded events through the owner controls.
+The pilot export is not the planned full research schema. A validated importer, controlled
+analysis, model training and recurring agent review remain future stages.
+Do not train on fabricated/example records or mistake pointer events for independent trials.

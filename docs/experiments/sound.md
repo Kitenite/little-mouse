@@ -7,6 +7,7 @@ Measurement definitions and staging: [protocol](protocol.md). Runtime applicabil
 
 | Variable | Baseline; software domain | Potential benefit / cost | Interactions | Measures | Stage |
 | --- | --- | --- | --- | --- | --- |
+| `soundVariety` | varied; varied, focused | A focused versus varied recorded repertoire may change habituation; it can also alter the cue distribution. | soundFrequency, soundVolume | tracking, contact, exposure | 2 |
 | `sound` | true; true / false | Tests recorded audio contribution; silence may reduce orientation or improve tolerance. | soundVolume, soundFrequency | tracking, return, audio | 1 |
 | `soundVolume` | 0.7; 0–1; step 0.05  | Changes software gain, not calibrated speaker loudness; louder may orient or cause withdrawal. | sound, soundFrequency | tracking, return, audio | 2 |
 | `soundFrequency` | 1.25; 0.25–2; step 0.25 × | Changes cue activity; more cues may help orientation or become repetitive. | sound, soundVolume, nibbleFrequency | tracking, return, audio | 2 |

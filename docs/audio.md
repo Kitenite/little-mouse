@@ -19,6 +19,10 @@ vocals (12), pet-mouse cracker eating (6), and kitchen crawl (3). Paper, confirm
 hamster assets remain archived with attribution but are absent from playback and preload.
 The 25 named banks are contextual/audition aliases, not distinct recordings or performances.
 Selection cycles loaded excerpts and avoids immediate cross-bank repetition when possible.
+The Sound variety control defaults to varied; focused limits each cue to a stable two-clip
+subset where available. Both modes avoid immediate repeats and retain native playback rate.
+Successful playback exposes clip, cue, gain and audio-clock metadata to local pilot logging.
+This establishes scheduling, not physical audibility.
 Missing/failed clips stay silent; there is no generated primer or fallback.
 
 Tap and release use floor vocals. Injury uses uncertain mouse/rat and floor vocals.

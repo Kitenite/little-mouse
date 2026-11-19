@@ -1,5 +1,7 @@
 # Versioned research data contract
 
+The implemented [local pilot](runtime.md) uses `sensory-pilot-v1`, not this planned full research contract.
+
 Status: schema artifact only; no live telemetry, storage/export implementation or collection is installed.
 Machine-readable record shape: [`record.schema.json`](../../experiments/record.schema.json), JSON Schema 2020-12.
 Records are append-only JSONL; payloads reference stable session, bout and decision IDs.

@@ -131,15 +131,19 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
-## Feline-play critique and experiment organization
+## Sensory experiments implementation
 
-Task `feline-play-critic`: completed; no dependencies; local main workspace above.
-Terminal `0cabd4fa-e351-458b-a77b-743b7f75f617` (Codex via Superset).
-Owns only `docs/cycles/feline-play-critique.md`; source read-only, no deployment/device actions.
-Root checked citations/source evidence and accepted six ranked comparisons with explicit limits.
-Report indexed; stale companion/default documentation corrected. No gameplay changes or device trials.
+Root owns game integration, owner controls, catalog/docs and combined checks. Scope: local
+sensory comparisons, recorded sound variation, logging/export; no trained preference model.
+Same main workspace, deliberately disjoint files; no worker commits/deploys or touches iPad.
 
-Root owns `experiments/` and `docs/experiments/`: complete control inventory, proposed trials,
-future logging/training contracts. Same terminal reused for read-only `experiment-design-critic`;
-review completed and accepted after five findings resolved; [evidence](experiments/review.md).
-All 76 settings covered; four preflight tests and schema checks pass. Logging/learning remain planned.
+| Task | Local terminal | Ownership / status |
+| --- | --- | --- |
+| Experiment engine | `ee8a2dff-d086-427e-94a5-2b2c18ee0e10` | experiment engine + game integration/tests; completed |
+| Audio variation | `41bd025d-e709-4416-bfbd-b76ffd574d9a` | audio/settings + focused tests; completed |
+| Independent critic | `0cabd4fa-e351-458b-a77b-743b7f75f617` | five findings reviewed; regression fixes integrated |
+
+Existing [research critique](cycles/feline-play-critique.md) and [catalog review](experiments/review.md)
+are complete. Runtime review findings and remedies: [review](experiments/runtime-review.md).
+Root verified 309 web tests, four eligibility tests, catalog freshness and build.
+No trained model, recurring automation, hosted update or new iPad verification in this change.

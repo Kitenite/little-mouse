@@ -1087,5 +1087,20 @@
     "stage": "2",
     "evidence": "design-hypothesis",
     "automaticLearningEligible": false
+  },
+  "soundVariety": {
+    "hypothesis": "A focused versus varied recorded repertoire may change habituation; it can also alter the cue distribution.",
+    "interactions": [
+      "soundFrequency",
+      "soundVolume"
+    ],
+    "measurements": [
+      "tracking",
+      "contact",
+      "exposure"
+    ],
+    "stage": "2",
+    "evidence": "design-hypothesis",
+    "automaticLearningEligible": false
   }
 }

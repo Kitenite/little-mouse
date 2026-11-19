@@ -1,7 +1,7 @@
 {
   "catalogVersion": 1,
   "status": "proposed-not-running",
-  "settingsSchemaHash": "b519b27d525ce62897e4ed42a8e2d18642cb0b1e188a4cc792284f43ad495f7b",
+  "settingsSchemaHash": "98ca3026fa7b7be467474c859141145dc990b0332649bd2dc7240648d2128be5",
   "variables": [
     {
       "id": "coatPalette",
@@ -1852,6 +1852,36 @@
         "tracking"
       ],
       "stage": "3",
+      "evidence": "design-hypothesis",
+      "automaticLearningEligible": false
+    },
+    {
+      "id": "soundVariety",
+      "type": "select",
+      "label": "Sound variety",
+      "group": "sound",
+      "options": [
+        {
+          "value": "varied",
+          "label": "Varied"
+        },
+        {
+          "value": "focused",
+          "label": "Focused"
+        }
+      ],
+      "default": "varied",
+      "hypothesis": "A focused versus varied recorded repertoire may change habituation; it can also alter the cue distribution.",
+      "interactions": [
+        "soundFrequency",
+        "soundVolume"
+      ],
+      "measurements": [
+        "tracking",
+        "contact",
+        "exposure"
+      ],
+      "stage": "2",
       "evidence": "design-hypothesis",
       "automaticLearningEligible": false
     },

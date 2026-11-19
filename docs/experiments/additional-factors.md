@@ -1,7 +1,7 @@
 # Factors beyond exposed settings
 
 Status: inventory of additional factor families; these are not implemented experiment controls.
-The 76-setting catalog is exhaustive for `settingsSchema`, not for every numeric literal or possible future feature.
+The 77-setting catalog is exhaustive for `settingsSchema`, not for every numeric literal or possible future feature.
 Before exposing another policy constant, give it a stable ID, software domain, reviewed candidate values,
 source owner, hypothesis, interaction list and acceptance checks; extend catalog coverage accordingly.
 

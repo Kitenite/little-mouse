@@ -7,14 +7,15 @@ const OUTPUT_GAIN=1.8;
 // input by 1/2 and restores it in the curve, accommodating three loud voices
 // without hard clamping the waveshaper input. Static output stays below .85.
 export function createLimiterCurve(inputRange=1){const curve=new Float32Array(2049);for(let i=0;i<curve.length;i++){const x=(i/(curve.length-1)*2-1)*inputRange,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.6?a:.6+.25*(1-Math.exp(-(a-.6)/.25)));}return curve;}
-export const audioDefaults={soundVolume:.7,soundFrequency:1};
+export const audioDefaults={soundVolume:.7,soundFrequency:1,soundVariety:'varied'};
 export const audioControlSchema={
+  soundVariety:{type:'select',options:['varied','focused'],default:'varied',label:'Sound variety'},
   soundVolume:{min:0,max:1,step:.05,default:.7,label:'Sound volume'},
   soundFrequency:{min:.25,max:2,step:.25,default:1,label:'Sound activity'},
 };
 export class PreyAudio {
-  constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,audioSession=globalThis.navigator?.audioSession}={}) {
-    this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleLoading=false;this.sampleRetryAt=0;this.sampleErrors=[];this.sampleChoice={};this.sampleRounds={};this.context=null;this.master=null;
+  constructor({contextFactory=()=>new(globalThis.AudioContext||globalThis.webkitAudioContext)(),rng=Math.random,sampleLoader=null,onPlayback=null,audioSession=globalThis.navigator?.audioSession}={}) {
+    this.onPlayback=typeof onPlayback==='function'?onPlayback:null;this.contextFactory=contextFactory;this.rng=rng;this.sampleLoader=sampleLoader;this.audioSession=audioSession;this.sampleBuffers=new Map();this.samplesPromise=null;this.sampleLoading=false;this.sampleRetryAt=0;this.sampleErrors=[];this.sampleChoice={};this.sampleRounds={};this.context=null;this.master=null;
     this.enabled=false;this.active=false;this.voices=new Set();this.lastVariant={};this.lastCue=-Infinity;
     this.nextAmbient=null;this.lastHit=-Infinity;this.settings={...audioDefaults};this.nextSocial=null;this.pendingReply=null;this.observations=new WeakMap();this.played=0;this.lastPlayed=null;this.lastError=null;this.signalPeak=0;this.testing=false;this.auditionGeneration=0;this.pendingContacts=[];this.unlockGeneration=0;this.lastTouches=new WeakMap();this.foleyUntil=-Infinity;this.unavailableKind=null;this.surface={background:'photo-clearing',strength:.55};this.surfaceMotion=new WeakMap();
   }
@@ -25,7 +26,10 @@ export class PreyAudio {
       this.surface={background,strength};this.surfaceMotion=new WeakMap();
       for(const voice of [...this.voices])if(voice.surface)voice.cancel();
     }
-    for(const [key,schema] of Object.entries(audioControlSchema)){const value=Number(config[key]??schema.default);this.settings[key]=Number.isFinite(value)?clamp(value,schema.min,schema.max):schema.default;}
+    for(const [key,schema] of Object.entries(audioControlSchema)){
+      if(schema.type==='select'){this.settings[key]=schema.options.includes(config[key])?config[key]:schema.default;continue;}
+      const value=Number(config[key]??schema.default);this.settings[key]=Number.isFinite(value)?clamp(value,schema.min,schema.max):schema.default;
+    }
     if(this.settings.soundVolume===0)this.stop();
     const volume=this.settings.soundVolume*OUTPUT_GAIN;
     if(this.master&&this.masterVolume!==volume){this.master.gain.setValueAtTime(volume,this.context.currentTime);this.masterVolume=volume;}
@@ -88,7 +92,11 @@ export class PreyAudio {
     if(priority<2&&t<this.foleyUntil)return false;
     const impact=['hit','hurt','tap','dragrelease'].includes(kind);
     if(!bypassCooldown&&(t-this.lastCue<(impact?.08:.32)||impact&&t-this.lastHit<.18))return false;
-    const available=sampleBanks[kind].filter(id=>this.sampleBuffers.has(id));
+    // Fixed bank order makes focused aliases share a stable pair. Failed clips
+    // fall through to the next real recording; fewer than two may mean silence
+    // or unavoidable repetition. Varied keeps the complete existing shuffle bag.
+    const loaded=sampleBanks[kind].filter(id=>this.sampleBuffers.has(id));
+    const available=this.settings.soundVariety==='focused'?loaded.slice(0,2):loaded;
     if(!available.length){this.unavailableKind=kind;return false;}
     this.unavailableKind=null;
     if(this.voices.size>=3){
@@ -98,9 +106,9 @@ export class PreyAudio {
     this.lastCue=t;if(impact)this.lastHit=t;
     const gain=context.createGain(),pan=context.createStereoPanner?.();
     if(pan){pan.pan.value=clamp(x*1.4-.7,-.7,.7);gain.connect(pan);pan.connect(this.master);}else gain.connect(this.master);
-    const nodes=[gain,...(pan?[pan]:[])];let source,duration,sampleId=null;
+    const nodes=[gain,...(pan?[pan]:[])];let source,duration,level,sampleId=null;
     {
-      const key=available.join('|');let round=this.sampleRounds[kind];
+      const key=this.settings.soundVariety+':'+available.join('|');let round=this.sampleRounds[kind];
       if(!round||round.key!==key||!round.remaining.length)round=this.sampleRounds[kind]={key,remaining:[...available]};
       // Exhaust a bank's loaded excerpts before refilling. If another bank just
       // used the sole remaining clip, defer that clip rather than repeat it now.
@@ -110,7 +118,7 @@ export class PreyAudio {
       source=context.createBufferSource();source.buffer=this.sampleBuffers.get(sampleId);
       source.playbackRate.value=1; // Preserve recorded timing and pitch, including movement.
       duration=source.buffer.duration/source.playbackRate.value;
-      const level=(sampleMix[kind]??.2)*(sampleTrim[sampleId]??1)*(.9+this.rng()*.15)*clamp(gainScale,0,1);
+      level=(sampleMix[kind]??.2)*(sampleTrim[sampleId]??1)*(.9+this.rng()*.15)*clamp(gainScale,0,1);
       gain.gain.setValueAtTime(.0001,t);gain.gain.linearRampToValueAtTime(level,t+.008);gain.gain.setValueAtTime(level,t+Math.max(.01,duration-.018));gain.gain.linearRampToValueAtTime(.0001,t+duration);
       source.connect(gain);
     }
@@ -119,7 +127,10 @@ export class PreyAudio {
     const cleanup=()=>{if(cleaned)return;cleaned=true;for(const node of nodes)node.disconnect();this.voices.delete(voice);};
     const voice={owner,priority,pointerId,kind,surface,cancel:()=>{try{source.stop();}catch{}cleanup();}};
     this.voices.add(voice);source.onended=cleanup;source.start(t);source.stop(t+duration);
-    this.played++;this.lastPlayed={kind,variant:this.lastVariant[kind],sample:sampleId,priority,source:'recording',surface,gainScale,at:t};
+    this.played++;this.lastPlayed={kind,variant:this.lastVariant[kind],sample:sampleId,soundVariety:this.settings.soundVariety,playbackRate:1,priority,source:'recording',surface,gainScale,at:t};
+    // Snapshot the scheduled envelope level (before master/limiter), not the
+    // AudioParam's final fade value. Observer failures never affect playback.
+    if(this.onPlayback)try{Promise.resolve(this.onPlayback({clip:sampleId,kind,profile:this.settings.soundVariety,gain:level,masterGain:this.master?.gain.value??null,playbackRate:source.playbackRate.value,time:t})).catch(()=>{});}catch{}
     return true;
   }
   contactFeedback(mouse,width,outcome='touch',pointerId=null){
@@ -261,5 +272,5 @@ export class PreyAudio {
     if(this.analyser?.getFloatTimeDomainData&&this.samples){this.analyser.getFloatTimeDomainData(this.samples);let peak=0;for(const sample of this.samples)peak=Math.max(peak,Math.abs(sample));this.signalPeak=Math.max(this.signalPeak,peak);}
     return this.signalPeak;
   }
-  diagnostics(){this.pendingContacts=this.pendingContacts.filter(event=>event.expires>=Date.now());this.measure();return{unavailableKind:this.unavailableKind,state:this.context?.state||'locked',enabled:this.enabled,active:this.active,voices:this.voices.size,pendingContacts:this.pendingContacts.length,settings:{...this.settings},sampleCount:this.sampleBuffers.size,sampleTotal:recordedSamples.length,sampleErrors:this.sampleErrors.slice(0,3),audioSessionType:this.audioSession?.type||'unavailable',signalPeak:this.signalPeak,lastError:this.lastError,blockedReason:!this.enabled?'muted':this.settings.soundVolume===0?'volume-zero':!this.ready?(this.context?.state||'gesture-required'):this.lastError?'audio-error':this.unavailableKind?'sample-unavailable':null,played:this.played,last:this.lastPlayed};}
+  diagnostics(){this.pendingContacts=this.pendingContacts.filter(event=>event.expires>=Date.now());this.measure();return{unavailableKind:this.unavailableKind,state:this.context?.state||'locked',enabled:this.enabled,active:this.active,voices:this.voices.size,pendingContacts:this.pendingContacts.length,settings:{...this.settings},sampleCount:this.sampleBuffers.size,loadedBankCounts:Object.fromEntries(Object.entries(sampleBanks).map(([kind,bank])=>[kind,bank.filter(id=>this.sampleBuffers.has(id)).length])),sampleTotal:recordedSamples.length,sampleErrors:this.sampleErrors.slice(0,3),audioSessionType:this.audioSession?.type||'unavailable',signalPeak:this.signalPeak,lastError:this.lastError,blockedReason:!this.enabled?'muted':this.settings.soundVolume===0?'volume-zero':!this.ready?(this.context?.state||'gesture-required'):this.lastError?'audio-error':this.unavailableKind?'sample-unavailable':null,played:this.played,last:this.lastPlayed};}
 }

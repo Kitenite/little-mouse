@@ -936,6 +936,7 @@
         "shadowStrength",
         "shadowSoftness",
         "materialRoughness",
+        "soundVariety",
         "sound",
         "soundVolume",
         "soundFrequency"
@@ -1340,6 +1341,12 @@
           "type": "number",
           "minimum": 0.5,
           "maximum": 1
+        },
+        "soundVariety": {
+          "enum": [
+            "varied",
+            "focused"
+          ]
         },
         "sound": {
           "type": "boolean"

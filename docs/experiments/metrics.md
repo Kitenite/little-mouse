@@ -1,6 +1,6 @@
 # Initial metric definitions — owner-observation-v1
 
-Status: proposed labels; collection UI and analysis are not implemented.
+Status: proposed research metrics; local pilot owner labels exist, but tracking measurement and analysis remain pending.
 The 60-second window is an engineering starting point, not a biologically optimal session duration.
 Window starts when the assigned settings are applied and play resumes; include initial hidden time.
 No automatic stop follows: play continues until the owner ends it. One window belongs to one decision.

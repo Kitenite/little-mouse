@@ -22,3 +22,5 @@ html[data-playing=true],html[data-playing=true] body{overflow:hidden;overscroll-
 .secondary,select,input[type=number],.control-group>input{background:#fff8e9;color:#100d09;border:2px solid #302313}
 .control-group{border-color:#302313}.numeric-control input[type=range],input[type=checkbox]{accent-color:#100d09}
 .game-top,#gameHint{display:none}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline-color:#100d09}
+
+.experiment-actions{display:flex;gap:6px;flex-wrap:wrap}.experiment-actions .secondary{font-size:12px}#experimentControls .control-status{font-weight:600}

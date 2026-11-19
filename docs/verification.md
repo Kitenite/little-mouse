@@ -1,7 +1,18 @@
 # Current verification
 
-Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence remains in
+Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
+
+## Local sensory pilot
+
+309 web tests and four catalog eligibility tests pass; catalog freshness and Worker syntax
+checks pass. Production build: `eec877e6b147`.
+Implemented 15 optional sensory comparisons, recorded repertoire control, bounded local
+logging/export and a 77-variable catalog. Browser smoke check confirmed controls, explicit
+human trial assignment, confirmed settings and owner-ended stop. The background pane
+provided no simulation exposure during that check; it is not motion/audio quality evidence.
+Pilot data is explicitly not training-ready; learner and recurring agent analysis remain pending.
+This update targets the local browser; hosted publication and iPad acceptance are separate.
 
 ## Integrated and checked
 
@@ -43,7 +54,7 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 - Recorded stock/found audio only, native playback rate, silent missing-recording fallback.
   Tap/squeak gain is 0.48; movement uses sparse quiet crawl excerpts. See
   [audio curation report](cycles/podrick-audio.md) for source confidence and mix math.
-- Root combined checks: 277 web tests, four native tests, native lint and TypeScript pass.
+- Prior deployed release checks: 277 web tests, four native tests, native lint and TypeScript pass.
   Production build `20794f4c1253` and built Worker syntax check pass.
 - UI worker inspected desktop/tablet/phone layout, settings, Play, synthetic corner exit,
   Escape and injected failure/Retry. Root inspected final tablet capture and exercised

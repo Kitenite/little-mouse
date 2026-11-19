@@ -16,7 +16,7 @@ movement, not an optimal setting for any listed slider; see [critic report](../c
 5. Stage E: engineering controls (springs, damping, paw clearance, hold classification) need physics/contact
    acceptance before any bounded candidate can be proposed; they are never unrestricted learner actions.
 
-Do not grid-search 76 controls. Start with interpretable effects; examine a few preselected interactions
+Do not grid-search 77 controls. Start with interpretable effects; examine a few preselected interactions
 only after individual screening. Relevant pairs include watch × tempo, travel × dart speed, size × count,
 coat brightness × background contrast, sound frequency × gain, and tail sway × damping.
 A later 2×2 interaction trial must log all four candidates and their assignment probabilities explicitly.

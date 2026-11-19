@@ -1,3 +1,5 @@
+import{sensoryTrials}from'../public/experiment-trials.js';
+import{ExperimentSession}from'../public/experiment-session.js';
 import{upgradePlayStyle}from'../public/settings-migration.js';
 import{test}from'node:test';
 import assert from'node:assert/strict';
@@ -26,15 +28,15 @@ async function gameHarness(failure,surface='web',fault={}){
  const elements=new Map(),storage=new Map(fault.storage||[]),calls=[];
  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',style:{setProperty(){}},dataset:{},options:[],listeners:{},addEventListener(name,fn){const old=this.listeners[name];this.listeners[name]=old?e=>{old(e);fn(e);}:fn;},setAttribute(){},setPointerCapture(){},getBoundingClientRect(){return{left:0,top:0,width:800,height:600};},getContext(){return{};},querySelector(){return{removeAttribute(){}};}});return elements.get(id);};
  let response=failure,pendingResponse=null;
- const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,upgradePlayStyle,radius:()=>40,
+ const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,ExperimentSession,createExperimentControls(){return{nextTrial:()=>fault.trial||null,actor:fault.actor||"human",resetObservation(){calls.push(["observation-reset"]);},started(){calls.push(["trial-started"]);},stopped(){},message(text){calls.push(["trial-message",text]);}};},createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,upgradePlayStyle,radius:()=>40,
  document:{documentElement:{dataset:{surface}},hidden:false,getElementById:element,querySelectorAll:()=>[],addEventListener(){}},
  window:{addEventListener(){}},navigator:{},location:{origin:'http://local'},
  localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
- MouseScene:class{constructor(){if(fault.construct)throw Error('Injected WebGL initialization failure');}w=800;h=600;resize(){}clearEffects(){}render(){if(fault.render)throw Error('Injected first render failure');}splatter(){}},setInterval(){},requestAnimationFrame(){},
+ MouseScene:class{constructor(){if(fault.construct)throw Error('Injected WebGL initialization failure');}w=fault.initialDimensions||800;h=fault.initialDimensions||600;resize(){if(!element('game').hidden){this.w=800;this.h=600;}}clearEffects(){}render(){if(fault.render)throw Error('Injected first render failure');}splatter(){}},setInterval(){},requestAnimationFrame(){},
  fetch:async(path,options)=>{calls.push([path,options]);if(pendingResponse)await pendingResponse;if(response==='offline')throw TypeError('Failed to fetch');if(response)return new Response('not JSON',{status:response});return Response.json({version:'v1'});}
  });
  const source=(await readFile(new URL('../public/game.js',import.meta.url),'utf8')).replace(/^import.*;\n/gm,'');
- vm.runInContext(source+'\nglobalThis.testGame={checkVersion,reload,sync,config,start,pause,frame,contacts,get catches(){return catches},get mice(){return mice},get elapsed(){return elapsed}};',context);
+ vm.runInContext(source+'\nglobalThis.testGame={experiments,preyAudio,experimentMouseVisible,endExperiment,checkVersion,reload,sync,config,start,pause,frame,contacts,get catches(){return catches},get mice(){return mice},get elapsed(){return elapsed}};',context);
  await new Promise(resolve=>setImmediate(resolve));
  return{context,e:element,storage,calls,deferResponse(status){response=status;let release;pendingResponse=new Promise(resolve=>{release=resolve;});return release;},recover(){response=0;}};
 }
@@ -188,4 +190,88 @@ test('iPad migrates a saved large cast to two once, then preserves owner tuning'
  assert.equal(first.context.testGame.config.count,2);
  first.context.testGame.config.count=3;first.context.testGame.sync();
  const second=await gameHarness('offline','ipad',{storage:first.storage});assert.equal(second.context.testGame.config.count,3);
+});
+
+test('sensory trial applies confirmed settings only to new play and restores baseline on pause',async()=>{
+ const h=await gameHarness('offline','web',{trial:{id:'coat-brightness',variants:[{id:'A',patch:{}},{id:'B',patch:{coatBrightness:1.25}}]}});
+ const g=h.context.testGame,baseline=g.config.coatBrightness;
+ g.start(true,true);assert.equal(g.experiments.active,true);
+ const record=g.experiments.exportData().sessions[0];assert.ok(record);
+ g.pause();assert.equal(g.config.coatBrightness,baseline);assert.equal(g.experiments.active,false);
+});
+test('ordinary play does not create experiment records',async()=>{
+ const h=await gameHarness('offline');h.context.testGame.start();
+ assert.equal(h.context.testGame.experiments.exportData().sessions.length,0);
+});
+
+const sensoryTrial=id=>sensoryTrials.find(trial=>trial.id===id);
+const pointer=(id,x,y)=>({pointerId:id,clientX:x,clientY:y,width:22,height:22,preventDefault(){}});
+test('pilot frame exposure excludes fully offscreen approaches/exits and counts partial circle intersection',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;
+ Object.assign(g.config,{mode:'manual',count:2,sound:false});g.start();
+ const samples=[];g.experiments.tick=sample=>samples.push(sample);
+ Object.assign(g.mice[0],{x:-500,y:300,state:'active',hiddenUntil:0,entering:true});
+ Object.assign(g.mice[1],{x:1300,y:300,state:'active',hiddenUntil:0,leaving:true});
+ g.frame(1000);assert.equal(samples.at(-1).visibleCount,0);assert.equal(samples.at(-1).mouseCount,2);
+ const m={state:'active',hiddenUntil:0,x:400,y:300};
+ for(const [x,y] of [[-41,300],[841,300],[400,-41],[400,641],[-30,-30]])assert.equal(g.experimentMouseVisible({...m,x,y},0,800,600,1),false,`${x},${y}`);
+ for(const [x,y] of [[-20,300],[820,300],[400,-20],[400,620]])assert.equal(g.experimentMouseVisible({...m,x,y},0,800,600,1),true,`${x},${y}`);
+ assert.equal(g.experimentMouseVisible({...m,state:'away'},0,800,600,1),false);
+ assert.equal(g.experimentMouseVisible({...m,hiddenUntil:1},0,800,600,1),false);
+});
+test('entire owner exit gesture excludes all corner contacts and outcomes while gameplay stays functional',async()=>{
+ const h=await gameHarness('offline','web',{trial:sensoryTrial('coat-brightness'),actor:'cat'}),g=h.context.testGame,board=h.e('board');
+ Object.assign(g.config,{mode:'manual',count:1,sound:false,harmlessChance:1});g.start(true,true);
+ let id=10;
+ for(const [x,y]of [[10,10],[790,10],[790,590],[10,590]]){
+  Object.assign(g.mice[0],{x,y,angle:0,state:'active',hiddenUntil:0,invulnerableUntil:0});
+  board.listeners.pointerdown(pointer(id,x,y));board.listeners.pointerup(pointer(id++,x,y));
+ }
+ const record=g.experiments.exportData().sessions[0];
+ assert.equal(h.context.window.mouseDiagnostics().playing,false);assert.equal(record.end.reason,'owner-ended');
+ assert.equal(record.actor,'cat');assert.equal(record.contacts.episodes,0);assert.equal(record.contacts.outcomes,0);
+ assert.equal(record.records.filter(r=>r.kind==='event:contact-excluded').length,4);
+ assert.equal(g.catches,3,'the first three corner hits still affect gameplay; final exit pauses as before');
+});
+test('corner-origin exclusion follows drags, cancellation, and pointer ID reuse',async()=>{
+ const h=await gameHarness('offline','web',{trial:sensoryTrial('coat-brightness'),actor:'cat'}),g=h.context.testGame,board=h.e('board');
+ Object.assign(g.config,{mode:'manual',count:1,sound:false,harmlessChance:1});g.start(true,true);
+ Object.assign(g.mice[0],{x:10,y:10,angle:0,state:'active',hiddenUntil:0});
+ board.listeners.pointerdown(pointer(1,10,10));board.listeners.pointermove(pointer(1,400,300));board.listeners.pointerup(pointer(1,400,300));
+ assert.equal(g.experiments.exportData().sessions[0].contacts.episodes,0);
+ Object.assign(g.mice[0],{x:400,y:300,angle:0,state:'active',hiddenUntil:0,invulnerableUntil:0});
+ board.listeners.pointerdown(pointer(1,400,300));board.listeners.pointerup(pointer(1,400,300));
+ let record=g.experiments.exportData().sessions[0];assert.equal(record.contacts.episodes,1);assert.equal(record.contacts.outcomes,1);
+ board.listeners.pointerdown(pointer(1,790,10));board.listeners.pointercancel(pointer(1,790,10));
+ board.listeners.pointerdown(pointer(1,350,350));board.listeners.pointercancel(pointer(1,350,350));
+ record=g.experiments.exportData().sessions[0];assert.equal(record.contacts.episodes,2);assert.equal(record.contacts.outcomes,1);
+});
+test('preflight keeps board hidden on inapplicable textures; successful assignment snapshots resized dimensions',async()=>{
+ for(const id of ['texture-contrast','background-scale','coat-background-2x2'])for(const background of ['plain','chalk','ink','pale-blue','warm-yellow']){
+  const h=await gameHarness('offline','web',{trial:sensoryTrial(id),initialDimensions:1}),g=h.context.testGame;
+  h.e('game').hidden=true;h.e('home').hidden=false;g.config.background=background;g.start(true,true);
+  assert.equal(g.experiments.active,false,`${id}/${background}`);assert.equal(h.e('game').hidden,true);assert.equal(h.e('home').hidden,false);
+ }
+ const blocked=await gameHarness('offline','web',{trial:sensoryTrial('background-scale')});blocked.context.testGame.config.backgroundContrast=0;blocked.context.testGame.start(true,true);assert.equal(blocked.context.testGame.experiments.active,false);
+ const h=await gameHarness('offline','web',{trial:sensoryTrial('coat-brightness'),initialDimensions:1}),g=h.context.testGame;
+ h.e('game').hidden=true;g.start(true,true);
+ const record=g.experiments.exportData().sessions[0];assert.equal(record.device.width,800);assert.equal(record.device.height,600);
+ assert.ok(record.records.some(r=>r.kind==='event:visibility-method'&&r.payload.pixelSilhouetteVerified===false));
+ const reset=h.calls.findIndex(([name])=>name==='observation-reset'),started=h.calls.findIndex(([name])=>name==='trial-started');assert.ok(reset>=0&&started>reset);
+ g.pause();const count=h.calls.filter(([name])=>name==='observation-reset').length;g.start();assert.equal(h.calls.filter(([name])=>name==='observation-reset').length,count+1);
+});
+function mockAudio(g,banks){
+ Object.defineProperty(g.preyAudio,'ready',{get:()=>true});
+ g.preyAudio.diagnostics=()=>({state:'running',sampleCount:20,loadedBankCounts:banks,played:0});
+}
+test('sound pilots require both usable banks and variety requires a genuinely larger repertoire',async()=>{
+ for(const id of ['sound-presence','sound-frequency','sound-volume','sound-variety'])for(const banks of [{tap:0,squeak:4},{tap:4,squeak:0},{}]){
+  const h=await gameHarness('offline','web',{trial:sensoryTrial(id)}),g=h.context.testGame;mockAudio(g,banks);h.e('game').hidden=true;g.start(true,true);
+  assert.equal(g.experiments.active,false,`${id}/${JSON.stringify(banks)}`);assert.equal(h.e('game').hidden,true);
+ }
+ for(const [banks,allowed]of [[{tap:2,squeak:2},false],[{tap:3,squeak:1},true],[{tap:1,squeak:3},true]]){
+  const h=await gameHarness('offline','web',{trial:sensoryTrial('sound-variety')}),g=h.context.testGame;mockAudio(g,banks);g.start(true,true);
+  assert.equal(g.experiments.active,allowed);
+  if(allowed){const event=g.experiments.exportData().sessions[0].records.find(r=>r.kind==='event:audio-readiness');assert.deepEqual(event.payload.loadedBankCounts,banks);assert.equal(event.payload.physicalAudibility,'unknown');}
+ }
 });

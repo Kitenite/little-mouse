@@ -62,6 +62,13 @@ entry screen is owned separately and is integrated by the coordinator.
 Audio unlock activates the audio system only; it does not schedule a peek/foley cue.
 Direct pointer contact feedback remains responsible for touch squeaks.
 
+## Local comparisons
+
+Settings → Try variations selects an opt-in comparison and cat/human/unknown actor.
+The next Play starts a new cast with the assigned treatment; pause restores the baseline.
+Export/Copy data and owner observations remain local until explicitly shared. See
+[experiment runtime](experiments/runtime.md) for measurement and retention limits.
+
 ## Ending play
 
 Current owner exit: briefly tap corners **top-left, top-right, bottom-right, bottom-left**

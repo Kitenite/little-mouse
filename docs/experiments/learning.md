@@ -9,7 +9,7 @@ This framework targets interaction patterns and owner-observed engagement for an
 2. Randomized small comparisons: frozen policy/settings within each observation bout, meaningful uncertainty.
 3. Simple predictive baselines: compare constant/session baselines with regularized models on a few supported features.
 4. Bounded contextual bandit: choose among reviewed motif presets at bout boundaries, with logged probabilities.
-   Keep low-data fallback and owner override; no unconstrained action over all 76 dimensions.
+   Keep low-data fallback and owner override; no unconstrained action over all 77 dimensions.
 5. Consider richer sequence models only if enough independent sessions and consistent labels justify complexity.
    A single cat's sparse touch history does not justify a large model or a claim of general cat preferences.
 
