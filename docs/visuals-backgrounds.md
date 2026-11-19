@@ -5,9 +5,29 @@
 Create a textured 3D prey game with clear silhouettes and substantial color variety. The owner
 prioritizes this cat's engagement over perfect realism; photographic indistinguishability is not
 an acceptance gate. Keep comparing motion and anatomy with real prey where useful.
-The background must be configurable live, including image choices and quiet high-contrast floors.
+The background must be configurable locally, including image choices and quiet high-contrast floors.
 Preserve visual quality while optimizing for iPad. Soft fuzzy silhouettes and articulated anatomy
 are owned by [anatomy and motion](anatomy-motion.md).
+
+## Landing and owner settings
+
+**Implemented:** Podrick’s Violin opens as a small illustrated storybook: warm parchment,
+dark ink, slightly crooked borders and serif lettering. The supplied cats remain the central
+illustration, untrimmed. This is an original-art, Don’t Starve-inspired mood; no game assets
+were copied. `public/assets/brand/podrick-cats.png` is a byte-for-byte copy of the supplied
+`ipad/assets/icon.png` at rebrand commit `111d371`; the full original remains untouched.
+
+One Play button is the entry point. Sound & settings is collapsed by default on all surfaces;
+local controls remain available in a bounded scrolling panel. Pairing, remote-control links,
+research links and playground entry points do not appear on the landing. The owner corner
+exit and Escape are explained quietly below Play. Boot failure keeps a visible Retry button.
+Native home renders the existing Game with DEFAULT_GAME directly; splash/config and Game
+loading/error presentation belong to their native owners. No duplicate native menu remains.
+
+The hidden preview canvas remains as a 1px compatibility target for the current renderer;
+removing that renderer allocation is outside this presentation change. Gameplay canvas,
+floors, mouse physics and behavior are not restyled by the landing illustration.
+Browser evidence and remaining device limits: [UI handoff](cycles/podrick-ui.md).
 
 ## Implemented in source
 
@@ -39,7 +59,7 @@ and sparse tapered grass blades that bend about fixed ground roots. Boards, ston
 nothing. No image-pixel obstacles, photo deformation, glowing rings, ray tracing or new bitmap assets.
 The woodland center stays soil: this pass does not synthesize leaf fragments at photographic edges.
 `environmentStrength` updates existing marks live, including while paused (zero clears/disables); `environmentPersistence` sets finite lifetime.
-Both use the shared schema, so game, companion, profiles, playground and server inherit validation.
+Both use the shared settings schema for local validation.
 
 Rendered paw positions transformed by the mouse group supply contact samples; ground height and
 actual displacement gate emission, not speed/intent or cadence alone. Airborne paws reset history;
