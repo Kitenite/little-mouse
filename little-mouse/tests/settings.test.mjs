@@ -46,11 +46,22 @@ test('every numeric setting renders a paired slider and exact entry; sync emits 
 });
 
 test('fresh startup keeps the rich preset and current user choices survive migration',async()=>{
- const{upgradeSettings}=await import('../public/settings-migration.js');
- const fresh=upgradeSettings({...settingsDefaults});
+ const{upgradeSettings,upgradePlayStyle}=await import('../public/settings-migration.js');
+ const fresh=upgradePlayStyle(upgradeSettings({...settingsDefaults}));
  for(const[key,value]of Object.entries(settingsDefaults))assert.equal(fresh[key],value,key);
  const custom={...fresh,count:1,hide:8,sound:false};assert.deepEqual(upgradeSettings(custom),custom);
 });
 test('Fuzziness keeps the persisted numeric softness key and shared control label',async()=>{
  const {identityControls}=await import('../public/mouse-identity.js');assert.equal(settingsSchema.furSoftness.label,'Fuzziness');assert.equal(identityControls.furSoftness.label,'Fuzziness');assert.equal(settingsSchema.furSoftness.min,0);assert.equal(settingsSchema.furSoftness.max,1);for(const value of [0,.5,1])assert.equal(cleanSettings({furSoftness:value}).furSoftness,value);
+});
+
+test('faster larger preset migrates saved play once and preserves later tuning',async()=>{
+ const{upgradePlayStyle}=await import('../public/settings-migration.js');
+ const old={...settingsDefaults,size:2.2,speed:1.2,hide:8,sound:false,background:'slate'};
+ const next=upgradePlayStyle(old,old);
+ assert.equal(next.size,2.86);assert.equal(next.speed,2.8);assert.equal(next.hide,1);
+ assert.equal(next.sound,false);assert.equal(next.background,'slate');
+ assert.equal(upgradePlayStyle({...old,size:3},{...old,size:3}).size,3.9);
+ const custom={...next,size:1.4,speed:.6,hide:7};assert.deepEqual(upgradePlayStyle(custom,custom),custom);
+ validateSettings(next);
 });

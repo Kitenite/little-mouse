@@ -19,8 +19,10 @@ were copied. `public/assets/brand/podrick-cats.png` is a byte-for-byte copy of t
 
 One Play button is the entry point. Sound & settings is collapsed by default on all surfaces;
 local controls remain available in a bounded scrolling panel. Pairing, remote-control links,
-research links and playground entry points do not appear on the landing. The owner corner
-exit and Escape are explained quietly below Play. Boot failure keeps a visible Retry button.
+research links and playground entry points do not appear on the landing. Only title, Play, Settings and a concise corner-exit/Escape hint remain on the landing.
+Near-black ink on light parchment and solid control borders increase UI contrast.
+Decorative copy and gameplay counters/hints are hidden. The owner corner
+exit remains discoverable below Play. Boot failure keeps a visible Retry button.
 Native home renders the existing Game with DEFAULT_GAME directly; splash/config and Game
 loading/error presentation belong to their native owners. No duplicate native menu remains.
 

@@ -5,21 +5,19 @@
   <section class="storybook" aria-labelledby="title">
     <div class="illustration"><img src="assets/brand/podrick-cats.png" alt="Two curious cats beneath crooked trees in a moonlit wood." width="1199" height="1312"></div>
     <div class="story-page">
-      <header><a class="brand" href="./">A GAME FOR YOUR CAT</a><span aria-hidden="true">✦</span></header>
-      <div class="intro"><p class="eyebrow">A small tale of mischief</p><h1 id="title">Podrick’s<br>Violin<span aria-hidden="true">.</span></h1><p>Quiet paws. Curious eyes.<br>Something stirs in the shadows.</p></div>
+      <div class="intro"><h1 id="title">Podrick’s<br>Violin<span aria-hidden="true">.</span></h1></div>
       <div class="controls">
         <button id="start" class="start" disabled>Loading game…</button>
         <p id="bootStatus" role="status" aria-live="polite">Preparing the game…</p>
         <noscript>JavaScript is needed to play. Enable it, then reload this page.</noscript>
-        <details id="tabletSettings"><summary>Sound &amp; settings</summary><div id="settingsControls"></div></details>
-        <p class="hint">To return here, tap the four corners clockwise,<br>starting at the top left. Or press Escape.</p>
+        <details id="tabletSettings"><summary>Settings</summary><div id="settingsControls"></div></details>
+        <p class="hint">Exit: tap corners ↖ ↗ ↘ ↙ · Esc</p>
       </div>
-      <footer>Let the little hunt begin.</footer>
     </div>
   </section>
   <div class="preview background-preview" aria-hidden="true"><canvas id="preview"></canvas></div>
 </main>
-<section id="game" hidden aria-label="Mouse chase game"><canvas id="board" aria-label="Tap a moving mouse to catch it"></canvas><div class="game-top"><span id="score">0 catches</span></div><button id="enableSound" class="secondary" hidden>Tap for sound ♫</button><span id="gameHint">A little patience. A little pounce.</span><div id="error" hidden role="alert"></div></section>
+<section id="game" hidden aria-label="Mouse chase game"><canvas id="board" aria-label="Tap a moving mouse to catch it"></canvas><div class="game-top"><span id="score">0 catches</span></div><button id="enableSound" class="secondary" hidden>Enable sound</button><span id="gameHint"></span><div id="error" hidden role="alert"></div></section>
 <script id="boot-recovery">
 // Inline deliberately: recovery must work even when any external module fails.
 (()=>{
@@ -35,7 +33,7 @@
     held:Array.isArray(d.mice)?d.mice.slice(0,8).filter(m=>m?.hold).length:0,
     viewport:{width:number(window.innerWidth,16384),height:number(window.innerHeight,16384)},
     runtimeVersion:typeof d.version==='string'&&/^[a-f0-9]{12}$/.test(d.version)?d.version:null,
-    settings:{count:number(c.count,8),size:number(c.size,3),speed:number(c.speed,4),mode:['hunt','stalk','scurry','manual'].includes(c.mode)?c.mode:null}};
+    settings:{count:number(c.count,8),size:number(c.size,3.9),speed:number(c.speed,4),mode:['hunt','stalk','scurry','manual'].includes(c.mode)?c.mode:null}};
   }catch{return null;}
  }
  function record(kind){events.push({kind,state,ms:number(Date.now()-began)});if(events.length>12)events.shift();}

@@ -12,3 +12,13 @@ html[data-playing=true],html[data-playing=true] body{overflow:hidden;overscroll-
 @media(min-width:651px) and (max-height:650px){#home{padding:16px;max-width:940px}.story-page{padding:24px 30px}.intro{margin:20px 0}h1{font-size:48px}.intro>p:last-child{margin-top:16px;font-size:15px}footer{margin-top:18px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(min-width:651px){#home:has(#tabletSettings[open]) .story-page{padding:24px 32px}#home:has(#tabletSettings[open]) .intro{margin:18px 0}#home:has(#tabletSettings[open]) h1{font-size:46px}#home:has(#tabletSettings[open]) .intro>p:last-child{display:none}#home:has(#tabletSettings[open]) footer{margin-top:18px}#tabletSettings[open]{max-height:30dvh}}
+
+/* Strong ink/paper separation; no ornamental gameplay copy. */
+:root{--ink:#100d09;--paper:#fff1ce;--muted:#302313;background:#0c0a08;color:#fff1ce}
+.storybook{border:2px solid #fff1ce}.story-page{background-image:none;border-color:#100d09}
+.intro{margin:0 0 36px}.start{color:#fff8e9;border-color:#100d09;background:#100d09}
+#tabletSettings,#tabletSettings>summary{border-color:#302313;background:var(--paper)}
+.hint,.control-note,.control-status,.control-unit{color:#302313}
+.secondary,select,input[type=number],.control-group>input{background:#fff8e9;color:#100d09;border:2px solid #302313}
+.control-group{border-color:#302313}.numeric-control input[type=range],input[type=checkbox]{accent-color:#100d09}
+.game-top,#gameHint{display:none}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline-color:#100d09}

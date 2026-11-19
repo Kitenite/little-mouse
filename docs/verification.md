@@ -5,6 +5,11 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 
 ## Integrated and checked
 
+- Faster active hunt and 30% size migration verified in browser: size 2.86, pace 2.8,
+  hide 1, tempo 1.5, run-through 0.6. Later local tuning survives reload.
+  Minimal landing copy and high-contrast ink/paper presentation inspected.
+  Native code unchanged in this follow-up; earlier native checks remain applicable.
+
 - Podrick’s Violin name, owner-supplied artwork icon and native splash configuration.
 - Illustrated parchment landing, one Play entry, collapsed local settings, direct native game.
 - Companion/pairing/remote APIs removed; asset version checks remain. Legacy manual mode
@@ -12,8 +17,8 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 - Recorded stock/found audio only, native playback rate, silent missing-recording fallback.
   Tap/squeak gain is 0.48; movement uses sparse quiet crawl excerpts. See
   [audio curation report](cycles/podrick-audio.md) for source confidence and mix math.
-- Root combined checks: 268 web tests, four native tests, native lint and TypeScript pass.
-  Production build `a273b8eda35f` and built Worker syntax check pass.
+- Root combined checks: 269 web tests, four native tests, native lint and TypeScript pass.
+  Production build `1cd833c286db` and built Worker syntax check pass.
 - UI worker inspected desktop/tablet/phone layout, settings, Play, synthetic corner exit,
   Escape and injected failure/Retry. Root inspected final tablet capture and exercised
   integrated Play via DOM click: playing=true, no error; no remote resource requests observed.
@@ -38,7 +43,7 @@ of naturalness follows from waveform checks. No synthesis is used to fill covera
 
 ## Release
 
-Sites source `dc7b802ce9d8c6f615e3fdc1beb59da6a13540d4`, build `a273b8eda35f`.
-Hosted deployment `appgdep_6afe814eab8c8191a3034b0b6867148a` succeeded; owner-only access
+Sites source `01f746fc374eeb642e00293cda6104721b6fded1`, build `1cd833c286db`.
+Hosted deployment `appgdep_6afe825b4bbc819180447b1d126caf09` succeeded; owner-only access
 preserved. Native installation and hosted web deployment are separate. Source changes are
 integrated on main; publication is recorded by the corresponding GitHub commit.

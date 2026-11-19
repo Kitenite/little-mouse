@@ -1,3 +1,4 @@
+import{upgradePlayStyle}from'../public/settings-migration.js';
 import{test}from'node:test';
 import assert from'node:assert/strict';
 import{updateHunt,createHuntDirector,rememberTouch,clearHunt}from'../public/enrichment.js';
@@ -25,7 +26,7 @@ async function gameHarness(failure,surface='web',fault={}){
  const elements=new Map(),storage=new Map(fault.storage||[]),calls=[];
  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',style:{setProperty(){}},dataset:{},options:[],listeners:{},addEventListener(name,fn){const old=this.listeners[name];this.listeners[name]=old?e=>{old(e);fn(e);}:fn;},setAttribute(){},setPointerCapture(){},getBoundingClientRect(){return{left:0,top:0,width:800,height:600};},getContext(){return{};},querySelector(){return{removeAttribute(){}};}});return elements.get(id);};
  let response=failure,pendingResponse=null;
- const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,radius:()=>40,
+ const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,upgradePlayStyle,radius:()=>40,
  document:{documentElement:{dataset:{surface}},hidden:false,getElementById:element,querySelectorAll:()=>[],addEventListener(){}},
  window:{addEventListener(){}},navigator:{},location:{origin:'http://local'},
  localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
@@ -141,7 +142,7 @@ test('invalid resume payload is ignored without losing settings',async()=>{
   {playing:'yes',catches:7,elapsed:42,at:Date.now()},
   {playing:true,catches:7,elapsed:42,at:Date.now()+60000},
  ]){
-  const storage=new Map([['little-mouse',JSON.stringify({...upgradeSettings(defaults),speed:2})],['mouse-resume',JSON.stringify(resume)]]);
+  const storage=new Map([['little-mouse',JSON.stringify({...upgradeSettings(defaults),playStyleVersion:1,speed:2})],['mouse-resume',JSON.stringify(resume)]]);
   const h=await gameHarness('offline','web',{storage});assert.equal(h.context.window.mouseDiagnostics().playing,false);assert.equal(h.context.testGame.elapsed,0);assert.equal(h.context.testGame.config.speed,2);
  }
 });
@@ -165,7 +166,7 @@ test('asset version changes reload after checkpoint while failures leave play ru
 });
 
 test('legacy remote manual mode returns to active local hunt without changing other choices',async()=>{
- const storage=new Map([['little-mouse',JSON.stringify({...upgradeSettings(defaults),mode:'manual',speed:2})]]);
+ const storage=new Map([['little-mouse',JSON.stringify({...upgradeSettings(defaults),playStyleVersion:1,mode:'manual',speed:2})]]);
  const h=await gameHarness('offline','web',{storage}),g=h.context.testGame;
  assert.equal(g.config.mode,'hunt');assert.equal(g.config.speed,2);
  assert.equal(JSON.parse(h.storage.get('little-mouse')).mode,'hunt');

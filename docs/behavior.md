@@ -32,10 +32,13 @@ the first recovery entrance. Fresh cues after recovery still receive contextual 
 Direct contact can be harmless or cause the requested cosmetic injury/defeat reactions;
 [contact rules](touch-interaction.md) own region selection and held outcomes.
 
-The rich launch preset uses two mice, size 2.2, pace 1.2, hide 2.5 seconds, Hunt tempo 1
-and run-through probability 0.30. It favors varied visible bouts while retaining pauses and
-concealment, rather than maximizing simultaneous mice or movement speed. `settings.js` owns actual ranges/defaults. Peek/watch duration,
-creep/dart speed, perception distance and reaction delay are independently adjustable.
+The active launch preset uses two mice, size 2.86 (30% above 2.2), pace 2.8,
+hide 1 second, Hunt tempo 1.5 and run-through probability 0.60. Peek duration 0.7,
+watch duration 0.6, creep speed 1.6 and dart speed 1.4 favor faster screen coverage,
+shorter pauses and more full-screen runs while preserving teasing and paw avoidance.
+One-time play-style migration increases each saved size by 30% (maximum 3.9), applies
+these movement values, and preserves sound/background choices. Later tuning survives reload.
+`settings.js` owns actual ranges/defaults; gait cadence remains independently capped.
 No old saved session-duration value may stop the game automatically.
 
 ## Acceptance criteria

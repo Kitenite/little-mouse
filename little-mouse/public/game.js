@@ -1,3 +1,4 @@
+import{upgradePlayStyle}from'./settings-migration.js';
 import{createOwnerGesture}from'./owner-gesture.js';
 import{createContacts,recordPointer,removePointer,classifyContact,beginContact,moveContact,updateContacts,endContact,cancelContact,clearContacts}from'./contact.js';
 import{updateIdleBehavior}from'./idle-animation.js';
@@ -14,7 +15,8 @@ const $=id=>document.getElementById(id),defaults=settingsDefaults;
 let bootFailed=false;
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}};
 const persist=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
-const config=upgradeSettings({...defaults,...read('little-mouse',{})});let playing=false,mice=[],catches=0,elapsed=0,last=0,wake=null,version='',versionBusy=false;
+const savedSettings=read('little-mouse',{});
+const config=upgradePlayStyle(upgradeSettings({...defaults,...savedSettings}),savedSettings);let playing=false,mice=[],catches=0,elapsed=0,last=0,wake=null,version='',versionBusy=false;
 // Retired remote-only mode must not strand previously saved games.
 if(config.mode==='manual')config.mode=defaults.mode;
 const preyAudio=new PreyAudio();
@@ -42,7 +44,6 @@ function pause(){cancelTouchSounds();clearContacts(contacts);playing=false;syncA
 
 // Keep multi-touch play on the board from zooming or scrolling the page.
 for(const type of ['gesturestart','gesturechange','touchmove'])$('game').addEventListener(type,e=>e.preventDefault(),{passive:false});
-if(document.documentElement.dataset.surface==='ipad')$('home').querySelector('.brand').removeAttribute('href');
 $('tabletSettings').addEventListener('toggle',()=>preview?.resize());
 $('start').addEventListener('click',()=>{try{unlockAudio();start();}catch(error){recoverBoot(error,'start');}});
 const ownerGesture=createOwnerGesture(),ownerPointers=new Set();

@@ -91,3 +91,7 @@ owner asked to exit it. This does not block source publication or hosted deploym
 
 After GitHub preservation `254f5a6`, all four batch sessions and three auxiliary workspaces
 were retired. Only main worktree remains; roles, handoffs and selected captures are in code.
+
+Root follow-up: faster/more active hunt, 30% larger mice, minimal copy and stronger UI contrast.
+No new worker workspace needed for this scoped preset/presentation change. 269 web tests, production build and Worker syntax checks pass; browser confirms new preset
+and ready startup. Hosted publication succeeded. Guided Access remains the native restart dependency.
