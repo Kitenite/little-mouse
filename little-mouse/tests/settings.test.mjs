@@ -6,7 +6,7 @@ import{coatDefaults,coatControls,coatPalettes}from'../public/coat-palette.js';
 import{audioDefaults,audioControlSchema}from'../public/audio.js';
 import{secondaryMotionDefaults,secondaryMotionControls}from'../public/secondary-motion.js';
 import{createSettingsControls}from'../public/controls.js';
-import{cleanSettings}from'../worker/api.js';
+import{validateSettings as cleanSettings}from'../public/settings.js';
 
 test('all shared settings round trip through server validation, including each mouse count and surface',()=>{
  assert.deepEqual(cleanSettings(settingsDefaults),settingsDefaults);

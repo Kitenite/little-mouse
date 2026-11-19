@@ -9,24 +9,21 @@ pairing and updates. Home-screen name/icon changes require a signed native rebui
 
 ## Owner requirements
 
-Use the iPad as the play surface and a separate phone/laptop web companion for live tuning.
-Keep useful local iPad controls too. Expose meaningful numeric behavior, anatomy, motion,
-audio and visual settings. Preserve profiles and allow fast wireless iteration with the cat.
-Support testing an installed app on a wired device; Expo Go must not be the only route.
-The native app must remain horizontal: allow both landscape sides and no portrait orientation.
+Use the iPad as the play surface with local owner controls and saved profiles.
+Remote gameplay control is removed: no pairing, companion route, command endpoints,
+settings synchronization, telemetry uploads or room database access remains.
+Preserve wireless asset iteration and installed-app support. Native orientation remains landscape.
 
 ## Implemented surfaces and settings
 
-The game is `/`; the companion is `/companion`. `?surface=ipad` selects the tablet layout.
-Both use `public/settings.js` for validated settings and `controls.js` for grouped controls.
-Fuzziness is an independent anatomy control in game, companion and playground; it reuses the
-persisted numeric `furSoftness` key (0–1), with tuft loft/spread distinct from length and density.
-Profiles persist locally. Pairing uses a 16-character code or companion link.
-The game polls at 400 ms; the companion at 500 ms. This is live polling, not hard realtime.
-Commands include play, pause, steer, recall and reload. Stale commands are rejected.
-Unacknowledged local changes persist in a validated, pairing-scoped queue across reloads.
-Stale polling cannot erase them; acknowledgement clears both durable overrides and queued
-replays so a later companion choice wins. Storage denial still permits in-memory local play.
+The game is `/`; `?surface=ipad` selects the tablet layout. Settings start collapsed on
+all surfaces. `public/settings.js` validates local settings and `controls.js` renders grouped
+controls and profiles. Settings and profiles persist on this device; denied storage still
+permits in-memory play. Fuzziness retains the persisted `furSoftness` key.
+Legacy saved remote-manual mode becomes the normal hunt mode at game startup; the retired
+choice is absent from visible controls. Developer playground forcing remains separate.
+Existing legacy browser keys and local database files are not destructively purged; runtime
+never reads pairing keys or opens the old database. Hosting no longer requests a D1 binding.
 
 The current rich starting preset uses two large mice, woodland clearing, varied hunt/idle
 behavior and moderate secondary motion. It is a design starting point to test with this cat,
@@ -38,8 +35,7 @@ not a scientifically established optimum. The connected iPad also has a saved
 The HTML shows loading until the game module initializes. An inline recovery controller
 survives failed module downloads; startup failure or a 15-second timeout offers **Retry
 loading game**. Retry checks the game response before a fresh navigation, preserving
-stored pairing/settings and the existing short resume window. Malformed pairing values are
-cleared individually; resume requires finite nonnegative counters and a nonfuture timestamp
+stored settings and the existing short resume window. Resume requires finite nonnegative counters and a nonfuture timestamp
 less than 60 seconds old. Valid owner state is retained. There is no automatic
 error-reload loop or same-document re-import that could duplicate handlers.
 WebGL initialization, preview/game frame exceptions and context loss use this recovery;
@@ -55,18 +51,18 @@ first-failure category/pre-cleanup state plus the last 12 recovery transitions. 
 when game modules fail. Only allowlisted numeric/enum settings, viewport and a 12-hex runtime
 fingerprint are included; snapshot is null if diagnostics throw. No error text, URLs,
 pairing codes, storage dumps or raw mouse objects are included.
-`mouseDiagnostics()` exposes pairing presence, not the bearer code. Exported evidence is
+`mouseDiagnostics()` contains no pairing state. Exported evidence is
 in-memory and resets on navigation; collect it before Retry. It is not deterministic replay
 or an automatic upload. Browser/OS, source SHA and ordered actions are recorded separately.
-The native home opens the game without awaiting the connection preference write, preventing
-slow storage from blocking navigation. Saving the address is best-effort; URL validation remains.
+The native WebView keeps Retry after load failures and uses the supplied cat artwork while
+loading, with a dark background. Native connection-settings overlays are removed. The UI
+entry screen is owned separately and is integrated by the coordinator.
 
 ## Ending play
 
 Current owner exit: briefly tap corners **top-left, top-right, bottom-right, bottom-left**
 in order within four seconds. Multiple contacts, a long press or dragged corner touch cancel
-recognition. Companion Pause and keyboard Escape remain alternatives.
-The native connection-settings overlay is hidden during active play and returns when paused.
+recognition. Keyboard Escape also pauses locally.
 There is no timed breather or automatic session stop, including for legacy saved durations.
 Old READMEs describing long-press pause/settings during play are obsolete on this point.
 
@@ -74,14 +70,14 @@ Old READMEs describing long-press pause/settings during play are obsolete on thi
 
 | Change | Current route | Boundary |
 | --- | --- | --- |
-| Settings and steering | Paired polling | Requires connectivity; no native rebuild |
+| Settings and profiles | Local controls and storage | No network request or native rebuild |
 | Local web code/assets | Dev-server version detection and automatic reload | Server remains running; state is checkpointed |
 | Hosted web game | Explicit build/deploy, then version reload | GitHub push alone does not deploy |
 | App JS during development | Metro/Expo development workflow | Separate from hosted game reload |
 | Compatible installed app JS | EAS Update channel/runtime | Not all native changes can ship OTA |
 | Native modules/permissions/runtime | New signed binary | Device build/install required |
 
-The Expo/React Native wrapper uses WKWebView for the same renderer and companion integration.
+The Expo/React Native wrapper uses WKWebView for the same renderer and local controls.
 `npm --prefix ipad run local` starts LAN development; the existing `ios` script supports a
 connected-device build. Consult [ipad/AGENTS.md](../ipad/AGENTS.md) and matching Expo docs
 before changing native APIs; this requirements document is not a provisioning runbook.
@@ -89,22 +85,24 @@ A wired connection alone does not demonstrate that signing, installation or laun
 
 ## Acceptance criteria and limits
 
-- Pair phone and iPad; verify settings both directions, steering, pause, profiles and recovery.
-- Save a web change and observe the correct version load with pairing/session continuity.
-- Cancel all held contacts before pause, reload, app hiding or manual commands.
+- Verify local play, pause, saved settings/profiles, audio activation and failure recovery.
+- Assert retired endpoints return 404 and runtime sends only read-only asset-version checks.
+- Save a web change and observe the correct version load with settings/session continuity.
+- Cancel all held contacts before pause, reload, app hiding or asset reload.
 - Verify both landscape sides, refusal to rotate into portrait, and owner exit with real
   simultaneous paw-like touches in a newly rebuilt native app.
 - Test installed-device launch, local-network permission, audio unlock, hosted authentication
   and update delivery separately; simulator success does not prove device success.
 - First load needs the local or hosted server; the wrapper has no bundled offline game.
 
-Source owners: game/companion/controls/settings, worker API, dev/build scripts, and
+Source owners: game/controls/settings, version API, dev/build scripts, and
 `ipad/src/components/Game.tsx`. Tests: `network`, `settings`, `enrichment`, `owner-gesture`,
 and native connection tests. Public-repository permission is not proof of a public deployment.
 
-Development server: `npm run dev` watches the API plus shared settings/migration modules.
-Schema edits restart the local API so new companion sliders validate immediately; static
-asset changes use the source-version reload. Existing room data persists in `.local/rooms.sqlite`.
+Development server: `npm run dev` watches server/shared modules. Public asset changes are
+fingerprinted and checked every second; a changed version checkpoints the session and reloads.
+Version responses cannot change settings or issue gameplay commands. Offline checks leave play
+running. No gameplay state is sent to the server. Existing `.local/rooms.sqlite` is left untouched.
 
 ## Native orientation
 

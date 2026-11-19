@@ -1,15 +1,22 @@
-import{test}from'node:test';import assert from'node:assert/strict';import{DatabaseSync}from'node:sqlite';import{api}from'../worker/api.js';
-function env(){const s=new DatabaseSync(':memory:');s.exec('CREATE TABLE rooms(code TEXT PRIMARY KEY,settings TEXT,command TEXT,telemetry TEXT,revision INTEGER DEFAULT 0,updated INTEGER)');return{DB:{prepare(sql){return{bind(...a){return{first:async()=>s.prepare(sql).get(...a),run:async()=>s.prepare(sql).run(...a)}}}}}};}
-const req=(p,b,origin='http://local')=>new Request('http://local'+p,{method:b?'POST':'GET',headers:{origin,'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});
-test('pairing, live settings, steering, telemetry and persistent state across releases',async()=>{const e=env();const created=await api(req('/api/rooms',{settings:{speed:1.2}}),e,'v1');assert.equal(created.status,201);const {code}=await created.json();assert.match(code,/^[a-f0-9]{16}$/);const path='/api/rooms/'+code;assert.equal((await api(req(path+'/settings',{background:'wood',count:4}),e,'v1')).status,200);assert.equal((await api(req(path+'/command',{action:'steer',x:1.5,y:-1}),e,'v1')).status,200);await api(req(path+'/telemetry',{playing:true,catches:8,elapsed:42,mouse:[{x:.3,y:.5,visible:true}]}),e,'v1');const r=await(await api(req(path),e,'v2')).json();assert.equal(r.settings.speed,1.2);assert.equal(r.settings.background,'wood');assert.equal(r.settings.count,4);assert.equal(r.command.steer.x,1);assert.equal(r.command.steer.y,0);assert.equal(r.telemetry.catches,8);assert.equal(r.revision,2);assert.equal(r.version,'v2');});
-test('invalid settings, unknown codes and cross-origin writes are rejected',async()=>{const e=env();const{code}=await(await api(req('/api/rooms',{settings:{}}),e,'v1')).json();const p='/api/rooms/'+code;for(const settings of [{count:99},{speed:-1},{backgroundColor:'url(x)'},{mode:'bad'},{sound:'yes'}])assert.equal((await api(req(p+'/settings',settings),e,'v1')).status,400);assert.equal((await api(req(p+'/settings',{speed:1},'http://evil'),e,'v1')).status,403);assert.equal((await api(req('/api/rooms/0000000000000000'),e,'v1')).status,404);});
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile, access } from 'node:fs/promises';
+import { api } from '../worker/api.js';
 
-test('legacy room mute migrates once and an explicit later mute survives polling and unrelated writes',async()=>{
- const e=env(),code='abcdef0123456789',path='/api/rooms/'+code;
- const saved={behaviorVersion:3,sound:false,soundVolume:.7,speed:.4,count:2,size:1.7,mode:'manual',background:'slate'};
- await e.DB.prepare('INSERT INTO rooms (code,settings,command,telemetry,updated) VALUES (?,?,?,?,?)').bind(code,JSON.stringify(saved),'{}','{}',Date.now()).run();
- const first=await(await api(req(path),e,'audio-release')).json();assert.equal(first.settings.sound,true);assert.equal(first.settings.audioVersion,1);assert.equal(first.settings.mode,'manual');assert.equal(first.settings.speed,.4);
- assert.equal((await api(req(path+'/settings',{sound:false}),e,'audio-release')).status,200);
- await api(req(path+'/settings',{background:'wood'}),e,'audio-release');
- const later=await(await api(req(path),e,'next-release')).json();assert.equal(later.settings.sound,false);assert.equal(later.settings.audioVersion,1);assert.equal(later.settings.count,2);assert.equal(later.settings.background,'wood');
+test('only read-only asset version API remains, with no database dependency', async () => {
+ const env = new Proxy({}, {get(){throw Error('Database must never be accessed');}});
+ const response = await api(new Request('http://local/api/version'),env,'abc123');
+ assert.equal(response.status,200);assert.deepEqual(await response.json(),{version:'abc123'});
+ assert.equal(response.headers.get('cache-control'),'no-store');
+ for(const path of ['/api/rooms','/api/rooms/0123456789abcdef','/api/rooms/0123456789abcdef/settings','/api/rooms/0123456789abcdef/command','/api/rooms/0123456789abcdef/telemetry','/companion']){
+  for(const method of ['GET','POST','PUT','DELETE'])assert.equal((await api(new Request('http://local'+path,{method}),env,'v1')).status,404);
+ }
+ assert.equal((await api(new Request('http://local/api/version',{method:'POST'}),env,'v1')).status,404);
+});
+test('runtime and server have no pairing, command polling, telemetry or room database',async()=>{
+ for(const file of ['public/game.js','scripts/dev.mjs','scripts/build.mjs','worker/api.js']){
+  const source=await readFile(new URL('../'+file,import.meta.url),'utf8');
+  assert.doesNotMatch(source,/\/api\/rooms|companion|mouse-room|mouse-command|pendingSettings|applyCommand|DatabaseSync|CREATE TABLE|env\.DB/);
+ }
+ for(const file of ['public/companion.js','public/companion.html','drizzle/0000_rooms.sql'])await assert.rejects(access(new URL('../'+file,import.meta.url)));
 });

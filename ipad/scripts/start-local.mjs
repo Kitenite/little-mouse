@@ -7,7 +7,7 @@ const gameUrl = `http://${ip}:8787`;
 let server;
 try { const response = await fetch('http://127.0.0.1:8787/api/version'); if (!response.ok) throw new Error('not ready'); }
 catch { server = spawn('npm', ['run', 'dev'], { cwd: new URL('../../little-mouse/', import.meta.url), stdio: 'inherit' }); }
-console.log(`\nGame address: ${gameUrl}\nCompanion: ${gameUrl}/companion\nOpen in Expo Go: http://${ip}:8088/_expo/loading?platform=ios\nConnect your iPad to the same Wi-Fi.\n`);
+console.log(`\nGame address: ${gameUrl}\nOpen in Expo Go: http://${ip}:8088/_expo/loading?platform=ios\nConnect your iPad to the same Wi-Fi.\n`);
 const expo = spawn('npx', ['expo', 'start', '--lan', '--go', '--port', '8088', ...process.argv.slice(2)], {
   stdio: 'inherit', env: { ...process.env, EXPO_PUBLIC_GAME_URL: gameUrl },
 });

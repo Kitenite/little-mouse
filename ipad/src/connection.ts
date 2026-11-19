@@ -18,10 +18,6 @@ export function normalizeGameUrl(input: string): string {
   url.pathname = '/';
   return url.toString();
 }
-export function companionUrl(game: string): string {
-  return new URL('/companion', normalizeGameUrl(game)).toString();
-}
-
 export function isAllowedWebUrl(url: string): boolean {
   if (url === "about:blank") return true;
   try { normalizeGameUrl(url); return true; } catch { return false; }

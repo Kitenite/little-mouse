@@ -15,7 +15,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | [Coat surfaces](coat-surfaces.md) | Region material contract, memory budget and reference comparison |
 | [Limb surfaces](limb-surfaces.md) | Continuous arm/leg skin, solved-joint attachment and visual evidence |
 | [Fur volume](fur-volume.md) | Geometric coat depth, Fuzziness, deformation and rendering budgets |
-| [Controls, network and native app](controls-network-native.md) | Companion, settings, owner exit, live iteration and installed app |
+| [Controls, network and native app](controls-network-native.md) | Local settings, owner exit, asset iteration and installed app |
 | [Validation and research](validation-research.md) | Acceptance evidence, critique agents, device checks and scientific limits |
 | [Playground](playground.md) | Dedicated testing, forcing scenarios and controlled simulation time |
 | [Realism review](realism-review.md) | Reference comparisons, ranked visible gaps and review acceptance |

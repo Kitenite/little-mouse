@@ -1,8 +1,8 @@
 # Podrick’s Violin
 
-A 3D mouse-chasing game for cats, with an Expo iPad app and a phone/laptop companion for live control and wireless iteration.
+A 3D mouse-chasing game for cats, with an Expo iPad app and local owner controls with wireless asset iteration.
 
-The game and phone/laptop companion are in [little-mouse](./little-mouse/README.md).
+The game and local controls are in [little-mouse](./little-mouse/README.md).
 
 ```sh
 cd little-mouse
@@ -11,7 +11,7 @@ npm run build
 npm run dev
 ```
 
-Open http://localhost:8787 for the game or http://localhost:8787/companion for the controller. Use the computer's LAN IP from an iPad on the same network.
+Open http://localhost:8787 for the game. Use the computer's LAN IP from an iPad on the same network.
 
 ## iPad app
 

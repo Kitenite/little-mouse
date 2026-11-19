@@ -1,6 +1,6 @@
 import{settingsSchema,settingGroups,groupDefaults,readProfiles,saveProfile}from'./settings.js';
 import{backgroundCatalog,applyBackground}from'./backgrounds.js';
-// One control implementation for the iPad and companion. Programmatic sync never emits input events.
+// One control implementation for local play and the playground. Programmatic sync never emits input events.
 export function createSettingsControls(root,{getSettings,onChange,onTestSound,storage=globalThis.localStorage}={}){
  const fields=new Map();let profiles={},soundStatus;try{profiles=readProfiles(storage)}catch{}
  const make=(tag,props={})=>Object.assign(document.createElement(tag),props);
@@ -35,7 +35,7 @@ export function createSettingsControls(root,{getSettings,onChange,onTestSound,st
  save.addEventListener('click',()=>{try{profiles=saveProfile(storage,name.value,getSettings());refresh();select.value=name.value.trim().slice(0,48);status.textContent='Profile saved on this device.';}catch(e){status.textContent=e.message;}});
  load.addEventListener('click',()=>{if(profiles[select.value]){apply(profiles[select.value]);status.textContent='Profile applied live.';}});
  remove.addEventListener('click',()=>{delete profiles[select.value];try{storage.setItem('little-mouse-profiles',JSON.stringify(profiles));refresh();status.textContent='Profile deleted.';}catch{status.textContent='Could not save profiles on this device.';}});
- reset.addEventListener('click',()=>{apply(groupDefaults());status.textContent='All settings reset.';});section.append(name,save,select,load,remove,reset,make('p',{className:'control-note',textContent:'Profiles are saved on this device. Applying one sends its settings to the paired game.'}));root.append(section,status);refresh();
+ reset.addEventListener('click',()=>{apply(groupDefaults());status.textContent='All settings reset.';});section.append(name,save,select,load,remove,reset,make('p',{className:'control-note',textContent:'Profiles are saved on this device. Applying one updates this game.'}));root.append(section,status);refresh();
  function sync(){const config=getSettings();for(const[key,inputs]of fields){if(key.startsWith('$'))continue;for(const input of inputs){if(document.activeElement===input)continue;if(settingsSchema[key].type==='boolean')input.checked=config[key];else input.value=config[key];}}fields.get('$hunt').hidden=config.mode!=='hunt';applyBackground(fields.get('$preview'),config);}
  function setSoundStatus(message){if(soundStatus&&soundStatus.textContent!==message)soundStatus.textContent=message;}
  sync();return{sync,setSoundStatus};

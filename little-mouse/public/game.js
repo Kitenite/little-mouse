@@ -1,11 +1,11 @@
 import{createOwnerGesture}from'./owner-gesture.js';
 import{createContacts,recordPointer,removePointer,classifyContact,beginContact,moveContact,updateContacts,endContact,cancelContact,clearContacts}from'./contact.js';
 import{updateIdleBehavior}from'./idle-animation.js';
-import{settingsDefaults,validateSettings}from'./settings.js';
+import{settingsDefaults}from'./settings.js';
 import{createSettingsControls}from'./controls.js';
 import{applyBackground}from'./backgrounds.js';
 import{PreyAudio,audioDefaults}from'./audio.js';
-import{huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt}from'./enrichment.js';
+import{huntDefaults,updateHunt,createHuntDirector,rememberTouch}from'./enrichment.js';
 import{MouseScene}from'./mouse3d.js';
 import{sendOffscreen,pressMouse,updateLifecycle}from'./behavior.js';
 import{upgradeSettings,stepMice,flee,radius}from'./physics.js';
@@ -14,8 +14,9 @@ const $=id=>document.getElementById(id),defaults=settingsDefaults;
 let bootFailed=false;
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}};
 const persist=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
-const config=upgradeSettings({...defaults,...read('little-mouse',{})});let playing=false,mice=[],catches=0,elapsed=0,last=0,wake=null,room=read('mouse-room',null),revision=-1,commandSeen={},version='',pollBusy=false,telemetryAt=0,manualUntil=0,networkFailures=0;
-if(room!==null&&(typeof room!=='string'||!/^[a-f0-9]{16}$/.test(room))){room=null;persist('mouse-room',null);}
+const config=upgradeSettings({...defaults,...read('little-mouse',{})});let playing=false,mice=[],catches=0,elapsed=0,last=0,wake=null,version='',versionBusy=false;
+// Retired remote-only mode must not strand previously saved games.
+if(config.mode==='manual')config.mode=defaults.mode;
 const preyAudio=new PreyAudio();
 let huntDirector=createHuntDirector();const contacts=createContacts();huntDirector.paws=contacts.obstacles;
 const gameCadence={last:null,credit:0},previewCadence={last:null,credit:0};let renderDt=0;
@@ -24,25 +25,16 @@ function resetCadence(){gameCadence.last=previewCadence.last=null;gameCadence.cr
 function checkpoint(){if(bootFailed||window.mouseBoot?.recovering)return;persist('mouse-resume',{playing,catches,elapsed,at:Date.now()});}
 const previewMouse={hiddenUntil:0,moving:false,state:"active",seed:12};
 let preview,scene;try{preview=new MouseScene($('preview'),{preview:true});scene=new MouseScene($('board'));}catch(e){preview?.resizeObserver?.disconnect();preview?.renderer?.dispose();throw e;}
-// Keep unacknowledged owner changes across reloads, scoped to this pairing.
-function restoredSettings(){const saved=read('mouse-pending-settings',null);if(!saved||saved.room!==room)return{};try{return validateSettings(saved.patch);}catch{return{};}}
-let localSettings=restoredSettings(),pendingSettings={...localSettings},sendingSettings={};
-Object.assign(config,localSettings);
-function savePendingSettings(){persist('mouse-pending-settings',{room,patch:localSettings});}
-const controls=createSettingsControls($('settingsControls'),{getSettings:()=>config,onTestSound:()=>preyAudio.testSound().then(()=>syncAudio()),onChange:patch=>{Object.assign(config,patch);sync();if(patch.sound)unlockAudio();sendSettings(patch);}});
+const controls=createSettingsControls($('settingsControls'),{getSettings:()=>config,onTestSound:()=>preyAudio.testSound().then(()=>syncAudio()),onChange:patch=>{Object.assign(config,patch);sync();if(patch.sound)unlockAudio();}});
 function background(){applyBackground($('game'),config);applyBackground($('preview').parentElement,config);}
 function sync(){controls.sync();background();persist('little-mouse',config);syncAudio();if(playing)ensureCount();}
-async function request(path,body){const res=await fetch(path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:AbortSignal.timeout(5000)});if(!res.ok){const error=Error((await res.json().catch(()=>({}))).error||'Connection failed');error.status=res.status;error.path=path;throw error;}return res.json();}
-async function sendSettings(patch){Object.assign(pendingSettings,patch);Object.assign(localSettings,patch);savePendingSettings();await flushSettings();}
-async function flushSettings(){if(bootFailed||window.mouseBoot?.recovering||!room||Object.keys(sendingSettings).length||!Object.keys(pendingSettings).length)return;const patch=pendingSettings;pendingSettings={};sendingSettings=patch;try{await request(`/api/rooms/${room}/settings`,patch);}catch{pendingSettings={...Object.fromEntries(Object.entries(patch).filter(([key,value])=>localSettings[key]===value)),...pendingSettings};$('networkStatus').textContent='Settings saved here; companion offline';}finally{sendingSettings={};}}
-setInterval(flushSettings,200);
 function spawn(){const castIndex=mice.length;const w=scene.w,h=scene.h,r=radius(config.size,w,h);return{castIndex,state:config.mode==='hunt'?'away':'active',x:r+Math.random()*Math.max(1,w-2*r),y:r+Math.random()*Math.max(1,h-2*r),angle:Math.random()*Math.PI*2,targetX:w/2,targetY:h/2,next:elapsed+.6,hiddenUntil:0,restUntil:0,moving:false,vx:0,vy:0,seed:Math.random()*100};}
 function ensureCount(){while(mice.length<config.count)mice.push(spawn());mice.length=config.count;}
 async function awake(){try{if(playing&&navigator.wakeLock)wake=await navigator.wakeLock.request('screen')}catch{}}
 function syncAudio(){preyAudio.configure(config);preyAudio.setState(config.sound,playing&&!document.hidden);$('enableSound').hidden=!playing||!config.sound||preyAudio.ready;const audio=preyAudio.diagnostics();controls.setSoundStatus(`${config.sound?'Sound on':'Muted'} · ${audio.state==='locked'?'tap Test sound to enable':audio.state} · volume ${Math.round(config.soundVolume*100)}%${audio.lastError?' · '+audio.lastError:''}${audio.signalPeak>0?' · signal generated':''}`);}
 function unlockAudio(){if(!config.sound)return;preyAudio.unlock().then(ready=>{syncAudio();if(ready&&playing)preyAudio.cue('peek',.5);});}
 $('enableSound').addEventListener('click',unlockAudio);
-// Native navigation and remote Play are not gestures inside this web document.
+// Native navigation and resumed play are not gestures inside this web document.
 // Retry from the actual board touch, including pointerup for iOS activation.
 $('board').addEventListener('pointerup',()=>{if(config.sound&&!preyAudio.ready)unlockAudio();});
 function start(reset=true){if(bootFailed||window.mouseBoot?.recovering||!scene)return;playing=true;document.documentElement.dataset.playing='true';$('home').hidden=true;$('game').hidden=false;scene.resize();if(reset){cancelTouchSounds();clearContacts(contacts);preyAudio.reset();elapsed=0;catches=0;mice=[];huntDirector=createHuntDirector();huntDirector.paws=contacts.obstacles;scene.clearEffects();}ensureCount();syncAudio();resetCadence();checkpoint();$('score').textContent=`${catches} hits`;awake();}
@@ -51,7 +43,6 @@ function pause(){cancelTouchSounds();clearContacts(contacts);playing=false;syncA
 // Keep multi-touch play on the board from zooming or scrolling the page.
 for(const type of ['gesturestart','gesturechange','touchmove'])$('game').addEventListener(type,e=>e.preventDefault(),{passive:false});
 if(document.documentElement.dataset.surface==='ipad')$('home').querySelector('.brand').removeAttribute('href');
-else $('tabletSettings').open=true;
 $('tabletSettings').addEventListener('toggle',()=>preview?.resize());
 $('start').addEventListener('click',()=>{try{unlockAudio();start();}catch(error){recoverBoot(error,'start');}});
 const ownerGesture=createOwnerGesture(),ownerPointers=new Set();
@@ -80,22 +71,30 @@ for(const type of ['pointercancel','lostpointercapture'])$('board').addEventList
 window.addEventListener('pointerup',e=>{if(playing&&contacts.paws.has(e.pointerId))finishContact(e);});
 window.addEventListener('pointercancel',e=>{cancelTouchSound(e.pointerId);removePointer(contacts,e.pointerId);});
 window.addEventListener('blur',()=>{cancelTouchSounds();clearContacts(contacts);});
-window.addEventListener('resize',()=>{cancelTouchSounds();clearContacts(contacts);preview?.resize();if(playing)scene?.resize();});document.addEventListener('visibilitychange',()=>{cancelTouchSounds();clearContacts(contacts);checkpoint();syncAudio();last=0;resetCadence();clearHold();if(!document.hidden){awake();poll();}});
-function showCode(){if(room){$('pairCode').textContent=room.match(/.{1,4}/g).join(' ');$('pair').textContent='Copy companion link';}else{$('pairCode').textContent='';$('pair').textContent='Create pairing code';}}
-function clearPairing(){room=null;revision=-1;commandSeen={};telemetryAt=0;networkFailures=0;persist('mouse-room',null);persist('mouse-command',{});savePendingSettings();showCode();$('networkStatus').textContent='Pairing expired · create a new pairing code';$('connection').textContent='Not paired';}
-$('pair').addEventListener('click',async()=>{try{if(!room){room=(await request('/api/rooms',{settings:config})).code;persist('mouse-room',room);savePendingSettings();showCode();await poll();}else{await navigator.clipboard.writeText(`${location.origin}/companion#${room}`);$('networkStatus').textContent='Companion link copied';}}catch(e){$('networkStatus').textContent=e.message;}});
-function applyCommands(commands){for(const [slot,cmd] of Object.entries(commands).sort((a,b)=>(a[1].at||0)-(b[1].at||0))){applyCommand(cmd,slot);}}
-function applyCommand(cmd,slot){if(!cmd||cmd.nonce===commandSeen[slot])return;commandSeen[slot]=cmd.nonce;persist('mouse-command',commandSeen);if(cmd.at&&Date.now()-cmd.at>30000)return;if(cmd.action==='play')start(!playing);if(cmd.action==='pause')pause();if(cmd.action==='reload')reload();if(cmd.action==='recall'){cancelTouchSounds();clearContacts(contacts);manualUntil=elapsed+2;mice.forEach(m=>{clearHunt(m,elapsed);m.restUntil=0;m.hiddenUntil=0;m.state='active';m.leaving=false;m.entering=m.x<60||m.x>scene.w-60||m.y<60||m.y>scene.h-60;m.targetX=scene.w/2;m.targetY=scene.h/2;m.next=elapsed+2;});}if(cmd.action==='steer'){cancelTouchSounds();clearContacts(contacts);manualUntil=elapsed+2;mice.forEach(m=>{clearHunt(m,elapsed);m.hiddenUntil=0;m.state='active';m.leaving=false;m.entering=m.x<60||m.x>scene.w-60||m.y<60||m.y>scene.h-60;m.restUntil=0;m.targetX=60+cmd.x*Math.max(1,scene.w-120);m.targetY=85+cmd.y*Math.max(1,scene.h-145);m.next=elapsed+2;});}}
+window.addEventListener('resize',()=>{cancelTouchSounds();clearContacts(contacts);preview?.resize();if(playing)scene?.resize();});document.addEventListener('visibilitychange',()=>{cancelTouchSounds();clearContacts(contacts);checkpoint();syncAudio();last=0;resetCadence();clearHold();if(!document.hidden){awake();checkVersion();}});
 function reload(){cancelTouchSounds();clearContacts(contacts);checkpoint();location.reload();}
 window.addEventListener('pagehide',()=>{cancelTouchSounds();clearContacts(contacts);checkpoint();preyAudio.stop();});window.addEventListener('beforeunload',()=>{cancelTouchSounds();clearContacts(contacts);checkpoint();});setInterval(checkpoint,2000);
-async function poll(){if(bootFailed||window.mouseBoot?.recovering||pollBusy||document.hidden)return;pollBusy=true;try{const data=await request(room?`/api/rooms/${room}`:'/api/version');if(bootFailed||window.mouseBoot?.recovering)return;if(version&&data.version!==version){reload();return;}version=data.version;networkFailures=0;if(room){if(data.revision!==revision){revision=data.revision;for(const key of Object.keys(localSettings))if(data.settings[key]===localSettings[key]&&(!(key in sendingSettings)||sendingSettings[key]===localSettings[key])){delete localSettings[key];delete pendingSettings[key];}savePendingSettings();Object.assign(config,settingsDefaults,upgradeSettings(data.settings),localSettings);sync();applyCommands(data.command);}$('networkStatus').textContent='Paired · live settings and automatic updates';$('connection').textContent='Companion ready';if(Date.now()-telemetryAt>1000){telemetryAt=Date.now();await request(`/api/rooms/${room}/telemetry`,{playing,catches,elapsed,mouse:mice.map(m=>({x:m.x/scene.w,y:m.y/scene.h,visible:m.state!=='away'&&m.hiddenUntil<=elapsed&&m.x>-50*config.size&&m.x<scene.w+50*config.size&&m.y>-50*config.size&&m.y<scene.h+50*config.size}))});}}}catch(error){if(bootFailed||window.mouseBoot?.recovering)return;if(room&&error.status===404&&(error.path===`/api/rooms/${room}`||error.path===`/api/rooms/${room}/telemetry`)){clearPairing();return;}networkFailures++;$('networkStatus').textContent='Reconnecting… game continues locally';$('connection').textContent='Reconnecting';}finally{pollBusy=false;}}
-setInterval(poll,400);commandSeen=read('mouse-command',{});if(typeof commandSeen!=='object')commandSeen={};showCode();sync();poll();
+// Read-only asset fingerprint: never accepts gameplay state or commands.
+async function checkVersion(){
+ if(bootFailed||window.mouseBoot?.recovering||versionBusy||document.hidden)return;
+ versionBusy=true;
+ try{
+  const response=await fetch('/api/version',{cache:'no-store',signal:AbortSignal.timeout(5000)});
+  if(!response.ok)return;
+  const data=await response.json();
+  if(bootFailed||window.mouseBoot?.recovering||typeof data.version!=='string'||!data.version)return;
+  if(version&&data.version!==version){reload();return;}
+  version=data.version;
+ }catch{/* Offline play continues with locally saved settings. */}
+ finally{versionBusy=false;}
+}
+setInterval(checkVersion,1000);sync();checkVersion();
 function canResume(saved){return saved?.playing===true&&Number.isSafeInteger(saved.catches)&&saved.catches>=0&&Number.isFinite(saved.elapsed)&&saved.elapsed>=0&&saved.elapsed<=Number.MAX_SAFE_INTEGER&&Number.isFinite(saved.at)&&Date.now()-saved.at>=0&&Date.now()-saved.at<60000;}
 const resume=read('mouse-resume',null);if(canResume(resume)){start();catches=resume.catches;elapsed=resume.elapsed;$('score').textContent=`${catches} hits`;checkpoint();}else if(resume)persist('mouse-resume',null);
-function frame(now){if(bootFailed||window.mouseBoot?.recovering)return;const dt=last?Math.min((now-last)/1000,.05):0;last=now;if(!document.hidden&&scene&&preview){if(!playing){if($('game').hidden&&renderDue(previewCadence,now,30)){const t=now/1000;Object.assign(previewMouse,{x:preview.w*.56,y:preview.h*.5,angle:Math.sin(t*.2)*.25-.5});preview.render([previewMouse],{...config,size:2.1},t);}}else{elapsed+=dt;renderDt+=dt;updateContacts(contacts,elapsed,mice);for(const m of mice){if((m.tossUntil||0)>elapsed)continue;const manual=config.mode==='manual'||elapsed<manualUntil;if(updateHunt(m,config,elapsed,scene.w,scene.h,manual,Math.random,huntDirector))continue;if(!updateLifecycle(m,elapsed,scene.w,scene.h,config.size,config.hide,Math.random,config)){m.moving=false;continue;}if(m.leaving||m.entering||m.state==='hurt')continue;if(!manual&&elapsed>=m.next){if(Math.random()<(config.hide?.24:.13)){sendOffscreen(m,elapsed,scene.w,scene.h,config.size);continue;}m.targetX=65+Math.random()*Math.max(1,scene.w-130);m.targetY=90+Math.random()*Math.max(1,scene.h-160);m.restUntil=config.mode==='stalk'?elapsed+.4+Math.random()*1.8:elapsed;m.next=elapsed+(config.mode==='scurry'?.35+Math.random()*.75:2+Math.random()*3);}}stepMice(mice,config,elapsed,dt,scene.w,scene.h,contacts.obstacles.values());for(const m of mice)updateIdleBehavior(m,elapsed,config);preyAudio.update(mice,elapsed,scene.w,scene.h);syncAudio();if(renderDue(gameCadence,now,60)){scene.render(mice,config,elapsed,renderDt);renderDt=0;}$('gameHint').style.opacity=Math.max(0,1-(elapsed-3)/2);}}requestAnimationFrame(runFrame);}
+function frame(now){if(bootFailed||window.mouseBoot?.recovering)return;const dt=last?Math.min((now-last)/1000,.05):0;last=now;if(!document.hidden&&scene&&preview){if(!playing){if($('game').hidden&&renderDue(previewCadence,now,30)){const t=now/1000;Object.assign(previewMouse,{x:preview.w*.56,y:preview.h*.5,angle:Math.sin(t*.2)*.25-.5});preview.render([previewMouse],{...config,size:2.1},t);}}else{elapsed+=dt;renderDt+=dt;updateContacts(contacts,elapsed,mice);for(const m of mice){if((m.tossUntil||0)>elapsed)continue;const manual=config.mode==='manual';if(updateHunt(m,config,elapsed,scene.w,scene.h,manual,Math.random,huntDirector))continue;if(!updateLifecycle(m,elapsed,scene.w,scene.h,config.size,config.hide,Math.random,config)){m.moving=false;continue;}if(m.leaving||m.entering||m.state==='hurt')continue;if(!manual&&elapsed>=m.next){if(Math.random()<(config.hide?.24:.13)){sendOffscreen(m,elapsed,scene.w,scene.h,config.size);continue;}m.targetX=65+Math.random()*Math.max(1,scene.w-130);m.targetY=90+Math.random()*Math.max(1,scene.h-160);m.restUntil=config.mode==='stalk'?elapsed+.4+Math.random()*1.8:elapsed;m.next=elapsed+(config.mode==='scurry'?.35+Math.random()*.75:2+Math.random()*3);}}stepMice(mice,config,elapsed,dt,scene.w,scene.h,contacts.obstacles.values());for(const m of mice)updateIdleBehavior(m,elapsed,config);preyAudio.update(mice,elapsed,scene.w,scene.h);syncAudio();if(renderDue(gameCadence,now,60)){scene.render(mice,config,elapsed,renderDt);renderDt=0;}$('gameHint').style.opacity=Math.max(0,1-(elapsed-3)/2);}}requestAnimationFrame(runFrame);}
 requestAnimationFrame(runFrame);
-// Read-only diagnostics for device validation and companion support.
-window.mouseDiagnostics=()=>({playing,recovering:bootFailed||!!window.mouseBoot?.recovering,catches,elapsed,config:{...config},paired:!!room,version,mice:mice.map(m=>({...m})),webgl:!!scene,renderer:scene?.diagnostics?.(),previewRenderer:preview?.diagnostics?.(),renderLimits:{game:60,preview:30},audio:preyAudio.diagnostics(),gaits:scene?.models?.map(m=>({...m.gait,feet:m.feet.map(f=>({x:f.position.x,z:f.position.z}))}))});
+// Read-only diagnostics for local device validation.
+window.mouseDiagnostics=()=>({playing,recovering:bootFailed||!!window.mouseBoot?.recovering,catches,elapsed,config:{...config},version,mice:mice.map(m=>({...m})),webgl:!!scene,renderer:scene?.diagnostics?.(),previewRenderer:preview?.diagnostics?.(),renderLimits:{game:60,preview:30},audio:preyAudio.diagnostics(),gaits:scene?.models?.map(m=>({...m.gait,feet:m.feet.map(f=>({x:f.position.x,z:f.position.z}))}))});
 
 // A failed render/context must not leave a visible but inert play surface.
 function stopForRecovery(){

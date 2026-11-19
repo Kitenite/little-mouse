@@ -1,10 +1,10 @@
 # Little Mouse
 
-A tablet game with textured, articulated mice and a separate phone/laptop companion for live control.
+A tablet game with textured, articulated mice and local owner controls and saved profiles.
 
-## Run and pair
+## Run
 
-Requires Node 22.13+ (built-in SQLite).
+Requires Node 22.13+.
 
 ```sh
 npm install
@@ -12,19 +12,20 @@ npm run build
 npm run dev
 ```
 
-Game: http://localhost:8787 · Controller: http://localhost:8787/companion
+Game: http://localhost:8787
 
-On the same Wi-Fi, replace `localhost` with the computer's LAN IP. On the tablet home screen choose **Create pairing code**, then enter it on the companion or use the copied companion link. Play, pause, steer, recall mice and tune settings from the phone or laptop. Changes persist and apply live. Saved profiles retain combinations of settings.
+On the same Wi-Fi, replace `localhost` with the computer's LAN IP. Use the play device's
+settings to tune the game and save profiles locally. No pairing or remote control is available.
 
-To leave play, briefly tap the four corners clockwise: **top-left → top-right → bottom-right → bottom-left**, within four seconds. Resting paws and long holds do not open the menu. The companion's Pause button and keyboard Escape also work. Play continues until the owner stops it; there is no automatic break timer.
+To leave play, briefly tap the four corners clockwise: **top-left → top-right → bottom-right → bottom-left**, within four seconds. Resting paws and long holds do not open the menu. Keyboard Escape also works. Play continues until the owner stops it; there is no automatic break timer.
 
 ## Testing playground
 
-Open `/playground.html` for a separate many-mouse lab with live controls, repeatable scenarios and simulation-time controls. Its settings are separate from normal play and pairing.
+Open `/playground.html` for a separate many-mouse lab with live controls, repeatable scenarios and simulation-time controls. Its settings are separate from normal play.
 
 ## Sound
 
-Tap Play locally to unlock browser audio, or use **Test sound** in Sound design. Remote Play cannot supply the local gesture required by browser autoplay rules. The status reports activation errors and generated signal. It cannot prove the physical speaker is audible: device volume and output routing still apply. Supported Safari audio sessions request playback during activation.
+Tap Play locally to unlock browser audio, or use **Test sound** in Sound design. Browser audio activation requires a local gesture. The status reports activation errors and generated signal. It cannot prove the physical speaker is audible: device volume and output routing still apply. Supported Safari audio sessions request playback during activation.
 
 The 30 recording excerpts cover mouse/rat squeaks, rat and hamster activity, and paper friction foley. They are not all literal mouse recordings. [SOUND.md](SOUND.md) records exact provenance, licensing, event mapping and verification limits.
 
@@ -36,7 +37,10 @@ The renderer uses procedural textured geometry, connected jointed legs, inertial
 
 ## Updates
 
-Settings and remote commands poll every 400–500 ms; latency includes network round trips. This is near-real-time polling, not a hard real-time guarantee. Local public-file edits change the version fingerprint. Deployed hosted releases do the same. Open games reload on a new version, preserving pairing, settings, elapsed time and hit count, with a brief interruption. Individual poses are recreated after reload.
+Settings apply locally without network requests. A read-only asset fingerprint is checked
+every second. Local public-file edits and deployed releases change that fingerprint; open
+games checkpoint settings and session progress before reloading. Individual poses are recreated.
+Failures to fetch the version leave local play running.
 
 `npm run build` creates the Worker artifact. Publishing requires the Sites workflow; pushing GitHub alone does not deploy. The hosted Site remains owner-private. Backgrounded devices receive changes after resuming.
 
@@ -45,8 +49,8 @@ Settings and remote commands poll every 400–500 ms; latency includes network r
 - `public/game.js`: integration, input, play lifecycle and OTA detection.
 - `public/enrichment.js`, `contact.js`, `physics.js`: behavior policy, touch memory and motion.
 - `public/mouse3d.js`, `secondary-motion.js`, `leg-rig.js`: rendering and attached motion.
-- `public/settings.js`, `controls.js`, `companion.js`: shared validation and tunable controls.
+- `public/settings.js`, `controls.js`: shared validation and tunable controls.
 - `public/audio.js`, `audio-samples.js`: bounded recorded sound scheduling and mixing.
-- `worker/api.js`: room API; D1 hosted, SQLite locally.
+- `worker/api.js`: read-only asset version; retired gameplay endpoints return 404.
 
 Run `npm test` for policy, geometry, contact, audio, settings and API regression checks. Browser and physical iPad checks supplement these; numerical tests alone cannot judge how natural motion or sound feels. Current requirements and acceptance policies live in the repository's [docs index](../docs/README.md).
