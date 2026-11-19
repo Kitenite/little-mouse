@@ -22,6 +22,10 @@ should include eating, face wiping, hindleg scratching, stretching and occasiona
 - Pending claims freeze anatomical pose. Active grabs use pin-preserving, region-aware
   planar yielding; see [touch interaction](touch-interaction.md) for controls and constraints.
   Ears, whiskers, fur and tail inherit actual motion; no timed grab-struggle cue is injected.
+- Free-tail length/bend corrections transport previous solver positions too, preventing
+  correction displacement from becoming a new velocity impulse. Turn forcing is reduced
+  to 40%; translation forcing discounts the gameplay travel multiplier. Existing saved
+  tail controls still apply, with no repeated settings reset. Held-tail pins/release remain intact.
 - Tail contact uses the rendered centerline and a reachable dual-anchor curve. Exact material
   fractions remain pinned between solver nodes; held paws preserve the selected leg and
   contact offset while the limb solver follows the anchor.

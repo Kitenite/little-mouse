@@ -5,6 +5,12 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 
 ## Integrated and checked
 
+- Tail turn regression: fast 90-degree running turn at 30/60/120 Hz. Before repair, peak
+  lateral tip displacement was 64.6–67.3 model units and frame jumps 28.4–71.9 units.
+  After removing constraint-generated velocity and reducing turn forcing, peak is
+  23.0–24.1 with frame changes 0.73–2.77; settles below 0.001. Held-tail pin/release
+  tests pass. Connected iPad game-route launch succeeded; physical motion review pending.
+
 - Active paw repulsion overrides watch/rest; hunt goals exclude live held areas.
   All-part dragging defeats once after four seconds of actual motion; stationary hold
   remains alive and the paw persists after defeat. Release cannot duplicate the outcome.
@@ -27,8 +33,8 @@ Reviewed 2026-11-18. This replaces earlier totals; historical domain evidence re
 - Recorded stock/found audio only, native playback rate, silent missing-recording fallback.
   Tap/squeak gain is 0.48; movement uses sparse quiet crawl excerpts. See
   [audio curation report](cycles/podrick-audio.md) for source confidence and mix math.
-- Root combined checks: 273 web tests, four native tests, native lint and TypeScript pass.
-  Production build `b382ef7b060b` and built Worker syntax check pass.
+- Root combined checks: 274 web tests, four native tests, native lint and TypeScript pass.
+  Production build `80d110a3a2c0` and built Worker syntax check pass.
 - UI worker inspected desktop/tablet/phone layout, settings, Play, synthetic corner exit,
   Escape and injected failure/Retry. Root inspected final tablet capture and exercised
   integrated Play via DOM click: playing=true, no error; no remote resource requests observed.
@@ -54,7 +60,7 @@ of naturalness follows from waveform checks. No synthesis is used to fill covera
 
 ## Release
 
-Sites source `1452005fcccca037f40975736a33372d08a2e0e8`, build `b382ef7b060b`.
-Hosted deployment `appgdep_6afe8aaa33488191a89a555e5c73f6d0` succeeded; owner-only access
+Sites source `ffbfee77fe5f75dada1b226887b6145b40eb64d3`, build `80d110a3a2c0`.
+Hosted deployment `appgdep_6afe8b2dd94c8191947e944533675bae` succeeded; owner-only access
 preserved. Native installation and hosted web deployment are separate. Source changes are
 integrated on main; publication is recorded by the corresponding GitHub commit.

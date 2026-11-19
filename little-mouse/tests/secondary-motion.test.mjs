@@ -85,3 +85,16 @@ test('body-frame transport cannot stretch a released tail under translation or r
   assert.equal(s.releasing,false,`release ends under ${mode}, sway${tailSway}`);
  }
 });
+
+test('fast 90-degree running turns bend smoothly without constraint-driven tail whipping',()=>{
+ for(const hz of [30,60,120]){const s=createSecondaryMotion();let x=0,y=0,last=0,peak=0,maxTipSpeed=0;
+  for(let i=0;i<hz*6;i++){const t=i/hz,heading=t<1?0:t<2?(t-1)*Math.PI/2:Math.PI/2;
+   if(t<3){x+=Math.cos(heading)*900/hz;y+=Math.sin(heading)*900/hz;}
+   advanceSecondaryMotion(s,{x,y,heading,size:2.86},1/hz,{tailSway:1.15,travelSpeed:2.2});
+   const tip=s.points.at(-2);if(t>=1){peak=Math.max(peak,Math.abs(tip));maxTipSpeed=Math.max(maxTipSpeed,Math.abs(tip-last)*hz);}last=tip;
+  }
+  assert.ok(peak>5&&peak<28,`natural bounded follow-through at ${hz} Hz: ${peak}`);
+  assert.ok(maxTipSpeed<100,`no rapid side-to-side correction impulses at ${hz} Hz: ${maxTipSpeed}`);
+  assert.ok(Math.abs(last)<.01,'tail settles after the turn and stop');
+ }
+});

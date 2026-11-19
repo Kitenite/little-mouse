@@ -35,7 +35,7 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
   if(s.releasing)for(let i=1;i<=s.segments;i++){const k=i*3;s.releaseAngles[i-1]=angleDelta(Math.atan2(p[k+1]-p[k-2],p[k]-p[k-3])-Math.PI);}
   // Convert the free tail into the moving body's new frame. Both current and
   // previous points move together so a camera/frame change creates no impulse.
-  const a=s.heading+rotation*(step+1)/steps,c=Math.cos(a),sn=Math.sin(a),dr=-rotation/steps*sway,cr=Math.cos(dr),sr=Math.sin(dr),tx=(dx*c+dy*sn)/steps*sway,ty=(-dx*sn+dy*c)/steps*sway;
+  const a=s.heading+rotation*(step+1)/steps,c=Math.cos(a),sn=Math.sin(a),dr=-rotation/steps*sway*.4,cr=Math.cos(dr),sr=Math.sin(dr),tx=(dx*c+dy*sn)/steps*sway/Math.max(1,Math.min(4,Number(config.travelSpeed)||1)),ty=(-dx*sn+dy*c)/steps*sway/Math.max(1,Math.min(4,Number(config.travelSpeed)||1));
   for(let i=1;i<=s.segments;i++){const k=i*3,px=p[k],py=p[k+1],qx=previous[k],qy=previous[k+1];p[k]=px*cr-py*sr-tx;p[k+1]=px*sr+py*cr-ty;previous[k]=qx*cr-qy*sr-tx;previous[k+1]=qx*sr+qy*cr-ty;}
   for(let i=1;i<=s.segments;i++){const k=i*3,f=i/s.segments,drag=Math.exp(-damping*h),restX=ROOT_X-LENGTH*f,restZ=ROOT_Z-2*f;
    for(let axis=0;axis<3;axis++){const current=p[k+axis],rest=axis===0?restX:axis===1?0:restZ,velocity=clamp((current-previous[k+axis])*drag,-8,8);previous[k+axis]=current;p[k+axis]=current+velocity+(rest-current)*stiffness*h*h;}
@@ -51,7 +51,11 @@ export function advanceSecondaryMotion(s,motion={},dt=0,config={}){
     // Angular limits act like bending stiffness and prevent the free chain
     // folding into sharp accordion corners when the mouse pivots abruptly.
     const bend=clamp(clamp(desired,previousBend-maxBend,previousBend+maxBend),-1.4,1.4),z=clamp(clamp(p[k+2],p[b+2]-.3,p[b+2]+.3),1.4,7-2*f),dz=z-p[b+2],horizontal=Math.sqrt(Math.max(.01,segmentLength*segmentLength-dz*dz));
-    p[k]=p[b]-Math.cos(bend)*horizontal;p[k+1]=p[b+1]-Math.sin(bend)*horizontal;p[k+2]=z;previousBend=bend;
+    const oldX=p[k],oldY=p[k+1],oldZ=p[k+2];
+    p[k]=p[b]-Math.cos(bend)*horizontal;p[k+1]=p[b+1]-Math.sin(bend)*horizontal;p[k+2]=z;
+    // Geometric bend/length corrections are not velocity: transport history too.
+    previous[k]+=p[k]-oldX;previous[k+1]+=p[k+1]-oldY;previous[k+2]+=p[k+2]-oldZ;
+    previousBend=bend;
    }
   }
   const targetX=clamp(-localVX*.0015-ax*.00032,-1.4,1.4)*furSway,targetY=clamp(-localVY*.002-ay*.0005-rotation/elapsed*.055+struggle*.35,-1.7,1.7)*furSway,targetZ=clamp((Math.abs(ax)+Math.abs(ay))*.00015,0,.5)*furSway;
