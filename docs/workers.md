@@ -73,9 +73,9 @@ Root owns enrichment/group policy, game wiring, controls, integration and releas
 
 | Task | Local terminal | Dependencies / state |
 | --- | --- | --- |
-| Paw detours | `6de3c7ee-a37c-4f80-8439-d4607e801c55` | contact.js, focused tests, touch doc; completed and verified |
-| Living pauses | `cbdca8d9-3f01-4eb6-a6b4-a3f120a0d5bc` | idle-animation.js, mouse3d.js, tests, anatomy doc; completed and verified |
-| Local learning | `823e8d77-b178-45aa-a6a8-1cff0b43e2e1` | new metrics/learning module/tests and learning docs; completed and verified |
+| Paw detours | `6de3c7ee-a37c-4f80-8439-d4607e801c55` | contact.js, focused tests, touch doc; completed, verified, retired |
+| Living pauses | `cbdca8d9-3f01-4eb6-a6b4-a3f120a0d5bc` | idle-animation.js, mouse3d.js, tests, anatomy doc; completed, verified, retired |
+| Local learning | `823e8d77-b178-45aa-a6a8-1cff0b43e2e1` | new metrics/learning module/tests and learning docs; completed, verified, retired |
 | Root integration | current coordinator | all handoffs/critics accepted; combined checks passed |
 
 Accepted scope: coordinated lead/sneak roles, visible pause gestures, near-miss dodge/check-back,
@@ -96,4 +96,5 @@ Local server and Metro stay available; cleanup applies only to verified complete
 Independent social and learning critics reused the detour and pause terminals. All reproduced
 findings are repaired and accepted. [Batch evidence](cycles/behavior-learning.md) preserves
 reports and executable probes; final checks: 375 web tests, build/Worker syntax, catalog and
-four eligibility tests. Source publication and authorized terminal retirement follow verification.
+four eligibility tests. Implementation/evidence commit `9536c73` was verified on origin/main before all three completed
+worker terminals were closed. Main workspace, sidebar game and development servers remain available.

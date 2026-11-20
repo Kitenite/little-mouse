@@ -1,6 +1,7 @@
 # Coordinated prey and cautious local learning
 
-Status: integrated and validated in the working tree, 2026-11-20. Root owns publication.
+Status: integrated, validated and published to main as `9536c73`, 2026-11-20.
+All three completed worker terminals retired after remote preservation; main workspace retained.
 Three Superset builders used the main workspace with explicit disjoint ownership; no auxiliary worktrees.
 Two workers then provided independent read-only criticism. Reusable roles are in `agents/roles.json`.
 
