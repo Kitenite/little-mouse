@@ -1,7 +1,7 @@
 # Visibility and executed-route measurement batch
 
-Status: integrated and independently reviewed; publication/retirement status belongs in
-[worker ledger](../workers.md). Baseline `3537a0a`, two Superset builders and one independent
+Status: published in `e7c21bb`, verified on GitHub, independently reviewed; all three
+completed workers retired. [Worker ledger](../workers.md) preserves assignments. Baseline `3537a0a`, two Superset builders and one independent
 critic. No production behavior, settings, local-learning schema or scoring utility changes.
 
 ## Accepted measurements

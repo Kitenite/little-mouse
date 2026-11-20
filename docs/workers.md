@@ -91,7 +91,8 @@ boundaries belong in [verification](verification.md). Earlier domain queues rema
 
 ## Visibility and route measurement batch
 
-Baseline `3537a0a`; same local workspace `5b5bc0ce-e628-499e-b026-143bf97a9de0`.
+Published evidence/source `e7c21bb` was verified on GitHub before all three completed
+workers were retired. Terminal IDs below are historical. Baseline `3537a0a`; local workspace `5b5bc0ce-e628-499e-b026-143bf97a9de0`.
 Shared worktree has deliberately disjoint file ownership. No production setting changes.
 
 | Task | Terminal | Status / dependency / ownership |
@@ -99,9 +100,9 @@ Shared worktree has deliberately disjoint file ownership. No production setting 
 | Visibility builder | `29d1a8b8-6fb4-4d92-946b-6a61a8579771` | completed; neutral body helper/tests/topic reviewed |
 | Route builder | `1c5f99b3-5b82-4eca-83fd-a5f729e15c43` | completed; executed path helper/tests/topic reviewed |
 | Independent critic | `dacfdca9-b5c6-4a01-a87d-e25edc4d545d` | completed; two independent rounds, accepted with stated limits |
-| Root | coordinator | integrated; 425 tests/build/search pass; publication and retirement pending |
+| Root | coordinator | published/verified; 425 tests/build/search pass; workers retired |
 
-Acceptance: measured actual movement, explicit proxy/denominator limits, bounded memory,
+Accepted: measured actual movement, explicit proxy/denominator limits, bounded memory,
 edge/heading/discontinuity/frame-rate adversarial checks and unchanged gameplay/utility.
 New measurements remain diagnostic after review; no historical learning records are relabeled.
 [Results](cycles/motion-metrics.md) and [evidence](evidence/motion-metrics-2026-11-20/README.md)
