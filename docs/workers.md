@@ -70,7 +70,8 @@ install a recurring unattended service or authorize worker merges into main.
 
 Baseline `a3196df`; learning context `717aec1`, creep recovery `f4cee77`, visible-peek
 recovery `70eeb19`. The owner requested continued critique and hill climbing. All assigned
-work is integrated and independently reviewed; evidence publication/authorized cleanup pending.
+work is integrated and independently reviewed. Evidence commit `dd81c7a` was verified on
+GitHub before all three completed worker terminals were retired. IDs below are historical.
 
 | Task | Local terminal | Outcome |
 | --- | --- | --- |

@@ -1,6 +1,7 @@
 # Behavior hill-climb batch — 2026-11-20
 
-Status: accepted; final evidence publication and authorized worker cleanup pending. Root integrates Superset builders and independent critics; baseline
+Status: accepted and published. Evidence commit `dd81c7a` was verified on GitHub;
+all three finished Superset worker terminals were retired after preservation. Root integrates Superset builders and independent critics; baseline
 `a3196df`. [Worker ledger](../workers.md) owns current terminal IDs and responsibilities.
 Engineering motion metrics are not cat preference or a trained reward model.
 
