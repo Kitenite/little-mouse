@@ -3,9 +3,16 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
+## Behavior variety
+
+326 web tests pass; five-minute 30/60/120 Hz simulations cover four rotating appearance motifs,
+no adjacent motif repeats, and fresh investigation targets. Existing paw, injury, visibility,
+turning and pause regressions pass. Build `0f0f4f6853dc` passes Worker syntax checking.
+Local server serves the changed policy; physical iPad behavior and cat response need observation.
+
 ## Library adoption
 
-324 web tests pass, including 600 generated storage/movement cases and a swept-arrival fix.
+The suite includes 600 generated storage/movement cases and a swept-arrival fix.
 Valibot checkpoint validation is live; its 11,398-byte bundle matches source.
 Production build `23ece97a8032`, Worker syntax, 77-variable catalog and four eligibility checks pass.
 Browser reload starts two mice with WebGL and no recovery; checkpoint round-trip passed.

@@ -232,3 +232,26 @@ test('canceled hold discards queued flight but fresh cancellation-time cue still
  rememberTouch(s.director,s.m.x,s.m.y,s.time,s.w,s.h);s.tick();assert.equal(s.m.hunt.reactKind,'retreat');
  }
 });
+
+test('appearances rotate all four motifs without adjacent repeats across frame rates',()=>{
+ for(const hz of [30,60,120]){
+  const s=simulation({hz,seed:71,settings:{speed:2.8,travelSpeed:2.2,hide:1,runThroughChance:.6}});
+  const motifs=[];let previous;
+  while(s.time<300){s.tick();const a=s.m.hunt;if(a.phase==='peek'&&previous!=='peek')motifs.push(a.motif);previous=a.phase;}
+  assert.ok(motifs.length>=8,`${hz}Hz: enough complete appearances`);
+  assert.equal(new Set(motifs).size,4);
+  for(let i=1;i<motifs.length;i++)assert.notEqual(motifs[i],motifs[i-1]);
+ }
+});
+test('investigation after a pause chooses fresh ground instead of the old entry point',async()=>{
+ const {forceHuntPhase}=await import('../public/enrichment.js');
+ const s=simulation({state:'active'});s.tick();const goals=[];
+ for(let i=0;i<6;i++){
+  Object.assign(s.m,{x:512,y:384,angle:i*.4});
+  forceHuntPhase(s.m,'watch',s.time,s.config,s.w,s.h,s.rng,s.director);
+  forceHuntPhase(s.m,'creep',s.time,s.config,s.w,s.h,s.rng,s.director);
+  goals.push(s.m.hunt.goal.join(','));
+  assert.ok(Math.hypot(s.m.targetX-512,s.m.targetY-384)>40);
+ }
+ assert.equal(new Set(goals).size,6);
+});

@@ -44,8 +44,26 @@ function cover(m, time, w, h, director, rng, preferSame=false) {
   }
   return best;
 }
+// Each appearance has a coherent motif, drawn without replacement. Decisions stay
+// at phase boundaries: variety must not become per-frame heading noise.
+const motifs={
+ runner:{watch:.5,creep:.45,dart:1.5,traverse:1.5,dwell:.65},
+ scout:{watch:.9,creep:2,dart:.7,traverse:.55,dwell:1},
+ tease:{watch:1.5,creep:1.2,dart:.7,traverse:.45,dwell:1.15},
+ burst:{watch:.65,creep:.6,dart:2,traverse:.9,dwell:.6},
+};
+function nextMotif(a,rng){
+ if(!a.motifBag?.length){
+  a.motifBag=Object.keys(motifs);
+  for(let i=a.motifBag.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a.motifBag[i],a.motifBag[j]]=[a.motifBag[j],a.motifBag[i]];}
+  if(a.motifBag.at(-1)===a.motif)[a.motifBag[0],a.motifBag[a.motifBag.length-1]]=[a.motifBag.at(-1),a.motifBag[0]];
+ }
+ a.motif=a.motifBag.pop();a.transitions=[];
+ a.visibleBudget=between(rng,10,19);
+}
 function enter(m, phase, time, config, w, h, rng, director) {
   const a=m.hunt, previousPhase=a.phase, tempo=clamp(Number(config.huntTempo)||1,.5,2);
+  a.transitions??=[];if(previousPhase)a.transitions.push(previousPhase+'>'+phase);a.transitions=a.transitions.slice(-8);
   a.phase=phase;a.since=time;a.arrivedAt=null;a.history.push(phase);a.history=a.history.slice(-4);
   delete a.progress;
   a.dwell=between(rng,.65,1.65)/tempo;
@@ -71,7 +89,13 @@ function enter(m, phase, time, config, w, h, rng, director) {
     // Investigate where a paw WAS, after it has been quiet. No camera inference.
     if(latest&&time-latest.time>7&&time-latest.time<22&&a.fear<.5&&rng()<.55)
       a.goal=[clamp(latest.x+between(rng,-.12,.12),.18,.82),clamp(latest.y+between(rng,-.12,.12),.18,.82)];
-    else {const [x,y]=edgePoint(a.edge,a.slot,a.depth,w,h);a.goal=[x/w,y/h];}
+    else if(previousPhase==='peek') {const [x,y]=edgePoint(a.edge,a.slot,a.depth,w,h);a.goal=[x/w,y/h];}
+    else {
+      // Sniff a fresh patch ahead, rather than returning to the entrance's exact spot.
+      const heading=m.angle+between(rng,-.85,.85),reach=Math.min(w,h)*between(rng,.12,.3);
+      const inset=Math.min(65*config.size,Math.min(w,h)*.22);
+      a.goal=[clamp(m.x+Math.cos(heading)*reach,inset,w-inset)/w,clamp(m.y+Math.sin(heading)*reach,inset,h-inset)/h];
+    }
   } else if(phase==='dart') {
     // A dart is a brief commitment, never a long push against another mouse.
     a.deadline=time+6;
@@ -91,15 +115,22 @@ function enter(m, phase, time, config, w, h, rng, director) {
     a.deadline=time+Math.max(8,Math.hypot(w,h)/(115+config.speed*130)*3);
     m.huntSpeed=pace.traverse*tuning(config,'dartSpeed');
   }
+  if(phase==='watch'||phase==='creep'||phase==='dart'){a.dwell*=motifs[a.motif]?.dwell??1;if(phase==='watch')m.restUntil=time+a.dwell;}
 }
 function choose(a, rng, config, time) {
-  if(a.phase==='peek'&&rng()<clamp(Number(config.runThroughChance??.22),0,1))return 'traverse';
-  if(config.hide>0&&a.visibleSince!==null&&time-a.visibleSince>between(rng,10,17))return 'retreat';
+  const motif=motifs[a.motif]||motifs.scout;
+  const cross=clamp(Number(config.runThroughChance??.22),0,1);
+  if(a.phase==='peek'&&rng()<(cross===1?1:cross*motif.traverse))return 'traverse';
+  if(config.hide>0&&a.visibleSince!==null&&time-a.visibleSince>(a.visibleBudget??14))return 'retreat';
   const options=a.phase==='peek' ? [['watch',.5],['creep',1.5],['retreat',config.hide>0?.35+a.fear:0]]
     : a.phase==='watch' ? [['creep',1],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
     : a.phase==='creep' ? [['watch',1.5],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
     : [['watch',1.6],['creep',.4],['retreat',config.hide>0?.9+a.fear:0]];
-  for(const option of options)option[1]*=Math.pow(.35,a.history.filter(p=>p===option[0]).length);
+  if(a.phase==='dart'&&a.history.slice(-2).filter(p=>p==='dart').length<2)options.push(['dart',a.motif==='burst'?2:.25]);
+  for(const option of options){
+    const repeated=(a.transitions||[]).filter(t=>t===a.phase+'>'+option[0]).length;
+    option[1]*=(motif[option[0]]??1)*Math.pow(.35,a.history.filter(p=>p===option[0]).length)*Math.pow(.25,repeated);
+  }
   let roll=rng()*options.reduce((sum,p)=>sum+p[1],0);
   return options.find(p=>(roll-=p[1])<=0)?.[0]||'watch';
 }
@@ -122,6 +153,7 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   if(config.mode!=='hunt'||manual){if(m.hunt)clearHunt(m,time);return false;}
   if(!m.hunt){
     m.hunt={...cover(m,time,w,h,director,rng),fear:0,history:[],lastTime:time,sensed:director.serial,visibleSince:time};
+    nextMotif(m.hunt,rng);
     if(m.state==='hurt'||m.state==='defeated'||m.leaving) m.hunt.phase='injury';
     else if(m.state==='away') {enter(m,'hidden',time,config,w,h,rng,director);m.hunt.deadline=time+.35+(m.castIndex||0)*1.4;m.hiddenUntil=m.hunt.deadline;}
     else enter(m,'watch',time,config,w,h,rng,director);
@@ -156,13 +188,14 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   if(a.phase==='hidden') {
     // A director spaces entrances; hidden cast members never collide or get hit.
     if(time<a.deadline||time<director.nextEntrance){m.hiddenUntil=Math.max(a.deadline,director.nextEntrance);return true;}
-    Object.assign(a,cover(m,time,w,h,director,rng,true));
+    Object.assign(a,cover(m,time,w,h,director,rng,rng()<.35));
     const mouth=edgePoint(a.edge,a.slot,0,w,h);
     if(blockedMouth(mouth[0],mouth[1],director)){a.deadline=time+.35;m.hiddenUntil=a.deadline;return true;}
     [m.x,m.y]=edgePoint(a.edge,a.slot,-coverPad(m,config),w,h);
     m.angle=[0,Math.PI,Math.PI/2,-Math.PI/2][a.edge];m.vx=m.vy=m.speed=m.turnRate=0;
     m.reaction=null;m.hitAt=undefined;m.startledUntil=m.scrambleUntil=m.injuredUntil=0;
     director.nextEntrance=time+between(rng,1.3,2.5);
+    nextMotif(a,rng);
     enter(m,'peek',time,config,w,h,rng,director);
   }
   // Notice new nearby paw strikes after a short reaction delay. Continued tapping

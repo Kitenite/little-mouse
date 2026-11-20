@@ -131,7 +131,7 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
-Root owns library adoption: persistence schema and generated regression tests complete;
+Root completed behavior variety and regression checks in enrichment.js; cat observation pending.
 Babylon comparison complete, renderer unchanged. No dependent worker edits pending.
 
 ## Sensory experiments implementation

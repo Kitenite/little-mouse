@@ -46,6 +46,13 @@ candidate outranks a blocked familiar entrance. Fully covered entrances wait for
 A paw arriving during a peek triggers withdrawal through the approach edge, followed by
 clear-cover reselection; the full silhouette must clear the screen before hiding.
 Choices occur on events, arrival or deadlines rather than unrelated random choices every frame.
+Each appearance uses a shuffled runner, scout, tease or burst motif. Motifs bias phase choices,
+watch/dwell times and run-through probability; every bag contains all four, with no adjacent
+repeat at bag boundaries. Recent transitions are penalized in addition to recent phases.
+Burst mice can chain up to two darts before another activity. Post-pause investigation samples
+fresh ground ahead instead of returning to the original entry point. Cover familiarity is
+preferred on only some reentries; paw clearance still outranks familiarity. Visible time budgets
+are sampled once per appearance. These are authored variations, not learned cat preferences.
 
 Invisible approaches move faster than the final visible peek. The exploration budget starts
 on silhouette entry. Travel watchdogs bound blocked darts without shortening deliberate creep.
