@@ -6,7 +6,8 @@ The owner requests continuing Superset builder/critic work across physics, anato
 coat, environment, sound and prey behavior, with reproducible failures. New feedback
 adds to these domains. Root coordinates integration and the installed iPad release.
 The current batch runs up to three focused build/review iterations per domain; workers
-then hand off exact commits and the next ranked issue. The last batch is complete; reusable role definitions live in `agents/roles.json`.
+then hand off exact commits and the next ranked issue. The hill-climb batch is accepted; [results](cycles/behavior-hill-climb.md) preserve rejected
+candidates and retained repairs. Reusable role definitions live in `agents/roles.json`.
 Future batches are bounded work, not a scheduled service or perpetual execution.
 
 ## Iteration contract
@@ -27,6 +28,17 @@ Leads may each delegate one focused critic through Superset. Reuse that critic f
 follow-ups rather than spawning an unbounded tree. Keep terminal/workspace IDs in
 the domain report. Critics remain read-only in a builder's worktree.
 No worker merges main, publishes, restarts the iPad or alters production settings.
+
+## Measured hill climbing
+
+An offline evaluator captures the incumbent before tuning. Each of three rounds proposes a
+small bounded change, evaluates fixed training scenarios and retains an improvement only if
+safety/readability gates pass. A separate critic challenges metrics and reproduces failures.
+Hold-out seeds are reserved for final acceptance, not repeatedly tuned against. Record rejected
+candidates as well as winners, exact configs/source hashes and rollback identity. Empty screens,
+constant running, oscillation and unsafe paw approaches must not game the utility score.
+Technical scores are engineering proxies. Promoting cat-preference claims still requires
+labeled real play and prospective evaluation; synthetic contacts cannot supply that evidence.
 
 ## Failure evidence
 

@@ -264,6 +264,38 @@
       ],
       "report": "docs/cycles/behavior-learning.md",
       "objective": "Independently reproduce session support, touch episode classification, movement discontinuity, owner gestures, restore bounds and experiment isolation. Read-only review; never claim feline preference from touch counts."
+    },
+    {
+      "id": "behavior-evaluation",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/scripts/behavior-benchmark.mjs",
+        "little-mouse/scripts/behavior-hillclimb.mjs",
+        "little-mouse/tests/behavior-benchmark.test.mjs"
+      ],
+      "requirements": [
+        "docs/behavior-evaluation.md",
+        "docs/improvement-cycles.md"
+      ],
+      "report": "docs/cycles/behavior-hill-climb.md",
+      "objective": "Reproducible actual-motion benchmarks and bounded offline coordinate search. Keep fixed training seeds, reserve heldout until final selection, record rejection reasons and source fingerprints. Never apply settings or call engineering utility cat reward.",
+      "coordinateWith": [
+        "behavior",
+        "play-learning"
+      ],
+      "critic": "behavior-evaluation-critic"
+    },
+    {
+      "id": "behavior-evaluation-critic",
+      "kind": "critic",
+      "reviews": "behavior-evaluation",
+      "owns": [],
+      "requirements": [
+        "docs/behavior-evaluation.md",
+        "docs/improvement-cycles.md"
+      ],
+      "report": "docs/cycles/behavior-hill-climb.md",
+      "objective": "Challenge metric validity, movement discontinuities, score gaming, candidate bounds, train/heldout isolation and source provenance. Independently reproduce malformed/pathological rejection and reported improvements. Read-only; no tuning on heldout or feline efficacy claims."
     }
   ],
   "contract": [

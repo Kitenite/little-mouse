@@ -29,6 +29,7 @@ Every setting is cataloged; that does not make every setting a suitable autonomo
 - [Data contract](data-contract.md): what to log now so future analyses are possible.
 - [Catalog review](review.md) and [runtime review](runtime-review.md): findings and validation boundaries.
 - [Local chapter adaptation](../behavior-learning.md): cautious duration bias, metrics and freeze/reset/export.
+- [Offline behavior evaluation](../behavior-evaluation.md): engineering motion probes and critic-reviewed parameter search.
 - [Learning and agent review](learning.md): staged model development, evaluation and rollback.
 - [Research critique](../cycles/feline-play-critique.md): evidence and limitations behind initial comparisons.
 

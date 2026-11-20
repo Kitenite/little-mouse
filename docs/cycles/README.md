@@ -1,5 +1,10 @@
 # Improvement batches
 
+## Behavior hill climbing — 2026-11-20
+
+[Current batch](behavior-hill-climb.md): context-isolated learning, actual-travel obstruction
+recovery, reproducible offline search and independent motion/scoring critiques.
+
 ## Coordinated prey and learning — 2026-11-20
 
 [Accepted batch](behavior-learning.md): three Superset builders and two independent reviews;
@@ -67,11 +72,6 @@ The primary main checkout is retained. See [worker ledger](../workers.md) and
 [retirement evidence](../archive/workspace-retirement/README.md).
 Reusable roles are checked in under `agents/`; no periodic service is installed.
 Old terminal and workspace IDs in individual reports are historical identifiers.
-
-B4 follow-up also covers a grab canceled between policy ticks; accepted claims clear
-queued decisions while rejected claims/fresh cues remain unaffected. Same simulation
-timestamp ordering is a documented limit. Root independently reran the audio critic
-probe fixture against integrated source; no failed assertions.
 
 Current release details and total checks belong in [verification](../verification.md).
 Known visual limits include pointed rump, dark fringe, thick ears and faint marks.

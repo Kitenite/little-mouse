@@ -2,7 +2,8 @@
 
 `roles.json` is the checked-in project orchestration manifest. It is not Paradev's
 native configuration and does not install or automatically launch background agents.
-It preserves seven builders, seven independent critics and the reference realism critic.
+It preserves domain builders, independent critics, local learning, offline behavior evaluation
+and the reference realism critic.
 Active assignment/status belongs in `docs/workers.md`; domain queues remain in `docs/cycles/`.
 
 Print the catalog or a scoped prompt:

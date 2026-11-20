@@ -66,35 +66,24 @@ The owner now requests continuing builder/critic improvement. Follow
 independent criticism, reproducible cases and root-owned integration. This does not
 install a recurring unattended service or authorize worker merges into main.
 
-## Accepted behavior batch
+## Accepted hill-climb batch
 
-All tasks share main workspace above with disjoint file ownership; no auxiliary worktrees.
-Root owns enrichment/group policy, game wiring, controls, integration and release checks.
+Baseline `a3196df`; learning context `717aec1`, creep recovery `f4cee77`, visible-peek
+recovery `70eeb19`. The owner requested continued critique and hill climbing. All assigned
+work is integrated and independently reviewed; evidence publication/authorized cleanup pending.
 
-| Task | Local terminal | Dependencies / state |
+| Task | Local terminal | Outcome |
 | --- | --- | --- |
-| Paw detours | `6de3c7ee-a37c-4f80-8439-d4607e801c55` | contact.js, focused tests, touch doc; completed, verified, retired |
-| Living pauses | `cbdca8d9-3f01-4eb6-a6b4-a3f120a0d5bc` | idle-animation.js, mouse3d.js, tests, anatomy doc; completed, verified, retired |
-| Local learning | `823e8d77-b178-45aa-a6a8-1cff0b43e2e1` | new metrics/learning module/tests and learning docs; completed, verified, retired |
-| Root integration | current coordinator | all handoffs/critics accepted; combined checks passed |
+| Offline evaluation/search | `0b862128-8a8c-4ed4-b72c-54b827bc25b2` | partial builder handoff; root completed validation repairs and final search |
+| Motion critic | `8d651d10-d325-4501-b61d-8c068ce4b847` | verified creep recovery, nine blocked peeks and adverse controls |
+| Learning / scoring critic | `990ff0bf-6a89-4a5b-8895-36d32d7da36c` | learning accepted; three scoring-review rounds resolved blockers |
+| Root | current coordinator | integrated/published runtime; 400 tests, build, browser and final search pass |
 
-Accepted scope: coordinated lead/sneak roles, visible pause gestures, near-miss dodge/check-back,
-persistent paw detours, actual movement/variety metrics, cautious cross-session local adaptation.
-Contact safety and deliberate routes outrank variety; no auto-stop, remote control or synthetic audio.
-Learning must separate cat/human/test/unknown, exclude experiments, require multiple sessions,
-keep conservative bounds and provide freeze/reset/export. Interaction is not enjoyment.
-
-Prior reference-route critic `91d7274e-3c71-490f-a40a-93818442a1d7` completed and retired;
-[acceptance](evidence/reference-2026-11-19/implementation-review.md) preserves its handoff.
-Session chapters and reference-route changes are integrated through `2b9acbe`.
-The owner-supplied recording supersedes the earlier unavailable physical capture.
-[Recording analysis](reference-recording-analysis.md) owns observation and inference boundaries.
-
-Physical iPad play quality and matched before/after cat observation remain pending.
-Local server and Metro stay available; cleanup applies only to verified completed workers.
-
-Independent social and learning critics reused the detour and pause terminals. All reproduced
-findings are repaired and accepted. [Batch evidence](cycles/behavior-learning.md) preserves
-reports and executable probes; final checks: 375 web tests, build/Worker syntax, catalog and
-four eligibility tests. Implementation/evidence commit `9536c73` was verified on origin/main before all three completed
-worker terminals were closed. Main workspace, sidebar game and development servers remain available.
+Three search rounds retained default settings: all eight unique numeric neighbors failed
+improvement/safety requirements. Final training panel reduces worst blocked travel from
+6.83 to 3.33 seconds. Search utility remains an engineering proxy, never cat reward.
+[Batch report](cycles/behavior-hill-climb.md) and [evidence](evidence/hill-climb-2026-11-20/README.md)
+retain exact repros, candidates/rejections, source fingerprints, criticism and next comparisons.
+New evaluation/critic roles are durable in `agents/roles.json`; no periodic service is installed.
+Main workspace, sidebar game, game server and Metro stay available. Current device/release
+boundaries belong in [verification](verification.md). Earlier domain queues remain above.

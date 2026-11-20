@@ -3,31 +3,36 @@
 Reviewed 2026-11-20. Current checks replace earlier suite totals; historical evidence remains
 in [cycle reports](cycles/README.md). Test success does not establish feline preference.
 
-## Coordinated behavior and local learning
+## Behavior hill climbing and context-isolated learning
 
-All **375 web tests pass**, including living watch poses, persistent paw detours, near-miss
-responses, group coordination, duration adaptation, storage integrity and real game-entry
-attribution. Production build **182163da4ea1** and built Worker syntax check pass.
-The 77-variable catalog remains current; all four offline eligibility checks pass.
+Current combined checks: **400 web tests pass**; production build **a6df6715d6a5** and
+built Worker syntax check pass. The 77-variable catalog and all four offline eligibility
+checks pass. Final benchmark validation repairs pass independent scoring review. [Current batch](cycles/behavior-hill-climb.md) owns evidence.
 
-Three Superset builders delivered disjoint changes; two then independently reviewed integration.
-The critic reproduced and verified repairs for overlapping peeks, collision-blocked invisible
-retreats, unused traverse role weights and between-tick stale pounces. Ten-minute slow/large
-seed97 runs at 30/60/120 Hz now have maximum empty-board intervals **5.30 / 5.85 / 4.38s**,
-versus the reproduced 109.47s stall. This is bounded simulation evidence, not an engagement score.
-Learning review caught and verified fixes for drag-release distance leakage and merged anonymous
-tracks. Later storage-cap/export hardening is covered by the final combined suite.
+Two independently verified motion fixes address collision-locked creeping and near-arrival
+peeking. The opposed creep fixture yields after 2.51–2.54 seconds instead of 8.91–8.94;
+all nine 12/15/16-pixel peek cases retreat at 2.5 seconds instead of remaining blocked.
+Held anchors remain fixed; slow creep, live-paw detours and invisible approach controls
+match baseline. Fixed progress windows are not a strict sliding 2.5-second maximum.
 
-[Batch acceptance](cycles/behavior-learning.md) links reports, probes and final metrics.
-Browser sidebar starts two mice with WebGL, active lead/sneak roles, working learning controls,
-playing=true, recovering=false and no console errors. The live server fingerprint is
-**bb4746032117**, matching browser diagnostics; development and build hashes use different algorithms.
-Rendered screenshot inspected; no claim of sustained iPad performance or natural animation.
+Local duration learning now records validated settings, build, policy and coarse screen
+context. Only matching contexts support adaptation; legacy/missing context remains
+available descriptively. Explicit cat attribution, three completed sessions, owner freeze,
+reset/export, and interrupted/experiment exclusions remain. No trained model is claimed.
 
-Local learning is implemented and integrated. It requires explicit cat attribution and three
-completed sessions with adequate exposure per chapter; owner can select Fixed policy, reset,
-export or copy local data. Sensory pilots are excluded. No trained model, enjoyment measurement,
-automatic stop, recurring agent service, full settings provenance or hosted deployment is claimed.
+The sidebar runs two mice with WebGL, playing=true, recovering=false, no console errors,
+and development fingerprint **bc76ab02988b**, matching the server. A fresh play session
+was checked with all 77 settings and the actual build in its context. Auto-resume before
+version arrival intentionally remains descriptive until a new context-valid session starts.
+Development and production fingerprints use different algorithms. No new native install.
+
+Offline search completed three rounds: 24 decisions over eight unique candidates, with
+all rejected and defaults retained. The final 12-scenario training panel passes all gates;
+maximum blocked motion falls from 6.83 to 3.33 seconds versus archived baseline. Final
+search took 13.82 seconds and did not open holdout because no training candidate passed.
+Engineering utility is not cat preference. Earlier metric versions are not comparable to
+corrected reports. [Evaluation contract](behavior-evaluation.md).
+Previous coordinated-prey and learning evidence remains in [its batch report](cycles/behavior-learning.md).
 
 ## Existing implementation evidence
 
