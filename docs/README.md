@@ -5,6 +5,8 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 
 | Topic | Owns |
 | --- | --- |
+| [Coordinated prey](behavior-social.md) | Lead/sneak roles, entrance handoffs and missed-pounce responses |
+| [Behavior learning](behavior-learning.md) | Local movement metrics, conservative adaptation and owner controls |
 | [Session behavior chapters](behavior-chapters.md) | Longer policy rotation, shared clock and phase-boundary transitions |
 | [Connected prey routes](behavior-routes.md) | Continuous runs, edge hooks, hesitation and route safety |
 | [Owner reference recording](reference-recording-analysis.md) | Measured routes, brief pauses, inference and comparison |

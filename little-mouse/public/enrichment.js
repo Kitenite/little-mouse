@@ -1,6 +1,7 @@
 import {createHuntChapters,advanceHuntChapters} from './hunt-chapters.js';
 import {updateLifecycle,sendOffscreen} from './behavior.js';
 import {planHuntRoute,advanceHuntRoute} from './hunt-routes.js';
+import {groupWeight,deferSoloExit} from './hunt-group.js';
 import {physicalBounds} from './mouse-identity.js';
 
 export const huntDefaults = {huntTempo: 1};
@@ -14,8 +15,8 @@ function silhouetteVisible(m, size, w, h) {
   return m.x>-reach&&m.x<w+reach&&m.y>-reach&&m.y<h+reach;
 }
 export function createHuntDirector(seed) { return {touches:[], serial:0, nextEntrance:0, chapters:createHuntChapters(seed)}; }
-export function rememberTouch(director, x, y, time, w, h) {
-  director.touches.push({x:x/w, y:y/h, time, serial:++director.serial});
+export function rememberTouch(director, x, y, time, w, h, details={}) {
+  director.touches.push({x:x/w, y:y/h, time, serial:++director.serial,miss:details.miss===true,pointerId:details.pointerId});
   director.touches = director.touches.filter(p => time-p.time < 24).slice(-12);
 }
 // Edge coordinates are recomputed on resize. At peek depth the nose and ears
@@ -44,6 +45,11 @@ function cover(m, time, w, h, director, rng, preferSame=false) {
     // including contact size and released-footprint decay. All blocked still waits.
     if(blockedMouth(x,y,director))value-=100;
     for(const p of director.paws?.values()||[]){const reach=pawReach(p,director)*1.5,distance=Math.hypot(x-p.x,y-p.y);if(reach>0&&distance<reach)value-=8*(1-distance/reach);}
+    // Reserve room around a companion already emerging through this mouth.
+    const separation=Math.min(78*(director.group?.size||1),Math.min(w,h)*.36)+40;
+    for(const other of director.group?.members||[]){if(other!==m&&other.state==='active'){
+      const distance=Math.hypot(x-other.x,y-other.y);if(distance<separation)value-=4*(1-distance/separation);
+    }}
     if(value>score){score=value;best={edge,slot};}
   }
   return best;
@@ -78,7 +84,7 @@ function enter(m, phase, time, config, w, h, rng, director) {
   if(phase==='hidden') {
     const delay=config.hide>0 ? clamp(config.hide*between(rng,.7,1.25)*(a.chapter.hide??1)+a.fear, .8,20) : .65;
     a.deadline=time+delay;m.state='away';m.hiddenUntil=a.deadline;m.vx=m.vy=m.speed=0;m.moving=false;
-    a.visibleSince=null;return;
+    a.visibleSince=null;delete a.handoffUntil;return;
   }
   m.state='active';m.hiddenUntil=0;
   if(phase==='peek') {
@@ -126,10 +132,10 @@ function enter(m, phase, time, config, w, h, rng, director) {
   }
   if(phase==='watch'||phase==='creep'||phase==='dart'){a.dwell*=(motifs[a.motif]?.dwell??1)*(a.chapter.dwell??1);if(phase==='watch')m.restUntil=time+a.dwell;}
 }
-function choose(a, rng, config, time) {
+function choose(a, rng, config, time, director, m) {
   const motif=motifs[a.motif]||motifs.scout;
   const cross=clamp(Number(config.runThroughChance??.22),0,1);
-  if(a.phase==='peek'&&rng()<(cross===1?1:cross*motif.traverse*(a.chapter?.weights.traverse??1)))return 'traverse';
+  if(a.phase==='peek'&&rng()<(cross===1?1:cross*motif.traverse*(a.chapter?.weights.traverse??1)*groupWeight(director,m,'traverse')))return 'traverse';
   if(config.hide>0&&a.visibleSince!==null&&time-a.visibleSince>(a.visibleBudget??14)*(a.chapter?.visibleBudget??1))return 'retreat';
   const options=a.phase==='peek' ? [['watch',.5],['creep',1.5],['dart',1.2],['retreat',config.hide>0?.35+a.fear:0]]
     : a.phase==='watch' ? [['creep',1],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
@@ -138,13 +144,13 @@ function choose(a, rng, config, time) {
   if(a.phase==='dart'&&a.history.slice(-2).filter(p=>p==='dart').length<2)options.push(['dart',a.motif==='burst'?2:.25]);
   for(const option of options){
     const repeated=(a.transitions||[]).filter(t=>t===a.phase+'>'+option[0]).length;
-    option[1]*=(a.chapter?.weights[option[0]]??1)*(motif[option[0]]??1)*Math.pow(.35,a.history.filter(p=>p===option[0]).length)*Math.pow(.25,repeated);
+    option[1]*=groupWeight(director,m,option[0])*(a.chapter?.weights[option[0]]??1)*(motif[option[0]]??1)*Math.pow(.35,a.history.filter(p=>p===option[0]).length)*Math.pow(.25,repeated);
   }
   let roll=rng()*options.reduce((sum,p)=>sum+p[1],0);
   return options.find(p=>(roll-=p[1])<=0)?.[0]||'watch';
 }
 function discardReaction(a) {
-  delete a.reactAt;delete a.reactKind;delete a.lookAt;
+  delete a.reactAt;delete a.reactKind;delete a.lookAt;delete a.pounce;
 }
 export function clearHunt(m,time) {
   delete m.hunt;delete m.huntSpeed;m.restUntil=Math.min(m.restUntil||0,time);
@@ -188,8 +194,8 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   if(a.phase==='touch'&&m.state!=='hurt'&&m.state!=='defeated') {m.reaction=null;enter(m,'watch',time,config,w,h,rng,director);}
   if(m.state==='hurt'||m.state==='defeated'||a.phase==='injury'||(m.injuredUntil||0)>time) {
     // Injury owns the response. Do not replay a pre-impact decision on reentry.
-    a.sensed=director.serial;delete a.reactAt;delete a.reactKind;delete a.lookAt;
-    a.phase='injury';m.huntSpeed=1;
+    a.sensed=director.serial;delete a.reactAt;delete a.reactKind;delete a.lookAt;delete a.pounce;
+    delete a.pounce;a.phase='injury';m.huntSpeed=1;
     if(m.state==='away') {enter(m,'hidden',time,config,w,h,rng,director);return true;}
     updateLifecycle(m,time,w,h,config.size,config.hide,rng,config);
     if(m.state==='active'&&!m.leaving&&(m.injuredUntil||0)<=time)enter(m,'watch',time,config,w,h,rng,director);
@@ -216,14 +222,23 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     const distance=Math.hypot(m.x-p.x*w,m.y-p.y*h),near=(100+config.size*35)*sensitivity;
     const close=distance<near,moderate=distance<Math.max(near*1.7,Math.hypot(w,h)*.55*sensitivity);
     a.fear=clamp(a.fear+(close?.6:moderate?.22:.06),0,2.5);
-    const kind=close||(moderate&&a.fear>1.05)?'retreat':moderate?'freeze':'orient';
-    const priority={orient:1,freeze:2,retreat:3};
+    a.misses=(a.misses||[]).filter(t=>time-t<6);
+    if(close&&p.miss)a.misses.push(p.time);a.misses=a.misses.slice(-4);
+    const kind=close&&p.miss&&a.misses.length<3?'evade':close||(moderate&&a.fear>1.05)?'retreat':moderate?'freeze':'orient';
+    const priority={orient:1,freeze:2,evade:3,retreat:4};
     if(!a.reactKind||priority[kind]>=priority[a.reactKind]){a.reactKind=kind;a.lookAt=[p.x,p.y];}
     a.reactAt??=time+between(rng,.16,.3)*tuning(config,'reactionDelay');
   }
   if(a.reactAt&&time>=a.reactAt){delete a.reactAt;const kind=a.reactKind;delete a.reactKind;
     if(a.phase!=='retreat'){
-      if(kind==='retreat'){enter(m,'retreat',time,config,w,h,rng,director);m.startledUntil=time+1.2;}
+      delete a.pounce;
+      if(kind==='evade'&&silhouetteVisible(m,config.size,w,h)){
+        const [px,py]=a.lookAt,dx=m.x-px*w,dy=m.y-py*h,angle=Math.atan2(dy,dx);
+        enter(m,'dart',time,config,w,h,rng,director);delete a.route;
+        const reach=Math.min(w,h)*.28,inset=Math.min(45*config.size,Math.min(w,h)*.2);
+        a.goal=[clamp(m.x+Math.cos(angle)*reach,inset,w-inset)/w,clamp(m.y+Math.sin(angle)*reach,inset,h-inset)/h];
+        a.pounce={stage:'dodge',at:time,origin:[px,py]};a.dwell=.08;a.deadline=time+2.5;m.startledUntil=time+.8;
+      }else if(kind==='retreat'||kind==='evade'){enter(m,'retreat',time,config,w,h,rng,director);m.startledUntil=time+1.2;}
       else {enter(m,'watch',time,config,w,h,rng,director);a.dwell=kind==='freeze'?between(rng,.35,.75):between(rng,.55,1);
         if(kind==='orient'){a.goal=a.lookAt;m.restUntil=time;}
         else m.restUntil=time+a.dwell;
@@ -255,6 +270,18 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     m.huntSpeed=pace.peek+(Math.max(1,240/base)-pace.peek)*blend;
     if(!silhouetteVisible(m,config.size,w,h))m.huntSpeed=Math.max(m.huntSpeed,110/base);
   }
+  if(a.phase==='peek'&&a.arrivedAt===null&&silhouetteVisible(m,config.size,w,h)){
+    a.progress??={time,distance};
+    if(time-a.progress.time>=2.5){
+      if(a.progress.distance-distance<4&&distance>15){
+        // Collision-separated bodies can never reach two overlapping peek goals.
+        // Back out from the CURRENT lane, then choose new cover while concealed.
+        a.slot=clamp(a.edge<2?m.y/h:m.x/w,.02,.98);
+        enter(m,'retreat',time,config,w,h,rng,director);return true;
+      }
+      a.progress={time,distance};
+    }
+  }
   if(a.phase==='dart'&&a.arrivedAt===null) {
     a.progress??={time,distance};
     if(time-a.progress.time>=1.5) {
@@ -275,17 +302,30 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     if(time>a.deadline)enter(m,'retreat',time,config,w,h,rng,director);
     return true;
   }
-  if(a.phase==='retreat'&&distance<15){enter(m,'hidden',time,config,w,h,rng,director);return true;}
-  // Resize/slow settings cannot strand travel. Retreat watchdog continues toward
-  // cover until the complete silhouette is outside; never vanish mid-screen.
-  if(time>a.deadline&&a.phase==='retreat'){
+  if(a.phase==='retreat'){
     const pad=coverPad(m,config)-15;
-    if(m.x < -pad||m.x>w+pad||m.y < -pad||m.y>h+pad)enter(m,'hidden',time,config,w,h,rng,director);
-    return true;
+    // Full concealment completes the exit even if another mouse prevents exact
+    // arrival at its offscreen waypoint. Never leave invisible colliders pushing.
+    if(distance<15||m.x < -pad||m.x>w+pad||m.y < -pad||m.y>h+pad){enter(m,'hidden',time,config,w,h,rng,director);return true;}
   }
   // A peek must reach the edge before it may become a stationary watch. A
   // timeout while still invisible must not leave a frozen offscreen mouse.
-  if((a.arrivedAt!==null&&time-a.arrivedAt>=a.dwell)||(time>a.deadline&&a.phase!=='peek'))enter(m,choose(a,rng,config,time),time,config,w,h,rng,director);
+  if((a.arrivedAt!==null&&time-a.arrivedAt>=a.dwell)||(time>a.deadline&&a.phase!=='peek')){
+    if(a.pounce?.stage==='dodge'){
+      const memory=a.pounce;
+      // A near miss earns a brief visible check-back only after reaching safety.
+      if(!blockedMouth(m.x,m.y,director)){
+        enter(m,'watch',time,config,w,h,rng,director);a.pounce={...memory,stage:'hesitate'};
+        a.dwell=between(rng,.2,.4);m.restUntil=time+a.dwell;a.deadline=time+a.dwell+.1;
+      }else {delete a.pounce;enter(m,'retreat',time,config,w,h,rng,director);}
+    }else if(a.pounce?.stage==='hesitate'){
+      delete a.pounce;enter(m,'dart',time,config,w,h,rng,director);
+    }else{
+      let phase=choose(a,rng,config,time,director,m);
+      if(['retreat','traverse'].includes(phase)&&deferSoloExit(director,m,time))phase='creep';
+      enter(m,phase,time,config,w,h,rng,director);
+    }
+  }
   return true;
 }
 

@@ -1,6 +1,6 @@
 # Worker coordination
 
-Reviewed 2026-11-19. Use persistent Superset terminal workers for ongoing core work;
+Reviewed 2026-11-20. Use persistent Superset terminal workers for ongoing core work;
 built-in subagents are not the default orchestration surface requested by the owner.
 Read the superset-orchestrate skill before dispatching. Keep this file a current ledger,
 not an append-only activity log. Terminal existence does not establish completion.
@@ -66,85 +66,34 @@ The owner now requests continuing builder/critic improvement. Follow
 independent criticism, reproducible cases and root-owned integration. This does not
 install a recurring unattended service or authorize worker merges into main.
 
-Podrick’s Violin rebrand, artwork splash, simplified storybook UI, local-only runtime
-and recorded audio are integrated and published. Renamed native shell installed; final
-relaunch awaits exit from Guided Access. Current owner direction supersedes companion policy.
-Completed assignments: UI (HTML/CSS + native home), local-only (game networking + native
-Game wrapper), audio (recorded sample curation/mix). Root completed deployment and cleanup.
-Keep the base game and local owner controls; remove pairing, steering and companion UI/API.
-Live development asset updates remain for iteration; no remote gameplay control.
+## Accepted behavior batch
 
-| Task | Workspace (local) | Terminal | Status |
-| --- | --- | --- | --- |
-| ui | `1cdd768e-7a48-4a06-a46e-f66d0838c204` | `ef6a072f-ed57-4054-8a71-f79bca72f302` | completed; integrated; retired |
-| local | `a7f96f69-497b-4888-a869-e5969da687f2` | `ee9cec0a-24cf-4c8c-bfdd-cd38ebff6986` | completed; integrated; retired |
-| audio | `c4b3d12d-6447-4349-b55b-381ecae24e95` | `f69ded84-16aa-4d32-bbbe-00b25c347a1c` | completed; integrated; retired |
+All tasks share main workspace above with disjoint file ownership; no auxiliary worktrees.
+Root owns enrichment/group policy, game wiring, controls, integration and release checks.
 
-Audio acceptance: recorded stock/found sources only; no artificial synthesis or
-unnatural pitch/rate effects. Silence if no suitable recording. Squeaks more prominent.
-
-Integrated UI `504867e`, local-only `fa03cc5` / `58e5066`, audio `69bb434`.
-Audio critic terminal `f0c5e35b-7540-475e-86ba-3af60e254976` shared the audio workspace.
-Pending physical checks: listening and native appearance. Final restart blocked by Guided Access;
-owner asked to exit it. This does not block source publication or hosted deployment.
-
-After GitHub preservation `254f5a6`, all four batch sessions and three auxiliary workspaces
-were retired. Only main worktree remains; roles, handoffs and selected captures are in code.
-
-Root follow-up: faster/more active hunt, 30% larger mice, minimal copy and stronger UI contrast.
-No new worker workspace needed for this scoped preset/presentation change. 269 web tests, production build and Worker syntax checks pass; browser confirms new preset
-and ready startup. Hosted publication succeeded. Connected iPad relaunch subsequently succeeded.
-
-Root follow-up: 2.2× actual travel gain independent of gait; distance/cadence regression
-and all 270 web tests pass. Connected iPad relaunch succeeded; hosted publication succeeded.
-No agent/workspace dispatch needed for this focused change.
-
-Root follow-up: live-paw goal exclusion and watch escape, iPad two-mouse migration,
-actual-drag timeout defeat with one sound/score event. All 273 tests and build pass;
-browser startup and iPad launch checked. Hosted publication succeeded.
-
-Root tail-turn fix: remove constraint-generated Verlet velocity, soften angular forcing,
-discount gameplay travel gain. Turn reproduction at 30/60/120 Hz and all 274 tests pass.
-Published hosted update and relaunched iPad route; physical visual review remains pending.
-
-Root ambient vocal follow-up: occasional native-rate recorded squeaks with a global
-randomized schedule, quieter than contact vocals; 275 tests and build pass, hosted publish
-succeeded. No iPad restart while reference game is open.
-
-Reference-game observation: owner requests recording current iPad game and behavior comparison.
-Xcode screen-record unsupported on this iPad; QuickTime lists the iPad screen but fails
-with “The operation couldn’t be completed.” No physical gameplay recorded; official preview evidence is now available.
-Asked owner to reconnect data cable/unlock, leaving reference game open. Do not relaunch ours.
-
-Root steering fix: reproduced nearly two full turns around fixed nearby targets; repaired
-approach braking, swept arrival and residual watch turning. All 277 tests and build pass;
-hosted publication succeeded. Physical behavior review remains pending.
-Reference-game physical capture remains blocked; do not switch the iPad away from it.
-Root downloaded and decoded both official App Store previews; sampled-frame observations,
-source URLs and remaining comparison limits are in [reference notes](reference-game-observation.md).
-Simulator cannot run its App Store binary; Mac compatibility is listed, installation untested.
-
-Root policy follow-up: reference takeaways adopted in behavior, anatomy and touch documents.
-Root owns preservation; next behavior/anatomy critics own continuous rendered/iPad acceptance
-of steady routes, deliberate turns/exits, restrained secondary motion and readable contacts.
-Existing runtime support inspected; this policy-only change makes no new deployment claim.
-Physical capture remains the dependency for a matched current-game comparison.
-
-Root completed session chapters and regression checks; reference-route critic `91d7274e-3c71-490f-a40a-93818442a1d7` complete.
-[Findings and acceptance](evidence/reference-2026-11-19/implementation-review.md) preserved; worker retired.
-Babylon comparison complete; no dependent worker edits.
-
-## Sensory experiments implementation
-
-Root owns game integration, owner controls, catalog/docs and combined checks. Scope: local
-sensory comparisons, recorded sound variation, logging/export; no trained preference model.
-
-| Task | Local terminal | Ownership / status |
+| Task | Local terminal | Dependencies / state |
 | --- | --- | --- |
-| Experiment engine | `ee8a2dff-d086-427e-94a5-2b2c18ee0e10` | experiment engine + game integration/tests; completed |
-| Audio variation | `41bd025d-e709-4416-bfbd-b76ffd574d9a` | audio/settings + focused tests; completed |
-| Independent critic | `0cabd4fa-e351-458b-a77b-743b7f75f617` | five findings reviewed; regression fixes integrated |
+| Paw detours | `6de3c7ee-a37c-4f80-8439-d4607e801c55` | contact.js, focused tests, touch doc; completed and verified |
+| Living pauses | `cbdca8d9-3f01-4eb6-a6b4-a3f120a0d5bc` | idle-animation.js, mouse3d.js, tests, anatomy doc; completed and verified |
+| Local learning | `823e8d77-b178-45aa-a6a8-1cff0b43e2e1` | new metrics/learning module/tests and learning docs; completed and verified |
+| Root integration | current coordinator | all handoffs/critics accepted; combined checks passed |
 
-Existing [research critique](cycles/feline-play-critique.md) and [catalog review](experiments/review.md)
-are complete. Runtime review findings and remedies: [review](experiments/runtime-review.md).
-No trained model, recurring automation, hosted update or new iPad verification in this change.
+Accepted scope: coordinated lead/sneak roles, visible pause gestures, near-miss dodge/check-back,
+persistent paw detours, actual movement/variety metrics, cautious cross-session local adaptation.
+Contact safety and deliberate routes outrank variety; no auto-stop, remote control or synthetic audio.
+Learning must separate cat/human/test/unknown, exclude experiments, require multiple sessions,
+keep conservative bounds and provide freeze/reset/export. Interaction is not enjoyment.
+
+Prior reference-route critic `91d7274e-3c71-490f-a40a-93818442a1d7` completed and retired;
+[acceptance](evidence/reference-2026-11-19/implementation-review.md) preserves its handoff.
+Session chapters and reference-route changes are integrated through `2b9acbe`.
+The owner-supplied recording supersedes the earlier unavailable physical capture.
+[Recording analysis](reference-recording-analysis.md) owns observation and inference boundaries.
+
+Physical iPad play quality and matched before/after cat observation remain pending.
+Local server and Metro stay available; cleanup applies only to verified completed workers.
+
+Independent social and learning critics reused the detour and pause terminals. All reproduced
+findings are repaired and accepted. [Batch evidence](cycles/behavior-learning.md) preserves
+reports and executable probes; final checks: 375 web tests, build/Worker syntax, catalog and
+four eligibility tests. Source publication and authorized terminal retirement follow verification.

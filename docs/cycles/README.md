@@ -1,5 +1,11 @@
 # Improvement batches
 
+## Coordinated prey and learning — 2026-11-20
+
+[Accepted batch](behavior-learning.md): three Superset builders and two independent reviews;
+coordination, watch poses, pounce responses, detours, metrics and cautious local adaptation.
+Critic reproductions and repairs are preserved; current checks are in [verification](../verification.md).
+
 ## Feline-play critique — 2026-11-18
 
 [Research critic report](feline-play-critique.md) ranks six owner-led comparisons against

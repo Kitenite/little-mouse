@@ -39,7 +39,11 @@ chapter continuity across app restarts is not persisted.
 dwell, hidden duration, cover preference, route probability and visible budget.
 `hunt-routes.js` uses chapter edge-hook and hesitation probabilities when planning a new route.
 The optional local experiment behavior sample records each mouse's effective chapter ID.
-This supports attribution; it does not make pilot records training-ready or create automatic learning.
+This supports attribution; pilot records remain separate from [local play learning](behavior-learning.md).
+With enough completed cat sessions, a bounded duration multiplier is applied only when a new
+chapter starts, clamped to 30–65 seconds. The opening and full shuffled deck stay unchanged.
+Each session snapshots its multipliers; sensory comparisons use the fixed baseline.
+Applied base duration, multiplier and actual duration are retained for audit.
 
 Tests cover four full chapter cycles, no repeats, reproducibility and paused-clock behavior;
 shared two-mouse advancement; unchanged ongoing routes/holds; and sampled differences in actual

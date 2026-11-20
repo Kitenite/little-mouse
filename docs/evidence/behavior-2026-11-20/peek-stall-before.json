@@ -1,0 +1,176 @@
+[
+  {
+    "final": [
+      {
+        "state": "active",
+        "castIndex": 0,
+        "x": 134.39156983311298,
+        "y": 806.999999999912,
+        "angle": -6.283185307178682,
+        "vx": -1.182768375903506,
+        "vy": 4.828008569785506e-12,
+        "speed": 1.182768375903506,
+        "targetX": 232.268857421875,
+        "targetY": 807,
+        "hiddenUntil": 0,
+        "restUntil": 0,
+        "seed": 0,
+        "huntRole": "lead",
+        "physicalBounds": {
+          "front": 50.26565703156281,
+          "rear": 37.95513396546936,
+          "width": 27.62122664105818,
+          "tail": 124.8161822291901
+        },
+        "hunt": {
+          "edge": 3,
+          "slot": 0.2268250560760498,
+          "fear": 0,
+          "history": [
+            "dart",
+            "retreat",
+            "hidden",
+            "peek"
+          ],
+          "lastTime": 599.9833333333333,
+          "sensed": 0,
+          "visibleSince": 46.93333333333333,
+          "motifBag": [],
+          "motif": "tease",
+          "transitions": [
+            "hidden>peek"
+          ],
+          "visibleBudget": 18.373565074289218,
+          "chapter": {
+            "id": "stalking",
+            "weights": {
+              "creep": 2,
+              "watch": 1.6,
+              "dart": 0.65,
+              "traverse": 0.4
+            },
+            "routeChance": 0.35,
+            "dwell": 1.15
+          },
+          "phase": "peek",
+          "since": 44.38333333333333,
+          "arrivedAt": null,
+          "dwell": 1.021475806222297,
+          "deadline": 155.6876811594203,
+          "depth": -39,
+          "crossEdge": 2,
+          "crossSlot": 0.7173979843501002,
+          "goal": [
+            0.3620932439994672,
+            0.5062445771101856
+          ]
+        },
+        "next": 44.38333333333333,
+        "leaving": false,
+        "entering": false,
+        "huntSpeed": 0.24,
+        "moving": false,
+        "turnRate": -5.0165998902271995e-14,
+        "reaction": null,
+        "injuredUntil": 0,
+        "scrambleUntil": 0,
+        "startledUntil": 0
+      },
+      {
+        "state": "active",
+        "castIndex": 1,
+        "x": 410.87156983311297,
+        "y": 807.0000000001054,
+        "angle": -3.1415926535889027,
+        "vx": 1.1827683759035068,
+        "vy": -4.444665816672163e-12,
+        "speed": 1.1827683759035068,
+        "targetX": 292.1953739929199,
+        "targetY": 807,
+        "hiddenUntil": 0,
+        "restUntil": 0,
+        "seed": 1,
+        "huntRole": "sneak",
+        "physicalBounds": {
+          "front": 50.26565703156281,
+          "rear": 37.95513396546936,
+          "width": 27.62122664105818,
+          "tail": 124.8161822291901
+        },
+        "hunt": {
+          "edge": 3,
+          "slot": 0.2853470449149608,
+          "fear": 0,
+          "history": [
+            "creep",
+            "retreat",
+            "hidden",
+            "peek"
+          ],
+          "lastTime": 599.9833333333333,
+          "sensed": 0,
+          "visibleSince": 63,
+          "motifBag": [],
+          "motif": "burst",
+          "transitions": [
+            "hidden>peek"
+          ],
+          "visibleBudget": 18.20269551477395,
+          "chapter": {
+            "id": "stalking",
+            "weights": {
+              "creep": 2,
+              "watch": 1.6,
+              "dart": 0.65,
+              "traverse": 0.4
+            },
+            "routeChance": 0.35,
+            "dwell": 1.15
+          },
+          "phase": "peek",
+          "since": 58.93333333333333,
+          "arrivedAt": null,
+          "dwell": 2.0163378217769785,
+          "deadline": 170.23768115942028,
+          "depth": -39,
+          "goal": [
+            0.165,
+            0.6700309454106339
+          ]
+        },
+        "next": 58.93333333333333,
+        "leaving": false,
+        "entering": false,
+        "huntSpeed": 0.24,
+        "moving": false,
+        "turnRate": -2.398081733190338e-14,
+        "reaction": null,
+        "injuredUntil": 0,
+        "scrambleUntil": 0,
+        "startledUntil": 0
+      }
+    ],
+    "scenario": "slow-large",
+    "seed": 97,
+    "maxEmpty": 2.88,
+    "maxEmptyAfterRelease": 0,
+    "maxInvisible": [
+      6.12,
+      7.58
+    ],
+    "maxFixedGoalTurn": 4.71,
+    "spinCase": {
+      "time": 560.3666666666667,
+      "phase": "peek",
+      "duration": 515.9833333333333,
+      "travel": 583.7117183595898
+    },
+    "emptyCase": {
+      "t": 2.8666666666666667,
+      "phases": [
+        "peek",
+        "peek"
+      ]
+    }
+  }
+]

@@ -51,3 +51,15 @@ test('chapters change actual route choices, not only diagnostic names',()=>{
  assert.ok(teasing.hookRate>sweeping.hookRate+.4);
  assert.ok(bursts.pauseRate>sweeping.pauseRate+.15);
 });
+
+test('learned duration bias changes only new chapter length, never the deck or opening',()=>{
+ const a=createHuntChapters(71),b=createHuntChapters(71);
+ a.durationScales=Object.fromEntries(HUNT_CHAPTERS.map(c=>[c.id,100]));
+ assert.equal(a.until,35);
+ for(let i=0;i<12;i++){
+  advanceHuntChapters(a,a.until);advanceHuntChapters(b,b.until);
+  assert.equal(a.current.id,b.current.id);assert.equal(a.decision.multiplier,1.15);
+  assert.ok(a.until-a.since>=30&&a.until-a.since<=65);
+  assert.equal(a.decision.baseDuration,b.decision.baseDuration);
+ }
+});

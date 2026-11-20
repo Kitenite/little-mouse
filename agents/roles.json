@@ -165,7 +165,10 @@
       "kind": "builder",
       "owns": [
         "little-mouse/public/enrichment.js",
-        "little-mouse/public/behavior.js"
+        "little-mouse/public/behavior.js",
+        "little-mouse/public/hunt-group.js",
+        "little-mouse/public/hunt-chapters.js",
+        "little-mouse/public/hunt-routes.js"
       ],
       "requirements": [
         "docs/behavior.md"
@@ -229,6 +232,38 @@
       ],
       "report": "docs/cycles/realism.md",
       "objective": "Compare actual rendered views and audio against cited mouse images, movement and recordings. Record specific anatomy, physics, fur, background and sound defects. Separate evidence from inference; never infer device quality or cat engagement from software tests."
+    },
+    {
+      "id": "play-learning",
+      "kind": "builder",
+      "owns": [
+        "little-mouse/public/play-learning.js",
+        "little-mouse/public/play-learning-runtime.js",
+        "little-mouse/public/play-learning-controls.js"
+      ],
+      "requirements": [
+        "docs/behavior-learning.md",
+        "docs/experiments/learning.md"
+      ],
+      "report": "docs/cycles/behavior-learning.md",
+      "objective": "Bounded local interaction metrics and cautious chapter duration adaptation across completed labeled cat sessions. Preserve actor attribution, prior support, freeze/reset/export, exclusion of interruptions/experiments and no enjoyment inference.",
+      "coordinateWith": [
+        "behavior",
+        "reliability"
+      ],
+      "critic": "play-learning-critic"
+    },
+    {
+      "id": "play-learning-critic",
+      "kind": "critic",
+      "reviews": "play-learning",
+      "owns": [],
+      "requirements": [
+        "docs/behavior-learning.md",
+        "docs/experiments/learning.md"
+      ],
+      "report": "docs/cycles/behavior-learning.md",
+      "objective": "Independently reproduce session support, touch episode classification, movement discontinuity, owner gestures, restore bounds and experiment isolation. Read-only review; never claim feline preference from touch counts."
     }
   ],
   "contract": [

@@ -31,7 +31,7 @@ restrained appendage motion is our inference, not a measured property of that ga
   folded pinnae. Seed-derived traits preserve coats and identity through hiding/reload.
   Body variety controls this spread; zero gives matching upright ears. Ear size scales both;
   existing movement/stiffness/damping controls remain active. Larger/softer ears lag more
-  within the same bounded spring angles, without a decorative idle flap.
+  within the same bounded spring angles; calm watch adds small independent listening offsets.
 - Limbs vary by front/hind pair in length, thickness, segment ratio and paw size, with
   subtle side asymmetry. IK, skin and paw picking share the dimensions; see [limbs](limb-surfaces.md).
 - Geometry, articulated legs, contacts and exit bounds use the same morphology.
@@ -51,6 +51,12 @@ restrained appendage motion is our inference, not a measured property of that ga
 - Calm watch bouts support nibbling, alternating face wipes, one-sided hindleg scratching,
   hindleg stretches and rare partial side rolls. Action-specific targets use the same attached
   limb solver; the whole rig follows a roll. Each bout has a bounded simulation-time duration.
+- Calm watch also uses `watchPausePose(mouse,time)` for seeded sniff/head scans and
+  asymmetric ear listening, with no per-frame random draws or travel/scheduler changes.
+  Head offsets bypass leg posing to keep paws planted; head/ear controls bound their strength.
+  Hold claims freeze the captured pose; injury, toss, travel and danger suppress new offsets.
+  Grooming/eating take priority; zero simulation dt freezes pose. Renderer bounds/contact tests
+  pass; naturalness and iPad frame cost remain pending visual/device validation.
 - `activity={kind,at,until,side}` coordinates animation/audio. Movement, danger, injury or even
   a pending pointer claim cancels the action. Pausing freezes its timestamp-based pose.
 - `idleActivityFrequency` controls spontaneous grooming actions; nibbling retains its separate

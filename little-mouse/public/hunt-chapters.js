@@ -20,6 +20,10 @@ export function advanceHuntChapters(state,time){
   for(let i=state.bag.length-1;i>0;i--){const j=Math.floor(random(state)*(i+1));[state.bag[i],state.bag[j]]=[state.bag[j],state.bag[i]];}
   if(state.bag.at(-1).id===state.current.id)[state.bag[0],state.bag[state.bag.length-1]]=[state.bag.at(-1),state.bag[0]];
  }
- state.current=state.bag.pop();state.since=time;state.until=time+30+random(state)*35;state.serial++;
+ state.current=state.bag.pop();state.since=time;
+ const baseDuration=30+random(state)*35,requested=state.durationScales?.[state.current.id];
+ const multiplier=Number.isFinite(requested)?Math.max(.85,Math.min(1.15,requested)):1;
+ const duration=Math.max(30,Math.min(65,baseDuration*multiplier));
+ state.decision={baseDuration,multiplier,duration};state.until=time+duration;state.serial++;
  return state.current;
 }

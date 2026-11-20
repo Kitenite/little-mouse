@@ -1,0 +1,92 @@
+[
+  {
+    "hz": 30,
+    "maxPeek": 17.200000000000003,
+    "finalPhases": [
+      "creep",
+      "retreat"
+    ],
+    "scenario": "slow-large",
+    "seed": 97,
+    "maxEmpty": 5.3,
+    "maxEmptyAfterRelease": 5.3,
+    "maxInvisible": [
+      6.73,
+      7.3
+    ],
+    "maxFixedGoalTurn": 3.17,
+    "spinCase": {
+      "time": 222.8,
+      "phase": "retreat",
+      "duration": 9.5,
+      "travel": 1510.0962724392466
+    },
+    "emptyCase": {
+      "t": 122.6,
+      "phases": [
+        "peek",
+        "peek"
+      ]
+    }
+  },
+  {
+    "hz": 60,
+    "maxPeek": 11.633333333333383,
+    "finalPhases": [
+      "creep",
+      "peek"
+    ],
+    "scenario": "slow-large",
+    "seed": 97,
+    "maxEmpty": 5.85,
+    "maxEmptyAfterRelease": 5.85,
+    "maxInvisible": [
+      6.98,
+      7.57
+    ],
+    "maxFixedGoalTurn": 3.91,
+    "spinCase": {
+      "time": 232.08333333333334,
+      "phase": "retreat",
+      "duration": 7.300000000000011,
+      "travel": 919.1827078790787
+    },
+    "emptyCase": {
+      "t": 234,
+      "phases": [
+        "peek",
+        "peek"
+      ]
+    }
+  },
+  {
+    "hz": 120,
+    "maxPeek": 12.974999999999994,
+    "finalPhases": [
+      "creep",
+      "creep"
+    ],
+    "scenario": "slow-large",
+    "seed": 97,
+    "maxEmpty": 4.38,
+    "maxEmptyAfterRelease": 4.38,
+    "maxInvisible": [
+      6.79,
+      6.53
+    ],
+    "maxFixedGoalTurn": 3.15,
+    "spinCase": {
+      "time": 253.74166666666667,
+      "phase": "retreat",
+      "duration": 5.14166666666668,
+      "travel": 802.478571892588
+    },
+    "emptyCase": {
+      "t": 309.0083333333333,
+      "phases": [
+        "peek",
+        "peek"
+      ]
+    }
+  }
+]

@@ -1,6 +1,6 @@
 # Experiment program
 
-Status: **catalog, local pilot logging and assignment implemented; learner and agent automation pending**.
+Status: **catalog, local pilot and bounded chapter adaptation implemented; trained models/agent automation pending**.
 Owner: root; scientific/source review: feline-play critic. No cat preference results or trained model are claimed.
 This program tests preferences for this individual cat; it does not establish welfare or universal efficacy.
 
@@ -28,6 +28,7 @@ Every setting is cataloged; that does not make every setting a suitable autonomo
 - [Metric definitions](metrics.md): common observation window, denominators and censoring.
 - [Data contract](data-contract.md): what to log now so future analyses are possible.
 - [Catalog review](review.md) and [runtime review](runtime-review.md): findings and validation boundaries.
+- [Local chapter adaptation](../behavior-learning.md): cautious duration bias, metrics and freeze/reset/export.
 - [Learning and agent review](learning.md): staged model development, evaluation and rollback.
 - [Research critique](../cycles/feline-play-critique.md): evidence and limitations behind initial comparisons.
 

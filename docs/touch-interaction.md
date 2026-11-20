@@ -1,14 +1,11 @@
 # Touch and resting paws
-
 ## Owner requirements
 
-Clicks/taps near a mouse and elsewhere on screen must receive contextual attention.
-Direct hits should vary: some harmless, some injured, some defeated. Requested cosmetic
-responses include squashing, blood, fleeing, limping and stronger impacts.
+Clicks/taps near a mouse and elsewhere must receive contextual attention. Direct hits vary:
+some harmless, injured or defeated, with squashing, blood, fleeing, limping and stronger impacts.
 Contact location matters: head, body, forepaw, hindpaw and tail behave differently.
 A sustained paw can restrain, drag and release/toss a mouse. A cat may sit or stand on the
-screen; retain those touch areas and route around them instead of running underneath.
-
+screen; retain touch areas and route around them instead of running underneath.
 ## Readable contact policy
 
 Every accepted live-mouse touch must have perceptible feedback: a brief flinch/freeze,
@@ -21,7 +18,6 @@ an indefinite spin. Do not force flight while held, defeated or in a deliberate 
 Preserve varied outcomes, immunity, one-owner claims and one outcome/score per interaction.
 The [reference review](reference-game-observation.md) motivates clarity, not a requirement
 that every hit damages the mouse or reproduces the reference game's exact response.
-
 ## Implemented lifecycle
 
 - Pointerdown claims a mouse without immediate injury, death or score. Hold activation defaults
@@ -38,8 +34,7 @@ that every hit damages the mouse or reproduces the reference game's exact respon
   retaining local escape/tether motion. Claimed mice remain kinematic during collisions.
   Release recency is stamped by actual integrated anchor displacement, not pointer-event
   arrival; redundant no-displacement events cannot change the outcome. Release uses
-  recent filtered actual anchor motion for a
-  bounded toss; zero-time events and huge pointer jumps cannot create unbounded velocity.
+  recent filtered actual anchor motion for a bounded toss; zero-time events and huge pointer jumps cannot create unbounded velocity.
 - Actual capped anchor travel above 20 CSS px/s accumulates drag time while active. After
   four seconds (local control: 2–15), any held part enters defeat once before release,
   with existing recorded hit audio/visual feedback. Stationary holds do not accumulate.
@@ -67,30 +62,39 @@ that every hit damages the mouse or reproduces the reference game's exact respon
   reachable geometry rather than stretch. Exact pin claims apply to reachable anchors only.
 - Zero/invalid time steps preserve positions, velocities and anchors; catch-up work is bounded.
 
-Harmless probability defaults to 0.35 with region modifiers. Harmless flinch/freeze/dodge
-and held-release escape remain distinct from injury. Ordinary paw/tail harmful release reactions favor
-limp or escape; prolonged active dragging can defeat any part. Head responses favor stun/escape.
+Harmless probability defaults to 0.35 with region modifiers; flinch/freeze/dodge and held-release
+escape remain distinct from injury. Paw/tail harmful releases favor limp or escape, head releases
+favor stun/escape, and prolonged active dragging can defeat any part.
 Blood is excluded for harmless and tossed outcomes. `behavior.js` owns exact weights.
-
 ## Spatial memory
 
 Every active pointer, including misses, becomes a persistent footprint, bounded to ten.
-Contact width/height contributes to radius; configurable resting-paw clearance defaults to
-50 CSS pixels plus mouse clearance. Captured mice use their own hold constraints.
+Contact size contributes to radius; resting-paw clearance defaults to 50 CSS pixels plus
+mouse clearance. Captured mice use their own hold constraints.
 
 On release, a timestamped footprint remains for four simulation seconds with decaying
 avoidance. Active footprints take precedence in the ten-obstacle budget. Remembered
 footprints affect steering and cover/reentry; they do not act as physical walls.
 Live paw overlap overrides watch/rest and steers outward. Hunt destinations inside a live
 paw clearance are projected outside it, so old tap investigation does not approach a held
-area. This geometric avoidance is bounded; it is not a global pathfinding solver.
-
+area. Free mice commit to one obstacle identity and detour side across physics substeps,
+pointer jitter and release into recent memory. Each mouse retains its own approach axis;
+a forward flank waypoint carries it past the paw. Live overlap always overrides that waypoint,
+even for a different paw. Claims discard the commitment and held mice bypass paw steering.
+Commitments clear on passing the paw, obstacle removal/expiry, arrival, a material goal change
+(over 40 CSS px or half clearance), or bounded accumulated travel. Reused pointer IDs receive
+new identities. Recent footprints shrink steering clearance and remain nonphysical.
+This bounded local avoidance is implemented, not a global pathfinding solver; dense paw
+arrangements and physical-device motion quality still require observational validation.
 ## Acceptance criteria
 
 - Exercise quick tap, threshold crossing, stationary hold, slow drag, fast release, cancellation,
   two independent catches and competing pointers on one mouse.
 - A miss remains an obstacle until release; released footprints shrink then expire.
 - Fully covered entry waits; partial obstruction produces a bounded detour.
+- Centered-paw paths mirror across seed-selected sides; pointer jitter and obstacle ordering
+  do not flip a committed side. Multiple paws allow forward progress; removal, goal changes,
+  release expiry and claims discard stale commitments. Live overlap takes immediate priority.
 - Actual event contact sizes increase clearance. Released memory never physically pushes a mouse.
 - Long presses do not accidentally trigger owner menus; normal release resolves once.
 - Inspect harmless, harmful, immune and held contacts at normal speed: feedback is readable,
@@ -99,11 +103,9 @@ area. This geometric avoidance is bounded; it is not a global pathfinding solver
 - Rotated renderer hit coordinates anchor the correct side; tail/paw identity survives the claim.
 
 Source owners: `contact.js`, `behavior.js`, `physics.js`, `enrichment.js`, game pointer/frame
-integration and renderer `contactAt`. Tests: `contact`, `touch-reactions`, `held-paw`, `drag-pose`, `mouse-model`, `enrichment`.
+integration and renderer `contactAt`. Tests: `contact`, `touch-reactions`, `held-paw`, `drag-pose`, `mouse-model`, `enrichment`, `paw-detour-memory`.
 Limit: touch events reveal contact patches only; no camera/body tracking or offscreen paw detection.
-
 World-solver alternatives and the current adoption gate: [physics decision](physics-engine-decision.md).
-
 ## Drag response evidence and limits
 
 The planar compliant pose is a game approximation, not anatomical tissue or a dynamics engine.

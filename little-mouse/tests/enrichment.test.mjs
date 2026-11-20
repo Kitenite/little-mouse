@@ -1,3 +1,6 @@
+import{updateHuntGroup}from'../public/hunt-group.js';
+import{createPlayLearning}from'../public/play-learning.js';
+import{createLearningRuntime}from'../public/play-learning-runtime.js';
 import{sensoryTrials}from'../public/experiment-trials.js';
 import{ExperimentSession}from'../public/experiment-session.js';
 import{upgradePlayStyle}from'../public/settings-migration.js';
@@ -28,7 +31,7 @@ async function gameHarness(failure,surface='web',fault={}){
  const elements=new Map(),storage=new Map(fault.storage||[]),calls=[];
  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',style:{setProperty(){}},dataset:{},options:[],listeners:{},addEventListener(name,fn){const old=this.listeners[name];this.listeners[name]=old?e=>{old(e);fn(e);}:fn;},setAttribute(){},setPointerCapture(){},getBoundingClientRect(){return{left:0,top:0,width:800,height:600};},getContext(){return{};},querySelector(){return{removeAttribute(){}};}});return elements.get(id);};
  let response=failure,pendingResponse=null;
- const context=vm.createContext({console,AbortSignal,Date,Math,JSON,Number,performance,ExperimentSession,createExperimentControls(){return{nextTrial:()=>fault.trial||null,actor:fault.actor||"human",resetObservation(){calls.push(["observation-reset"]);},started(){calls.push(["trial-started"]);},stopped(){},message(text){calls.push(["trial-message",text]);}};},createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,upgradePlayStyle,radius:()=>40,
+ const context=vm.createContext({updateHuntGroup,createPlayLearning,createLearningRuntime,createLearningControls(){return{refresh(){}};},console,AbortSignal,Date,Math,JSON,Number,performance,ExperimentSession,createExperimentControls(){return{nextTrial:()=>fault.trial||null,actor:fault.actor||"human",resetObservation(){calls.push(["observation-reset"]);},started(){calls.push(["trial-started"]);},stopped(){},message(text){calls.push(["trial-message",text]);}};},createOwnerGesture,...contact,settingsDefaults,validateSettings,updateIdleBehavior,applyBackground(){},createSettingsControls(root,{getSettings}){return{setSoundStatus(){},sync(){element('huntControls').hidden=getSettings().mode!=='hunt';}};},PreyAudio,audioDefaults,stepMice,flee,sendOffscreen,pressMouse,updateLifecycle,Option:class{},huntDefaults,updateHunt,createHuntDirector,rememberTouch,clearHunt,upgradeSettings,upgradePlayStyle,radius:()=>40,
  document:{documentElement:{dataset:{surface}},hidden:false,getElementById:element,querySelectorAll:()=>[],addEventListener(){}},
  window:{addEventListener(){}},navigator:{},location:{origin:'http://local'},
  localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
@@ -36,7 +39,7 @@ async function gameHarness(failure,surface='web',fault={}){
  fetch:async(path,options)=>{calls.push([path,options]);if(pendingResponse)await pendingResponse;if(response==='offline')throw TypeError('Failed to fetch');if(response)return new Response('not JSON',{status:response});return Response.json({version:'v1'});}
  });
  const source=(await readFile(new URL('../public/game.js',import.meta.url),'utf8')).replace(/^import.*;\n/gm,'');
- vm.runInContext(source+'\nglobalThis.testGame={experiments,preyAudio,experimentMouseVisible,endExperiment,checkVersion,reload,sync,config,start,pause,frame,contacts,get catches(){return catches},get mice(){return mice},get elapsed(){return elapsed}};',context);
+ vm.runInContext(source+'\nglobalThis.testGame={learning,learningRuntime,experiments,preyAudio,experimentMouseVisible,endExperiment,checkVersion,reload,sync,config,start,pause,frame,contacts,get catches(){return catches},get mice(){return mice},get elapsed(){return elapsed}};',context);
  await new Promise(resolve=>setImmediate(resolve));
  return{context,e:element,storage,calls,deferResponse(status){response=status;let release;pendingResponse=new Promise(resolve=>{release=resolve;});return release;},recover(){response=0;}};
 }
@@ -274,4 +277,25 @@ test('sound pilots require both usable banks and variety requires a genuinely la
   assert.equal(g.experiments.active,allowed);
   if(allowed){const event=g.experiments.exportData().sessions[0].records.find(r=>r.kind==='event:audio-readiness');assert.deepEqual(event.payload.loadedBankCounts,banks);assert.equal(event.payload.physicalAudibility,'unknown');}
  }
+});
+
+test('ordinary play records labeled completed contacts locally and excludes owner corners and cancelled grabs',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;g.learning.configure({actor:'cat'});g.config.sound=false;g.start();
+ const m=g.mice[0];Object.assign(m,{state:'active',x:400,y:300,angle:0,hiddenUntil:0,hunt:{chapter:{id:'bursts'},phase:'watch',since:0}});
+ const e=(pointerId,x=400,y=300)=>({pointerId,clientX:x,clientY:y,width:10,height:10,preventDefault(){}}),board=h.e('board');
+ board.listeners.pointerdown(e(1));board.listeners.pointerup(e(1));
+ board.listeners.pointerdown(e(2));board.listeners.pointercancel(e(2));
+ board.listeners.pointerdown(e(3,5,5));board.listeners.pointerup(e(3,5,5));
+ g.pause();const data=JSON.parse(g.learning.export()),r=data.sessions.at(-1);
+ assert.equal(r.actor,'cat');assert.equal(r.complete,true);assert.equal(r.chapters.bursts.contacts.cat.tap,1);
+ assert.equal(Object.values(r.chapters).reduce((n,c)=>n+c.contacts.cat.tap,0),1,'owner corner adds no learning tap');
+ assert.equal(g.learning.status().support.bursts.sessions,0,'short play cannot establish chapter support');
+});
+test('sensory comparisons and graphics recovery cannot become eligible learning sessions',async()=>{
+ const trial=sensoryTrials.find(t=>t.id==='texture-contrast');
+ const h=await gameHarness('offline','ipad',{trial}),g=h.context.testGame;
+ g.learning.configure({actor:'cat'});g.config.background='wood';g.start(true,true);g.pause();
+ assert.equal(JSON.parse(g.learning.export()).sessions.at(-1).excluded,true);
+ g.start();h.context.window.mouseStopForRecovery();
+ assert.equal(JSON.parse(g.learning.export()).sessions.at(-1).complete,false);
 });

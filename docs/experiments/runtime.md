@@ -51,6 +51,7 @@ Export before clearing browser data or removing the app.
 
 Schema `sensory-pilot-v1` always exports `trainingReady:false`. It does not conform to the
 planned full research record schema. Cast/seed balancing, measured attention, validated analysis,
-automatic difficulty learning, trained models and recurring agent review are not implemented.
+trained models and recurring agent review are not implemented. Separate [local chapter learning](../behavior-learning.md)
+is excluded from sensory comparisons; it does not change the pilot schema or make these records training-ready.
 The [research critique](../cycles/feline-play-critique.md) motivates testing novelty and
 readable prey; it does not establish a winning color, sound, background or lighting setting.

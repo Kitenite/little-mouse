@@ -57,10 +57,10 @@ are sampled once per appearance. These are authored variations, not learned cat 
 Invisible approaches move faster than the final visible peek. The exploration budget starts
 on silhouette entry. Travel watchdogs bound blocked darts without shortening deliberate creep.
 Traverses cross toward an opposite edge, clear the full mouse/tail, hide and return.
-Manual steering and recall release hidden mice and temporarily override autonomous choices.
+Local playground overrides retain lifecycle priority. [Group coordination](behavior-social.md) gives two mice complementary roles.
 
-Close taps prompt delayed escape; moderate taps can freeze, with repeated events escalating
-risk. Distant taps can orient or pause rather than being ignored or always causing flight.
+Close taps prompt delayed escape; [missed pounces](behavior-social.md) can dodge, check back, then run.
+Moderate taps can freeze, with repeated events escalating risk. Distant taps can orient or pause rather than being ignored or always causing flight.
 Injury supersedes queued pre-impact touch reactions so stale flight decisions cannot cancel
 the first recovery entrance. Fresh cues after recovery still receive contextual attention.
 Direct contact can be harmless or cause the requested cosmetic injury/defeat reactions;

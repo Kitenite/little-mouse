@@ -1,6 +1,8 @@
 import {pressMouse} from './behavior.js';
 import {physicalTraits} from './mouse-identity.js';
 
+const pawIdentity=Symbol('pawIdentity');
+const pawDetours=new WeakMap();
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function localContact(m,x,y,size){const dx=(x-m.x)/size,dy=(y-m.y)/size,c=Math.cos(m.angle),s=Math.sin(m.angle);return{localX:dx*c+dy*s,localY:dx*s-dy*c};}
 // Fallback for headless tests / a renderer without articulated contact geometry.
@@ -13,18 +15,19 @@ export function classifyContact(m,x,y,size){
  return null;
 }
 export function createContacts(){const contacts=new Map();contacts.paws=new Map();contacts.recentPaws=new Map();contacts.obstacles=new Map();return contacts;}
-export function recordPointer(contacts,pointerId,x,y,time,width=0,height=0){if(!contacts.paws.has(pointerId)&&contacts.paws.size>=10)return false;contacts.recentPaws.delete(pointerId);contacts.paws.set(pointerId,{pointerId,x,y,time,radius:Math.min(180,Math.max(0,width||0,height||0)/2)});refreshObstacles(contacts,time);return true;}
+export function recordPointer(contacts,pointerId,x,y,time,width=0,height=0){if(!contacts.paws.has(pointerId)&&contacts.paws.size>=10)return false;contacts.recentPaws.delete(pointerId);contacts.paws.set(pointerId,{[pawIdentity]:contacts.paws.get(pointerId)?.[pawIdentity]??Symbol(),pointerId,x,y,time,radius:Math.min(180,Math.max(0,width||0,height||0)/2)});refreshObstacles(contacts,time);return true;}
 export function removePointer(contacts,pointerId){contacts.paws.delete(pointerId);contacts.obstacles.delete(pointerId);return cancelContact(contacts,pointerId);}
 export function beginContact(contacts,m,hit,pointerId,x,y,time,config,size){
  if(!m||!hit||m.hold||contacts.has(pointerId)||m.state==='away'||m.state==='defeated'||m.hiddenUntil>time||(m.invulnerableUntil||0)>time)return false;
  const local=localContact(m,x,y,size);
  const traits=m.identity?physicalTraits(m.identity,config):{bodyLength:config.bodyLength||1,tailLength:config.tailLength||1};
  const hold={part:hit.part,x,y,targetX:x,targetY:y,anchorVX:0,anchorVY:0,lastAnchorMoveAt:time,lastMoveAt:time,localX:hit.localX??local.localX,localY:hit.localY??local.localY,fraction:hit.fraction??.5,legIndex:hit.legIndex,pawOffsetX:hit.pawOffsetX,pawOffsetY:hit.pawOffsetY,startedAt:time,pointerId,active:false,angle:m.angle,originX:x,originY:y,dragSeconds:0,dragDefeatAfter:clamp(Number(config.dragDefeatAfter)||4,2,15),threshold:clamp(Number(config.holdThreshold)||.25,.15,1)};
+ pawDetours.delete(m);
  m.hold=hold;m.vx=m.vy=m.speed=0;m.moving=false;m.turnRate=0;
  hold.tailRoot=hit.tailRoot??-36*traits.bodyLength;hold.tailRootX=hit.tailRootX??hold.tailRoot;hold.tailRootY=hit.tailRootY??0;hold.tailLength=hit.tailLength??87*traits.tailLength;
  contacts.set(pointerId,{m,hold});
  // A claim supersedes queued threats even if cancelled before the next policy tick.
- if(m.hunt){delete m.hunt.reactAt;delete m.hunt.reactKind;delete m.hunt.lookAt;}
+ if(m.hunt){delete m.hunt.reactAt;delete m.hunt.reactKind;delete m.hunt.lookAt;delete m.hunt.pounce;}
  return true;
 }
 export function cancelContact(contacts,pointerId){const record=contacts.get(pointerId);if(!record)return false;if(record.m.hold===record.hold)delete record.m.hold;contacts.delete(pointerId);return true;}
@@ -53,17 +56,35 @@ export function endContact(contacts,pointerId,time,w,h,size,config,rng=Math.rand
  return outcome?{mouse:m,outcome,part:hold.part,held,x:hold.x,y:hold.y}:null;
 }
 
-// A short geometric detour keeps a travelling mouse from aiming through a
-// stationary touch. At most ten active pointers are considered per substep.
+// Commit one side per mouse/footprint; pointer updates and release preserve identity.
+// Weak ownership avoids retaining mice after removal. No physics clock/API is needed.
 export function avoidPaws(m,dx,dy,paws,clearance,baseRadius=50){
- if(m.hold)return[dx,dy];
- for(const p of paws){if(p.recent)continue;const reach=clearance+Math.max(0,(p.radius||0)-baseRadius),ox=m.x-p.x,oy=m.y-p.y,d=Math.hypot(ox,oy);if(d<reach+25){const nx=d>.01?ox/d:Math.cos(m.angle),ny=d>.01?oy/d:Math.sin(m.angle);return[nx*(reach+60),ny*(reach+60)];}}
- const distance=Math.hypot(dx,dy);if(distance<1)return[dx,dy];const ux=dx/distance,uy=dy/distance;
- let closest=null,nearest=Infinity;
- for(const p of paws){const reach=(clearance+Math.max(0,(p.radius||0)-baseRadius))*(p.memory??1),ox=p.x-m.x,oy=p.y-m.y,along=ox*ux+oy*uy,side=ox*-uy+oy*ux;
-  if(along>0&&along<Math.min(distance,reach+180)&&Math.abs(side)<reach+10&&along<nearest){closest={p,side,reach};nearest=along;}}
- if(!closest)return[dx,dy];const sign=closest.side===0?((m.seed||0)%2<1?1:-1):-Math.sign(closest.side);
- return[closest.p.x-uy*sign*(closest.reach+20)-m.x,closest.p.y+ux*sign*(closest.reach+20)-m.y];
+ if(m.hold){pawDetours.delete(m);return[dx,dy];}
+ const obstacles=[...paws].slice(0,10),key=p=>p[pawIdentity]??p.pointerId??p;
+ const reachOf=p=>(clearance+Math.max(0,(p.radius||0)-baseRadius))*clamp(p.memory??1,0,1);
+ const distance=Math.hypot(dx,dy),goalX=Number.isFinite(m.targetX)?m.targetX:m.x+dx,goalY=Number.isFinite(m.targetY)?m.targetY:m.y+dy;
+ let detour=pawDetours.get(m),paw=detour&&obstacles.find(p=>key(p)===detour.key&&reachOf(p)>0);
+ if(detour){
+  detour.travel+=Math.hypot(m.x-detour.x,m.y-detour.y);detour.x=m.x;detour.y=m.y;
+  const passed=paw&&(m.x-paw.x)*detour.ux+(m.y-paw.y)*detour.uy>reachOf(paw)*.35;
+  if(!paw||passed||distance<1||Math.hypot(goalX-detour.goalX,goalY-detour.goalY)>Math.max(40,clearance*.5)||detour.travel>6*(clearance+180)){
+   pawDetours.delete(m);detour=null;
+  }
+ }
+ // Live overlap always wins, including a different paw encountered during a detour.
+ for(const p of obstacles){if(p.recent)continue;const reach=reachOf(p),ox=m.x-p.x,oy=m.y-p.y,d=Math.hypot(ox,oy);if(d<reach+25){const nx=d>.01?ox/d:Math.cos(m.angle),ny=d>.01?oy/d:Math.sin(m.angle);return[nx*(reach+60),ny*(reach+60)];}}
+ if(distance<1)return[dx,dy];const ux=dx/distance,uy=dy/distance;
+ if(!detour){
+  let closest=null,nearest=Infinity;
+  for(const p of obstacles){const reach=reachOf(p),ox=p.x-m.x,oy=p.y-m.y,along=ox*ux+oy*uy,side=ox*-uy+oy*ux;
+   if(reach>0&&along>0&&along<Math.min(distance,reach+180)&&Math.abs(side)<reach+10&&along<nearest){closest={p,side};nearest=along;}}
+  if(!closest)return[dx,dy];paw=closest.p;
+  const sign=Math.abs(closest.side)<.01?((m.seed||0)%2<1?1:-1):-Math.sign(closest.side);
+  detour={key:key(paw),sign,ux,uy,goalX,goalY,x:m.x,y:m.y,travel:0};pawDetours.set(m,detour);
+ }
+ // A forward offset carries the mouse past the paw instead of stopping at its flank.
+ const reach=reachOf(paw),forward=reach*.6,side=detour.sign*(reach+40);
+ return[paw.x+detour.ux*forward-detour.uy*side-m.x,paw.y+detour.uy*forward+detour.ux*side-m.y];
 }
 export function constrainPaws(m,paws,clearance,dt,baseRadius=50){if(m.hold)return;for(const p of paws){if(p.recent)continue;const reach=clearance+Math.max(0,(p.radius||0)-baseRadius),dx=m.x-p.x,dy=m.y-p.y,d=Math.hypot(dx,dy);if(d>=reach)continue;const nx=d>.01?dx/d:Math.cos(m.angle),ny=d>.01?dy/d:Math.sin(m.angle),push=Math.min(reach-d,Math.max(1,180*dt));m.x+=nx*push;m.y+=ny*push;const inward=m.vx*nx+m.vy*ny;if(inward<0){m.vx-=inward*nx;m.vy-=inward*ny;}}}
 export function constrainContact(m,size,time,dt){

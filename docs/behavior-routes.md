@@ -29,6 +29,5 @@ checks actual reentry diversity, not only shuffled motif labels. The independent
 sweep reaches every final target after the braking repair; production watchdogs remain separate.
 
 Evidence and comparative coverage are in the reference analysis. No claim of feline preference,
-photorealism or device frame rate. Existing stateless multi-paw detours remain a possible source
-of alternating corrections; no new failure was reproduced in this change. Long-run two-mouse
-collision/route distribution and physical iPad behavior still need observation.
+photorealism or device frame rate. Persistent [paw detours](touch-interaction.md) now retain a chosen side through a footprint.
+Long-run two-mouse collision/route distribution and physical iPad behavior still need observation.

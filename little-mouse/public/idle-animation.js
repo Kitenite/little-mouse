@@ -37,3 +37,22 @@ export function nibblePose(mouse,time){
  if(mouse.hold||(mouse.nibblingUntil||0)<=time)return 0;
  return Math.max(0,Math.min(1,(time-(mouse.nibblingAt??time))/.16,(mouse.nibblingUntil-time)/.18));
 }
+
+// Pure simulation-time sampling: no timers, scheduling, travel edits or random draws.
+// Renderers can reuse this hook without running the behavior scheduler.
+export function watchPausePose(mouse,time){
+ if(!Number.isFinite(time)||!safe(mouse,time)||(mouse.tossUntil||0)>time||
+   mouse.entering||mouse.leaving||Math.abs(mouse.turnRate||0)>.3||
+   (mouse.activity&&mouse.activity.at<=time&&mouse.activity.until>time)||
+   (mouse.nibblingUntil||0)>time)return null;
+ const at=Number.isFinite(mouse.hunt.arrivedAt)?mouse.hunt.arrivedAt:0;
+ if(time<at)return null;
+ const seed=Number.isFinite(mouse.identity?.seed)?mouse.identity.seed:0;
+ const elapsed=time-at,phase=((seed%997)+997)%997/997*Math.PI*2;
+ const weight=smooth(elapsed/.25),scan=Math.sin(elapsed*1.15+phase);
+ // Two soft sniff pulses per cycle; each ear listens on its own slower rhythm.
+ const sniff=Math.max(0,Math.sin(elapsed*4.6+phase))**6;
+ return{head:weight*(.045*scan+.012*sniff),sniff:weight*sniff,
+  earLeft:weight*.045*Math.sin(elapsed*1.7+phase),
+  earRight:weight*.035*Math.sin(elapsed*2.1+phase+1.9)};
+}

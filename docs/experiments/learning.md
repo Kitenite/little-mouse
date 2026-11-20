@@ -1,6 +1,8 @@
 # Preference learning and agent policy review
 
-Status: planned; no model, scheduled agent, runtime learner or policy auto-update has been installed.
+Status: bounded local contact-presence heuristic implemented; trained models and scheduled agents remain planned.
+See [behavior learning](../behavior-learning.md) for the owning API, support gates, bounds and limitations.
+Root owns runtime/UI integration and device validation; automated tests do not establish cat preference.
 This framework targets interaction patterns and owner-observed engagement for an individual cat, not enjoyment.
 
 ## Progression
@@ -15,7 +17,8 @@ This framework targets interaction patterns and owner-observed engagement for an
 
 Keep repetition memory separate from preference estimates: remembered recent exits, motifs and clip IDs can
 reduce immediate repetition without mislabeling novelty as enjoyment. Model choice occurs between coherent bouts,
-never as frame-by-frame heading noise. All catalog automatic eligibility is false until a reviewed action set exists.
+never as frame-by-frame heading noise. Catalog automatic eligibility remains false. The separately bounded chapter-duration heuristic does not
+change catalog settings eligibility or authorize a contextual bandit.
 
 ## Targets and evaluation
 
@@ -57,4 +60,6 @@ Owner decides when play ends; no automatic session stop. Preserve paw avoidance 
 coherent readable routes, bounded appendage physics, independent gait/travel, recorded-only native-rate audio,
 local controls, identity through hiding and immediate owner override. Two mice/current fast travel remain baseline.
 Learners cannot reinterpret unknown presence as disinterest or require injury to provide catch feedback.
+The implemented heuristic uses finalized cat-tap presence once per chapter/session; absence of a
+tap is only missing contact presence, never an enjoyment or attention label. Holds and drags do not reward it.
 Freeze/reset/export learning controls are required before enabling adaptation. Keep last accepted policy for rollback.
