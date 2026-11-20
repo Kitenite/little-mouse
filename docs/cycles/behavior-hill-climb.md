@@ -34,11 +34,22 @@ node docs/evidence/hill-climb-2026-11-20/motion-creep-repro.mjs
 
 Set `MOTION_SOURCE` to the public directory of an archived`a3196df` checkout for baseline.
 Stored baseline/candidate JSON and probes live in the same evidence directory.
-Focused motion suite passes36 tests; final combined checks remain pending.
+Focused motion checks pass; final combined checks are recorded in [verification](../verification.md).
+
+## Motion iteration: near-arrival peeking
+
+A held companion can block an emerging mouse 12 pixels from its peek target for the
+entire 15-second probe. Arrival requires under 8 pixels while the old progress guard
+required over 15 pixels, so neither could finish the phase. Actual-travel recovery now
+covers all visible peeks and retreats along the current lane. Keeping one continuous
+window also avoids rounding jitter at the 15-pixel boundary. Independent controls
+cover unobstructed near peeks, slow invisible approaches, held entry and prior creeps.
+The blocked fixture retreats at 2.5 seconds at 30/60/120 Hz with zero held-anchor drift.
+The same evidence directory contains `motion-peek-repro.mjs`, controls and recorded JSON.
 
 ## Offline search and remaining review
 
 Three bounded coordinate rounds, separate final validation seeds and independent scoring
 critique are in progress. No parameter change is accepted merely because it scores higher.
-Near-arrival peek obstruction is under independent reproduction. Final search/rejection
+Near-arrival peek obstruction is repaired and independently checked. Final search/rejection
 records, combined suite and release boundaries will replace this pending section.

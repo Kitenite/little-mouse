@@ -68,3 +68,36 @@ test('actual travel away from a goal is progress; changed goals, holds and arriv
  assert.equal(m.hunt.travelProgress,undefined);assert.equal(m.hunt.arrivedAt,9.2);
  policy(9.21);assert.equal(m.hunt.phase,'creep','normal arrival dwell remains');
 });
+
+test('a visible peek blocked 8–15px from arrival backs out instead of remaining stuck beyond its deadline',()=>{
+ for(const hz of [30,60,120])for(const gap of [8,12,15,16]){
+  const f=fixture(),m=f.mice[0],other=f.mice[1],x=-10*f.config.size-gap;
+  Object.assign(m,{x,y:384,angle:0});Object.assign(other,{x:x+2*radius(f.config.size,w,h),y:384,angle:0});
+  Object.assign(m.hunt,{edge:0,slot:.5});forceHuntPhase(m,'peek',0,f.config,w,h,f.rng,f.director);
+  beginContact(f.contacts,other,{part:'body',localX:0,localY:0},3,other.x,other.y,0,f.config,f.config.size);
+  recordPointer(f.contacts,3,other.x,other.y,0,20,20);
+  const anchor=other.x;let exit=0;
+  for(let frame=1;frame<=3*hz;frame++){
+   f.tick(frame/hz,hz);assert.ok(Math.abs(other.x-anchor)<1e-6);
+   if(m.hunt.phase!=='peek'){exit=frame/hz;break;}
+  }
+  assert.ok(exit>0&&exit<2.6,`${hz}Hz gap${gap}: ${m.hunt.phase}`);
+  // Floating point integration can bring the exact8px boundary inside arrival.
+  if(gap>8){assert.equal(m.hunt.phase,'retreat');assert.ok(Math.abs(m.x-x)<1,'no teleport on recovery');}
+ }
+});
+
+test('unobstructed near peek reaches its goal and dwells; invisible slow approach keeps moving inward',()=>{
+ for(const hz of [30,60,120])for(const startX of [-40.6,-500]){
+  const f=fixture('slow-progress'),m=f.mice[0];
+  Object.assign(m,{x:startX,y:384,angle:0});Object.assign(m.hunt,{edge:0,slot:.5});
+  forceHuntPhase(m,'peek',0,f.config,w,h,f.rng,f.director);let arrival=null;
+  for(let frame=1;frame<=8*hz;frame++){
+   f.tick(frame/hz,hz);
+   if(m.x<-47*f.config.size)assert.equal(m.hunt.phase,'peek','invisible approach remains an approach');
+   if(m.hunt.arrivedAt!==null){arrival=frame/hz;assert.equal(m.hunt.phase,'peek');break;}
+  }
+  assert.ok(arrival!==null,`${hz}Hz start${startX}: reaches edge`);
+  assert.ok(Math.hypot(m.x+10*f.config.size,m.y-384)<8);
+ }
+});

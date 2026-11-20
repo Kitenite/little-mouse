@@ -22,6 +22,9 @@ reselecting cover. This repairs a reproduced slow/large two-mouse collision stal
 teleporting or turning an invisible approach into an invisible watch. Retreat completes as
 soon as the full silhouette clears the screen, even if collisions block exact offscreen-goal
 arrival; invisible mice must not spend the travel deadline pushing against one another.
+Visible peeks blocked 8–15 pixels from arrival also retreat after an actual-travel window
+under four pixels in 2.5 seconds. They cannot remain stuck between the arrival radius and
+the farther-distance watchdog. Invisible approaches and normal arrival dwell are preserved.
 
 ## Missed pounces
 

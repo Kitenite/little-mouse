@@ -282,17 +282,23 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
       a.progress={time,distance};
     }
   }
-  if(a.phase==='creep'&&a.arrivedAt===null&&distance>=8){
+  const visiblePeek=a.phase==='peek'&&silhouetteVisible(m,config.size,w,h);
+  if((a.phase==='creep'||visiblePeek)&&a.arrivedAt===null&&distance>=8){
     // Collision projection can cancel every step while velocity still reports
     // movement. Measure the actual path; a paw detour moving away from the goal
     // is still progress. Goal/viewport changes and holds start a fresh window.
-    const key=[...a.goal,w,h].join(':');
+    const key=[a.phase,...(visiblePeek?[a.edge,a.slot,a.depth]:a.goal),w,h].join(':');
     if(!a.travelProgress||a.travelProgress.key!==key)
       a.travelProgress={key,time,x:m.x,y:m.y,travel:0};
     const p=a.travelProgress;
     p.travel+=Math.hypot(m.x-p.x,m.y-p.y);p.x=m.x;p.y=m.y;
     if(time-p.time>=2.5){
-      if(p.travel<4){enter(m,'watch',time,config,w,h,rng,director);return true;}
+      if(p.travel<4){
+        // The old peek guard leaves a gap between its 15px threshold and the
+        // 8px arrival radius. Back out rather than declaring a blocked arrival.
+        if(visiblePeek)a.slot=clamp(a.edge<2?m.y/h:m.x/w,.02,.98);
+        enter(m,visiblePeek?'retreat':'watch',time,config,w,h,rng,director);return true;
+      }
       p.time=time;p.travel=0;
     }
   }else delete a.travelProgress;
