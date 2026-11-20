@@ -44,8 +44,9 @@ let preview,scene;try{preview=new MouseScene($('preview'),{preview:true});scene=
 const controls=createSettingsControls($('settingsControls'),{getSettings:()=>config,onTestSound:()=>preyAudio.testSound().then(()=>syncAudio()),onChange:patch=>{learningRuntime.end(false);endExperiment('settings-change');Object.assign(config,patch);sync();if(patch.sound)unlockAudio();}});
 experimentUI=createExperimentControls($('settingsControls'),{recorder:experiments,storage:experimentStorage});
 learningUI=createLearningControls($('settingsControls'),learning);
+function learningContext(){return{policyVersion:'chapter-duration-v1',build:version,settings:{...config},device:{platform:window.ReactNativeWebView?'unknown':'web',width:scene?.w,height:scene?.h,pixelRatio:globalThis.devicePixelRatio||1}};}
 function background(){applyBackground($('game'),config);applyBackground($('preview').parentElement,config);}
-function sync(){controls.sync();background();persist('little-mouse',config);syncAudio();if(playing)ensureCount();}
+function sync(){if(!playing)learning.configure({context:learningContext()});controls.sync();background();persist('little-mouse',config);syncAudio();if(playing)ensureCount();}
 function spawn(){const castIndex=mice.length;const w=scene.w,h=scene.h,r=radius(config.size,w,h);return{castIndex,state:config.mode==='hunt'?'away':'active',x:r+Math.random()*Math.max(1,w-2*r),y:r+Math.random()*Math.max(1,h-2*r),angle:Math.random()*Math.PI*2,targetX:w/2,targetY:h/2,next:elapsed+.6,hiddenUntil:0,restUntil:0,moving:false,vx:0,vy:0,seed:Math.random()*100};}
 function ensureCount(){while(mice.length<config.count)mice.push(spawn());mice.length=config.count;}
 async function awake(){try{if(playing&&navigator.wakeLock)wake=await navigator.wakeLock.request('screen')}catch{}}
@@ -80,7 +81,7 @@ function start(reset=true,runTrial=false){if(bootFailed||window.mouseBoot?.recov
   experiments.event('visibility-method',{method:'viewport-circle-intersection-approximation',radiusPx:radius(config.size,scene.w,scene.h),partialIntersectionCounts:true,pixelSilhouetteVerified:false});
   experimentUI.started();
  }
- if(reset){cancelTouchSounds();clearContacts(contacts);preyAudio.reset();elapsed=0;catches=0;mice=[];huntDirector=createHuntDirector(Math.floor(Math.random()*4294967296));huntDirector.paws=contacts.obstacles;scene.clearEffects();}learningRuntime.begin({experiment:!!trial,manual:config.mode!=='hunt'});huntDirector.chapters.durationScales=trial?{}:learning.status().multipliers;ensureCount();syncAudio();resetCadence();checkpoint();$('score').textContent=`${catches} hits`;awake();}
+ if(reset){cancelTouchSounds();clearContacts(contacts);preyAudio.reset();elapsed=0;catches=0;mice=[];huntDirector=createHuntDirector(Math.floor(Math.random()*4294967296));huntDirector.paws=contacts.obstacles;scene.clearEffects();}learningRuntime.begin({experiment:!!trial,manual:config.mode!=='hunt',context:learningContext()});huntDirector.chapters.durationScales=trial?{}:learning.status().multipliers;ensureCount();syncAudio();resetCadence();checkpoint();$('score').textContent=`${catches} hits`;awake();}
 function pause(){learningRuntime.end(true);learningUI?.refresh();endExperiment('owner-ended');cancelTouchSounds();clearContacts(contacts);playing=false;syncAudio();checkpoint();resetCadence();document.documentElement.dataset.playing='false';clearHold();$('game').hidden=true;$('home').hidden=false;wake?.release().catch(()=>{});wake=null;preview?.resize();}
 
 // Keep multi-touch play on the board from zooming or scrolling the page.
@@ -146,7 +147,7 @@ async function checkVersion(){
   const data=await response.json();
   if(bootFailed||window.mouseBoot?.recovering||typeof data.version!=='string'||!data.version)return;
   if(version&&data.version!==version){reload();return;}
-  version=data.version;
+  version=data.version;if(!playing)learning.configure({context:learningContext()});
  }catch{/* Offline play continues with locally saved settings. */}
  finally{versionBusy=false;}
 }

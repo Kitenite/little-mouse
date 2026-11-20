@@ -299,3 +299,19 @@ test('sensory comparisons and graphics recovery cannot become eligible learning 
  g.start();h.context.window.mouseStopForRecovery();
  assert.equal(JSON.parse(g.learning.export()).sessions.at(-1).complete,false);
 });
+
+test('learning snapshots the actual build, settings and measured board before play',async()=>{
+ const h=await gameHarness(0),g=h.context.testGame;g.config.sound=false;g.start();
+ const context=g.learning.status().active.context;
+ assert.equal(context.build,'v1');assert.equal(context.policyVersion,'chapter-duration-v1');
+ assert.equal(context.device.width,800);assert.equal(context.device.height,600);assert.equal(context.device.platform,'web');
+ assert.equal(context.settings.size,g.config.size);assert.equal(context.settings.count,2);
+ assert.equal(Object.keys(context.settings).length,Object.keys(settingsSchema).length);
+ g.pause();const saved=JSON.parse(g.learning.export()).sessions.at(-1).context;
+ g.config.size=1.8;g.start();assert.equal(g.learning.status().active.context.settings.size,1.8);
+ assert.equal(saved.settings.size,context.settings.size,'later owner changes cannot mutate prior provenance');
+});
+test('a start before any successful build lookup stays descriptive instead of fabricating provenance',async()=>{
+ const h=await gameHarness('offline'),g=h.context.testGame;g.learning.configure({actor:'cat'});g.start();
+ assert.equal(g.learning.status().active.context,null);assert.ok(Object.values(g.learning.status().multipliers).every(v=>v===1));
+});

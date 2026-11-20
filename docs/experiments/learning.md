@@ -1,6 +1,6 @@
 # Preference learning and agent policy review
 
-Status: bounded local contact-presence heuristic implemented; trained models and scheduled agents remain planned.
+Status: context-isolated local heuristic integrated; device validation pending; trained models/agents planned.
 See [behavior learning](../behavior-learning.md) for the owning API, support gates, bounds and limitations.
 Root owns runtime/UI integration and device validation; automated tests do not establish cat preference.
 This framework targets interaction patterns and owner-observed engagement for an individual cat, not enjoyment.
@@ -62,4 +62,10 @@ local controls, identity through hiding and immediate owner override. Two mice/c
 Learners cannot reinterpret unknown presence as disinterest or require injury to provide catch feedback.
 The implemented heuristic uses finalized cat-tap presence once per chapter/session; absence of a
 tap is only missing contact presence, never an enjoyment or attention label. Holds and drags do not reward it.
+At least three distinct completed cat sessions must share canonical policy/build, full validated settings
+and coarse device/arena context. Changes fall back to default duration multipliers. Missing or invalid
+context and migrated v1 records stay descriptive-only; their metrics/decisions remain exportable.
+Snapshots exclude arbitrary nested extras and navigator data. Root must supply actual current context
+and signal changes; context is not a persisted preference. This prevents known context pooling, not
+confounding across cats/days or causal inference. Export v2 remains explicitly `trainingReady:false`.
 Freeze/reset/export learning controls are required before enabling adaptation. Keep last accepted policy for rollback.

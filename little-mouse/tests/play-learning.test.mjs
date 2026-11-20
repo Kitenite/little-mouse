@@ -1,6 +1,11 @@
 import test from 'node:test';
+import vm from 'node:vm';
 import assert from 'node:assert/strict';
-import { createPlayLearning, PLAY_LEARNING_KEY, PLAY_LEARNING_LIMITS, metricVersion, heuristicVersion } from '../public/play-learning.js';
+import { createPlayLearning as createRawLearning, PLAY_LEARNING_KEY, PLAY_LEARNING_LIMITS, metricVersion, heuristicVersion } from '../public/play-learning.js';
+import { settingsDefaults } from '../public/settings.js';
+const baseContext = () => ({ policyVersion:'chapters-v1', build:'build-a', settings:{...settingsDefaults},
+ device:{platform:'web',width:1024,height:768,pixelRatio:2} });
+function createPlayLearning(storage) { const l=createRawLearning(storage);l.configure({context:baseContext()});return l; }
 const chapterId = 'sweeping';
 function memory() { const map = new Map(); return { writes:0, getItem:k=>map.get(k)??null, setItem(k,v){this.writes++;map.set(k,v);} }; }
 function sample(l,time,extra={}) { return l.sample({mouseId:'mouse', chapterId, time, x:.2, y:.2, heading:0, visible:true, ...extra}); }
@@ -146,4 +151,103 @@ test('export declares research limits and pruning stays restorable with full dec
  assert.equal(restored.status().retainedSessions,l.status().retainedSessions);
  assert.equal(restored.status().droppedSessions,l.status().droppedSessions);
  assert.equal(restored.status().droppedDecisions,32);
+});
+
+test('settings, build, policy, platform, dimensions and pixel ratio never pool support',()=>{
+ const l=createPlayLearning();for(let i=0;i<3;i++)session(l,`base${i}`);
+ assert.equal(l.status().multipliers.sweeping,1.05);
+ const variants=[c=>c.settings.sound=false,c=>c.settings.travelSpeed=3,c=>c.build='build-b',
+  c=>c.policyVersion='chapters-v2',c=>c.device.platform='ios',c=>c.device.width=768,
+  c=>c.device.height=1024,c=>c.device.pixelRatio=3];
+ variants.forEach((change,i)=>{const context=baseContext();change(context);
+  assert.equal(l.status({context}).support.sweeping.sessions,0);
+  l.configure({context});session(l,`variant${i}`);
+  assert.equal(l.status().support.sweeping.sessions,1);
+  assert.equal(l.status().multipliers.sweeping,1);
+ });
+ assert.equal(l.status({context:baseContext()}).support.sweeping.sessions,3);
+});
+test('canonical order, normalized dimensions/platform/colors; snapshots are detached and closed',()=>{
+ const l=createPlayLearning(),context=baseContext();
+ context.settings=Object.fromEntries(Object.entries(context.settings).reverse());
+ context.device.platform=' WEB ';context.device.width=1024.1;context.settings.backgroundColor=context.settings.backgroundColor.toUpperCase();
+ context.extra={secret:'remove'};context.settings.extra={secret:'remove'};context.device.userAgent={secret:'remove'};
+ assert.equal(l.status({context}).contextKey,l.status().contextKey);
+ l.start({id:'snapshot',actor:'cat',context});context.settings.sound=false;context.device.width=800;
+ assert.equal(l.status().active.context.settings.sound,true);
+ const result=l.status();result.context.settings.sound=false;result.active.context.device.width=7;
+ assert.equal(l.status().active.context.device.width,1024);
+ for(let t=0;t<=30;t++)sample(l,t);l.end({complete:true});
+ const record=JSON.parse(l.export()).sessions[0];assert.equal(record.context.settings.sound,true);
+ assert.equal(l.export().includes('secret'),false);assert.equal(l.export().includes('userAgent'),false);
+});
+test('invalid and absent context are descriptive-only and never inherit a previous valid context',()=>{
+ const l=createRawLearning();for(let i=0;i<3;i++)session(l,`none${i}`);
+ assert.equal(l.status().support.sweeping.sessions,0);assert.equal(l.status().multipliers.sweeping,1);
+ const partial=baseContext();delete partial.settings.sound;
+ const nested=baseContext();nested.settings.sound={value:true};
+ const badDimension=baseContext();badDimension.device.width=Infinity;
+ const longBuild=baseContext();longBuild.build='x'.repeat(97);
+ const getter=Object.defineProperty({},'policyVersion',{get(){throw Error('bad');}});
+ const cyclic=baseContext();cyclic.extra=cyclic;
+ for(const context of [null,undefined,[],{},partial,nested,badDimension,longBuild,getter]){
+  assert.doesNotThrow(()=>l.configure({context}));assert.equal(l.status().context,null);
+  assert.equal(l.status({context}).multipliers.sweeping,1);
+ }
+ l.configure({context:cyclic});assert.ok(l.status().context);assert.equal(l.export().includes('extra'),false);
+ l.configure({context:null});session(l,'invalid');
+ assert.equal(JSON.parse(l.export()).sessions.at(-1).context,null);
+ assert.equal(l.status().metrics.sweeping.visibleSeconds,120);
+});
+test('context change during session excludes it permanently; reordered context does not',()=>{
+ const l=createPlayLearning();l.start({id:'mixed',actor:'cat'});for(let t=0;t<=30;t++)sample(l,t);
+ const changed=baseContext();changed.build='new';l.configure({context:changed});l.configure({context:baseContext()});
+ assert.equal(l.status().active.excluded,true);l.end({complete:true});assert.equal(l.status().support.sweeping.sessions,0);
+ l.start({id:'same',actor:'cat'});for(let t=0;t<=30;t++)sample(l,t);
+ const reordered=baseContext();reordered.settings=Object.fromEntries(Object.entries(reordered.settings).reverse());
+ l.configure({context:reordered});assert.equal(l.status().active.excluded,false);l.end({complete:true});
+ assert.equal(l.status().support.sweeping.sessions,1);
+ l.start({id:'explicit',actor:'cat',context:changed});assert.equal(l.status().active.context.build,'new');
+ l.configure({context:null});assert.equal(l.status().active.excluded,true);
+});
+test('v1 migration retains metrics and decisions with original provenance but no eligibility',()=>{
+ const s=memory(),l=createPlayLearning(s);for(let i=0;i<3;i++)session(l,`legacy${i}`);
+ const legacy=JSON.parse(l.export());legacy.version=1;legacy.heuristicVersion='session-contact-presence-v1';
+ for(const r of legacy.sessions){delete r.context;delete r.metricVersion;delete r.heuristicVersion;}
+ legacy.sessions[0].decisions.push({chapterId,time:1,baseDuration:60,multiplier:1,duration:60});
+ s.setItem(PLAY_LEARNING_KEY,JSON.stringify(legacy));const restored=createPlayLearning(s);
+ assert.equal(restored.status().storageError,null);assert.equal(restored.status().retainedSessions,3);
+ assert.equal(restored.status().support.sweeping.sessions,0);assert.equal(restored.status().metrics.sweeping.visibleSeconds,90);
+ const exported=JSON.parse(restored.export());assert.equal(exported.version,2);assert.equal(exported.trainingReady,false);
+ exported.sessions.forEach(r=>{assert.equal(r.context,null);assert.equal(r.heuristicVersion,legacy.heuristicVersion);});
+ assert.deepEqual(exported.sessions[0].decisions,legacy.sessions[0].decisions);
+ session(restored,'new');const again=createPlayLearning(s);assert.equal(again.status().retainedSessions,4);
+ assert.equal(again.status().support.sweeping.sessions,1);
+});
+test('restore requires current context, revalidates snapshots and strips nested extras',()=>{
+ const s=memory(),l=createPlayLearning(s);for(let i=0;i<3;i++)session(l,`saved${i}`);
+ const restored=createRawLearning(s);assert.equal(restored.status().context,null);
+ assert.equal(restored.status().multipliers.sweeping,1);
+ assert.equal(restored.status({context:baseContext()}).multipliers.sweeping,1.05);
+ const payload=JSON.parse(l.export());payload.sessions[0].context.settings.sound={bad:true};
+ payload.sessions[1].context.device.extra={secret:'removed'};payload.sessions[2].context.extra={secret:'removed'};
+ s.setItem(PLAY_LEARNING_KEY,JSON.stringify(payload));const sanitized=createPlayLearning(s);
+ assert.equal(sanitized.status().retainedSessions,3);assert.equal(sanitized.status().support.sweeping.sessions,2);
+ assert.equal(sanitized.export().includes('secret'),false);assert.equal(JSON.parse(sanitized.export()).sessions[0].context,null);
+ sanitized.reset();assert.equal(sanitized.status().context,null);assert.equal(sanitized.status().trainingReady,false);
+});
+
+test('valid cross-realm context keeps support and sanitization',()=>{
+ const l=createPlayLearning();for(let i=0;i<3;i++)session(l,`realm${i}`);
+ const context=vm.runInNewContext(`(${JSON.stringify(baseContext())})`);
+ context.device.extra={secret:'remove'};
+ assert.equal(l.status({context}).multipliers.sweeping,1.05);
+ l.configure({context});assert.equal(l.status().contextKey,l.status({context:baseContext()}).contextKey);
+ assert.equal(JSON.stringify(l.status().context).includes('secret'),false);
+ class Custom { constructor(){Object.assign(this,baseContext());} }
+ assert.equal(l.status({context:new Custom()}).context,null);
+ const chained=Object.assign(Object.create({custom:true}),baseContext());
+ assert.equal(l.status({context:chained}).context,null);
+ const nullPrototype=Object.assign(Object.create(null),baseContext());
+ assert.equal(l.status({context:nullPrototype}).multipliers.sweeping,1.05);
 });

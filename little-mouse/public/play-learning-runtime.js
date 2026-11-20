@@ -3,9 +3,9 @@ export function createLearningRuntime(learning){
  const pending=new Map(),anonymous=new WeakMap();let anonymousSerial=0;let serial=0,chapterSerial=-1,sessionActor='unknown';
  const clip=v=>Math.max(0,Math.min(1,v));
  return {
-  begin({experiment=false,manual=false}={}){
-   this.end(false);sessionActor=learning.status().actor||'unknown';
-   learning.start({id:`${Date.now()}-${Math.random().toString(36).slice(2)}`,actor:sessionActor,experiment,manual});chapterSerial=-1;
+  begin({experiment=false,manual=false,context=null}={}){
+   this.end(false);learning.configure({context});sessionActor=learning.status().actor||'unknown';
+   learning.start({id:`${Date.now()}-${Math.random().toString(36).slice(2)}`,actor:sessionActor,experiment,manual,context});chapterSerial=-1;
   },
   end(complete=false){pending.clear();learning.end({complete});},
   down(id,x,y,time,chapterId){if(pending.size<10)pending.set(id,{id:String(++serial),x,y,time,chapterId,distance:0});},

@@ -1,8 +1,7 @@
 # Bounded local behavior learning
 
-Status: **implemented and integrated in ordinary play; physical-device and cat validation pending**.
-Sources: `play-learning.js`, `play-learning-runtime.js`, `play-learning-controls.js` and game wiring;
-focused and game-entry tests cover attribution and persistence.
+Status: **context-isolated learning integrated; automated checks pass; device/cat validation pending**.
+Sources: `play-learning.js`, runtime/controls adapters and game wiring; tests cover attribution/persistence.
 This is a conservative contact-presence heuristic, not a trained preference or enjoyment model.
 
 ## Owner flow
@@ -29,7 +28,8 @@ Exclusion is sticky through the session. Starting a new session cannot silently 
 Only explicit owner session end uses `end({complete:true})`; default completion is false.
 Crash/reload cannot recover an unfinished session as completed.
 
-Each chapter requires at least three distinct completed sessions, each with at least 30 visible
+Each chapter requires at least three distinct completed sessions in the exact same valid context,
+each with at least 30 visible
 mouse-seconds of exposure. Two visible mice contribute two mouse-seconds per elapsed second.
 A session supplies at most one binary cat-tap-presence observation per chapter. Hundreds of taps
 or repeated chapter visits never become hundreds of trials. Holds, drags, cancellations and
@@ -47,16 +47,27 @@ The module imports the six IDs from `hunt-chapters.js`; it cannot choose or remo
 No automatic session stop, upload, autonomous injury adjustment or agent-generated policy exists here.
 
 ## Metrics and API
-
 `createPlayLearning(storage)` accepts a localStorage-like object; unavailable storage is nonfatal.
 Methods: `start`, `end`, `sample`, `contact`, `decision`, `configure`, `status`, `export`, `reset`.
+
+- `configure({context})` sets an in-memory default; `start({...,context})` snapshots an explicit
+  context or that default. `status({context})` queries without mutation; plain `status()` uses the
+  configured default, else active context. Root must supply current context after launch/reset.
+- Context requires bounded nonblank `policyVersion` and `build` IDs, all validated `settingsSchema`
+  settings, and `device:{platform,width,height,pixelRatio}`. Sorted setting keys and lowercase colors
+  canonicalize order; full sanitized snapshots remain on exported records for audit.
+- Platform is trimmed/lowercased: web/ios/android/macos/windows/linux/unknown. Arena width/height
+  are 1–32768 logical pixels rounded to integers; pixel ratio is .1–16 rounded to .001. No navigator
+  data or hardware identifiers. Coarse device context does not identify an individual device.
+- Missing/invalid context yields null, zero support and fixed default multipliers; unknown extra
+  properties are stripped. Any context change via configure permanently excludes an active session.
+  Root must signal settings/build/device changes; a status query alone does not alter attribution.
 
 - `sample({mouseId,chapterId,time,x,y,heading,visible,routeId,routeInstanceId,discontinuity})`
   uses simulation seconds, normalized arena coordinates 0–1 and radians. Supply actual positions.
 - Integrate actual successive Euclidean displacement and absolute wrapped heading delta / 2π.
   Eligible visible time requires both endpoints visible and neither endpoint discontinuous. Hidden
-  transitions, gaps over one second,
-  chapter switches and discontinuities break travel and eligible exposure, including release intervals.
+  transitions, gaps over one second, chapter switches and discontinuities break travel and eligible exposure, including release intervals.
 - Elapsed time sums sampled mouse intervals, including hidden time; it is not wall-clock session time.
   Duplicate/backwards timestamps contribute nothing. Coordinate bounds and numbers are validated.
 - Route signatures describe motifs/quantized geometry. An optional execution ID is authoritative:
@@ -66,7 +77,7 @@ Methods: `start`, `end`, `sample`, `contact`, `decision`, `configure`, `status`,
 - `contact({id,chapterId,actor,kind})` accepts finalized tap/hold/drag/cancel episodes once each.
   Never submit pointerdown as a tap. Missing contact actor stays unknown even in a cat session.
 - `decision({chapterId,time,baseDuration,multiplier,duration})` records applied boundary choices.
-  Export includes `metricVersion` and `heuristicVersion`. Decisions are descriptive, not support.
+  Export includes per-record `metricVersion`, `heuristicVersion` and context. Decisions are descriptive.
 - `status()` includes per-chapter support, multipliers, active metrics and aggregate descriptive
   metrics, including visible/elapsed fraction, distance and rotations per visible second, and
   repetition/entry fraction. Undefined denominators produce null. Aggregate metrics include
@@ -84,9 +95,12 @@ Status/export report cumulative `droppedSessions` and `droppedDecisions`; reset 
 Support rolls with retention. Duplicate session IDs are rejected within retained history;
 callers must generate globally unique session IDs because evicted IDs cannot be remembered forever.
 
-Persist only on end/configure/reset, never every frame. Active sessions are intentionally not
-persisted or included in export, so crashes lose their observations without inventing completion.
-Restore validates versions, actors, booleans, chapters, finite bounded counters, decisions and
+Persist only on end/configure/reset, never every frame. Active sessions are not persisted/exported;
+crashes lose their observations without inventing completion. Context-only configure does not write.
+Export schema v2 uses the existing storage key. V1 records retain metrics/decisions and their old
+heuristic version, with null context: descriptive only, never retroactively eligible. Restore
+revalidates snapshots; invalid context preserves metrics with null context. Current context is not
+persisted as a preference. Restore validates versions, actors, booleans, counters, decisions and
 unique session IDs before projecting known fields. Invalid payloads yield empty safe defaults.
 Storage failures appear in status; absent storage reports `storageMode: memory-only`. This is local integrity checking, not tamper-proof attestation.
 
@@ -96,11 +110,11 @@ unknown actor and unfreezes; it does not stop gameplay. `export()` returns local
 
 ## Limits and acceptance
 
-The module cannot infer gaze, enjoyment, actor identity, independent observation days, injury or
-unobserved teleports. Root must supply correct visibility/discontinuities and exclude manual/pilot
-sessions. Exposure and contact classification need physical-device observation before efficacy claims.
+The module cannot infer gaze, enjoyment, actor identity, independent days, injury or teleports.
+Root must supply visibility/discontinuities and exclude manual/pilot sessions. Exposure and contact classification need physical-device observation before efficacy claims.
 Sparse endpoint heading sampling can alias full rotations; gaps over one second are censored.
-Provenance includes metric/heuristic versions and bounded applied decisions, but no build, full
-settings or device snapshots. Export is not the planned full research data contract or OPE dataset.
+Provenance includes policy/build IDs, full settings, coarse device context and bounded decisions.
+Same-context support prevents known configuration pooling; it does not identify the cat, establish
+causality or make export the planned full research data contract or an OPE dataset.
 Tests cover support, same-session duplication, actor exclusions, holds, metrics, corrupt restore,
-freeze/reset, persistence cadence and bounded retention. Device and prospective cat evaluation remain pending.
+context isolation/migration, freeze/reset, persistence cadence and bounded retention. Device and prospective cat evaluation remain pending.

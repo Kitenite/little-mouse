@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createLearningRuntime} from '../public/play-learning-runtime.js';
-const fixture=()=>{const calls=[];const learner={status:()=>({actor:'cat'}),start:p=>calls.push(['start',p]),end:p=>calls.push(['end',p]),sample:p=>calls.push(['sample',p]),contact:p=>calls.push(['contact',p]),decision:p=>calls.push(['decision',p])};return{calls,r:createLearningRuntime(learner)};};
+const fixture=()=>{const calls=[];const learner={configure:p=>calls.push(['configure',p]),status:()=>({actor:'cat'}),start:p=>calls.push(['start',p]),end:p=>calls.push(['end',p]),sample:p=>calls.push(['sample',p]),contact:p=>calls.push(['contact',p]),decision:p=>calls.push(['decision',p])};return{calls,r:createLearningRuntime(learner)};};
 test('completed episodes distinguish taps, stationary holds, accumulated drag and cancel',()=>{
  const {r,calls}=fixture();r.begin();
  r.down(1,100,100,0,'sweeping');assert.equal(calls.some(c=>c[0]==='contact'),false);
@@ -32,4 +32,10 @@ test('anonymous mice have stable distinct identities instead of a shared undefin
  r.frame([a,b],d,0,100,100);r.frame([a,b],d,.1,100,100);
  const ids=calls.filter(c=>c[0]==='sample').map(c=>c[1].mouseId);
  assert.notEqual(ids[0],ids[1]);assert.equal(ids[0],ids[2]);assert.equal(ids[1],ids[3]);
+});
+
+test('begin supplies the same explicit context before querying and starting the learner',()=>{
+ const {r,calls}=fixture(),context={policyVersion:'p1',build:'b1',settings:{size:2.86},device:{width:1024,height:768}};
+ r.begin({context});assert.deepEqual(calls.find(c=>c[0]==='configure')[1].context,context);
+ assert.equal(calls.find(c=>c[0]==='start')[1].context,context);
 });
