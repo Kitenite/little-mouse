@@ -86,7 +86,8 @@ release boundaries belong in [verification](../verification.md).
 
 ## Next ranked comparisons
 
-1. Measure rendered partial-body visibility and route diversity before changing the utility.
+1. Neutral-body and executed-route diagnostics are now [implemented and reviewed](motion-metrics.md).
+   Live rendered visibility and a scoring-contract change remain pending; utility stays unchanged.
 2. Observe real labeled cat sessions under fixed context; use prospective fresh seeds for
    subsequent offline candidate validation and separate engineering scores from cat response.
 3. Investigate oscillatory motion only from a new reproducible trace; retained fixes target

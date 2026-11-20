@@ -10,12 +10,19 @@ const here=dirname(fileURLToPath(import.meta.url));
 const defaultSource=resolve(here,'../public');
 const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
 const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
-const scriptHash=()=>createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).digest('hex');
-const benchmarkHash=scriptHash();
+// Include every local evaluator dependency, not only this entrypoint. Capture before import.
+const evaluatorFiles=['behavior-benchmark.mjs','behavior-route-metrics.mjs','behavior-visibility.mjs'];
+const evaluatorFingerprints=()=>Object.fromEntries(evaluatorFiles.map(name=>[name,createHash('sha256').update(readFileSync(resolve(here,name))).digest('hex')]));
+const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const evaluatorHashes=evaluatorFingerprints(),benchmarkHash=digest(evaluatorHashes);
+const scriptHash=()=>digest(evaluatorFingerprints());
+const {createBodyVisibility}=await import('./behavior-visibility.mjs');
+const {createRouteMetricsTracker}=await import('./behavior-route-metrics.mjs');
+assertEvaluatorUnchanged();
 export function assertEvaluatorUnchanged(){if(scriptHash()!==benchmarkHash)throw Error('Evaluator changed; restart the process');}
 const loadedHashes=new Map();
 export async function loadRuntime(sourceDir=process.env.BEHAVIOR_SOURCE_DIR||defaultSource){
- const source=resolve(sourceDir), names=['enrichment','hunt-group','physics','mouse-identity','settings'];
+ const source=resolve(sourceDir), names=['enrichment','hunt-group','physics','mouse-identity','settings','body-profile'];
  const fingerprint=provenance(source).sourceHash;
  if(loadedHashes.has(source)&&loadedHashes.get(source)!==fingerprint)throw Error('Runtime source changed; restart with immutable archive');
  loadedHashes.set(source,fingerprint);
@@ -27,7 +34,7 @@ export function provenance(source){
  assertEvaluatorUnchanged();
  const hashes=Object.fromEntries(readdirSync(source).filter(n=>n.endsWith('.js')).sort().map(n=>[n,createHash('sha256').update(readFileSync(resolve(source,n))).digest('hex')]));
  let git={};try{git={head:execFileSync('git',['rev-parse','HEAD'],{cwd:here,encoding:'utf8'}).trim(),status:execFileSync('git',['status','--porcelain'],{cwd:here,encoding:'utf8'}).trim()};}catch{}
- return {source,evaluatorGit:git,runtimeRevision:source===defaultSource?git.head:"archive: revision unverified; source hashes authoritative",sourceHashes:hashes,sourceHash:createHash('sha256').update(JSON.stringify(hashes)).digest('hex'),node:process.version,platform:process.platform,arch:process.arch,benchmarkHash};
+ return {source,evaluatorGit:git,runtimeRevision:source===defaultSource?git.head:"archive: revision unverified; source hashes authoritative",sourceHashes:hashes,sourceHash:createHash('sha256').update(JSON.stringify(hashes)).digest('hex'),node:process.version,platform:process.platform,arch:process.arch,benchmarkHash,evaluatorHashes:{...evaluatorHashes}};
 }
 export function utility(m){return .35*Math.min(1,m.visiblePathRate/.15)+.3*m.coverage+.15*m.entropy*(1-.25*m.repetition)+.2*Math.min(1,m.visibleFraction/.55);}
 export function guardrails(m){
@@ -91,6 +98,9 @@ function run(r,config,{seed,scenario,seconds,hz}){
  const w=scenario==='tall-phone'?390:1024,h=scenario==='tall-phone'?844:768,dt=1/hz,n=Math.round(seconds*hz),rng=r.identityRandom(seed),director=r.createHuntDirector(seed);
  const paw=scenario==='central-paw'?[{x:w/2,y:h/2,radius:50}]:[];director.paws=new Map(paw.map((p,i)=>[i,p]));
  const mice=Array.from({length:2},(_,castIndex)=>{const rad=r.radius(config.size,w,h);return {castIndex,state:'away',x:rad+rng()*(w-2*rad),y:rad+rng()*(h-2*rad),angle:rng()*Math.PI*2,targetX:w/2,targetY:h/2,next:.6,hiddenUntil:0,restUntil:0,moving:false,vx:0,vy:0,speed:0,seed:rng()*100,identity:r.createMouseIdentity((seed+castIndex*2654435761)>>>0)};});
+ const bodyVisibility=createBodyVisibility(r),routeTrackers=mice.map(()=>createRouteMetricsTracker());
+ const bodyExposure={version:'neutral-core-exposure-v1',samples:0,invalidSamples:0,anyBodySeconds:0,areaWeightedSeconds:0,partialOnlySeconds:0,maxNoBodySeconds:0,totalMouseSeconds:seconds*2};
+ let bodyEmpty=0;
  const tracks=mice.map(()=>({phase:null,phaseTime:0,blocked:0,recentTransitions:[]})),cells=new Set(),transitions={},chapters=new Set();
  let path=0,visible=0,empty=0,maxEmpty=0,maxPhaseStall=0,maxBlocked=0,finite=1,watch=0,creep=0,running=0,creepPath=0,runPath=0,freezeDrift=0,pawPenetration=0,repeats=0,events=0,collisions=0;
  for(let frame=1;frame<=n;frame++){
@@ -100,11 +110,22 @@ function run(r,config,{seed,scenario,seconds,hz}){
   r.updateHuntGroup(director,mice,time,w,h,config);
   for(const m of mice)r.updateHunt(m,config,time,w,h,false,rng,director);
   collisions+=r.stepMice(mice,config,time,dt,w,h,paw);
-  let any=false;
+  let any=false,anyBody=false;
   for(let i=0;i<2;i++){
    const m=mice[i],o=old[i],t=tracks[i],phase=m.hunt?.phase,dist=Math.hypot(m.x-o.x,m.y-o.y),on=m.state==='active'&&m.hiddenUntil<=time&&m.x>=0&&m.x<=w&&m.y>=0&&m.y<=h;
    if(![m.x,m.y,m.angle,m.vx,m.vy,m.targetX,m.targetY].every(Number.isFinite))finite=0;
    chapters.add(m.hunt?.chapter?.id);
+   // New diagnostics are deliberately separate from the frozen version-2 score metrics.
+   bodyExposure.samples++;
+   if(m.state==='active'&&m.hiddenUntil<=time){
+    const body=bodyVisibility(m,config,w,h);
+    if(!body.valid)bodyExposure.invalidSamples++;
+    else {bodyExposure.areaWeightedSeconds+=body.fraction*dt;
+     if(body.fraction>0){anyBody=true;bodyExposure.anyBodySeconds+=dt;if(!on)bodyExposure.partialOnlySeconds+=dt;}}
+   }
+   routeTrackers[i].sample({time,x:m.x/w,y:m.y/h,phase:phase||'unassigned',
+    eligible:on&&!m.hold&&(m.tossUntil||0)<=time&&(m.injuredUntil||0)<=time&&!['held','toss','touch','injury'].includes(phase),
+    discontinuity:false});
    if(phase!==t.phase){if(t.phase){const key=t.phase+'>'+phase;transitions[key]=(transitions[key]||0)+1;events++;if(t.recentTransitions.includes(key))repeats++;t.recentTransitions.push(key);if(t.recentTransitions.length>8)t.recentTransitions.shift();}t.phase=phase;t.phaseTime=time;t.blocked=0;}
    maxPhaseStall=Math.max(maxPhaseStall,time-t.phaseTime);
    if(on){any=true;visible+=dt;cells.add(Math.min(5,Math.floor(m.x/w*6))+6*Math.min(3,Math.floor(m.y/h*4)));}
@@ -118,6 +139,7 @@ function run(r,config,{seed,scenario,seconds,hz}){
    for(const p of paw)if(on)pawPenetration=Math.max(pawPenetration,Math.max(0,r.radius(config.size,w,h)+p.radius-Math.hypot(m.x-p.x,m.y-p.y)));
   }
   empty=any?0:empty+dt;maxEmpty=Math.max(maxEmpty,empty);
+  bodyEmpty=anyBody?0:bodyEmpty+dt;bodyExposure.maxNoBodySeconds=Math.max(bodyExposure.maxNoBodySeconds,bodyEmpty);
  }
  const entropy=events?-Object.values(transitions).reduce((s,v)=>s+v/events*Math.log(v/events),0)/Math.log(42):0;
  // Isolated ordinary fixed goals distinguish unexplained orbits from paw/collision turns.
@@ -141,7 +163,12 @@ function run(r,config,{seed,scenario,seconds,hz}){
   fixedGoalTurns=Math.max(fixedGoalTurns,turns);fixedGoalError=Math.max(fixedGoalError,Math.hypot(m.x-m.targetX,m.y-m.targetY));
  }
  const metrics={visiblePath:path,visibleSpeed:visible?path/visible:0,visiblePathRate:path/(seconds*2),coverage:cells.size/24,entropy,repetition:events?repeats/events:0,visibleFraction:visible/(seconds*2),maxEmpty,maxPhaseStall,maxBlocked,finite,watchFraction:watch/(seconds*2),creepFraction:creep/(seconds*2),runFraction:running/(seconds*2),creepRate:creep?creepPath/creep:0,runRate:running?runPath/running:0,freezeDrift,watchControlSeconds,observedWatchDrift,pawPenetration,fixedGoalTurns,fixedGoalError,timeError:Math.abs(n*dt-seconds)};
- return {seed,scenario,width:w,height:h,identities:mice.map(m=>m.identity.seed),chapters:[...chapters],transitions,collisions,metrics,gates:guardrails(metrics),objective:utility(metrics)};
+ const diagnostics={bodyVisibility:{...bodyExposure,
+  anyBodyFraction:bodyExposure.anyBodySeconds/bodyExposure.totalMouseSeconds,
+  areaWeightedFraction:bodyExposure.areaWeightedSeconds/bodyExposure.totalMouseSeconds,
+  partialOnlyFraction:bodyExposure.partialOnlySeconds/bodyExposure.totalMouseSeconds},
+  routes:routeTrackers.map(tracker=>tracker.finalize())};
+ return {seed,scenario,width:w,height:h,diagnostics,identities:mice.map(m=>m.identity.seed),chapters:[...chapters],transitions,collisions,metrics,gates:guardrails(metrics),objective:utility(metrics)};
 }
 export async function evaluate({patch={},seeds=TRAIN,seconds=360,hz=30,scenarios=SCENARIOS,sourceDir,metadata=true}={}){
  assertEvaluatorUnchanged();
@@ -154,7 +181,7 @@ export async function evaluate({patch={},seeds=TRAIN,seconds=360,hz=30,scenarios
  const rows=[];for(const scenario of scenarios)for(const seed of seeds)rows.push(run(r,config,{seed,scenario,seconds,hz}));
  if(provenance(r.source).sourceHash!==r.fingerprint)throw Error('Runtime changed during evaluation');
  const metrics=Object.fromEntries(Object.keys(rows[0].metrics).map(k=>[k,mean(rows.map(x=>x.metrics[k]))]));
- return {version:2,kind:'engineering proxy; not cat reward',sourceHash:r.fingerprint,benchmarkHash,options:{seeds,seconds,hz,scenarios},config,patch,provenance:metadata?provenance(r.source):undefined,rows,metrics,objective:mean(rows.map(x=>x.objective)),gates:rows.flatMap(x=>x.gates.map(g=>`${x.scenario}/${x.seed}: ${g}`)),elapsedMs:performance.now()-started};
+ return {version:3,diagnosticContract:{participatesInUtility:false,visibility:'neutral core body only; active mice; no articulated/rendered-pixel claim',routes:'executed center-visible paths; per-mouse bounded history; no cat-preference claim'},kind:'engineering proxy; not cat reward',sourceHash:r.fingerprint,benchmarkHash,options:{seeds,seconds,hz,scenarios},config,patch,provenance:metadata?provenance(r.source):undefined,rows,metrics,objective:mean(rows.map(x=>x.objective)),gates:rows.flatMap(x=>x.gates.map(g=>`${x.scenario}/${x.seed}: ${g}`)),elapsedMs:performance.now()-started};
 }
 export function cliOptions(args=process.argv.slice(2)){
  const value=k=>{const i=args.indexOf(k);return i<0?undefined:args[i+1];};

@@ -2,8 +2,7 @@
 
 Owner: root; Superset builder and independent scoring critic preserve the evaluation contract.
 Status: implemented headless evaluator and three-round offline search. No settings are applied.
-This is an engineering proxy, not measured cat reward, preference or validated efficacy.
-No browser/native changes, injury optimization, audio changes or automatic session stop.
+Engineering proxy, not measured cat reward, preference or validated efficacy.
 
 ## Reproduction and source isolation
 
@@ -21,9 +20,10 @@ No browser/native changes, injury optimization, audio changes or automatic sessi
 - Evaluation options: `patch`, `seeds`, `seconds`, `hz`, `scenarios`, `sourceDir`, `metadata`.
   Use the same options and scenario order for comparisons; default seeds are training seeds.
 
-Version 2 reports contain complete settings, seeds, dimensions, identity seeds, chapter IDs,
+Version 3 benchmark reports contain complete settings, seeds, dimensions, identity seeds, chapter IDs,
 transition counts, metrics, reasons, timings, evaluator Git status, Node/platform,
-benchmark/search hashes and all public JS source hashes. Archive revision is explicitly
+benchmark/search hashes and all public JS source hashes. The benchmark hash covers its
+entrypoint and both diagnostic helpers; `evaluatorHashes` records each source separately. Archive revision is explicitly
 unverified in the machine report: retain the git-archive command alongside the artifact.
 Evaluator Git is not runtime Git. Source hashes are the runtime truth. Immutable archives
 avoid Node's import cache disagreeing with files changed during a live evaluation.
@@ -36,8 +36,7 @@ Actual `updateHuntGroup`, `updateHunt`, and `stepMice` run in production order.
 Actual `settingsDefaults` include two mice, pace 2.8, size 2.86 and morphology variation .8.
 Spawn fields mirror production; each mouse receives deterministic `createMouseIdentity`
 (the renderer ordinarily assigns it). Shared seeded chapter director and policy RNG are separate.
-No renderer, sound, learner, input event pipeline or real cat is simulated.
-
+No renderer, sound, learner, input pipeline or real cat is simulated.
 Scenarios: passive 1024×768, persistent central paw (50 px radius), synthetic deterministic
 near misses every seven seconds, and passive tall phone 390×844. Near misses go through
 `rememberTouch` with `miss:true`; these are authored stress inputs, not observed pounces.
@@ -66,6 +65,23 @@ Utility is `.35*min(1,pathRate/.15) + .30*coverage +
 .15*entropy*(1-.25*repetition) + .20*min(1,visibleFraction/.55)`.
 Saturation limits the incentive for constant running; guardrails remain mandatory.
 Weights/thresholds are explicit engineering choices, not fitted cat preferences.
+
+## Diagnostic measurements (not utility)
+
+Version 3 adds `row.diagnostics` alongside unchanged version-2 score metrics. The
+[body estimate](behavior-visibility.md) measures any neutral core overlap, visible core-area
+fraction, center-outside partial exposure and maximum no-body time for active/nonhidden mice.
+Exposure uses total simulated mouse-seconds, including offscreen time; invalid geometry is
+reported separately. This is not renderer pixels, appendage visibility or live articulated pose.
+[Executed-route recurrence](behavior-route-metrics.md) retains per-mouse support/censor counts,
+bounded history, geometry comparisons and explicit null rates when support is absent.
+Only center-visible, active/nonhidden, unheld, non-tossed and uninjured samples are eligible;
+partial-only peeks are excluded from route geometry, never clamped onto the viewport edge.
+Both helpers use actual positions after physics; selected runtime supplies its own morphology.
+No utility weights, gates, production defaults or local learning records change. The old visible
+path predicate's prior endpoint omits hiddenUntil; retained for historical score comparability.
+The new route tracker independently checks both endpoint eligibility. Diagnostics cannot repair
+that legacy score limit or establish cat interest. Future scoring changes need explicit versioning.
 
 ## Search and acceptance
 
@@ -100,8 +116,5 @@ Do not loosen a failing threshold to obtain a winner. Report the failure and rev
 Focused tests exercise deterministic actual runtime with unseeded randomness forbidden,
 production settings/identity, paused time, patch restrictions, and rejection of all-run,
 invisible, NaN, collision-locked, insufficient-improvement and holdout-regressing candidates.
-Obsolete version 1 runs opened baseline holdout before the skip-on-rejection repair. Those
-results were not used to select settings; final search isolation is not globally unseen data.
 Final run durations, exact source hashes and rejection reasons belong in the batch artifacts.
-Root owns docs index/worker ledger registration and final runtime comparison after integration.
 Physical-device perception, contact geometry, audio and feline response remain unvalidated.

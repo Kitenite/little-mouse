@@ -3,11 +3,26 @@
 Reviewed 2026-11-20. Current checks replace earlier suite totals; historical evidence remains
 in [cycle reports](cycles/README.md). Test success does not establish feline preference.
 
-## Behavior hill climbing and context-isolated learning
+## Current motion diagnostics
 
-Current combined checks: **400 web tests pass**; production build **a6df6715d6a5** and
-built Worker syntax check pass. The 77-variable catalog and all four offline eligibility
-checks pass. Final benchmark validation repairs pass independent scoring review. [Current batch](cycles/behavior-hill-climb.md) owns evidence.
+**425 web tests pass**; production build **a6df6715d6a5**, Worker syntax, catalog and four
+eligibility tests pass. Native lint/typecheck also pass. No public/native gameplay source changed.
+[Current batch](cycles/motion-metrics.md) records two builders and independent acceptance:
+partial neutral-core visibility and bounded actual-route recurrence remain diagnostic only.
+Every preexisting field across 12 training rows and aggregate scores matches the saved baseline.
+CPU projection of actual neutral mesh agrees in 144 cases; this does not verify animated pixels.
+Three search rounds still reject all 24 decisions/eight unique candidates; no holdout opened.
+
+After restart, root restored game port 8787 and development-client Metro port 8088, with current
+LAN game URL `http://192.168.1.21:8787`. Sidebar reload reaches playing=true, recovering=false,
+two mice and WebGL, development version `bc76ab02988b`. Host animation callbacks were throttled
+in this probing context; neither fluent motion nor physical iPad rendering is established.
+No new native install or hosted publication. [Evidence](evidence/motion-metrics-2026-11-20/README.md).
+
+## Accepted hill climbing and context-isolated learning
+
+The earlier batch passed 400 web tests and independent scoring review; current checks are
+above. [Accepted hill-climb batch](cycles/behavior-hill-climb.md) preserves its exact evidence.
 
 Two independently verified motion fixes address collision-locked creeping and near-arrival
 peeking. The opposed creep fixture yields after 2.51–2.54 seconds instead of 8.91–8.94;
@@ -20,7 +35,7 @@ context. Only matching contexts support adaptation; legacy/missing context remai
 available descriptively. Explicit cat attribution, three completed sessions, owner freeze,
 reset/export, and interrupted/experiment exclusions remain. No trained model is claimed.
 
-The sidebar runs two mice with WebGL, playing=true, recovering=false, no console errors,
+The earlier sidebar check ran two mice with WebGL, playing=true, recovering=false, no console errors,
 and development fingerprint **bc76ab02988b**, matching the server. A fresh play session
 was checked with all 77 settings and the actual build in its context. Auto-resume before
 version arrival intentionally remains descriptive until a new context-valid session starts.

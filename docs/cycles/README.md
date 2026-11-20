@@ -1,8 +1,13 @@
 # Improvement batches
 
+## Visibility and executed-route diagnostics — 2026-11-20
+
+[Current batch](motion-metrics.md): partial neutral-body exposure, bounded actual-route recurrence,
+independent criticism and unchanged-score comparison. Runtime/settings are unchanged.
+
 ## Behavior hill climbing — 2026-11-20
 
-[Current batch](behavior-hill-climb.md): context-isolated learning, actual-travel obstruction
+[Accepted batch](behavior-hill-climb.md): context-isolated learning, actual-travel obstruction
 recovery, reproducible offline search and independent motion/scoring critiques.
 
 ## Coordinated prey and learning — 2026-11-20
@@ -44,22 +49,11 @@ Root owns combined verification and publication; this bounded batch is complete.
 | [Reliability](reliability.md) | Durable pending settings, sanitized failure export, malformed-state recovery | Injected failures, acknowledgement races, native checkpoints |
 | [Realism](realism.md) | Independent reference comparisons across builder iterations | Actual captures, specific remaining visual defects |
 
-## Combined review
+## Previous combined review
 
-After the final B4 follow-up, the full web suite passed 276 tests. All four native
-tests passed earlier in this batch with unchanged native inputs.
-The physics lead independently passed seven focused tests and four combined
-contact/renderer/ground probes. The realism critic inspected 11 combined captures,
-including extreme coat/morphology, tail hold/release and material switches; no new
-blocker found. Root also inspected a combined held-tail side view.
-[Combined report](evidence/integration/review.txt) records exact settings and limits.
-Its default39/extreme39 draw calls are resource counts, not device frame-rate evidence.
-
-Root injected actual browser WebGL context loss during active play. The new
-[sanitized report](evidence/integration/context-loss-report.json) captured the
-failure and pre-cleanup playing state; Retry returned ready/recovering=false,
-playing=true and a usable WebGL renderer. The backgrounded scratch browser had
-elapsed0 and no runtime version; this is recovery evidence, not a live-motion test.
+[Integration evidence](evidence/integration/review.txt) preserves earlier rendered anatomy/drag
+checks and browser recovery. Those checks are historical; current suite/build and release
+boundaries belong in [verification](../verification.md). Device quality remains observational.
 
 ## Cleanup
 

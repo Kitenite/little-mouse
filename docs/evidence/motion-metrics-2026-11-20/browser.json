@@ -1,0 +1,10 @@
+{
+  "url": "http://localhost:8787/?surface=ipad",
+  "visibility": "visible",
+  "playing": true,
+  "recovering": false,
+  "count": 2,
+  "version": "bc76ab02988b",
+  "webgl": true,
+  "elapsed": 0
+}

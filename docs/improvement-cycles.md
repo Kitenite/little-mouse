@@ -7,7 +7,8 @@ coat, environment, sound and prey behavior, with reproducible failures. New feed
 adds to these domains. Root coordinates integration and the installed iPad release.
 The current batch runs up to three focused build/review iterations per domain; workers
 then hand off exact commits and the next ranked issue. The hill-climb batch is accepted; [results](cycles/behavior-hill-climb.md) preserve rejected
-candidates and retained repairs. Reusable role definitions live in `agents/roles.json`.
+candidates and retained repairs. The next batch adds independently reviewed visibility and
+executed-route diagnostics without changing utility or gameplay. Reusable role definitions live in `agents/roles.json`.
 Future batches are bounded work, not a scheduled service or perpetual execution.
 
 ## Iteration contract

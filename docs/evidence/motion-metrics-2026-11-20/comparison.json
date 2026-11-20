@@ -1,0 +1,35 @@
+{
+  "runtimeUnchanged": true,
+  "legacyRowsExactlyEqual": true,
+  "rows": 12,
+  "beforeElapsedMs": 1742.752792,
+  "afterElapsedMs": 3993.058833,
+  "sourceHash": "d8d87c72ba617bf9ad2af768a5ca16a5e1f74be243eafcabbf5af514b5eb1c67",
+  "benchmarkHash": "fafb9ea2625634325a882a76997a1818ae3b5861388f52f1e13d2e33766388a3",
+  "centerVisibleFraction": 0.6090972222224074,
+  "neutralBodyVisibleFraction": 0.7572878086421995,
+  "neutralBodyAreaFraction": 0.6257306864119047,
+  "partialOnlyFraction": 0.14819058641974825,
+  "worstCenterEmpty": 4.833333333333326,
+  "worstBodyEmpty": 3.3999999999999977,
+  "visibilityInvalid": 0,
+  "routeInvalid": 0,
+  "routeCounts": {
+    "eligibleRoutes": 1313,
+    "comparisonRoutes": 1289,
+    "repeatedCorridorRoutes": 64,
+    "repeatedShapeRoutes": 596,
+    "shortRoutes": 63,
+    "censoredRoutes": 972
+  },
+  "overflowClosures": 0,
+  "maxStoredRoutePoints": 330,
+  "search": {
+    "rounds": 3,
+    "decisions": 24,
+    "uniqueCandidates": 8,
+    "accepted": false,
+    "holdoutOpened": false,
+    "elapsedMs": 34743.444083
+  }
+}

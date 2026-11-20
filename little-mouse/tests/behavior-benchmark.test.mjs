@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {evaluate,guardrails,assessCandidate,loadRuntime,utility,TRAIN,HOLDOUT} from '../scripts/behavior-benchmark.mjs';
-import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,rm,readdir} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -69,9 +69,61 @@ test('real watch entry/update yields measured stationary exposure',async()=>{
 test('a loaded evaluator refuses later on-disk script edits',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'prey-evaluator-'));
  try{
-  const path=join(dir,'benchmark.mjs'),source=await readFile(new URL('../scripts/behavior-benchmark.mjs',import.meta.url),'utf8');
-  await writeFile(path,source);const module=await import(pathToFileURL(path));
+  const path=join(dir,'behavior-benchmark.mjs'),source=await readFile(new URL('../scripts/behavior-benchmark.mjs',import.meta.url),'utf8');
+  await writeFile(path,source);
+  for(const name of ['behavior-visibility.mjs','behavior-route-metrics.mjs'])
+   await writeFile(join(dir,name),await readFile(new URL('../scripts/'+name,import.meta.url),'utf8'));
+  const module=await import(pathToFileURL(path));
   module.assertEvaluatorUnchanged();await writeFile(path,source+'\n// changed after import\n');
   assert.throws(()=>module.assertEvaluatorUnchanged(),/Evaluator changed/);
+ }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+
+test('helper edits invalidate the loaded evaluator fingerprint',async()=>{
+ for(const changed of ['behavior-visibility.mjs','behavior-route-metrics.mjs']){
+  const dir=await mkdtemp(join(tmpdir(),'prey-helper-hash-'));
+  try{
+   for(const name of ['behavior-benchmark.mjs','behavior-visibility.mjs','behavior-route-metrics.mjs'])
+    await writeFile(join(dir,name),await readFile(new URL('../scripts/'+name,import.meta.url),'utf8'));
+   const module=await import(pathToFileURL(join(dir,'behavior-benchmark.mjs')));
+   module.assertEvaluatorUnchanged();
+   await writeFile(join(dir,changed),(await readFile(join(dir,changed),'utf8'))+'\n// changed dependency\n');
+   assert.throws(()=>module.assertEvaluatorUnchanged(),/Evaluator changed/);
+  }finally{await rm(dir,{recursive:true,force:true});}
+ }
+});
+
+test('diagnostics report partial peeks without replacing legacy scores or learning',async()=>{
+ const r=await evaluate({seconds:30,seeds:[11],scenarios:['passive'],metadata:true});
+ assert.equal(r.version,3);assert.equal(r.diagnosticContract.participatesInUtility,false);
+ assert.deepEqual(Object.keys(r.provenance.evaluatorHashes).sort(),['behavior-benchmark.mjs','behavior-route-metrics.mjs','behavior-visibility.mjs']);
+ const row=r.rows[0],body=row.diagnostics.bodyVisibility;
+ assert.equal(body.samples,1800);assert.equal(body.totalMouseSeconds,60);assert.equal(body.invalidSamples,0);
+ assert.ok(body.anyBodyFraction>=row.metrics.visibleFraction-1e-10);
+ assert.ok(body.partialOnlyFraction>0);assert.ok(body.areaWeightedFraction<=body.anyBodyFraction+1e-10);
+ assert.ok(body.maxNoBodySeconds<=row.metrics.maxEmpty+1e-10);
+ assert.equal(row.objective,utility(row.metrics));
+ assert.equal(row.diagnostics.routes.length,2);
+ for(const route of row.diagnostics.routes){
+  assert.equal(route.samples,900);assert.equal(route.finalized,true);
+  assert.equal(route.invalidSamples,0);
+ }
+});
+
+test('archived runtime provides the diagnostic body profile rather than current public source',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'prey-runtime-profile-'));
+ try{
+  const publicDir=new URL('../public/',import.meta.url);
+  for(const name of await readdir(publicDir))if(name.endsWith('.js'))
+   await writeFile(join(dir,name),await readFile(new URL(name,publicDir),'utf8'));
+  await writeFile(join(dir,'package.json'),' {"type":"module"} ');
+  // Only the headless footprint uses this API in the loaded production policy/physics.
+  await writeFile(join(dir,'body-profile.js'),'export function bodySection(){return {r:.001,z:1};}');
+  const options={seconds:12,seeds:[11],scenarios:['passive'],metadata:false};
+  const live=await evaluate(options),archive=await evaluate({...options,sourceDir:dir});
+  assert.deepEqual(archive.rows[0].metrics,live.rows[0].metrics);
+  assert.notDeepEqual(archive.rows[0].diagnostics.bodyVisibility,live.rows[0].diagnostics.bodyVisibility);
+  assert.notEqual(archive.sourceHash,live.sourceHash);
  }finally{await rm(dir,{recursive:true,force:true});}
 });

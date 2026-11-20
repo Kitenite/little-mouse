@@ -14,7 +14,7 @@ Workers may delegate bounded independent reviews through Superset; preserve thei
 
 ## Durable roles and current status
 
-The accepted batch is complete and integrated on main. All 14 remaining completed
+Earlier domain work is integrated on main. All 14 then-remaining completed
 sessions and 20 auxiliary workspaces were retired after preservation commit
 `d1f687a` was verified on GitHub. The Podrick simplification batch is integrated below.
 Reusable roles, ownership, delegation and handoff policies are stored in
@@ -88,3 +88,21 @@ retain exact repros, candidates/rejections, source fingerprints, criticism and n
 New evaluation/critic roles are durable in `agents/roles.json`; no periodic service is installed.
 Main workspace, sidebar game, game server and Metro stay available. Current device/release
 boundaries belong in [verification](verification.md). Earlier domain queues remain above.
+
+## Visibility and route measurement batch
+
+Baseline `3537a0a`; same local workspace `5b5bc0ce-e628-499e-b026-143bf97a9de0`.
+Shared worktree has deliberately disjoint file ownership. No production setting changes.
+
+| Task | Terminal | Status / dependency / ownership |
+| --- | --- | --- |
+| Visibility builder | `29d1a8b8-6fb4-4d92-946b-6a61a8579771` | completed; neutral body helper/tests/topic reviewed |
+| Route builder | `1c5f99b3-5b82-4eca-83fd-a5f729e15c43` | completed; executed path helper/tests/topic reviewed |
+| Independent critic | `dacfdca9-b5c6-4a01-a87d-e25edc4d545d` | completed; two independent rounds, accepted with stated limits |
+| Root | coordinator | integrated; 425 tests/build/search pass; publication and retirement pending |
+
+Acceptance: measured actual movement, explicit proxy/denominator limits, bounded memory,
+edge/heading/discontinuity/frame-rate adversarial checks and unchanged gameplay/utility.
+New measurements remain diagnostic after review; no historical learning records are relabeled.
+[Results](cycles/motion-metrics.md) and [evidence](evidence/motion-metrics-2026-11-20/README.md)
+preserve roles, probes, exact comparisons and next queue. Main/sidebar/server are retained.
