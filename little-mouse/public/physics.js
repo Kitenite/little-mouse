@@ -1,3 +1,4 @@
+import {isHuntCruising} from './hunt-routes.js';
 import {constrainContact,advanceContactAnchor,avoidPaws,constrainPaws} from './contact.js';
 // Units are CSS pixels and seconds. Fixed substeps keep fast mice from tunnelling.
 export{livelyDefaults,upgradeSettings}from'./settings-migration.js';
@@ -25,12 +26,15 @@ export function stepMice(mice,config,time,dt,w,h,obstacles=[]){if(!Number.isFini
    const rotation=m.turnRate*step;
    if(!ready){m.turnRate=0;}else if(Math.abs(rotation)>=Math.abs(error)&&rotation*error>=0){m.angle+=error;m.turnRate=0;}else m.angle+=rotation;
    const alignment=Math.max(0,Math.cos(error));
+   // Intermediate waypoints omit the arrival latch, but retain distance braking
+   // so extreme speeds cannot orbit a bend faster than the body can turn.
+   const cruising=isHuntCruising(m)&&!m.hold&&!injured&&!threatened;
    const desired=ready?Math.min(pace,d*3)*alignment*alignment:0;
    const blend=1-Math.exp(-step*(scared?18:12));
    m.vx+=(Math.cos(m.angle)*desired-m.vx)*blend;m.vy+=(Math.sin(m.angle)*desired-m.vy)*blend;
    const oldX=m.x,oldY=m.y;m.x+=m.vx*step;m.y+=m.vy*step;
    // Stop on swept arrival, rather than orbiting a target passed between frames.
-   if(!m.hold&&!threatened){const sx=m.x-oldX,sy=m.y-oldY,len=sx*sx+sy*sy;
+   if(!m.hold&&!threatened&&!cruising){const sx=m.x-oldX,sy=m.y-oldY,len=sx*sx+sy*sy;
     const u=len>0?clamp(((m.targetX-oldX)*sx+(m.targetY-oldY)*sy)/len,0,1):0;
     if(arrived||Math.hypot(oldX+u*sx-m.targetX,oldY+u*sy-m.targetY)<=5){m.x=oldX+u*sx;m.y=oldY+u*sy;m.arrivalTarget={x:m.targetX,y:m.targetY};m.vx=m.vy=m.turnRate=0;}
    }

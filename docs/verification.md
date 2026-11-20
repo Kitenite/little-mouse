@@ -3,12 +3,14 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
-## Behavior variety
+## Reference-driven routes
 
-326 web tests pass; five-minute 30/60/120 Hz simulations cover four rotating appearance motifs,
-no adjacent motif repeats, and fresh investigation targets. Existing paw, injury, visibility,
-turning and pause regressions pass. Build `0f0f4f6853dc` passes Worker syntax checking.
-Local server serves the changed policy; physical iPad behavior and cat response need observation.
+333 web tests pass, including intermediate motion, final arrival, narrow-screen max-speed
+orbit reproduction, hold/paw priority and actual reentry diversity. Independent critic: 73 relevant
+tests and 1,200 route fixtures pass; resolved orbit blocker and limits are preserved in the
+[recording analysis](reference-recording-analysis.md). Build `d809a90b71cc` passes Worker syntax.
+Browser runs two mice, observed an edge-hook route, WebGL active, no recovery/console errors.
+Local iPad development server serves the update; physical motion and cat response need observation.
 
 ## Library adoption
 

@@ -1,0 +1,82 @@
+[
+  {
+    "variant": "before",
+    "rows": [
+      {
+        "seed": 1,
+        "visibleSeconds": 77.53333333333022,
+        "fastVisibleSeconds": 24.99999999999986,
+        "visiblePathWidths": 26.211178279747827,
+        "routeSeconds": 0
+      },
+      {
+        "seed": 42,
+        "visibleSeconds": 76.2333333333303,
+        "fastVisibleSeconds": 23.399999999999952,
+        "visiblePathWidths": 23.709510908616675,
+        "routeSeconds": 0
+      },
+      {
+        "seed": 71,
+        "visibleSeconds": 54.91666666666483,
+        "fastVisibleSeconds": 24.26666666666657,
+        "visiblePathWidths": 28.893446585711658,
+        "routeSeconds": 0
+      },
+      {
+        "seed": 97,
+        "visibleSeconds": 63.61666666666434,
+        "fastVisibleSeconds": 20.850000000000097,
+        "visiblePathWidths": 22.017126476852646,
+        "routeSeconds": 0
+      },
+      {
+        "seed": 123,
+        "visibleSeconds": 49.11666666666516,
+        "fastVisibleSeconds": 19.25000000000019,
+        "visiblePathWidths": 21.53820173740996,
+        "routeSeconds": 0
+      }
+    ]
+  },
+  {
+    "variant": "after",
+    "rows": [
+      {
+        "seed": 1,
+        "visibleSeconds": 88.9166666666629,
+        "fastVisibleSeconds": 38.63333333333242,
+        "visiblePathWidths": 37.87351543959285,
+        "routeSeconds": 42.716666666665525
+      },
+      {
+        "seed": 42,
+        "visibleSeconds": 80.64999999999671,
+        "fastVisibleSeconds": 34.39999999999933,
+        "visiblePathWidths": 34.63916654368036,
+        "routeSeconds": 31.616666666666152
+      },
+      {
+        "seed": 71,
+        "visibleSeconds": 87.98333333332963,
+        "fastVisibleSeconds": 35.399999999999274,
+        "visiblePathWidths": 34.9434207017778,
+        "routeSeconds": 31.916666666666135
+      },
+      {
+        "seed": 97,
+        "visibleSeconds": 75.69999999999699,
+        "fastVisibleSeconds": 27.099999999999742,
+        "visiblePathWidths": 29.26173953996443,
+        "routeSeconds": 11.066666666666796
+      },
+      {
+        "seed": 123,
+        "visibleSeconds": 83.49999999999655,
+        "fastVisibleSeconds": 32.99999999999941,
+        "visiblePathWidths": 31.26319514924802,
+        "routeSeconds": 32.38333333333278
+      }
+    ]
+  }
+]

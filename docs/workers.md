@@ -42,7 +42,6 @@ Previously integrated: part-drag `68a8337`, limb skin `8bdc57b`, fur/Fuzziness `
 environment `20313f4`, surface rustle `655eab4`, web recovery `0ae2101`, landscape `46eaeb9`.
 World-engine prototype `6c1633e` remains deferred after failing drag/joint/overshoot gates.
 
-New messages are additive. Do not cancel or replace these tasks merely because another request arrives.
 
 Coat-depth requirement: body/head and continuous limbs need visible fur volume and silhouette
 breakup, not just flat texture. Preserve regional bare skin, coat identity, deformation and
@@ -131,8 +130,9 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
-Root completed behavior variety and regression checks in enrichment.js; cat observation pending.
-Babylon comparison complete, renderer unchanged. No dependent worker edits pending.
+Root integrated reference routes; critic `91d7274e-3c71-490f-a40a-93818442a1d7` complete.
+[Findings and acceptance](evidence/reference-2026-11-19/implementation-review.md) preserved; worker retired.
+Babylon comparison complete; no dependent worker edits.
 
 ## Sensory experiments implementation
 

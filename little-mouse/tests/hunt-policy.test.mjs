@@ -255,3 +255,15 @@ test('investigation after a pause chooses fresh ground instead of the old entry 
  }
  assert.equal(new Set(goals).size,6);
 });
+
+test('unobstructed reentry mixes familiar cover with different edges',()=>{
+ const s=simulation({seed:23,settings:{speed:2.8,travelSpeed:2.2,hide:1,runThroughChance:.6}});
+ let exitEdge=null,entrances=0,same=0,previous;
+ while(s.time<600){s.tick();const a=s.m.hunt;
+  if(a.phase==='hidden'&&previous!=='hidden')exitEdge=a.edge;
+  if(a.phase==='peek'&&previous!=='peek'&&exitEdge!==null){entrances++;if(a.edge===exitEdge)same++;}
+  previous=a.phase;
+ }
+ assert.ok(entrances>20);assert.ok(same/entrances<.75,'distance bias must not force the same entrance');
+ assert.ok(same>0,'familiar-cover teasing remains available');
+});

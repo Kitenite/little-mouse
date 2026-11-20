@@ -1,4 +1,5 @@
 import {updateLifecycle,sendOffscreen} from './behavior.js';
+import {planHuntRoute,advanceHuntRoute} from './hunt-routes.js';
 import {physicalBounds} from './mouse-identity.js';
 
 export const huntDefaults = {huntTempo: 1};
@@ -33,7 +34,9 @@ function cover(m, time, w, h, director, rng, preferSame=false) {
   for(let edge=0;edge<4;edge++) {
     const slot=preferSame&&edge===old ? m.hunt.slot : between(rng,.18,.82);
     const [x,y]=edgePoint(edge,slot,0,w,h);
-    let value=rng()*.35 - Math.hypot(x-m.x,y-m.y)/Math.hypot(w,h)*.6;
+    // Once hidden, unseen travel has no useful distance cost. Keeping that cost
+    // made over 90% of entrances reuse the exit edge despite the variety policy.
+    let value=rng()*.35 - (m.state==='away'&&m.hunt?0:Math.hypot(x-m.x,y-m.y)/Math.hypot(w,h)*.6);
     if(preferSame&&edge===old)value+=.9;
     for(const p of director.touches){const age=time-p.time;if(age<16)value-=Math.exp(-age/5)*Math.exp(-Math.hypot(x/w-p.x,y/h-p.y)*5)*2;}
     // An open entrance outranks familiar cover; use the exact entry clearance,
@@ -65,7 +68,7 @@ function enter(m, phase, time, config, w, h, rng, director) {
   const a=m.hunt, previousPhase=a.phase, tempo=clamp(Number(config.huntTempo)||1,.5,2);
   a.transitions??=[];if(previousPhase)a.transitions.push(previousPhase+'>'+phase);a.transitions=a.transitions.slice(-8);
   a.phase=phase;a.since=time;a.arrivedAt=null;a.history.push(phase);a.history=a.history.slice(-4);
-  delete a.progress;
+  delete a.progress;delete a.route;
   a.dwell=between(rng,.65,1.65)/tempo;
   a.deadline=time+Math.max(4,Math.hypot(w,h)/Math.max(60,115+config.speed*130)*5)/tempo;
   m.restUntil=0;m.next=time;m.leaving=false;m.entering=false;m.huntSpeed=pace[phase]??1;
@@ -102,7 +105,11 @@ function enter(m, phase, time, config, w, h, rng, director) {
     const angle=m.angle+between(rng,-1.1,1.1),reach=Math.min(w,h)*between(rng,.26,.55);
     const inset=Math.min(65*config.size,Math.min(w,h)*.22);
     a.goal=[clamp(m.x+Math.cos(angle)*reach,inset,w-inset)/w,clamp(m.y+Math.sin(angle)*reach,inset,h-inset)/h];
-    a.dwell=between(rng,.25,.6)/tempo;
+    a.dwell=between(rng,.18,.45)/tempo;
+    if(rng()<(a.motif==='runner'||a.motif==='burst'?.85:.5)){
+      a.route=planHuntRoute(m,w,h,rng);a.goal=a.route.points[0];
+      a.deadline=time+Math.max(8,Math.hypot(w,h)/Math.max(60,115+config.speed*130)*5);
+    }
   } else if(phase==='retreat') {
     // A blocked peek backs out along its approach instead of crossing the playfield.
     if(previousPhase!=='peek')Object.assign(a,cover(m,time,w,h,director,rng,true));
@@ -122,7 +129,7 @@ function choose(a, rng, config, time) {
   const cross=clamp(Number(config.runThroughChance??.22),0,1);
   if(a.phase==='peek'&&rng()<(cross===1?1:cross*motif.traverse))return 'traverse';
   if(config.hide>0&&a.visibleSince!==null&&time-a.visibleSince>(a.visibleBudget??14))return 'retreat';
-  const options=a.phase==='peek' ? [['watch',.5],['creep',1.5],['retreat',config.hide>0?.35+a.fear:0]]
+  const options=a.phase==='peek' ? [['watch',.5],['creep',1.5],['dart',1.2],['retreat',config.hide>0?.35+a.fear:0]]
     : a.phase==='watch' ? [['creep',1],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
     : a.phase==='creep' ? [['watch',1.5],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
     : [['watch',1.6],['creep',.4],['retreat',config.hide>0?.9+a.fear:0]];
@@ -224,6 +231,7 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     const mouth=edgePoint(a.edge,a.slot,0,w,h);
     if(blockedMouth(mouth[0],mouth[1],director))enter(m,'retreat',time,config,w,h,rng,director);
   }
+  if(a.phase==='dart')advanceHuntRoute(m,w,h,time);
   let target;
   if(a.phase==='traverse')target=edgePoint(a.crossEdge,a.crossSlot,a.depth,w,h);
   else if(a.phase==='peek'||a.phase==='retreat')target=edgePoint(a.edge,a.slot,a.depth,w,h);

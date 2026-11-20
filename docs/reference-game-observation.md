@@ -1,6 +1,7 @@
 # Mouse for Cats reference footage
 
-Reviewed 2026-11-18. Root owns this comparison; current iPad recording is still pending.
+Trailer review: 2026-11-18. Root owns this comparison. The owner supplied a continuous
+recording on 2026-11-19; see [analysis and adopted changes](reference-recording-analysis.md).
 
 ## Sources and local evidence
 
@@ -59,9 +60,8 @@ This adoption does not turn design hypotheses into scientifically measured prefe
 
 ## Device and simulator limits
 
-Physical recording remains blocked: devicectl reports screen recording unsupported;
-QuickTime sees the iPad screen but selecting it fails. No iPad recording exists yet.
-Do not switch the connected iPad away from the reference game before capture is resolved.
+Earlier direct capture failed through devicectl/QuickTime. The owner-supplied recording
+now resolves the missing-footage dependency. Matched footage of our latest build remains pending.
 
 Apple documents that App Store apps cannot be installed into Simulator:
 https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/InteractingwiththeiOSSimulator/InteractingwiththeiOSSimulator.html
