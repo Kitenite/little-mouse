@@ -76,7 +76,7 @@ function enter(m, phase, time, config, w, h, rng, director) {
   a.chapter=director.chapters?.current||{id:'mixed',weights:{}};
   a.transitions??=[];if(previousPhase)a.transitions.push(previousPhase+'>'+phase);a.transitions=a.transitions.slice(-8);
   a.phase=phase;a.since=time;a.arrivedAt=null;a.history.push(phase);a.history=a.history.slice(-4);
-  delete a.progress;delete a.route;
+  delete a.progress;delete a.travelProgress;delete a.route;
   a.dwell=between(rng,.65,1.65)/tempo;
   a.deadline=time+Math.max(4,Math.hypot(w,h)/Math.max(60,115+config.speed*130)*5)/tempo;
   m.restUntil=0;m.next=time;m.leaving=false;m.entering=false;m.huntSpeed=pace[phase]??1;
@@ -161,7 +161,7 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   if(config.mode==='hunt'&&!manual&&director.chapters)advanceHuntChapters(director.chapters,time);
   m.physicalBounds=physicalBounds(m.identity,config);
   if(m.hold){
-    if(m.hunt){discardReaction(m.hunt);m.hunt.sensed=director.serial;}
+    if(m.hunt){discardReaction(m.hunt);delete m.hunt.travelProgress;m.hunt.sensed=director.serial;}
     return true;
   }
   director.pawBaseRadius=Number(config.pawAvoidanceRadius)||50;
@@ -181,7 +181,7 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
     discardReaction(a);
     for(const p of director.touches)if(p.time<m.tossAt)a.sensed=Math.max(a.sensed,p.serial);
   }
-  if((m.tossUntil||0)>time)return true;
+  if((m.tossUntil||0)>time){delete a.travelProgress;return true;}
   if(a.phase==='toss'){
     if(m.x<0||m.x>w||m.y<0||m.y>h){sendOffscreen(m,time,w,h,config.size,rng,m.x<0?0:m.x>w?1:m.y<0?2:3);a.phase='injury';}
     else {m.reaction=null;enter(m,'watch',time,config,w,h,rng,director);}
@@ -282,6 +282,20 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
       a.progress={time,distance};
     }
   }
+  if(a.phase==='creep'&&a.arrivedAt===null&&distance>=8){
+    // Collision projection can cancel every step while velocity still reports
+    // movement. Measure the actual path; a paw detour moving away from the goal
+    // is still progress. Goal/viewport changes and holds start a fresh window.
+    const key=[...a.goal,w,h].join(':');
+    if(!a.travelProgress||a.travelProgress.key!==key)
+      a.travelProgress={key,time,x:m.x,y:m.y,travel:0};
+    const p=a.travelProgress;
+    p.travel+=Math.hypot(m.x-p.x,m.y-p.y);p.x=m.x;p.y=m.y;
+    if(time-p.time>=2.5){
+      if(p.travel<4){enter(m,'watch',time,config,w,h,rng,director);return true;}
+      p.time=time;p.travel=0;
+    }
+  }else delete a.travelProgress;
   if(a.phase==='dart'&&a.arrivedAt===null) {
     a.progress??={time,distance};
     if(time-a.progress.time>=1.5) {

@@ -17,6 +17,10 @@ Modules: `hunt-routes.js`, `enrichment.js`, `physics.js`.
   A nearby live paw can interrupt the pause; holds, injury, toss and manual control take priority.
 - Every phase entry clears stale route state. Progress watchdogs reset at a new waypoint;
   an obstructed dart can still yield to watch. No teleport or mid-screen disappearance.
+- A creep traveling under four actual pixels in 2.5 seconds before arrival yields to watch.
+  This measures integrated position changes after collisions, not stored velocity or distance
+  to the goal: a progressing paw detour may temporarily move away. Holds, goal/viewport
+  changes and phase entry reset the window; slow moving creeps and arrival dwell remain.
 - Hidden reentries ignore distance from the previous exit when choosing cover. Familiar-cover
   preference remains available; active/recent paw penalties and blocked-entry waits are unchanged.
   Initial cover and visible retreats still consider distance. Living identity is unchanged.
@@ -30,4 +34,6 @@ sweep reaches every final target after the braking repair; production watchdogs 
 
 Evidence and comparative coverage are in the reference analysis. No claim of feline preference,
 photorealism or device frame rate. Persistent [paw detours](touch-interaction.md) now retain a chosen side through a footprint.
-Long-run two-mouse collision/route distribution and physical iPad behavior still need observation.
+The opposed-creep collision fixture recovers in 2.51–2.54 seconds at 30/60/120 Hz rather
+than pushing until its roughly nine-second deadline. Held-anchor, slow-creep and live-paw
+controls remain covered. Long-run distributions and physical iPad behavior still need observation.
