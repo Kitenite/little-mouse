@@ -46,7 +46,7 @@ candidate outranks a blocked familiar entrance. Fully covered entrances wait for
 A paw arriving during a peek triggers withdrawal through the approach edge, followed by
 clear-cover reselection; the full silhouette must clear the screen before hiding.
 Choices occur on events, arrival or deadlines; [connected routes](behavior-routes.md) add broad runs and edge hooks.
-Each appearance uses a shuffled runner, scout, tease or burst motif. Motifs bias phase choices,
+Each appearance uses a motif within the [session chapter](behavior-chapters.md): runner, scout, tease or burst. Motifs bias phase choices,
 watch/dwell times and run-through probability; every bag contains all four, with no adjacent
 repeat at bag boundaries. Recent transitions are penalized in addition to recent phases.
 Burst mice can chain up to two darts before another activity. Post-pause investigation samples

@@ -1,3 +1,4 @@
+import {createHuntChapters,advanceHuntChapters} from './hunt-chapters.js';
 import {updateLifecycle,sendOffscreen} from './behavior.js';
 import {planHuntRoute,advanceHuntRoute} from './hunt-routes.js';
 import {physicalBounds} from './mouse-identity.js';
@@ -12,7 +13,7 @@ function silhouetteVisible(m, size, w, h) {
   const reach=47*size;
   return m.x>-reach&&m.x<w+reach&&m.y>-reach&&m.y<h+reach;
 }
-export function createHuntDirector() { return {touches:[], serial:0, nextEntrance:0}; }
+export function createHuntDirector(seed) { return {touches:[], serial:0, nextEntrance:0, chapters:createHuntChapters(seed)}; }
 export function rememberTouch(director, x, y, time, w, h) {
   director.touches.push({x:x/w, y:y/h, time, serial:++director.serial});
   director.touches = director.touches.filter(p => time-p.time < 24).slice(-12);
@@ -66,6 +67,7 @@ function nextMotif(a,rng){
 }
 function enter(m, phase, time, config, w, h, rng, director) {
   const a=m.hunt, previousPhase=a.phase, tempo=clamp(Number(config.huntTempo)||1,.5,2);
+  a.chapter=director.chapters?.current||{id:'mixed',weights:{}};
   a.transitions??=[];if(previousPhase)a.transitions.push(previousPhase+'>'+phase);a.transitions=a.transitions.slice(-8);
   a.phase=phase;a.since=time;a.arrivedAt=null;a.history.push(phase);a.history=a.history.slice(-4);
   delete a.progress;delete a.route;
@@ -74,7 +76,7 @@ function enter(m, phase, time, config, w, h, rng, director) {
   m.restUntil=0;m.next=time;m.leaving=false;m.entering=false;m.huntSpeed=pace[phase]??1;
   if(phase==='creep'||phase==='dart')m.huntSpeed*=tuning(config,phase+'Speed');
   if(phase==='hidden') {
-    const delay=config.hide>0 ? clamp(config.hide*between(rng,.7,1.25)+a.fear, .8,20) : .65;
+    const delay=config.hide>0 ? clamp(config.hide*between(rng,.7,1.25)*(a.chapter.hide??1)+a.fear, .8,20) : .65;
     a.deadline=time+delay;m.state='away';m.hiddenUntil=a.deadline;m.vx=m.vy=m.speed=0;m.moving=false;
     a.visibleSince=null;return;
   }
@@ -106,8 +108,8 @@ function enter(m, phase, time, config, w, h, rng, director) {
     const inset=Math.min(65*config.size,Math.min(w,h)*.22);
     a.goal=[clamp(m.x+Math.cos(angle)*reach,inset,w-inset)/w,clamp(m.y+Math.sin(angle)*reach,inset,h-inset)/h];
     a.dwell=between(rng,.18,.45)/tempo;
-    if(rng()<(a.motif==='runner'||a.motif==='burst'?.85:.5)){
-      a.route=planHuntRoute(m,w,h,rng);a.goal=a.route.points[0];
+    if(rng()<(a.chapter.routeChance??(a.motif==='runner'||a.motif==='burst'?.85:.5))){
+      a.route=planHuntRoute(m,w,h,rng,a.chapter);a.goal=a.route.points[0];
       a.deadline=time+Math.max(8,Math.hypot(w,h)/Math.max(60,115+config.speed*130)*5);
     }
   } else if(phase==='retreat') {
@@ -122,13 +124,13 @@ function enter(m, phase, time, config, w, h, rng, director) {
     a.deadline=time+Math.max(8,Math.hypot(w,h)/(115+config.speed*130)*3);
     m.huntSpeed=pace.traverse*tuning(config,'dartSpeed');
   }
-  if(phase==='watch'||phase==='creep'||phase==='dart'){a.dwell*=motifs[a.motif]?.dwell??1;if(phase==='watch')m.restUntil=time+a.dwell;}
+  if(phase==='watch'||phase==='creep'||phase==='dart'){a.dwell*=(motifs[a.motif]?.dwell??1)*(a.chapter.dwell??1);if(phase==='watch')m.restUntil=time+a.dwell;}
 }
 function choose(a, rng, config, time) {
   const motif=motifs[a.motif]||motifs.scout;
   const cross=clamp(Number(config.runThroughChance??.22),0,1);
-  if(a.phase==='peek'&&rng()<(cross===1?1:cross*motif.traverse))return 'traverse';
-  if(config.hide>0&&a.visibleSince!==null&&time-a.visibleSince>(a.visibleBudget??14))return 'retreat';
+  if(a.phase==='peek'&&rng()<(cross===1?1:cross*motif.traverse*(a.chapter?.weights.traverse??1)))return 'traverse';
+  if(config.hide>0&&a.visibleSince!==null&&time-a.visibleSince>(a.visibleBudget??14)*(a.chapter?.visibleBudget??1))return 'retreat';
   const options=a.phase==='peek' ? [['watch',.5],['creep',1.5],['dart',1.2],['retreat',config.hide>0?.35+a.fear:0]]
     : a.phase==='watch' ? [['creep',1],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
     : a.phase==='creep' ? [['watch',1.5],['dart',.8],['retreat',config.hide>0?.45+a.fear:0]]
@@ -136,7 +138,7 @@ function choose(a, rng, config, time) {
   if(a.phase==='dart'&&a.history.slice(-2).filter(p=>p==='dart').length<2)options.push(['dart',a.motif==='burst'?2:.25]);
   for(const option of options){
     const repeated=(a.transitions||[]).filter(t=>t===a.phase+'>'+option[0]).length;
-    option[1]*=(motif[option[0]]??1)*Math.pow(.35,a.history.filter(p=>p===option[0]).length)*Math.pow(.25,repeated);
+    option[1]*=(a.chapter?.weights[option[0]]??1)*(motif[option[0]]??1)*Math.pow(.35,a.history.filter(p=>p===option[0]).length)*Math.pow(.25,repeated);
   }
   let roll=rng()*options.reduce((sum,p)=>sum+p[1],0);
   return options.find(p=>(roll-=p[1])<=0)?.[0]||'watch';
@@ -150,6 +152,7 @@ export function clearHunt(m,time) {
 // Semi-Markov policy: transition on arrival + dwell, not on a frame lottery.
 // Injury/manual control have priority. Timing uses paused simulation time only.
 export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,director=createHuntDirector()) {
+  if(config.mode==='hunt'&&!manual&&director.chapters)advanceHuntChapters(director.chapters,time);
   m.physicalBounds=physicalBounds(m.identity,config);
   if(m.hold){
     if(m.hunt){discardReaction(m.hunt);m.hunt.sensed=director.serial;}
@@ -195,7 +198,7 @@ export function updateHunt(m,config,time,w,h,manual=false,rng=Math.random,direct
   if(a.phase==='hidden') {
     // A director spaces entrances; hidden cast members never collide or get hit.
     if(time<a.deadline||time<director.nextEntrance){m.hiddenUntil=Math.max(a.deadline,director.nextEntrance);return true;}
-    Object.assign(a,cover(m,time,w,h,director,rng,rng()<.35));
+    Object.assign(a,cover(m,time,w,h,director,rng,rng()<(director.chapters?.current.familiar??.35)));
     const mouth=edgePoint(a.edge,a.slot,0,w,h);
     if(blockedMouth(mouth[0],mouth[1],director)){a.deadline=time+.35;m.hiddenUntil=a.deadline;return true;}
     [m.x,m.y]=edgePoint(a.edge,a.slot,-coverPad(m,config),w,h);

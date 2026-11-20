@@ -3,12 +3,19 @@
 Reviewed 2026-11-19. This replaces earlier totals; historical domain evidence remains in
 [cycle reports](cycles/README.md).
 
+## Session chapters
+
+Six longer policy chapters rotate on simulation time with boundary-safe per-mouse adoption.
+Tests cover full decks, pause, shared clock, held/ongoing actions and actual route distributions.
+Browser module confirms all six chapters load; physical-session rotation needs observation.
+See [chapter policy](behavior-chapters.md).
+
 ## Reference-driven routes
 
-333 web tests pass, including intermediate motion, final arrival, narrow-screen max-speed
+336 web tests pass, including intermediate motion, final arrival, narrow-screen max-speed
 orbit reproduction, hold/paw priority and actual reentry diversity. Independent critic: 73 relevant
 tests and 1,200 route fixtures pass; resolved orbit blocker and limits are preserved in the
-[recording analysis](reference-recording-analysis.md). Build `d809a90b71cc` passes Worker syntax.
+[recording analysis](reference-recording-analysis.md). Build `a3b4376d0d40` passes Worker syntax.
 Browser runs two mice, observed an edge-hook route, WebGL active, no recovery/console errors.
 Local iPad development server serves the update; physical motion and cat response need observation.
 

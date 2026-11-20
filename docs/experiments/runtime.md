@@ -31,7 +31,7 @@ Actual visual contrast, device volume and audible output are not measured by the
 ## Collection and boundaries
 
 Each round records full baseline/assigned/confirmed settings, build, device, assignment,
-contact episodes/outcomes, sampled behavior and scheduled recorded clips. Repeated moves or
+contact episodes/outcomes, sampled behavior (including effective chapter ID) and scheduled recorded clips. Repeated moves or
 held-pointer events do not count as independent contacts. Unknown player remains unknown.
 Corner-origin contacts are conservatively excluded because they may be the owner exit gesture;
 this also excludes genuine cat touches there. Exposure uses approximate viewport intersection,

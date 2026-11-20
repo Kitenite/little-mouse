@@ -130,7 +130,7 @@ of steady routes, deliberate turns/exits, restrained secondary motion and readab
 Existing runtime support inspected; this policy-only change makes no new deployment claim.
 Physical capture remains the dependency for a matched current-game comparison.
 
-Root integrated reference routes; critic `91d7274e-3c71-490f-a40a-93818442a1d7` complete.
+Root completed session chapters and regression checks; reference-route critic `91d7274e-3c71-490f-a40a-93818442a1d7` complete.
 [Findings and acceptance](evidence/reference-2026-11-19/implementation-review.md) preserved; worker retired.
 Babylon comparison complete; no dependent worker edits.
 

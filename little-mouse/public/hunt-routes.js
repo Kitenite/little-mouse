@@ -1,12 +1,12 @@
 // Normalized, finite routes: broad runs with an optional edge hook, never a loop.
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-export function planHuntRoute(m,w,h,rng=Math.random){
+export function planHuntRoute(m,w,h,rng=Math.random,policy={}){
  const x=m.x/w,y=m.y/h;
  const horizontal=Math.abs(Math.cos(m.angle))>.55;
  const far=horizontal?(x<.5?.88:.12):(y<.5?.88:.12);
  const across=.2+rng()*.6;
  const first=horizontal?[far,across]:[across,far];
- const kind=rng()<.45?'edge-hook':'crossfield';
+ const kind=rng()<(policy.edgeHookChance??.45)?'edge-hook':'crossfield';
  let points;
  if(kind==='edge-hook'){
   const along=across<.5?.82:.18;
@@ -18,7 +18,7 @@ export function planHuntRoute(m,w,h,rng=Math.random){
    :[clamp((x+across)/2+(rng()-.5)*.3,.15,.85),(y+far)/2];
   points=[bend,first];
  }
- return {kind,points,index:0,pauseAt:rng()<.35?1:-1,pauseDuration:.18+rng()*.22,pauseUsed:false};
+ return {kind,points,index:0,pauseAt:rng()<(policy.hesitationChance??.35)?1:-1,pauseDuration:.18+rng()*.22,pauseUsed:false};
 }
 export function advanceHuntRoute(m,w,h,time){
  const route=m.hunt?.route;
