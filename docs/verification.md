@@ -9,8 +9,10 @@ Recorded vocal gains doubled (+6.02 dB before limiting); movement levels remain 
 Limiter input headroom increased to range four with the same output ceiling. All 450 web
 tests and production build pass; no physical speaker-loudness claim. Native lint/typecheck pass.
 The Mac LAN address is now `10.0.0.49`; Metro was restarted with the matching game URL.
-Latest iPad relaunch attempt was rejected by iOS because Guided Access is active.
-Device loading remains pending until the owner exits Guided Access; no new native binary needed.
+After the owner exited Guided Access, devicectl successfully launched the connected iPad
+app with the current Metro URL; Metro completed its iOS bundle (1301 modules). The game
+server serves `aaea4ae23bbe`. Launch/bundle delivery are verified; on-device WebView version
+and actual speaker loudness remain unobserved. No new native binary was needed.
 
 ## Current collision–paw repair and appearance diagnostics
 
