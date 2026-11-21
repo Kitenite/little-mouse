@@ -1,0 +1,6 @@
+{
+  "little-mouse/public/contact.js": "3a06fc5ccdcc3243f5eacc98e8faaeb9ea72aacdb1687f090647689d14b91ad3",
+  "little-mouse/public/physics.js": "1c906ca8586811ed18734ca640f8b13d0d801fc94db4f2968c05bd1c326b4e0c",
+  "little-mouse/tests/paw-collision-recovery.test.mjs": "b54ba931193b4786f8310601e54fc42e1af0ba78fe39a0309f58876537080e03",
+  "little-mouse/scripts/behavior-excursions.mjs": "0f8104934e85f539723b346c161beaaed9ed1b4a55dcbfce4b0b30a18062f0e0"
+}

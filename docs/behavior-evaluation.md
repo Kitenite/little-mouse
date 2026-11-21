@@ -20,10 +20,10 @@ Engineering proxy, not measured cat reward, preference or validated efficacy.
 - Evaluation options: `patch`, `seeds`, `seconds`, `hz`, `scenarios`, `sourceDir`, `metadata`.
   Use the same options and scenario order for comparisons; default seeds are training seeds.
 
-Version 3 benchmark reports contain complete settings, seeds, dimensions, identity seeds, chapter IDs,
+Version 4 benchmark reports contain complete settings, seeds, dimensions, identity seeds, chapter IDs,
 transition counts, metrics, reasons, timings, evaluator Git status, Node/platform,
 benchmark/search hashes and all public JS source hashes. The benchmark hash covers its
-entrypoint and both diagnostic helpers; `evaluatorHashes` records each source separately. Archive revision is explicitly
+entrypoint and all three diagnostic helpers; `evaluatorHashes` records each source separately. Archive revision is explicitly
 unverified in the machine report: retain the git-archive command alongside the artifact.
 Evaluator Git is not runtime Git. Source hashes are the runtime truth. Immutable archives
 avoid Node's import cache disagreeing with files changed during a live evaluation.
@@ -77,11 +77,15 @@ reported separately. This is not renderer pixels, appendage visibility or live a
 bounded history, geometry comparisons and explicit null rates when support is absent.
 Only center-visible, active/nonhidden, unheld, non-tossed and uninjured samples are eligible;
 partial-only peeks are excluded from route geometry, never clamped onto the viewport edge.
-Both helpers use actual positions after physics; selected runtime supplies its own morphology.
+All helpers use actual positions after physics; selected runtime supplies its own morphology.
 No utility weights, gates, production defaults or local learning records change. The old visible
 path predicate's prior endpoint omits hiddenUntil; retained for historical score comparability.
 The new route tracker independently checks both endpoint eligibility. Diagnostics cannot repair
 that legacy score limit or establish cat interest. Future scoring changes need explicit versioning.
+
+Version 4 adds [whole appearances](behavior-excursions.md): continuous neutral-core entry/exit,
+pauses retained, bounded signatures and cumulative complete/censored time/path support.
+Current panels have fixed identities/viewports; replacement/resize requires fresh trackers.
 
 ## Search and acceptance
 

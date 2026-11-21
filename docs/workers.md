@@ -66,44 +66,33 @@ The owner now requests continuing builder/critic improvement. Follow
 independent criticism, reproducible cases and root-owned integration. This does not
 install a recurring unattended service or authorize worker merges into main.
 
-## Accepted hill-climb batch
+## Previous accepted batches
 
-Baseline `a3196df`; learning context `717aec1`, creep recovery `f4cee77`, visible-peek
-recovery `70eeb19`. The owner requested continued critique and hill climbing. All assigned
-work is integrated and independently reviewed. Evidence commit `dd81c7a` was verified on
-GitHub before all three completed worker terminals were retired. IDs below are historical.
+[Hill climbing](cycles/behavior-hill-climb.md): `dd81c7a`, obstruction repairs and context-isolated
+learning. [Motion metrics](cycles/motion-metrics.md): `e7c21bb`, partial neutral-body visibility
+and actual-route diagnostics. All workers from both batches were retired after source/evidence
+publication. Historical terminal tables remain in Git at `4ba72c4`; reusable roles are in code.
+Main workspace, sidebar, game server and Metro are retained; release status is in verification.
 
-| Task | Local terminal | Outcome |
-| --- | --- | --- |
-| Offline evaluation/search | `0b862128-8a8c-4ed4-b72c-54b827bc25b2` | partial builder handoff; root completed validation repairs and final search |
-| Motion critic | `8d651d10-d325-4501-b61d-8c068ce4b847` | verified creep recovery, nine blocked peeks and adverse controls |
-| Learning / scoring critic | `990ff0bf-6a89-4a5b-8895-36d32d7da36c` | learning accepted; three scoring-review rounds resolved blockers |
-| Root | current coordinator | integrated/published runtime; 400 tests, build, browser and final search pass |
+## Active whole-appearance and motion review
 
-Three search rounds retained default settings: all eight unique numeric neighbors failed
-improvement/safety requirements. Final training panel reduces worst blocked travel from
-6.83 to 3.33 seconds. Search utility remains an engineering proxy, never cat reward.
-[Batch report](cycles/behavior-hill-climb.md) and [evidence](evidence/hill-climb-2026-11-20/README.md)
-retain exact repros, candidates/rejections, source fingerprints, criticism and next comparisons.
-New evaluation/critic roles are durable in `agents/roles.json`; no periodic service is installed.
-Main workspace, sidebar game, game server and Metro stay available. Current device/release
-boundaries belong in [verification](verification.md). Earlier domain queues remain above.
-
-## Visibility and route measurement batch
-
-Published evidence/source `e7c21bb` was verified on GitHub before all three completed
-workers were retired. Terminal IDs below are historical. Baseline `3537a0a`; local workspace `5b5bc0ce-e628-499e-b026-143bf97a9de0`.
-Shared worktree has deliberately disjoint file ownership. No production setting changes.
+Baseline `4ba72c4`, local workspace above; intentionally disjoint shared worktree ownership.
 
 | Task | Terminal | Status / dependency / ownership |
 | --- | --- | --- |
-| Visibility builder | `29d1a8b8-6fb4-4d92-946b-6a61a8579771` | completed; neutral body helper/tests/topic reviewed |
-| Route builder | `1c5f99b3-5b82-4eca-83fd-a5f729e15c43` | completed; executed path helper/tests/topic reviewed |
-| Independent critic | `dacfdca9-b5c6-4a01-a87d-e25edc4d545d` | completed; two independent rounds, accepted with stated limits |
-| Root | coordinator | published/verified; 425 tests/build/search pass; workers retired |
+| Excursion builder | `9f7718a4-5081-4a0c-a7b9-cf1f55bf1949` | completed; helper and baseline-failing recovery regression verified |
+| Measurement critic | `6283fe10-62c0-4495-9c45-60db1121742a` | completed; round3 accepted measurement contract |
+| Motion trace critic | `96133374-ac7e-4878-bfd9-350e89f09a05` | completed; scoped acceptance with two exact residual cases queued |
+| Root | coordinator | final checks passed; publishing reviewed work and preserving residual collision queue |
 
-Accepted: measured actual movement, explicit proxy/denominator limits, bounded memory,
-edge/heading/discontinuity/frame-rate adversarial checks and unchanged gameplay/utility.
-New measurements remain diagnostic after review; no historical learning records are relabeled.
-[Results](cycles/motion-metrics.md) and [evidence](evidence/motion-metrics-2026-11-20/README.md)
-preserve roles, probes, exact comparisons and next queue. Main/sidebar/server are retained.
+Acceptance: continuous witnessed entry-to-exit geometry; partial/censored appearances explicitly
+separated; bounded memory and real displacement; unchanged existing score metrics unless a
+separately reviewed runtime defect requires repair. No automatic settings or enjoyment claims.
+Earlier domain queues remain active above; new messages add work, never silently replace it.
+
+Persistent non-agent servers (retain during cleanup): game `10790bda-bdde-47fc-8703-087de9a1a21b`
+and Metro `268209c7-0d6c-4906-b6c0-4ddb94c75d20`.
+
+Next motion batch: seed23 prolonged retreat and post-sweep collision-induced paw intrusion;
+see the final motion critic artifacts. Whole-appearance replacement/resize adapters remain
+out of scope until those scenarios are added. No claim of all spinning resolved.

@@ -1,0 +1,56 @@
+{
+  "description": "Matched isolated production physics approach from observed candidate phase-entry position; fixed intermediate goal, no companion, reconstructed huntSpeed and cleared arrival state",
+  "source": {
+    "time": 137.55833333333334,
+    "mouse": 1,
+    "x": -33.547103913369405,
+    "y": 439.68787719726555,
+    "angle": 0,
+    "targetX": -28.599999999999998,
+    "targetY": 439.68787719726555,
+    "phase": "dart",
+    "state": "active",
+    "visible": false,
+    "collisions": 0,
+    "route": "edge-hook/0",
+    "goal": [
+      0.88,
+      0.47204681686125693
+    ],
+    "arrived": null,
+    "deadline": 150.9195024356298,
+    "restUntil": 0,
+    "vx": 0,
+    "vy": 0
+  },
+  "rows": [
+    {
+      "variant": "baseline",
+      "minDistance": 157.20930083008062,
+      "penetration": 4.33069916991937,
+      "end": {
+        "time": 139.05833333333334,
+        "x": 472.48626763004086,
+        "y": 580.7710045926752,
+        "angle": 0.09732709599951973,
+        "vx": 546.0429183229918,
+        "vy": 128.1578389646837,
+        "distance": 200.6991860825932
+      }
+    },
+    {
+      "variant": "candidate2-final",
+      "minDistance": 161.53999999999996,
+      "penetration": 2.842170943040401e-14,
+      "end": {
+        "time": 139.05833333333334,
+        "x": 557.9658730749,
+        "y": 592.2193894343052,
+        "angle": -0.13116759950954626,
+        "vx": 302.5331397963203,
+        "vy": -5.054451502722527,
+        "distance": 213.2326795402915
+      }
+    }
+  ]
+}

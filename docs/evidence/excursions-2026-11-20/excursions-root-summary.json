@@ -1,0 +1,51 @@
+{
+  "sourceHash": "c26e2e305c846292264087efae3ca7179d880c8de979d471354d776ccf878e03",
+  "benchmarkHash": "4fe9a16e996957af0783980b62bf6eca7cd46d6073a16d2644ef3842dfdb3272",
+  "options": {
+    "seeds": [
+      11,
+      37,
+      83
+    ],
+    "seconds": 360,
+    "hz": 30,
+    "scenarios": [
+      "passive",
+      "central-paw",
+      "near-misses",
+      "tall-phone"
+    ]
+  },
+  "gates": [],
+  "objective": 0.9412392599336695,
+  "pooledSupport": {
+    "completed": {
+      "appearances": 898,
+      "durationSeconds": 6399.666666666666,
+      "pathLength": 2017.7056046602893,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    },
+    "censored": {
+      "appearances": 17,
+      "durationSeconds": 91.46666666666675,
+      "pathLength": 23.291519973716873,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    },
+    "short": {
+      "appearances": 4,
+      "durationSeconds": 0.9666666666666615,
+      "pathLength": 0.12755899981673752,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    },
+    "overflow": {
+      "appearances": 0,
+      "durationSeconds": 0,
+      "pathLength": 0,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    }
+  }
+}

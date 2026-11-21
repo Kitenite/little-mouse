@@ -1,0 +1,21 @@
+{
+  "replayFramesEqual": 2400,
+  "sourceHashesVerified": 42,
+  "controls": {
+    "replay": {
+      "lastRetreatTime": 75,
+      "turns": 12.3145927360869,
+      "collisionImpulses": 1324
+    },
+    "no-companion": {
+      "lastRetreatTime": 58.666666666666664,
+      "turns": 0.2522259817538996,
+      "collisionImpulses": 0
+    },
+    "no-paw": {
+      "lastRetreatTime": 58.233333333333334,
+      "turns": 0.2394227723246953,
+      "collisionImpulses": 28
+    }
+  }
+}

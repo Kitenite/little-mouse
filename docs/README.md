@@ -9,6 +9,7 @@ Source review: 2026-11-17. They describe the working tree, not proof of a deploy
 | [Behavior learning](behavior-learning.md) | Local movement metrics, conservative adaptation and owner controls |
 | [Offline behavior evaluation](behavior-evaluation.md) | Reproducible motion benchmarks, critic gates and bounded hill climbing |
 | [Visibility diagnostic](behavior-visibility.md) | Neutral core body intersection, partial peeks and approximation limits |
+| [Whole appearances](behavior-excursions.md) | Continuous entry-to-exit paths and censored population support |
 | [Executed route diagnostic](behavior-route-metrics.md) | Bounded path recurrence, exclusions and comparison support |
 | [Session behavior chapters](behavior-chapters.md) | Longer policy rotation, shared clock and phase-boundary transitions |
 | [Connected prey routes](behavior-routes.md) | Continuous runs, edge hooks, hesitation and route safety |

@@ -11,12 +11,13 @@ const defaultSource=resolve(here,'../public');
 const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
 const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
 // Include every local evaluator dependency, not only this entrypoint. Capture before import.
-const evaluatorFiles=['behavior-benchmark.mjs','behavior-route-metrics.mjs','behavior-visibility.mjs'];
+const evaluatorFiles=['behavior-benchmark.mjs','behavior-excursions.mjs','behavior-route-metrics.mjs','behavior-visibility.mjs'];
 const evaluatorFingerprints=()=>Object.fromEntries(evaluatorFiles.map(name=>[name,createHash('sha256').update(readFileSync(resolve(here,name))).digest('hex')]));
 const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const evaluatorHashes=evaluatorFingerprints(),benchmarkHash=digest(evaluatorHashes);
 const scriptHash=()=>digest(evaluatorFingerprints());
 const {createBodyVisibility}=await import('./behavior-visibility.mjs');
+const {createExcursionTracker}=await import('./behavior-excursions.mjs');
 const {createRouteMetricsTracker}=await import('./behavior-route-metrics.mjs');
 assertEvaluatorUnchanged();
 export function assertEvaluatorUnchanged(){if(scriptHash()!==benchmarkHash)throw Error('Evaluator changed; restart the process');}
@@ -98,7 +99,7 @@ function run(r,config,{seed,scenario,seconds,hz}){
  const w=scenario==='tall-phone'?390:1024,h=scenario==='tall-phone'?844:768,dt=1/hz,n=Math.round(seconds*hz),rng=r.identityRandom(seed),director=r.createHuntDirector(seed);
  const paw=scenario==='central-paw'?[{x:w/2,y:h/2,radius:50}]:[];director.paws=new Map(paw.map((p,i)=>[i,p]));
  const mice=Array.from({length:2},(_,castIndex)=>{const rad=r.radius(config.size,w,h);return {castIndex,state:'away',x:rad+rng()*(w-2*rad),y:rad+rng()*(h-2*rad),angle:rng()*Math.PI*2,targetX:w/2,targetY:h/2,next:.6,hiddenUntil:0,restUntil:0,moving:false,vx:0,vy:0,speed:0,seed:rng()*100,identity:r.createMouseIdentity((seed+castIndex*2654435761)>>>0)};});
- const bodyVisibility=createBodyVisibility(r),routeTrackers=mice.map(()=>createRouteMetricsTracker());
+ const bodyVisibility=createBodyVisibility(r),routeTrackers=mice.map(()=>createRouteMetricsTracker()),excursionTrackers=mice.map(()=>createExcursionTracker());
  const bodyExposure={version:'neutral-core-exposure-v1',samples:0,invalidSamples:0,anyBodySeconds:0,areaWeightedSeconds:0,partialOnlySeconds:0,maxNoBodySeconds:0,totalMouseSeconds:seconds*2};
  let bodyEmpty=0;
  const tracks=mice.map(()=>({phase:null,phaseTime:0,blocked:0,recentTransitions:[]})),cells=new Set(),transitions={},chapters=new Set();
@@ -117,12 +118,18 @@ function run(r,config,{seed,scenario,seconds,hz}){
    chapters.add(m.hunt?.chapter?.id);
    // New diagnostics are deliberately separate from the frozen version-2 score metrics.
    bodyExposure.samples++;
+   let body=null;
    if(m.state==='active'&&m.hiddenUntil<=time){
-    const body=bodyVisibility(m,config,w,h);
+    body=bodyVisibility(m,config,w,h);
     if(!body.valid)bodyExposure.invalidSamples++;
     else {bodyExposure.areaWeightedSeconds+=body.fraction*dt;
      if(body.fraction>0){anyBody=true;bodyExposure.anyBodySeconds+=dt;if(!on)bodyExposure.partialOnlySeconds+=dt;}}
    }
+   // Whole appearances may include centers outside the viewport. A hidden-state change
+   // is an exclusion, never evidence of a natural geometric exit.
+   excursionTrackers[i].sample({time,x:m.x/w,y:m.y/h,visible:body?.valid===true&&body.fraction>0,
+    eligible:body?.valid===true&&!m.hold&&(m.tossUntil||0)<=time&&(m.injuredUntil||0)<=time&&!['held','toss','touch','injury'].includes(phase),
+    discontinuity:body?.valid===false});
    routeTrackers[i].sample({time,x:m.x/w,y:m.y/h,phase:phase||'unassigned',
     eligible:on&&!m.hold&&(m.tossUntil||0)<=time&&(m.injuredUntil||0)<=time&&!['held','toss','touch','injury'].includes(phase),
     discontinuity:false});
@@ -167,7 +174,7 @@ function run(r,config,{seed,scenario,seconds,hz}){
   anyBodyFraction:bodyExposure.anyBodySeconds/bodyExposure.totalMouseSeconds,
   areaWeightedFraction:bodyExposure.areaWeightedSeconds/bodyExposure.totalMouseSeconds,
   partialOnlyFraction:bodyExposure.partialOnlySeconds/bodyExposure.totalMouseSeconds},
-  routes:routeTrackers.map(tracker=>tracker.finalize())};
+  routes:routeTrackers.map(tracker=>tracker.finalize()),excursions:excursionTrackers.map(tracker=>tracker.finalize())};
  return {seed,scenario,width:w,height:h,diagnostics,identities:mice.map(m=>m.identity.seed),chapters:[...chapters],transitions,collisions,metrics,gates:guardrails(metrics),objective:utility(metrics)};
 }
 export async function evaluate({patch={},seeds=TRAIN,seconds=360,hz=30,scenarios=SCENARIOS,sourceDir,metadata=true}={}){
@@ -181,7 +188,7 @@ export async function evaluate({patch={},seeds=TRAIN,seconds=360,hz=30,scenarios
  const rows=[];for(const scenario of scenarios)for(const seed of seeds)rows.push(run(r,config,{seed,scenario,seconds,hz}));
  if(provenance(r.source).sourceHash!==r.fingerprint)throw Error('Runtime changed during evaluation');
  const metrics=Object.fromEntries(Object.keys(rows[0].metrics).map(k=>[k,mean(rows.map(x=>x.metrics[k]))]));
- return {version:3,diagnosticContract:{participatesInUtility:false,visibility:'neutral core body only; active mice; no articulated/rendered-pixel claim',routes:'executed center-visible paths; per-mouse bounded history; no cat-preference claim'},kind:'engineering proxy; not cat reward',sourceHash:r.fingerprint,benchmarkHash,options:{seeds,seconds,hz,scenarios},config,patch,provenance:metadata?provenance(r.source):undefined,rows,metrics,objective:mean(rows.map(x=>x.objective)),gates:rows.flatMap(x=>x.gates.map(g=>`${x.scenario}/${x.seed}: ${g}`)),elapsedMs:performance.now()-started};
+ return {version:4,diagnosticContract:{participatesInUtility:false,visibility:'neutral core body only; active mice; no articulated/rendered-pixel claim',routes:'executed center-visible paths; per-mouse bounded history; no cat-preference claim',excursions:'witnessed neutral-core entry-to-exit; pauses retained; exclusions censored; no cat-preference claim'},kind:'engineering proxy; not cat reward',sourceHash:r.fingerprint,benchmarkHash,options:{seeds,seconds,hz,scenarios},config,patch,provenance:metadata?provenance(r.source):undefined,rows,metrics,objective:mean(rows.map(x=>x.objective)),gates:rows.flatMap(x=>x.gates.map(g=>`${x.scenario}/${x.seed}: ${g}`)),elapsedMs:performance.now()-started};
 }
 export function cliOptions(args=process.argv.slice(2)){
  const value=k=>{const i=args.indexOf(k);return i<0?undefined:args[i+1];};

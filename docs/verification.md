@@ -3,21 +3,19 @@
 Reviewed 2026-11-20. Current checks replace earlier suite totals; historical evidence remains
 in [cycle reports](cycles/README.md). Test success does not establish feline preference.
 
-## Current motion diagnostics
+## Current collision–paw repair and appearance diagnostics
 
-**425 web tests pass**; production build **a6df6715d6a5**, Worker syntax, catalog and four
-eligibility tests pass. Native lint/typecheck also pass. No public/native gameplay source changed.
-[Current batch](cycles/motion-metrics.md) records two builders and independent acceptance:
-partial neutral-core visibility and bounded actual-route recurrence remain diagnostic only.
-Every preexisting field across 12 training rows and aggregate scores matches the saved baseline.
-CPU projection of actual neutral mesh agrees in 144 cases; this does not verify animated pixels.
-Three search rounds still reject all 24 decisions/eight unique candidates; no holdout opened.
+**450 web tests pass**; production build **91839a4344eb**, Worker syntax, catalog and four
+eligibility checks pass. Native code is unchanged; prior native lint/typecheck remain historical.
+[Current batch](cycles/excursions.md) preserves baseline-failing collision/turn regressions,
+continuous same-paw escape steering, swept live-paw travel and complete entry-to-exit diagnostics.
+The 12-row full training panel passes all existing gates; defaults and utility are unchanged.
+Final independent reviews and their limitations are retained with the batch evidence.
 
-After restart, root restored game port 8787 and development-client Metro port 8088, with current
-LAN game URL `http://192.168.1.21:8787`. Sidebar reload reaches playing=true, recovering=false,
-two mice and WebGL, development version `bc76ab02988b`. Host animation callbacks were throttled
-in this probing context; neither fluent motion nor physical iPad rendering is established.
-No new native install or hosted publication. [Evidence](evidence/motion-metrics-2026-11-20/README.md).
+Game port 8787 and development-client Metro 8088 run in persistent Paradev terminals.
+The sidebar uses `http://localhost:8787/?surface=ipad`; current development fingerprint
+is `968435eeaa19`. Browser startup checks do not establish physical iPad motion or audio.
+No new native install or hosted publication. [Evidence](evidence/excursions-2026-11-20/README.md).
 
 ## Accepted hill climbing and context-isolated learning
 

@@ -1,0 +1,513 @@
+{
+  "runtimeDir": "/tmp/excursion-motion-baseline/little-mouse/public",
+  "hashes": {
+    "behavior-excursions.mjs": "0f8104934e85f539723b346c161beaaed9ed1b4a55dcbfce4b0b30a18062f0e0",
+    "behavior-benchmark.mjs": "c901bc3d8e95e1767e3dddb97038026903b73cd0533246003f34a33bd248e079",
+    "behavior-route-metrics.mjs": "20b7b16d574c329260957861e1425bedb12f19373ec7f599b1053fc385798064",
+    "behavior-visibility.mjs": "c44ae68247f9880ff2ac1294986e1ff3b5ee5783aaf508065f6b41a58e2bb981"
+  },
+  "sourceHash": "d8d87c72ba617bf9ad2af768a5ca16a5e1f74be243eafcabbf5af514b5eb1c67",
+  "oldFieldsExactlyEqual": true,
+  "supportExactlyEqual": true,
+  "ordinaryResult": {
+    "version": 1,
+    "config": {
+      "noiseDistance": 0.002,
+      "maxGap": 0.25,
+      "maxSpeed": 8,
+      "minPathLength": 0.06,
+      "maxPathLength": 128,
+      "maxDuration": 3600,
+      "maxPoints": 2048,
+      "historySize": 32,
+      "signaturePoints": 32,
+      "corridorRms": 0.025,
+      "corridorMax": 0.06
+    },
+    "counts": {
+      "samples": 3,
+      "validSamples": 3,
+      "invalidSamples": 0,
+      "nonMonotonicSamples": 0,
+      "appearances": 1,
+      "witnessedEntries": 0,
+      "naturalExits": 0,
+      "completedAppearances": 0,
+      "censoredAppearances": 1,
+      "shortAppearances": 0,
+      "comparisonAppearances": 0,
+      "repeatedCorridors": 0,
+      "historyEvictions": 0
+    },
+    "censorReasons": {
+      "leftCensored": 1,
+      "rightCensored": 1,
+      "ineligible": 0,
+      "discontinuity": 0,
+      "invalid": 0,
+      "nonMonotonic": 0,
+      "gap": 0,
+      "teleport": 0,
+      "overflow": 0
+    },
+    "support": {
+      "completed": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "censored": {
+        "appearances": 1,
+        "durationSeconds": 0.19999999999999996,
+        "pathLength": 0.2,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "short": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "overflow": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      }
+    },
+    "corridorRecurrence": null,
+    "history": [],
+    "active": null,
+    "finalized": true,
+    "storage": {
+      "activePoints": 0,
+      "highWaterPoints": 3,
+      "historyAppearances": 0,
+      "signaturePoints": 0
+    }
+  },
+  "support": {
+    "completed": {
+      "appearances": 889,
+      "durationSeconds": 6439.533333333333,
+      "pathLength": 2017.770691429211,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    },
+    "censored": {
+      "appearances": 17,
+      "durationSeconds": 73.23333333333335,
+      "pathLength": 21.522518775111504,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    },
+    "short": {
+      "appearances": 3,
+      "durationSeconds": 0.8999999999999986,
+      "pathLength": 0.10685240464700836,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    },
+    "overflow": {
+      "appearances": 0,
+      "durationSeconds": 0,
+      "pathLength": 0,
+      "truncatedPathAppearances": 0,
+      "saturated": false
+    }
+  },
+  "hand": {
+    "version": 1,
+    "config": {
+      "noiseDistance": 0.002,
+      "maxGap": 0.25,
+      "maxSpeed": 8,
+      "minPathLength": 0.06,
+      "maxPathLength": 128,
+      "maxDuration": 3600,
+      "maxPoints": 2048,
+      "historySize": 1,
+      "signaturePoints": 32,
+      "corridorRms": 0.025,
+      "corridorMax": 0.06
+    },
+    "counts": {
+      "samples": 23,
+      "validSamples": 23,
+      "invalidSamples": 0,
+      "nonMonotonicSamples": 0,
+      "appearances": 5,
+      "witnessedEntries": 4,
+      "naturalExits": 4,
+      "completedAppearances": 4,
+      "censoredAppearances": 1,
+      "shortAppearances": 0,
+      "comparisonAppearances": 3,
+      "repeatedCorridors": 3,
+      "historyEvictions": 3
+    },
+    "censorReasons": {
+      "leftCensored": 1,
+      "rightCensored": 0,
+      "ineligible": 1,
+      "discontinuity": 0,
+      "invalid": 0,
+      "nonMonotonic": 0,
+      "gap": 0,
+      "teleport": 0,
+      "overflow": 0
+    },
+    "support": {
+      "completed": {
+        "appearances": 4,
+        "durationSeconds": 0.7999999999999994,
+        "pathLength": 1.6,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "censored": {
+        "appearances": 1,
+        "durationSeconds": 0.09999999999999964,
+        "pathLength": 0.2,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "short": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "overflow": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      }
+    },
+    "corridorRecurrence": 1,
+    "history": [
+      {
+        "startTime": 3.1,
+        "endTime": 3.3,
+        "duration": 0.19999999999999973,
+        "pathLength": 0.4,
+        "entryEdge": "left",
+        "exitEdge": "unknown",
+        "edgePair": "left->unknown",
+        "signature": [
+          {
+            "x": 0,
+            "y": 0.5
+          },
+          {
+            "x": 0.012903225806451613,
+            "y": 0.5
+          },
+          {
+            "x": 0.025806451612903226,
+            "y": 0.5
+          },
+          {
+            "x": 0.03870967741935484,
+            "y": 0.5
+          },
+          {
+            "x": 0.05161290322580645,
+            "y": 0.5
+          },
+          {
+            "x": 0.06451612903225806,
+            "y": 0.5
+          },
+          {
+            "x": 0.07741935483870968,
+            "y": 0.5
+          },
+          {
+            "x": 0.0903225806451613,
+            "y": 0.5
+          },
+          {
+            "x": 0.1032258064516129,
+            "y": 0.5
+          },
+          {
+            "x": 0.11612903225806454,
+            "y": 0.5
+          },
+          {
+            "x": 0.12903225806451613,
+            "y": 0.5
+          },
+          {
+            "x": 0.14193548387096774,
+            "y": 0.5
+          },
+          {
+            "x": 0.15483870967741936,
+            "y": 0.5
+          },
+          {
+            "x": 0.16774193548387098,
+            "y": 0.5
+          },
+          {
+            "x": 0.1806451612903226,
+            "y": 0.5
+          },
+          {
+            "x": 0.19354838709677422,
+            "y": 0.5
+          },
+          {
+            "x": 0.2064516129032258,
+            "y": 0.5
+          },
+          {
+            "x": 0.21935483870967742,
+            "y": 0.5
+          },
+          {
+            "x": 0.23225806451612907,
+            "y": 0.5
+          },
+          {
+            "x": 0.24516129032258066,
+            "y": 0.5
+          },
+          {
+            "x": 0.25806451612903225,
+            "y": 0.5
+          },
+          {
+            "x": 0.27096774193548384,
+            "y": 0.5
+          },
+          {
+            "x": 0.2838709677419355,
+            "y": 0.5
+          },
+          {
+            "x": 0.29677419354838713,
+            "y": 0.5
+          },
+          {
+            "x": 0.3096774193548387,
+            "y": 0.5
+          },
+          {
+            "x": 0.3225806451612903,
+            "y": 0.5
+          },
+          {
+            "x": 0.33548387096774196,
+            "y": 0.5
+          },
+          {
+            "x": 0.34838709677419355,
+            "y": 0.5
+          },
+          {
+            "x": 0.3612903225806452,
+            "y": 0.5
+          },
+          {
+            "x": 0.3741935483870968,
+            "y": 0.5
+          },
+          {
+            "x": 0.38709677419354843,
+            "y": 0.5
+          },
+          {
+            "x": 0.4,
+            "y": 0.5
+          }
+        ],
+        "short": false,
+        "comparisonSupport": 1,
+        "repeatedCorridor": true
+      }
+    ],
+    "active": null,
+    "finalized": true,
+    "storage": {
+      "activePoints": 0,
+      "highWaterPoints": 3,
+      "historyAppearances": 1,
+      "signaturePoints": 32
+    }
+  },
+  "discontinuityGap": {
+    "version": 1,
+    "config": {
+      "noiseDistance": 0.002,
+      "maxGap": 0.25,
+      "maxSpeed": 8,
+      "minPathLength": 0.06,
+      "maxPathLength": 128,
+      "maxDuration": 3600,
+      "maxPoints": 2048,
+      "historySize": 32,
+      "signaturePoints": 32,
+      "corridorRms": 0.025,
+      "corridorMax": 0.06
+    },
+    "counts": {
+      "samples": 2,
+      "validSamples": 2,
+      "invalidSamples": 0,
+      "nonMonotonicSamples": 0,
+      "appearances": 2,
+      "witnessedEntries": 0,
+      "naturalExits": 0,
+      "completedAppearances": 0,
+      "censoredAppearances": 2,
+      "shortAppearances": 0,
+      "comparisonAppearances": 0,
+      "repeatedCorridors": 0,
+      "historyEvictions": 0
+    },
+    "censorReasons": {
+      "leftCensored": 2,
+      "rightCensored": 1,
+      "ineligible": 0,
+      "discontinuity": 0,
+      "invalid": 0,
+      "nonMonotonic": 0,
+      "gap": 1,
+      "teleport": 0,
+      "overflow": 0
+    },
+    "support": {
+      "completed": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "censored": {
+        "appearances": 2,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "short": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "overflow": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      }
+    },
+    "corridorRecurrence": null,
+    "history": [],
+    "active": null,
+    "finalized": true,
+    "storage": {
+      "activePoints": 0,
+      "highWaterPoints": 1,
+      "historyAppearances": 0,
+      "signaturePoints": 0
+    }
+  },
+  "discontinuityTeleport": {
+    "version": 1,
+    "config": {
+      "noiseDistance": 0.002,
+      "maxGap": 0.25,
+      "maxSpeed": 8,
+      "minPathLength": 0.06,
+      "maxPathLength": 128,
+      "maxDuration": 3600,
+      "maxPoints": 2048,
+      "historySize": 32,
+      "signaturePoints": 32,
+      "corridorRms": 0.025,
+      "corridorMax": 0.06
+    },
+    "counts": {
+      "samples": 2,
+      "validSamples": 2,
+      "invalidSamples": 0,
+      "nonMonotonicSamples": 0,
+      "appearances": 2,
+      "witnessedEntries": 0,
+      "naturalExits": 0,
+      "completedAppearances": 0,
+      "censoredAppearances": 2,
+      "shortAppearances": 0,
+      "comparisonAppearances": 0,
+      "repeatedCorridors": 0,
+      "historyEvictions": 0
+    },
+    "censorReasons": {
+      "leftCensored": 2,
+      "rightCensored": 1,
+      "ineligible": 0,
+      "discontinuity": 0,
+      "invalid": 0,
+      "nonMonotonic": 0,
+      "gap": 0,
+      "teleport": 1,
+      "overflow": 0
+    },
+    "support": {
+      "completed": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "censored": {
+        "appearances": 2,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "short": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      },
+      "overflow": {
+        "appearances": 0,
+        "durationSeconds": 0,
+        "pathLength": 0,
+        "truncatedPathAppearances": 0,
+        "saturated": false
+      }
+    },
+    "corridorRecurrence": null,
+    "history": [],
+    "active": null,
+    "finalized": true,
+    "storage": {
+      "activePoints": 0,
+      "highWaterPoints": 1,
+      "historyAppearances": 0,
+      "signaturePoints": 0
+    }
+  }
+}

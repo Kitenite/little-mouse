@@ -1,5 +1,5 @@
 import {isHuntCruising} from './hunt-routes.js';
-import {constrainContact,advanceContactAnchor,avoidPaws,constrainPaws} from './contact.js';
+import {constrainContact,advanceContactAnchor,avoidPaws,constrainPaws,sweepPaws} from './contact.js';
 // Units are CSS pixels and seconds. Fixed substeps keep fast mice from tunnelling.
 export{livelyDefaults,upgradeSettings}from'./settings-migration.js';
 export function radius(size,w,h){return Math.min(39*size,Math.min(w,h)*.18);}
@@ -33,6 +33,7 @@ export function stepMice(mice,config,time,dt,w,h,obstacles=[]){if(!Number.isFini
    const blend=1-Math.exp(-step*(scared?18:12));
    m.vx+=(Math.cos(m.angle)*desired-m.vx)*blend;m.vy+=(Math.sin(m.angle)*desired-m.vy)*blend;
    const oldX=m.x,oldY=m.y;m.x+=m.vx*step;m.y+=m.vy*step;
+   sweepPaws(m,oldX,oldY,paws,clearance,Number(config.pawAvoidanceRadius)||50);
    // Stop on swept arrival, rather than orbiting a target passed between frames.
    if(!m.hold&&!threatened&&!cruising){const sx=m.x-oldX,sy=m.y-oldY,len=sx*sx+sy*sy;
     const u=len>0?clamp(((m.targetX-oldX)*sx+(m.targetY-oldY)*sy)/len,0,1):0;

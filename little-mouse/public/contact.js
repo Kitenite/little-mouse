@@ -71,8 +71,16 @@ export function avoidPaws(m,dx,dy,paws,clearance,baseRadius=50){
    pawDetours.delete(m);detour=null;
   }
  }
- // Live overlap always wins, including a different paw encountered during a detour.
- for(const p of obstacles){if(p.recent)continue;const reach=reachOf(p),ox=m.x-p.x,oy=m.y-p.y,d=Math.hypot(ox,oy);if(d<reach+25){const nx=d>.01?ox/d:Math.cos(m.angle),ny=d>.01?oy/d:Math.sin(m.angle);return[nx*(reach+60),ny*(reach+60)];}}
+ // Keep same-paw tangential progress through the safety band: a radial-only
+ // override abruptly reversed the flank heading when collisions crossed this boundary.
+ const flank=()=>{const reach=reachOf(paw),forward=reach*.6,side=detour.sign*(reach+40);return[paw.x+detour.ux*forward-detour.uy*side-m.x,paw.y+detour.uy*forward+detour.ux*side-m.y];};
+ // A different live paw still takes immediate priority.
+ for(const p of obstacles){if(p.recent)continue;const reach=reachOf(p),ox=m.x-p.x,oy=m.y-p.y,d=Math.hypot(ox,oy);if(d<reach+25){const nx=d>.01?ox/d:Math.cos(m.angle),ny=d>.01?oy/d:Math.sin(m.angle);if(detour&&key(p)===detour.key){
+    const [fx,fy]=flank(),radial=fx*nx+fy*ny;
+    const blend=clamp((reach+25-d)/25,0,1);
+    const correction=(Math.max(reach+60,radial)-radial)*blend;
+    return[fx+nx*correction,fy+ny*correction];
+   }return[nx*(reach+60),ny*(reach+60)];}}
  if(distance<1)return[dx,dy];const ux=dx/distance,uy=dy/distance;
  if(!detour){
   let closest=null,nearest=Infinity;
@@ -85,6 +93,23 @@ export function avoidPaws(m,dx,dy,paws,clearance,baseRadius=50){
  // A forward offset carries the mouse past the paw instead of stopping at its flank.
  const reach=reachOf(paw),forward=reach*.6,side=detour.sign*(reach+40);
  return[paw.x+detour.ux*forward-detour.uy*side-m.x,paw.y+detour.uy*forward+detour.ux*side-m.y];
+}
+// Clip a free mouse's integrated travel at its first live-paw boundary crossing.
+// Initially overlapping bodies retain the existing bounded depenetration policy.
+export function sweepPaws(m,oldX,oldY,paws,clearance,baseRadius=50){
+ if(m.hold)return;
+ const dx=m.x-oldX,dy=m.y-oldY,a=dx*dx+dy*dy;if(a<1e-12)return;
+ let fraction=1;
+ for(const p of paws){
+  if(p.recent)continue;
+  const reach=clearance+Math.max(0,(p.radius||0)-baseRadius),ox=oldX-p.x,oy=oldY-p.y;
+  const c=ox*ox+oy*oy-reach*reach,b=ox*dx+oy*dy;
+  if(c< -1e-6||b>=0)continue;
+  const discriminant=b*b-a*Math.max(0,c);if(discriminant<=0)continue;
+  const hit=(-b-Math.sqrt(discriminant))/a;
+  if(hit>=0&&hit<fraction)fraction=hit;
+ }
+ if(fraction<1){m.x=oldX+dx*fraction;m.y=oldY+dy*fraction;}
 }
 export function constrainPaws(m,paws,clearance,dt,baseRadius=50){if(m.hold)return;for(const p of paws){if(p.recent)continue;const reach=clearance+Math.max(0,(p.radius||0)-baseRadius),dx=m.x-p.x,dy=m.y-p.y,d=Math.hypot(dx,dy);if(d>=reach)continue;const nx=d>.01?dx/d:Math.cos(m.angle),ny=d>.01?dy/d:Math.sin(m.angle),push=Math.min(reach-d,Math.max(1,180*dt));m.x+=nx*push;m.y+=ny*push;const inward=m.vx*nx+m.vy*ny;if(inward<0){m.vx-=inward*nx;m.vy-=inward*ny;}}}
 export function constrainContact(m,size,time,dt){

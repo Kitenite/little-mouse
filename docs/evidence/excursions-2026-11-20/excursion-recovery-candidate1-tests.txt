@@ -1,0 +1,25 @@
+✔ only the contacted paw uses the held target (2.258375ms)
+✔ invalid held coordinates cannot poison limb IK (0.107583ms)
+✔ seeded collision-paw retreats physically exit with bounded elapsed time and actual progress (106.297833ms)
+ℹ {"episodes":10,"maxSeconds":2.866666666666667,"maxTurns":1.468205148483661,"collisions":627}
+✔ seeded collision-paw retreats do not accumulate repeated corrective rotations (0.351708ms)
+✔ same-paw steering is continuous at the outer safety band and outward in overlap (0.279833ms)
+✔ different live paw overrides same-paw commitment and held bodies retain their anchor (1.189083ms)
+✔ centered paw produces mirrored actual paths and progress at 30/60/120 Hz (12.4895ms)
+✔ pointer refresh and centerline jitter retain the chosen steering side (1.168917ms)
+✔ a second nonoverlapping paw cannot steal a commitment as ordering changes (0.755125ms)
+✔ live overlap immediately overrides a committed detour, even with zero goal distance (0.128791ms)
+✔ release preserves side while memory shrinks, expires, and pointer reuse starts fresh (0.927958ms)
+✔ passed paw and changed destination discard the old commitment (0.14925ms)
+✔ bounded accumulated travel releases a stale side without a physics clock (0.222417ms)
+✔ held mice ignore all paw steering and body pins retain precedence in physics (0.6815ms)
+✔ actual travel tolerates pointer jitter and passes multiple paws (5.8905ms)
+✔ claim then cancellation clears commitment even when physics bypasses steering (0.206792ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 191.045792

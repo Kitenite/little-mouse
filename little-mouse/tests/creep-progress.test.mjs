@@ -44,14 +44,15 @@ test('collision-locked creeping yields within three seconds at 30/60/120 Hz with
 
 test('slow progressing creep and a live-paw detour retain their routes',()=>{
  for(const hz of [30,60,120])for(const kind of ['slow-progress','paw-detour']){
-  const f=fixture(kind),m=f.mice[0];let exit=null,minPaw=Infinity;
+  const f=fixture(kind),m=f.mice[0];let exit=null,minPaw=Infinity,arrival=null,dwell=null;
   for(let frame=1;frame<=10*hz;frame++){
    f.tick(frame/hz,hz);
    minPaw=Math.min(minPaw,Math.hypot(m.x-625,m.y-384));
+   if(m.hunt.phase==='creep'&&m.hunt.arrivedAt!==null&&m.hunt.arrivedAt!==undefined){arrival=m.hunt.arrivedAt;dwell=m.hunt.dwell;}
    if(m.hunt.phase!=='creep'){exit=frame/hz;break;}
   }
   if(kind==='slow-progress'){assert.equal(exit,null);assert.ok(m.x>550,'slow creep still advances');}
-  else {assert.ok(exit>4&&exit<5);assert.ok(minPaw>=161.54-1e-6,'live paw clearance survives');}
+  else {assert.ok(exit<5,'detour completes promptly');assert.notEqual(arrival,null,'arrives rather than yielding to a watchdog');assert.ok(exit-arrival>=dwell&&exit-arrival<=dwell+2/hz);assert.ok(Math.hypot(m.x-850,m.y-384)<8,'reaches the original goal');assert.ok(minPaw>=161.54-1e-6,'live paw clearance survives');}
  }
 });
 

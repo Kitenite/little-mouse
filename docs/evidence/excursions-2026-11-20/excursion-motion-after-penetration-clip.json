@@ -1,0 +1,2930 @@
+[
+  [
+    {
+      "time": 137.64166666666665,
+      "mouse": 0,
+      "x": 552.4408511531327,
+      "y": 90.74635773960168,
+      "angle": 5.497286561175499,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 10.504685323479924,
+      "vy": -2.9955518979373523
+    },
+    {
+      "time": 137.64166666666665,
+      "mouse": 1,
+      "x": 25.98374768623166,
+      "y": 438.601640708718,
+      "angle": -0.04274788720423026,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1132.850123033234,
+      "vy": -31.11910376571377
+    }
+  ],
+  [
+    {
+      "time": 137.65,
+      "mouse": 0,
+      "x": 552.5200597560108,
+      "y": 90.72377034422732,
+      "angle": 5.443074589445234,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 9.505032345377813,
+      "vy": -2.710487444922352
+    },
+    {
+      "time": 137.65,
+      "mouse": 1,
+      "x": 35.94887655213328,
+      "y": 438.30142107057867,
+      "angle": -0.04604469424381805,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1195.815463908194,
+      "vy": -36.026356576715486
+    }
+  ],
+  [
+    {
+      "time": 137.65833333333333,
+      "mouse": 0,
+      "x": 552.5917306637253,
+      "y": 90.70333242371663,
+      "angle": 5.386640395492748,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 8.600508925739941,
+      "vy": -2.452550461282426
+    },
+    {
+      "time": 137.65833333333333,
+      "mouse": 1,
+      "x": 46.388895181021134,
+      "y": 437.95977466772644,
+      "angle": -0.04914293392497437,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1252.802235466543,
+      "vy": -40.99756834227082
+    }
+  ],
+  [
+    {
+      "time": 137.66666666666666,
+      "mouse": 0,
+      "x": 552.65658118281,
+      "y": 90.68483942849171,
+      "angle": 5.328650504030634,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 7.782062290161752,
+      "vy": -2.219159426989692
+    },
+    {
+      "time": 137.66666666666666,
+      "mouse": 1,
+      "x": 57.25867953182628,
+      "y": 437.5764799377821,
+      "angle": -0.05205866970359615,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1304.3741220966178,
+      "vy": -45.995367593323564
+    }
+  ],
+  [
+    {
+      "time": 137.675,
+      "mouse": 0,
+      "x": 552.7152603590569,
+      "y": 90.66810627444065,
+      "angle": 5.270628103962005,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 7.041501149624966,
+      "vy": -2.007978486127512
+    },
+    {
+      "time": 137.675,
+      "mouse": 1,
+      "x": 68.5173635269535,
+      "y": 437.1515764127206,
+      "angle": -0.05480651424330527,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1351.042079415266,
+      "vy": -50.988423007376525
+    }
+  ],
+  [
+    {
+      "time": 137.68333333333334,
+      "mouse": 0,
+      "x": 552.7683554733845,
+      "y": 90.65296549053349,
+      "angle": 5.212576257463494,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 6.371413719323895,
+      "vy": -1.8168940688593729
+    },
+    {
+      "time": 137.68333333333334,
+      "mouse": 1,
+      "x": 80.1279401812711,
+      "y": 436.6853209716541,
+      "angle": -0.05739977519469932,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1393.2691985181116,
+      "vy": -55.950652927976456
+    }
+  ],
+  [
+    {
+      "time": 137.69166666666666,
+      "mouse": 0,
+      "x": 552.8163979195431,
+      "y": 90.63926554271589,
+      "angle": 5.154497740964401,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 5.765093539031923,
+      "vy": -1.643993738111564
+    },
+    {
+      "time": 137.69166666666666,
+      "mouse": 1,
+      "x": 92.05689962757735,
+      "y": 436.17814988799074,
+      "angle": -0.059850585086868864,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1431.4751335567505,
+      "vy": -60.86053003960071
+    }
+  ],
+  [
+    {
+      "time": 137.7,
+      "mouse": 0,
+      "x": 552.8598685224814,
+      "y": 90.62686931730539,
+      "angle": 5.096395071323782,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 5.2164723525934376,
+      "vy": -1.487547049260153
+    },
+    {
+      "time": 137.7,
+      "mouse": 1,
+      "x": 104.27390070722733,
+      "y": 435.6306459681954,
+      "angle": -0.06217001728164754,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1466.0401295579975,
+      "vy": -65.70047037544215
+    }
+  ],
+  [
+    {
+      "time": 137.70833333333334,
+      "mouse": 0,
+      "x": 552.8992023506046,
+      "y": 90.61565274871157,
+      "angle": 5.038270529697913,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 4.720059374776613,
+      "vy": -1.3459882312595672
+    },
+    {
+      "time": 137.70833333333334,
+      "mouse": 1,
+      "x": 116.7514730800738,
+      "y": 435.0435101599294,
+      "angle": -0.06436818966678541,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1497.3086847415766,
+      "vy": -70.45629699191879
+    }
+  ],
+  [
+    {
+      "time": 137.71666666666667,
+      "mouse": 0,
+      "x": 552.934793070085,
+      "y": 90.6055035777459,
+      "angle": 4.9801261832856865,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 4.270886337649296,
+      "vy": -1.2179005158796947
+    },
+    {
+      "time": 137.71666666666667,
+      "mouse": 1,
+      "x": 129.4647470719263,
+      "y": 434.41753707916087,
+      "angle": -0.06645435753535654,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1525.5928790223018,
+      "vy": -75.11676969222125
+    }
+  ],
+  [
+    {
+      "time": 137.725,
+      "mouse": 0,
+      "x": 552.9669968848057,
+      "y": 90.59632022809413,
+      "angle": 4.9219639051273285,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 3.8644577664836444,
+      "vy": -1.102001958213246
+    },
+    {
+      "time": 137.725,
+      "mouse": 1,
+      "x": 142.39120872130775,
+      "y": 433.7535939697637,
+      "angle": -0.06843699690658538,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1551.1753979257753,
+      "vy": -79.67317312765766
+    }
+  ],
+  [
+    {
+      "time": 137.73333333333332,
+      "mouse": 0,
+      "x": 552.9961361013685,
+      "y": 90.58801078970629,
+      "angle": 4.8637853921198335,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 3.496705987534072,
+      "vy": -0.9971326065402449
+    },
+    {
+      "time": 137.73333333333332,
+      "mouse": 1,
+      "x": 155.51047771146074,
+      "y": 433.0526026659563,
+      "angle": -0.07032387938112239,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1574.3122788183575,
+      "vy": -84.11895645689145
+    }
+  ],
+  [
+    {
+      "time": 137.74166666666667,
+      "mouse": 0,
+      "x": 553.0225023548468,
+      "y": 90.58049209893011,
+      "angle": 4.8055921814008045,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 3.1639504173912094,
+      "vy": -0.9022428931413415
+    },
+    {
+      "time": 137.74166666666667,
+      "mouse": 1,
+      "x": 168.80410607946976,
+      "y": 432.31552417839947,
+      "angle": -0.07212213948625992,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1595.2354041610845,
+      "vy": -88.44941850681685
+    }
+  ],
+  [
+    {
+      "time": 137.75,
+      "mouse": 0,
+      "x": 553.0463595275673,
+      "y": 90.57368890618118,
+      "angle": 4.747385665241173,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 2.8628607264660584,
+      "vy": -0.8163831298713056
+    },
+    {
+      "time": 137.75,
+      "mouse": 1,
+      "x": 182.25539578319194,
+      "y": 431.54334556954706,
+      "angle": -0.07383833534939362,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1614.1547644466607,
+      "vy": -92.66143306228845
+    }
+  ],
+  [
+    {
+      "time": 137.75833333333333,
+      "mouse": 0,
+      "x": 553.0679463901334,
+      "y": 90.56753312281984,
+      "angle": 4.689167104576515,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 2.5904235079320994,
+      "vy": -0.7386940033608675
+    },
+    {
+      "time": 137.75833333333333,
+      "mouse": 1,
+      "x": 195.37981666035128,
+      "y": 430.77462423262864,
+      "angle": -0.07333230899030509,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1574.9305052591199,
+      "vy": -92.24656043021216
+    }
+  ],
+  [
+    {
+      "time": 137.76666666666665,
+      "mouse": 0,
+      "x": 553.0874534886397,
+      "y": 90.56165073158095,
+      "angle": 4.630937641296516,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 2.340851820747268,
+      "vy": -0.7058869486653986
+    },
+    {
+      "time": 137.76666666666665,
+      "mouse": 1,
+      "x": 208.17617536246834,
+      "y": 430.01392946281595,
+      "angle": -0.07060406040899433,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1535.563044254047,
+      "vy": -91.28337237752417
+    }
+  ],
+  [
+    {
+      "time": 137.775,
+      "mouse": 0,
+      "x": 553.1043792113735,
+      "y": 90.55117166397275,
+      "angle": 4.572698602654583,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 2.0310867280617435,
+      "vy": -1.2574881129836215
+    },
+    {
+      "time": 137.775,
+      "mouse": 1,
+      "x": 220.64594211258455,
+      "y": 429.2670334545281,
+      "angle": -0.06565358960546136,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1496.3720100139462,
+      "vy": -89.6275209945432
+    }
+  ],
+  [
+    {
+      "time": 137.78333333333333,
+      "mouse": 0,
+      "x": 553.1165538720616,
+      "y": 90.52603162724859,
+      "angle": 4.514457403056425,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 1.4609592825737712,
+      "vy": -3.0168044068992437
+    },
+    {
+      "time": 137.78333333333333,
+      "mouse": 1,
+      "x": 232.79290863458868,
+      "y": 428.540637314724,
+      "angle": -0.05848089657970617,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1457.635982640495,
+      "vy": -87.1675367764925
+    }
+  ],
+  [
+    {
+      "time": 137.79166666666666,
+      "mouse": 0,
+      "x": 553.119350412803,
+      "y": 90.47189824694583,
+      "angle": 4.456253266092678,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": 0.33558488897277505,
+      "vy": -6.496005636330226
+    },
+    {
+      "time": 137.79166666666666,
+      "mouse": 1,
+      "x": 244.62284982357943,
+      "y": 427.8421550151246,
+      "angle": -0.049085981331728756,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1419.5929426788878,
+      "vy": -83.81787595192732
+    }
+  ],
+  [
+    {
+      "time": 137.8,
+      "mouse": 0,
+      "x": 553.1050788496983,
+      "y": 90.37121565134156,
+      "angle": 4.398170125826435,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -1.712587572555231,
+      "vy": -12.08191147251171
+    },
+    {
+      "time": 137.8,
+      "mouse": 1,
+      "x": 256.14319321548163,
+      "y": 427.17954683110594,
+      "angle": -0.03746884386152912,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1382.4412070282667,
+      "vy": -79.51298208224063
+    }
+  ],
+  [
+    {
+      "time": 137.80833333333334,
+      "mouse": 0,
+      "x": 553.0625981665062,
+      "y": 90.20435198607048,
+      "angle": 4.340304395091266,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -5.097681983058786,
+      "vy": -20.02363983252926
+    },
+    {
+      "time": 137.80833333333334,
+      "mouse": 1,
+      "x": 267.36269876415196,
+      "y": 426.56119416027883,
+      "angle": -0.023629484169107262,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1346.3406658404376,
+      "vy": -74.20232049925457
+    }
+  ],
+  [
+    {
+      "time": 137.81666666666666,
+      "mouse": 0,
+      "x": 552.9771665481738,
+      "y": 89.95080053378513,
+      "angle": 4.282758459767896,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -10.251794199877704,
+      "vy": -30.426174274242573
+    },
+    {
+      "time": 137.81666666666666,
+      "mouse": 1,
+      "x": 278.2911501934882,
+      "y": 425.9958080070334,
+      "angle": -0.007567902254463181,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1311.4141715203486,
+      "vy": -67.84633838945135
+    }
+  ],
+  [
+    {
+      "time": 137.825,
+      "mouse": 0,
+      "x": 552.8305370474419,
+      "y": 89.59037776732592,
+      "angle": 4.225639571338316,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -17.595540087832223,
+      "vy": -43.25073197510424
+    },
+    {
+      "time": 137.825,
+      "mouse": 1,
+      "x": 288.9390582392111,
+      "y": 425.49236381601946,
+      "angle": 0.010715901882403123,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1277.748965486745,
+      "vy": -60.41330292167654
+    }
+  ],
+  [
+    {
+      "time": 137.83333333333334,
+      "mouse": 0,
+      "x": 552.6012902961569,
+      "y": 89.1043600998348,
+      "angle": 4.169055853298021,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -27.509610154196693,
+      "vy": -58.32212009893341
+    },
+    {
+      "time": 137.83333333333334,
+      "mouse": 1,
+      "x": 299.3173754104038,
+      "y": 425.0600557060263,
+      "angle": 0.03122192824149165,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1245.3980605431275,
+      "vy": -51.87697319918497
+    }
+  ],
+  [
+    {
+      "time": 137.84166666666667,
+      "mouse": 0,
+      "x": 552.2653784887932,
+      "y": 88.47650183762688,
+      "angle": 4.113111494689916,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -40.30941688364407,
+      "vy": -75.34299146495103
+    },
+    {
+      "time": 137.84166666666667,
+      "mouse": 1,
+      "x": 309.4372214680561,
+      "y": 424.70826347633164,
+      "angle": 0.0539501768228024,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1214.3815269182746,
+      "vy": -42.215067563353514
+    }
+  ],
+  [
+    {
+      "time": 137.85,
+      "mouse": 0,
+      "x": 551.7968391522564,
+      "y": 87.69388422941887,
+      "angle": 4.057902195753679,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -56.224720384405785,
+      "vy": -93.91411298496158
+    },
+    {
+      "time": 137.85,
+      "mouse": 1,
+      "x": 319.3096186239452,
+      "y": 424.44652602183334,
+      "angle": 0.07890064762633536,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1184.6876587066915,
+      "vy": -31.40849453979346
+    }
+  ],
+  [
+    {
+      "time": 137.85833333333332,
+      "mouse": 0,
+      "x": 551.1686257457525,
+      "y": 86.74755864626933,
+      "angle": 4.003511379649821,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -75.38560878047595,
+      "vy": -113.55906997794483
+    },
+    {
+      "time": 137.85833333333332,
+      "mouse": 1,
+      "x": 328.9452354990658,
+      "y": 424.2845150034241,
+      "angle": 0.10607334065209055,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1156.2740250144716,
+      "vy": -19.44132220911014
+    }
+  ],
+  [
+    {
+      "time": 137.86666666666667,
+      "mouse": 0,
+      "x": 550.3534965161538,
+      "y": 85.63296365056314,
+      "angle": 3.950007443066251,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -97.81550755184915,
+      "vy": -133.75139948474165
+    },
+    {
+      "time": 137.86666666666667,
+      "mouse": 1,
+      "x": 338.3543482909979,
+      "y": 424.2304553784365,
+      "angle": 0.1332267424505957,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1129.0935350318512,
+      "vy": -6.487154998512022
+    }
+  ],
+  [
+    {
+      "time": 137.875,
+      "mouse": 0,
+      "x": 549.3249037097063,
+      "y": 84.35011340524485,
+      "angle": 3.8974421481734742,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -123.43113677369927,
+      "vy": -153.94202943819448
+    },
+    {
+      "time": 137.875,
+      "mouse": 1,
+      "x": 347.13143583174497,
+      "y": 424.2247462829873,
+      "angle": 0.1626023664713231,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 1053.2505048896471,
+      "vy": -0.6850914538992523
+    }
+  ],
+  [
+    {
+      "time": 137.88333333333333,
+      "mouse": 0,
+      "x": 548.0578315053938,
+      "y": 82.90357105357553,
+      "angle": 3.8458501171264095,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -152.04866451749695,
+      "vy": -173.58508220031948
+    },
+    {
+      "time": 137.88333333333333,
+      "mouse": 1,
+      "x": 355.0763844062996,
+      "y": 424.2201924161272,
+      "angle": 0.19420021271427268,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 953.393828946559,
+      "vy": -0.5464640232145759
+    }
+  ],
+  [
+    {
+      "time": 137.89166666666665,
+      "mouse": 0,
+      "x": 546.5295413434148,
+      "y": 81.30223349566143,
+      "angle": 3.7952492829347193,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -183.39481943746887,
+      "vy": -192.16050694969204
+    },
+    {
+      "time": 137.89166666666665,
+      "mouse": 1,
+      "x": 360.81661190056104,
+      "y": 424.60515589195575,
+      "angle": 0.2280202811794445,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 57.91876169903321,
+      "vy": 215.64637386156585
+    }
+  ],
+  [
+    {
+      "time": 137.9,
+      "mouse": 0,
+      "x": 544.7201957474817,
+      "y": 79.558962401866,
+      "angle": 3.7456420847876433,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -217.1214715119683,
+      "vy": -209.19253125545194
+    },
+    {
+      "time": 137.9,
+      "mouse": 1,
+      "x": 359.8089464657827,
+      "y": 426.63583831383585,
+      "angle": 0.26406257186683857,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 52.40706279159323,
+      "vy": 195.12490813371647
+    }
+  ],
+  [
+    {
+      "time": 137.90833333333333,
+      "mouse": 0,
+      "x": 542.6135485721586,
+      "y": 77.68977151085691,
+      "angle": 3.6977171441643524,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -252.79766103876995,
+      "vy": -224.30290692109065
+    },
+    {
+      "time": 137.90833333333333,
+      "mouse": 1,
+      "x": 358.7636876990484,
+      "y": 428.5256832663759,
+      "angle": 0.30232708477645487,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 47.41987138319362,
+      "vy": 176.5563180702158
+    }
+  ],
+  [
+    {
+      "time": 137.91666666666666,
+      "mouse": 0,
+      "x": 540.1978998158925,
+      "y": 75.71319587114004,
+      "angle": 3.6520144257632836,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -289.8778507519309,
+      "vy": -237.189076766025
+    },
+    {
+      "time": 137.91666666666666,
+      "mouse": 1,
+      "x": 357.68449168137005,
+      "y": 430.2879374274159,
+      "angle": 0.34281381990829335,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 42.9072739859662,
+      "vy": 159.7547629805897
+    }
+  ],
+  [
+    {
+      "time": 137.925,
+      "mouse": 0,
+      "x": 537.4665380287812,
+      "y": 73.64967010787561,
+      "angle": 3.608533929584437,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -327.7634144533478,
+      "vy": -247.62309159173208
+    },
+    {
+      "time": 137.925,
+      "mouse": 1,
+      "x": 357.6345964514634,
+      "y": 431.60770722579946,
+      "angle": 0.38552277726235407,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 38.82410700842315,
+      "vy": 144.55208725430347
+    }
+  ],
+  [
+    {
+      "time": 137.93333333333334,
+      "mouse": 0,
+      "x": 534.4175871867305,
+      "y": 71.52066697526772,
+      "angle": 3.5672756556278125,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -365.8741010460757,
+      "vy": -255.48037591294644
+    },
+    {
+      "time": 137.93333333333334,
+      "mouse": 1,
+      "x": 357.9273423243222,
+      "y": 432.6976750374902,
+      "angle": 0.430453956838637,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 35.1295047430534,
+      "vy": 130.7961374028927
+    }
+  ],
+  [
+    {
+      "time": 137.94166666666666,
+      "mouse": 0,
+      "x": 531.0537082085557,
+      "y": 69.34791496015568,
+      "angle": 3.5282396038934105,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -403.665477380986,
+      "vy": -260.73024181344516
+    },
+    {
+      "time": 137.94166666666666,
+      "mouse": 1,
+      "x": 358.1922297440604,
+      "y": 433.68391869796284,
+      "angle": 0.47760735863714215,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 31.786490368586435,
+      "vy": 118.34923925671002
+    }
+  ],
+  [
+    {
+      "time": 137.95,
+      "mouse": 0,
+      "x": 527.3816914477073,
+      "y": 67.1527161248169,
+      "angle": 3.4914257743812307,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -440.6420113018087,
+      "vy": -263.4238602406532
+    },
+    {
+      "time": 137.95,
+      "mouse": 1,
+      "x": 358.4319097930065,
+      "y": 434.5763088652592,
+      "angle": 0.5269829826578696,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 28.761605873536645,
+      "vy": 107.08682007556152
+    }
+  ],
+  [
+    {
+      "time": 137.95833333333334,
+      "mouse": 0,
+      "x": 523.4119749291053,
+      "y": 64.95537550487532,
+      "angle": 3.456834167091273,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -476.36598223224007,
+      "vy": -263.6808743929901
+    },
+    {
+      "time": 137.95833333333334,
+      "mouse": 1,
+      "x": 358.6507914824707,
+      "y": 435.38508983451334,
+      "angle": 0.5785808289008192,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 26.26580273570024,
+      "vy": 97.05371631049668
+    }
+  ],
+  [
+    {
+      "time": 137.96666666666667,
+      "mouse": 0,
+      "x": 519.1581198573034,
+      "y": 62.7747452783116,
+      "angle": 3.4244647820235374,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -510.46260861622466,
+      "vy": -261.6756271876464
+    },
+    {
+      "time": 137.96666666666667,
+      "mouse": 1,
+      "x": 358.8568309849959,
+      "y": 436.12275809654557,
+      "angle": 0.632400897365991,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 24.724740303019576,
+      "vy": 88.52019144387077
+    }
+  ],
+  [
+    {
+      "time": 137.975,
+      "mouse": 0,
+      "x": 514.6362706626139,
+      "y": 60.6278806495976,
+      "angle": 3.394317619178024,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -542.6219033627378,
+      "vy": -257.6237554456798
+    },
+    {
+      "time": 137.975,
+      "mouse": 1,
+      "x": 359.0608514863149,
+      "y": 436.8046670786865,
+      "angle": 0.6873875658460527,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 24.482460158280844,
+      "vy": 81.82907785691737
+    }
+  ],
+  [
+    {
+      "time": 137.98333333333332,
+      "mouse": 0,
+      "x": 509.8646221215874,
+      "y": 58.52979985333298,
+      "angle": 3.366392678554733,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -572.5978249231823,
+      "vy": -251.76969555175452
+    },
+    {
+      "time": 137.98333333333332,
+      "mouse": 1,
+      "x": 359.2754774786622,
+      "y": 437.449238709427,
+      "angle": 0.7425980853076734,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 25.75511908167236,
+      "vy": 77.34859568885732
+    }
+  ],
+  [
+    {
+      "time": 137.99166666666667,
+      "mouse": 0,
+      "x": 504.86291130385484,
+      "y": 56.49333768439702,
+      "angle": 3.3406899601536644,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -600.2052981279064,
+      "vy": -244.37546027231542
+    },
+    {
+      "time": 137.99166666666667,
+      "mouse": 1,
+      "x": 359.5138621051013,
+      "y": 438.07777696377315,
+      "angle": 0.7979435170719431,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 28.606155172691885,
+      "vy": 75.42459052153885
+    }
+  ],
+  [
+    {
+      "time": 138,
+      "mouse": 0,
+      "x": 499.6519475554393,
+      "y": 54.52908026763808,
+      "angle": 3.3172094639748178,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -625.3156498098678,
+      "vy": -235.71089001107282
+    },
+    {
+      "time": 138,
+      "mouse": 1,
+      "x": 359.78864389548653,
+      "y": 438.7142092625826,
+      "angle": 0.8533187555484399,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 32.97381484622754,
+      "vy": 76.3718758571321
+    }
+  ],
+  [
+    {
+      "time": 138.00833333333333,
+      "mouse": 0,
+      "x": 494.2531024977227,
+      "y": 52.64592959054998,
+      "angle": 3.2951300212717696,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -647.8614069259926,
+      "vy": -225.97808125057173
+    },
+    {
+      "time": 138.00833333333333,
+      "mouse": 1,
+      "x": 360.1110568101777,
+      "y": 439.38471297800163,
+      "angle": 0.9086064423473257,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 38.68954976293775,
+      "vy": 80.46044585028322
+    }
+  ],
+  [
+    {
+      "time": 138.01666666666665,
+      "mouse": 0,
+      "x": 488.6876294835958,
+      "y": 50.851292682438164,
+      "angle": 3.2741041073985673,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -667.8567616952253,
+      "vy": -215.35642897341864
+    },
+    {
+      "time": 138.01666666666665,
+      "mouse": 1,
+      "x": 360.4902265702374,
+      "y": 440.1172876245933,
+      "angle": 0.9636835028201326,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 45.500371207166836,
+      "vy": 87.90895759100171
+    }
+  ],
+  [
+    {
+      "time": 138.025,
+      "mouse": 0,
+      "x": 482.976345582066,
+      "y": 49.15115949160978,
+      "angle": 3.254048581669479,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -685.3540681835756,
+      "vy": -204.01598289940574
+    },
+    {
+      "time": 138.025,
+      "mouse": 1,
+      "x": 360.84135377351186,
+      "y": 440.97574282951825,
+      "angle": 1.0184282981398203,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 39.24027377349715,
+      "vy": 104.10582410319319
+    }
+  ],
+  [
+    {
+      "time": 138.03333333333333,
+      "mouse": 0,
+      "x": 477.1394760672067,
+      "y": 47.55021130441813,
+      "angle": 3.2348875490086018,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -700.424341783115,
+      "vy": -192.11378246299873
+    },
+    {
+      "time": 138.03333333333333,
+      "mouse": 1,
+      "x": 361.2208382207132,
+      "y": 441.9725449944682,
+      "angle": 1.0727588123067202,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 45.93252810290004,
+      "vy": 119.46462047542784
+    }
+  ],
+  [
+    {
+      "time": 138.04166666666666,
+      "mouse": 0,
+      "x": 471.1965323421463,
+      "y": 46.051933061809926,
+      "angle": 3.2165516888742824,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -713.1532470072494,
+      "vy": -179.79338911298447
+    },
+    {
+      "time": 138.04166666666666,
+      "mouse": 1,
+      "x": 361.66934743920325,
+      "y": 443.12585306483976,
+      "angle": 1.1265342724188465,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 54.3503956877514,
+      "vy": 138.1887960536832
+    }
+  ],
+  [
+    {
+      "time": 138.05,
+      "mouse": 0,
+      "x": 465.1662188222829,
+      "y": 44.65872610287367,
+      "angle": 3.1989776465481294,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -723.6376223836133,
+      "vy": -167.18483507235072
+    },
+    {
+      "time": 138.05,
+      "mouse": 1,
+      "x": 362.2005538832552,
+      "y": 444.46218277828604,
+      "angle": 1.1796449953838961,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 63.74477328623456,
+      "vy": 160.35956561355437
+    }
+  ],
+  [
+    {
+      "time": 138.05833333333334,
+      "mouse": 0,
+      "x": 459.06636465934804,
+      "y": 43.372018768623214,
+      "angle": 3.1821074815384116,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -731.9824995521814,
+      "vy": -154.40488011005496
+    },
+    {
+      "time": 138.05833333333334,
+      "mouse": 1,
+      "x": 362.8025692468511,
+      "y": 446.01573696139866,
+      "angle": 1.23199591555979,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 72.24184363150145,
+      "vy": 186.42650197351736
+    }
+  ],
+  [
+    {
+      "time": 138.06666666666666,
+      "mouse": 0,
+      "x": 452.9138765806172,
+      "y": 42.192373022721426,
+      "angle": 3.1658881680961457,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -738.2985694476982,
+      "vy": -141.5574895082142
+    },
+    {
+      "time": 138.06666666666666,
+      "mouse": 1,
+      "x": 363.46432435771675,
+      "y": 447.817540698221,
+      "angle": 1.2835089350487328,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 79.41061330387919,
+      "vy": 216.21644841868428
+    }
+  ],
+  [
+    {
+      "time": 138.075,
+      "mouse": 0,
+      "x": 446.72470951726535,
+      "y": 41.11958581827385,
+      "angle": 3.1502711431419543,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -742.7000476022222,
+      "vy": -128.73446453370937
+    },
+    {
+      "time": 138.075,
+      "mouse": 1,
+      "x": 364.17169683085893,
+      "y": 449.8962509194104,
+      "angle": 1.3331800334611361,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 84.88469677706556,
+      "vy": 249.4452265427251
+    }
+  ],
+  [
+    {
+      "time": 138.08333333333334,
+      "mouse": 0,
+      "x": 440.5138520843325,
+      "y": 40.152784387437464,
+      "angle": 3.1352118972279484,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -745.3028919519471,
+      "vy": -116.01617170036626
+    },
+    {
+      "time": 138.08333333333334,
+      "mouse": 1,
+      "x": 364.9078428969407,
+      "y": 452.2763262400225,
+      "angle": 1.3806289096513171,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 88.33752792980927,
+      "vy": 285.6090384734532
+    }
+  ],
+  [
+    {
+      "time": 138.09166666666667,
+      "mouse": 0,
+      "x": 434.29532434082284,
+      "y": 39.290514976253455,
+      "angle": 3.1206696044938895,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -746.223329221155,
+      "vy": -103.47232934208117
+    },
+    {
+      "time": 138.09166666666667,
+      "mouse": 1,
+      "x": 365.6536990119601,
+      "y": 454.9763670525135,
+      "angle": 1.425855563619276,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 89.5027338023277,
+      "vy": 324.00489749891983
+    }
+  ],
+  [
+    {
+      "time": 138.1,
+      "mouse": 0,
+      "x": 428.0821855959124,
+      "y": 38.53082481031566,
+      "angle": 3.106606787908645,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -745.5766493892519,
+      "vy": -91.16281991253535
+    },
+    {
+      "time": 138.1,
+      "mouse": 1,
+      "x": 366.3887053888155,
+      "y": 458.0072774914309,
+      "angle": 1.4688599953650125,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 88.20076522264246,
+      "vy": 363.70925267008397
+    }
+  ],
+  [
+    {
+      "time": 138.10833333333332,
+      "mouse": 0,
+      "x": 421.88655033327615,
+      "y": 37.87133727398319,
+      "angle": 3.09298901640843,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -743.4762315163517,
+      "vy": -79.13850435989684
+    },
+    {
+      "time": 138.10833333333332,
+      "mouse": 1,
+      "x": 367.0917393310041,
+      "y": 461.3699183533128,
+      "angle": 1.509642204888527,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 84.36407306263052,
+      "vy": 403.5169034258283
+    }
+  ],
+  [
+    {
+      "time": 138.11666666666667,
+      "mouse": 0,
+      "x": 415.7196105996342,
+      "y": 37.30932043038744,
+      "angle": 3.07978463084749,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -740.0327680370287,
+      "vy": -67.44202123148978
+    },
+    {
+      "time": 138.11666666666667,
+      "mouse": 1,
+      "x": 367.7423275780451,
+      "y": 465.0523015487781,
+      "angle": 1.5482021921898192,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 78.07058964492215,
+      "vy": 441.88598345583125
+    }
+  ],
+  [
+    {
+      "time": 138.125,
+      "mouse": 0,
+      "x": 409.5916634466646,
+      "y": 36.84174911258704,
+      "angle": 3.0669644959618045,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -735.3536583563572,
+      "vy": -56.10855813604773
+    },
+    {
+      "time": 138.125,
+      "mouse": 1,
+      "x": 368.3221768516109,
+      "y": 469.02650336669706,
+      "angle": 1.5845399572688892,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 69.5819128278981,
+      "vy": 476.9042181502754
+    }
+  ],
+  [
+    {
+      "time": 138.13333333333333,
+      "mouse": 0,
+      "x": 403.51214222923494,
+      "y": 36.46536088693101,
+      "angle": 3.0545017758106985,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -729.5425460915559,
+      "vy": -45.16658707872347
+    },
+    {
+      "time": 138.13333333333333,
+      "mouse": 1,
+      "x": 368.8373403711643,
+      "y": 473.24633070027085,
+      "angle": 1.5860331768929894,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 61.81962234640997,
+      "vy": 506.3792800288561
+    }
+  ],
+  [
+    {
+      "time": 138.14166666666665,
+      "mouse": 0,
+      "x": 397.4896507497483,
+      "y": 36.1767062353035,
+      "angle": 3.0423717304045677,
+      "targetX": 184.32,
+      "targetY": 92.16,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/1",
+      "goal": [
+        0.18,
+        0.12
+      ],
+      "arrived": null,
+      "deadline": 149.7528357689631,
+      "restUntil": 0,
+      "vx": -722.6989775383931,
+      "vy": -34.63855819530128
+    },
+    {
+      "time": 138.14166666666665,
+      "mouse": 1,
+      "x": 369.295854318396,
+      "y": 477.6504561490745,
+      "angle": 1.5838109546707673,
+      "targetX": 901.12,
+      "targetY": 362.5319553494453,
+      "phase": "dart",
+      "state": "active",
+      "visible": true,
+      "collisions": 0,
+      "route": "edge-hook/0",
+      "goal": [
+        0.88,
+        0.47204681686125693
+      ],
+      "arrived": null,
+      "deadline": 150.9195024356298,
+      "restUntil": 0,
+      "vx": 55.021673667801764,
+      "vy": 528.4950538564373
+    }
+  ]
+]

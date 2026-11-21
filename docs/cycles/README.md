@@ -1,5 +1,9 @@
 # Improvement batches
 
+## Whole appearances and collision–paw steering — 2026-11-20
+
+[Current batch](excursions.md): entry-to-exit measurements and reproduced corrective-turn repair.
+
 ## Visibility and executed-route diagnostics — 2026-11-20
 
 [Current batch](motion-metrics.md): partial neutral-body exposure, bounded actual-route recurrence,

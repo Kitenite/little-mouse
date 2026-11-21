@@ -1,0 +1,5 @@
+
+> little-mouse@0.2.0 build
+> node scripts/build-validation.mjs && node scripts/build-babylon.mjs && node scripts/build.mjs
+
+Built 91839a4344eb (12815 KB)

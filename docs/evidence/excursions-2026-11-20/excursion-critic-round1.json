@@ -1,0 +1,691 @@
+{
+  "hashes": {
+    "behavior-excursions.mjs": "1f6ae0d03fd41cdaa8f692ad0a2486ce001dc28c64524418dbbdae2d1778996e",
+    "behavior-benchmark.mjs": "c901bc3d8e95e1767e3dddb97038026903b73cd0533246003f34a33bd248e079"
+  },
+  "results": {
+    "crossing": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2048,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 7,
+        "validSamples": 7,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 1,
+        "witnessedEntries": 1,
+        "naturalExits": 1,
+        "completedAppearances": 1,
+        "censoredAppearances": 0,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 0,
+        "rightCensored": 0,
+        "ineligible": 0,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 0
+      },
+      "corridorRecurrence": null,
+      "history": [
+        {
+          "startTime": 0.1,
+          "endTime": 0.5,
+          "duration": 0.4,
+          "pathLength": 1.2000000000000002,
+          "entryEdge": "left",
+          "exitEdge": "right",
+          "edgePair": "left->right",
+          "signature": [
+            {
+              "x": -0.1,
+              "y": 0.5
+            },
+            {
+              "x": -0.061290322580645165,
+              "y": 0.5
+            },
+            {
+              "x": -0.022580645161290325,
+              "y": 0.5
+            },
+            {
+              "x": 0.01612903225806453,
+              "y": 0.5
+            },
+            {
+              "x": 0.054838709677419356,
+              "y": 0.5
+            },
+            {
+              "x": 0.09354838709677421,
+              "y": 0.5
+            },
+            {
+              "x": 0.13225806451612906,
+              "y": 0.5
+            },
+            {
+              "x": 0.1709677419354839,
+              "y": 0.5
+            },
+            {
+              "x": 0.20967741935483872,
+              "y": 0.5
+            },
+            {
+              "x": 0.2483870967741936,
+              "y": 0.5
+            },
+            {
+              "x": 0.2870967741935484,
+              "y": 0.5
+            },
+            {
+              "x": 0.32580645161290334,
+              "y": 0.5
+            },
+            {
+              "x": 0.36451612903225816,
+              "y": 0.5
+            },
+            {
+              "x": 0.403225806451613,
+              "y": 0.5
+            },
+            {
+              "x": 0.4419354838709678,
+              "y": 0.5
+            },
+            {
+              "x": 0.48064516129032275,
+              "y": 0.5
+            },
+            {
+              "x": 0.5193548387096775,
+              "y": 0.5
+            },
+            {
+              "x": 0.5580645161290323,
+              "y": 0.5
+            },
+            {
+              "x": 0.5967741935483872,
+              "y": 0.5
+            },
+            {
+              "x": 0.6354838709677421,
+              "y": 0.5
+            },
+            {
+              "x": 0.6741935483870969,
+              "y": 0.5
+            },
+            {
+              "x": 0.7129032258064517,
+              "y": 0.5
+            },
+            {
+              "x": 0.7516129032258067,
+              "y": 0.5
+            },
+            {
+              "x": 0.7903225806451615,
+              "y": 0.5
+            },
+            {
+              "x": 0.8290322580645163,
+              "y": 0.5
+            },
+            {
+              "x": 0.867741935483871,
+              "y": 0.5
+            },
+            {
+              "x": 0.906451612903226,
+              "y": 0.5
+            },
+            {
+              "x": 0.9451612903225809,
+              "y": 0.5
+            },
+            {
+              "x": 0.9838709677419356,
+              "y": 0.5
+            },
+            {
+              "x": 1.0225806451612907,
+              "y": 0.5
+            },
+            {
+              "x": 1.0612903225806454,
+              "y": 0.5
+            },
+            {
+              "x": 1.1,
+              "y": 0.5
+            }
+          ],
+          "short": false,
+          "comparisonSupport": 0,
+          "repeatedCorridor": false
+        }
+      ],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 5,
+        "historyAppearances": 1,
+        "signaturePoints": 32
+      }
+    },
+    "partialOnly": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2048,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 5,
+        "validSamples": 5,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 1,
+        "witnessedEntries": 1,
+        "naturalExits": 1,
+        "completedAppearances": 1,
+        "censoredAppearances": 0,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 0,
+        "rightCensored": 0,
+        "ineligible": 0,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 0
+      },
+      "corridorRecurrence": null,
+      "history": [
+        {
+          "startTime": 0.1,
+          "endTime": 0.30000000000000004,
+          "duration": 0.20000000000000004,
+          "pathLength": 0.1,
+          "entryEdge": "left",
+          "exitEdge": "left",
+          "edgePair": "left->left",
+          "signature": [
+            {
+              "x": -0.1,
+              "y": 0.5
+            },
+            {
+              "x": -0.09677419354838711,
+              "y": 0.5
+            },
+            {
+              "x": -0.0935483870967742,
+              "y": 0.5
+            },
+            {
+              "x": -0.0903225806451613,
+              "y": 0.5
+            },
+            {
+              "x": -0.08709677419354839,
+              "y": 0.5
+            },
+            {
+              "x": -0.08387096774193549,
+              "y": 0.5
+            },
+            {
+              "x": -0.08064516129032259,
+              "y": 0.5
+            },
+            {
+              "x": -0.07741935483870968,
+              "y": 0.5
+            },
+            {
+              "x": -0.07419354838709678,
+              "y": 0.5
+            },
+            {
+              "x": -0.07096774193548387,
+              "y": 0.5
+            },
+            {
+              "x": -0.06774193548387097,
+              "y": 0.5
+            },
+            {
+              "x": -0.06451612903225806,
+              "y": 0.5
+            },
+            {
+              "x": -0.061290322580645165,
+              "y": 0.5
+            },
+            {
+              "x": -0.05806451612903226,
+              "y": 0.5
+            },
+            {
+              "x": -0.054838709677419356,
+              "y": 0.5
+            },
+            {
+              "x": -0.05161290322580645,
+              "y": 0.5
+            },
+            {
+              "x": -0.05161290322580645,
+              "y": 0.5
+            },
+            {
+              "x": -0.054838709677419356,
+              "y": 0.5
+            },
+            {
+              "x": -0.05806451612903227,
+              "y": 0.5
+            },
+            {
+              "x": -0.061290322580645165,
+              "y": 0.5
+            },
+            {
+              "x": -0.06451612903225806,
+              "y": 0.5
+            },
+            {
+              "x": -0.06774193548387096,
+              "y": 0.5
+            },
+            {
+              "x": -0.07096774193548387,
+              "y": 0.5
+            },
+            {
+              "x": -0.07419354838709678,
+              "y": 0.5
+            },
+            {
+              "x": -0.07741935483870968,
+              "y": 0.5
+            },
+            {
+              "x": -0.08064516129032258,
+              "y": 0.5
+            },
+            {
+              "x": -0.08387096774193549,
+              "y": 0.5
+            },
+            {
+              "x": -0.08709677419354839,
+              "y": 0.5
+            },
+            {
+              "x": -0.0903225806451613,
+              "y": 0.5
+            },
+            {
+              "x": -0.0935483870967742,
+              "y": 0.5
+            },
+            {
+              "x": -0.09677419354838711,
+              "y": 0.5
+            },
+            {
+              "x": -0.1,
+              "y": 0.5
+            }
+          ],
+          "short": false,
+          "comparisonSupport": 0,
+          "repeatedCorridor": false
+        }
+      ],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 3,
+        "historyAppearances": 1,
+        "signaturePoints": 32
+      }
+    },
+    "hidden": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2048,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 7,
+        "validSamples": 7,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 1,
+        "witnessedEntries": 1,
+        "naturalExits": 0,
+        "completedAppearances": 0,
+        "censoredAppearances": 1,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 0,
+        "rightCensored": 0,
+        "ineligible": 1,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 0
+      },
+      "corridorRecurrence": null,
+      "history": [],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 5,
+        "historyAppearances": 0,
+        "signaturePoints": 0
+      }
+    },
+    "lateEntry": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2048,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 6,
+        "validSamples": 6,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 1,
+        "witnessedEntries": 0,
+        "naturalExits": 1,
+        "completedAppearances": 0,
+        "censoredAppearances": 1,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 1,
+        "rightCensored": 0,
+        "ineligible": 0,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 0
+      },
+      "corridorRecurrence": null,
+      "history": [],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 5,
+        "historyAppearances": 0,
+        "signaturePoints": 0
+      }
+    },
+    "rightCensor": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2048,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 6,
+        "validSamples": 6,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 1,
+        "witnessedEntries": 1,
+        "naturalExits": 0,
+        "completedAppearances": 0,
+        "censoredAppearances": 1,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 0,
+        "rightCensored": 1,
+        "ineligible": 0,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 0
+      },
+      "corridorRecurrence": null,
+      "history": [],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 5,
+        "historyAppearances": 0,
+        "signaturePoints": 0
+      }
+    },
+    "interrupt": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2048,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 8,
+        "validSamples": 8,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 2,
+        "witnessedEntries": 1,
+        "naturalExits": 1,
+        "completedAppearances": 0,
+        "censoredAppearances": 2,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 1,
+        "rightCensored": 0,
+        "ineligible": 1,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 0
+      },
+      "corridorRecurrence": null,
+      "history": [],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 3,
+        "historyAppearances": 0,
+        "signaturePoints": 0
+      }
+    },
+    "overflow": {
+      "version": 1,
+      "config": {
+        "noiseDistance": 0.002,
+        "maxGap": 0.25,
+        "maxSpeed": 8,
+        "minPathLength": 0.06,
+        "maxPathLength": 128,
+        "maxDuration": 3600,
+        "maxPoints": 2,
+        "historySize": 32,
+        "signaturePoints": 32,
+        "corridorRms": 0.025,
+        "corridorMax": 0.06
+      },
+      "counts": {
+        "samples": 7,
+        "validSamples": 7,
+        "invalidSamples": 0,
+        "nonMonotonicSamples": 0,
+        "appearances": 1,
+        "witnessedEntries": 1,
+        "naturalExits": 1,
+        "completedAppearances": 0,
+        "censoredAppearances": 1,
+        "shortAppearances": 0,
+        "comparisonAppearances": 0,
+        "repeatedCorridors": 0,
+        "historyEvictions": 0
+      },
+      "censorReasons": {
+        "leftCensored": 0,
+        "rightCensored": 0,
+        "ineligible": 0,
+        "discontinuity": 0,
+        "invalid": 0,
+        "nonMonotonic": 0,
+        "gap": 0,
+        "teleport": 0,
+        "overflow": 1
+      },
+      "corridorRecurrence": null,
+      "history": [],
+      "active": null,
+      "finalized": true,
+      "storage": {
+        "activePoints": 0,
+        "highWaterPoints": 2,
+        "historyAppearances": 0,
+        "signaturePoints": 0
+      }
+    }
+  },
+  "totals": {
+    "samples": 259200,
+    "validSamples": 259200,
+    "invalidSamples": 0,
+    "nonMonotonicSamples": 0,
+    "appearances": 906,
+    "witnessedEntries": 906,
+    "naturalExits": 889,
+    "completedAppearances": 889,
+    "censoredAppearances": 17,
+    "shortAppearances": 3,
+    "comparisonAppearances": 862,
+    "repeatedCorridors": 3,
+    "historyEvictions": 122
+  },
+  "reasons": {
+    "leftCensored": 0,
+    "rightCensored": 17,
+    "ineligible": 0,
+    "discontinuity": 0,
+    "invalid": 0,
+    "nonMonotonic": 0,
+    "gap": 0,
+    "teleport": 0,
+    "overflow": 0
+  },
+  "oldFieldsExactlyEqual": true,
+  "evaluatorHashes": {
+    "behavior-benchmark.mjs": "c901bc3d8e95e1767e3dddb97038026903b73cd0533246003f34a33bd248e079",
+    "behavior-excursions.mjs": "1f6ae0d03fd41cdaa8f692ad0a2486ce001dc28c64524418dbbdae2d1778996e",
+    "behavior-route-metrics.mjs": "20b7b16d574c329260957861e1425bedb12f19373ec7f599b1053fc385798064",
+    "behavior-visibility.mjs": "c44ae68247f9880ff2ac1294986e1ff3b5ee5783aaf508065f6b41a58e2bb981"
+  }
+}

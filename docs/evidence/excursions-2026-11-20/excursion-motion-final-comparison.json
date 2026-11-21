@@ -1,0 +1,1589 @@
+{
+  "changedRuntimeFiles": [
+    "contact.js",
+    "physics.js"
+  ],
+  "candidateContactHash": "3a06fc5ccdcc3243f5eacc98e8faaeb9ea72aacdb1687f090647689d14b91ad3",
+  "defaultsEqual": true,
+  "allSixPassiveTracesByteIdentical": true,
+  "rows": [
+    {
+      "name": "passive-23-60",
+      "before": {
+        "sha256": "2ddb471c2e1e4105caa30865d6a2d45b0ec034e9918abd582dd1ec57572a27f1",
+        "visibleSeconds": 204.60000000005496,
+        "visiblePathPx": 54152.54663190677,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 2.8421709430404007e-13,
+        "collisionImpulses": 1214,
+        "maxBlockedSeconds": 0.35,
+        "maxEmptySeconds": 3.26666666666666,
+        "exits": 40,
+        "maxActiveStepPx": 74.57025967215313,
+        "finite": true,
+        "maxSegmentTurns": 0.7554522052916093,
+        "maxWindowTurns": 1.232665163552348,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 70.01666666666667,
+            "end": 73.01666666666667,
+            "turns": 1.232665163552348,
+            "net": -0.008015102886013866,
+            "path": 1282.7248053012872,
+            "targetPath": 1480.833683013454,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 604.5162717930348
+          },
+          {
+            "mouse": 0,
+            "start": 70.51666666666667,
+            "end": 73.51666666666667,
+            "turns": 1.1220272990028872,
+            "net": 0.27217747066582,
+            "path": 1526.5283104861983,
+            "targetPath": 963.6282802642143,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 511.70989156629753
+          },
+          {
+            "mouse": 0,
+            "start": 69.01666666666667,
+            "end": 72.01666666666667,
+            "turns": 1.1036291869166497,
+            "net": -0.4789358466938979,
+            "path": 843.740604734205,
+            "targetPath": 1095.818793224285,
+            "changes": 1,
+            "phases": [
+              "creep",
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 421.24821616503834
+          }
+        ]
+      },
+      "after": {
+        "sha256": "2ddb471c2e1e4105caa30865d6a2d45b0ec034e9918abd582dd1ec57572a27f1",
+        "visibleSeconds": 204.60000000005496,
+        "visiblePathPx": 54152.54663190677,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 2.8421709430404007e-13,
+        "collisionImpulses": 1214,
+        "maxBlockedSeconds": 0.35,
+        "maxEmptySeconds": 3.26666666666666,
+        "exits": 40,
+        "maxActiveStepPx": 74.57025967215313,
+        "finite": true,
+        "maxSegmentTurns": 0.7554522052916093,
+        "maxWindowTurns": 1.232665163552348,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 70.01666666666667,
+            "end": 73.01666666666667,
+            "turns": 1.232665163552348,
+            "net": -0.008015102886013866,
+            "path": 1282.7248053012872,
+            "targetPath": 1480.833683013454,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 604.5162717930348
+          },
+          {
+            "mouse": 0,
+            "start": 70.51666666666667,
+            "end": 73.51666666666667,
+            "turns": 1.1220272990028872,
+            "net": 0.27217747066582,
+            "path": 1526.5283104861983,
+            "targetPath": 963.6282802642143,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 511.70989156629753
+          },
+          {
+            "mouse": 0,
+            "start": 69.01666666666667,
+            "end": 72.01666666666667,
+            "turns": 1.1036291869166497,
+            "net": -0.4789358466938979,
+            "path": 843.740604734205,
+            "targetPath": 1095.818793224285,
+            "changes": 1,
+            "phases": [
+              "creep",
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 421.24821616503834
+          }
+        ]
+      }
+    },
+    {
+      "name": "passive-59-60",
+      "before": {
+        "sha256": "d1a04c62c4bbde0fe8a1d4f6f004cf0222d656707811cef4ce63659a3d1988ba",
+        "visibleSeconds": 237.15000000008087,
+        "visiblePathPx": 58384.298102030785,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.7053025658242404e-13,
+        "collisionImpulses": 3966,
+        "maxBlockedSeconds": 3.349999999999993,
+        "maxEmptySeconds": 2.833333333333328,
+        "exits": 31,
+        "maxActiveStepPx": 27.039294379914548,
+        "finite": true,
+        "maxSegmentTurns": 0.6713641326920959,
+        "maxWindowTurns": 1.1978447344691443,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 91.51666666666667,
+            "end": 94.51666666666667,
+            "turns": 1.1978447344691443,
+            "net": 1.1978447344691443,
+            "path": 1219.145062504383,
+            "targetPath": 1319.8508632657808,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 638.1691007170125
+          },
+          {
+            "mouse": 0,
+            "start": 14.516666666666666,
+            "end": 17.516666666666666,
+            "turns": 1.1278912971307686,
+            "net": 0.08731375209756345,
+            "path": 1167.6799991346327,
+            "targetPath": 584.0258772646504,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 813.861423321419
+          },
+          {
+            "mouse": 0,
+            "start": 13.516666666666666,
+            "end": 16.516666666666666,
+            "turns": 1.111595242708165,
+            "net": 0.4261258523006398,
+            "path": 1348.204890777513,
+            "targetPath": 1143.612918957384,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 250.4683073105794
+          }
+        ]
+      },
+      "after": {
+        "sha256": "d1a04c62c4bbde0fe8a1d4f6f004cf0222d656707811cef4ce63659a3d1988ba",
+        "visibleSeconds": 237.15000000008087,
+        "visiblePathPx": 58384.298102030785,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.7053025658242404e-13,
+        "collisionImpulses": 3966,
+        "maxBlockedSeconds": 3.349999999999993,
+        "maxEmptySeconds": 2.833333333333328,
+        "exits": 31,
+        "maxActiveStepPx": 27.039294379914548,
+        "finite": true,
+        "maxSegmentTurns": 0.6713641326920959,
+        "maxWindowTurns": 1.1978447344691443,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 91.51666666666667,
+            "end": 94.51666666666667,
+            "turns": 1.1978447344691443,
+            "net": 1.1978447344691443,
+            "path": 1219.145062504383,
+            "targetPath": 1319.8508632657808,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 638.1691007170125
+          },
+          {
+            "mouse": 0,
+            "start": 14.516666666666666,
+            "end": 17.516666666666666,
+            "turns": 1.1278912971307686,
+            "net": 0.08731375209756345,
+            "path": 1167.6799991346327,
+            "targetPath": 584.0258772646504,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 813.861423321419
+          },
+          {
+            "mouse": 0,
+            "start": 13.516666666666666,
+            "end": 16.516666666666666,
+            "turns": 1.111595242708165,
+            "net": 0.4261258523006398,
+            "path": 1348.204890777513,
+            "targetPath": 1143.612918957384,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 250.4683073105794
+          }
+        ]
+      }
+    },
+    {
+      "name": "paw-23-60",
+      "before": {
+        "sha256": "6e0fa660f04708026dbc12298445f950bb41507e8dddb31f08087c2d3e255793",
+        "visibleSeconds": 216.88333333339807,
+        "visiblePathPx": 44669.04368547785,
+        "minPawDistance": 160.4451403762908,
+        "maxPawPenetration": 1.0948596237091976,
+        "maxMouseOverlap": 0.7298423491889139,
+        "collisionImpulses": 2543,
+        "maxBlockedSeconds": 1.4666666666666663,
+        "maxEmptySeconds": 3.049999999999994,
+        "exits": 37,
+        "maxActiveStepPx": 26.703026037331956,
+        "finite": true,
+        "maxSegmentTurns": 4.313083060158643,
+        "maxWindowTurns": 2.0666327044554538,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 59.016666666666666,
+            "end": 62.016666666666666,
+            "turns": 2.0666327044554538,
+            "net": -0.027691361175689787,
+            "path": 438.3269150223259,
+            "targetPath": 1988.388239184033,
+            "changes": 1,
+            "phases": [
+              "traverse",
+              "retreat"
+            ],
+            "collisions": 352,
+            "displacement": 4.056614127844048
+          },
+          {
+            "mouse": 0,
+            "start": 58.516666666666666,
+            "end": 61.516666666666666,
+            "turns": 2.0375482492608867,
+            "net": 0.10380348572102653,
+            "path": 460.29990136472395,
+            "targetPath": 1988.388239184033,
+            "changes": 1,
+            "phases": [
+              "traverse",
+              "retreat"
+            ],
+            "collisions": 354,
+            "displacement": 55.06548406984004
+          },
+          {
+            "mouse": 0,
+            "start": 58.016666666666666,
+            "end": 61.016666666666666,
+            "turns": 1.9980377562325535,
+            "net": -0.18375388143975094,
+            "path": 496.068318373548,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 354,
+            "displacement": 14.631249866629625
+          }
+        ]
+      },
+      "after": {
+        "sha256": "460a4da6cc7a51c96edb08f857341c2621339aa8afb3d4d7b975719cc28d2b42",
+        "visibleSeconds": 241.30000000008417,
+        "visiblePathPx": 50847.93706535224,
+        "minPawDistance": 161.53999999999996,
+        "maxPawPenetration": 2.842170943040401e-14,
+        "maxMouseOverlap": 0.05665390196094222,
+        "collisionImpulses": 4184,
+        "maxBlockedSeconds": 3.5499999999999923,
+        "maxEmptySeconds": 2.9499999999999944,
+        "exits": 30,
+        "maxActiveStepPx": 27.0123841334093,
+        "finite": true,
+        "maxSegmentTurns": 3.6769423651151842,
+        "maxWindowTurns": 1.6174421621225148,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 143.01666666666665,
+            "end": 146.01666666666665,
+            "turns": 1.6174421621225148,
+            "net": 0.3134172527441346,
+            "path": 328.929395998664,
+            "targetPath": 1796.8194923414144,
+            "changes": 3,
+            "phases": [
+              "creep",
+              "dart",
+              "watch"
+            ],
+            "collisions": 267,
+            "displacement": 134.58528043952214
+          },
+          {
+            "mouse": 0,
+            "start": 143.51666666666665,
+            "end": 146.51666666666665,
+            "turns": 1.5486909002467335,
+            "net": 0.38216851461991613,
+            "path": 403.4175559045809,
+            "targetPath": 1208.5096319563168,
+            "changes": 2,
+            "phases": [
+              "dart",
+              "watch"
+            ],
+            "collisions": 263,
+            "displacement": 239.6952264538506
+          },
+          {
+            "mouse": 1,
+            "start": 14.016666666666666,
+            "end": 17.016666666666666,
+            "turns": 1.4829304969879131,
+            "net": 0.582570895678229,
+            "path": 498.3761939773997,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "retreat"
+            ],
+            "collisions": 358,
+            "displacement": 85.35632466202577
+          }
+        ]
+      }
+    },
+    {
+      "name": "paw-59-60",
+      "before": {
+        "sha256": "69b5bc50af0e9160de1f089cbfefab9b3ea7448ef4f3c88b9b8c20981a57dfb4",
+        "visibleSeconds": 225.76666666673847,
+        "visiblePathPx": 55353.83401218766,
+        "minPawDistance": 159.42779368529335,
+        "maxPawPenetration": 2.11220631470664,
+        "maxMouseOverlap": 0.017327340765376675,
+        "collisionImpulses": 1810,
+        "maxBlockedSeconds": 0.3833333333333333,
+        "maxEmptySeconds": 2.799999999999995,
+        "exits": 36,
+        "maxActiveStepPx": 26.999305536978035,
+        "finite": true,
+        "maxSegmentTurns": 2.325267261349981,
+        "maxWindowTurns": 1.9074960968729509,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 5.016666666666667,
+            "end": 8.016666666666666,
+            "turns": 1.9074960968729509,
+            "net": 0.27344345445789725,
+            "path": 490.8914581677968,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 198,
+            "displacement": 80.91953671022189
+          },
+          {
+            "mouse": 1,
+            "start": 4.516666666666667,
+            "end": 7.516666666666667,
+            "turns": 1.8411101402506642,
+            "net": -0.4052149120054395,
+            "path": 501.0775021994805,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 220,
+            "displacement": 41.776315329774505
+          },
+          {
+            "mouse": 1,
+            "start": 5.516666666666667,
+            "end": 8.516666666666666,
+            "turns": 1.6820753622631788,
+            "net": 0.17418835965653112,
+            "path": 635.4868388661076,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 138,
+            "displacement": 348.8025426301351
+          }
+        ]
+      },
+      "after": {
+        "sha256": "a729c84ffb10fe526069d28b61bfb236e4a270da8076ed9d17b098736e3c0d4c",
+        "visibleSeconds": 226.61666666673915,
+        "visiblePathPx": 61093.550922419614,
+        "minPawDistance": 161.53999999999994,
+        "maxPawPenetration": 5.684341886080802e-14,
+        "maxMouseOverlap": 0.10742765229409201,
+        "collisionImpulses": 1836,
+        "maxBlockedSeconds": 0.3833333333333333,
+        "maxEmptySeconds": 1.949999999999998,
+        "exits": 37,
+        "maxActiveStepPx": 26.995489262778996,
+        "finite": true,
+        "maxSegmentTurns": 1.8128373967675855,
+        "maxWindowTurns": 1.4038724878717725,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 4.516666666666667,
+            "end": 7.516666666666667,
+            "turns": 1.4038724878717725,
+            "net": -0.20327449847017479,
+            "path": 423.9444427842397,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 331,
+            "displacement": 73.21783285011155
+          },
+          {
+            "mouse": 1,
+            "start": 5.016666666666667,
+            "end": 8.016666666666666,
+            "turns": 1.3836429861741104,
+            "net": 0.20128934744832816,
+            "path": 445.74752322403714,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 324,
+            "displacement": 88.82057245208101
+          },
+          {
+            "mouse": 1,
+            "start": 5.516666666666667,
+            "end": 8.516666666666666,
+            "turns": 1.2868028970910177,
+            "net": 0.11959326999245269,
+            "path": 541.1132940480273,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 264,
+            "displacement": 231.70343624439784
+          }
+        ]
+      }
+    },
+    {
+      "name": "passive-23-30",
+      "before": {
+        "sha256": "47644372c22320dacdbf571e76b9139a5bccad80653991f66f80bd94020fbb89",
+        "visibleSeconds": 227.233333333323,
+        "visiblePathPx": 58668.392949473615,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.4210854715202004e-13,
+        "collisionImpulses": 2599,
+        "maxBlockedSeconds": 1.4333333333333345,
+        "maxEmptySeconds": 3.0999999999999988,
+        "exits": 35,
+        "maxActiveStepPx": 57.64197051303807,
+        "finite": true,
+        "maxSegmentTurns": 0.8347253784440598,
+        "maxWindowTurns": 1.134028356718606,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 135.03333333333333,
+            "end": 138.03333333333333,
+            "turns": 1.134028356718606,
+            "net": 1.134028356718606,
+            "path": 1043.9972429602722,
+            "targetPath": 1316.510252583872,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 671.2434289450903
+          },
+          {
+            "mouse": 1,
+            "start": 134.03333333333333,
+            "end": 137.03333333333333,
+            "turns": 1.1149918465504431,
+            "net": 0.6213429217471678,
+            "path": 1576.1365993773709,
+            "targetPath": 984.2804610875937,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 1,
+            "displacement": 218.1943825072445
+          },
+          {
+            "mouse": 0,
+            "start": 122.53333333333333,
+            "end": 125.53333333333333,
+            "turns": 1.064588898011766,
+            "net": -0.4343764687365091,
+            "path": 1126.5821279510312,
+            "targetPath": 778.2475047983847,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 267,
+            "displacement": 648.4317736234301
+          }
+        ]
+      },
+      "after": {
+        "sha256": "47644372c22320dacdbf571e76b9139a5bccad80653991f66f80bd94020fbb89",
+        "visibleSeconds": 227.233333333323,
+        "visiblePathPx": 58668.392949473615,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.4210854715202004e-13,
+        "collisionImpulses": 2599,
+        "maxBlockedSeconds": 1.4333333333333345,
+        "maxEmptySeconds": 3.0999999999999988,
+        "exits": 35,
+        "maxActiveStepPx": 57.64197051303807,
+        "finite": true,
+        "maxSegmentTurns": 0.8347253784440598,
+        "maxWindowTurns": 1.134028356718606,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 135.03333333333333,
+            "end": 138.03333333333333,
+            "turns": 1.134028356718606,
+            "net": 1.134028356718606,
+            "path": 1043.9972429602722,
+            "targetPath": 1316.510252583872,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 671.2434289450903
+          },
+          {
+            "mouse": 1,
+            "start": 134.03333333333333,
+            "end": 137.03333333333333,
+            "turns": 1.1149918465504431,
+            "net": 0.6213429217471678,
+            "path": 1576.1365993773709,
+            "targetPath": 984.2804610875937,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 1,
+            "displacement": 218.1943825072445
+          },
+          {
+            "mouse": 0,
+            "start": 122.53333333333333,
+            "end": 125.53333333333333,
+            "turns": 1.064588898011766,
+            "net": -0.4343764687365091,
+            "path": 1126.5821279510312,
+            "targetPath": 778.2475047983847,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 267,
+            "displacement": 648.4317736234301
+          }
+        ]
+      }
+    },
+    {
+      "name": "passive-59-30",
+      "before": {
+        "sha256": "5d6eacbccf0f014c4f727258327f769bb6d288b3f6550117db87d6ff29e519d5",
+        "visibleSeconds": 219.03333333332347,
+        "visiblePathPx": 55662.5776484961,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.7053025658242404e-13,
+        "collisionImpulses": 1623,
+        "maxBlockedSeconds": 1.3333333333333341,
+        "maxEmptySeconds": 2.0000000000000027,
+        "exits": 38,
+        "maxActiveStepPx": 54.31824014221906,
+        "finite": true,
+        "maxSegmentTurns": 0.8302976682760541,
+        "maxWindowTurns": 1.143298875772807,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 15.033333333333333,
+            "end": 18.03333333333333,
+            "turns": 1.143298875772807,
+            "net": 0.06570596217890112,
+            "path": 1173.4475372268894,
+            "targetPath": 584.0258772646504,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 815.365480580515
+          },
+          {
+            "mouse": 1,
+            "start": 157.03333333333333,
+            "end": 160.03333333333333,
+            "turns": 1.115556462850074,
+            "net": -0.02240950261049196,
+            "path": 1319.6257111519442,
+            "targetPath": 1611.019886243388,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 1,
+            "displacement": 784.2500888830717
+          },
+          {
+            "mouse": 1,
+            "start": 156.03333333333333,
+            "end": 159.03333333333333,
+            "turns": 1.0939317053848654,
+            "net": 0.5354729561838144,
+            "path": 1117.458981450695,
+            "targetPath": 1026.5320242650575,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 366.38636989351306
+          }
+        ]
+      },
+      "after": {
+        "sha256": "5d6eacbccf0f014c4f727258327f769bb6d288b3f6550117db87d6ff29e519d5",
+        "visibleSeconds": 219.03333333332347,
+        "visiblePathPx": 55662.5776484961,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.7053025658242404e-13,
+        "collisionImpulses": 1623,
+        "maxBlockedSeconds": 1.3333333333333341,
+        "maxEmptySeconds": 2.0000000000000027,
+        "exits": 38,
+        "maxActiveStepPx": 54.31824014221906,
+        "finite": true,
+        "maxSegmentTurns": 0.8302976682760541,
+        "maxWindowTurns": 1.143298875772807,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 15.033333333333333,
+            "end": 18.03333333333333,
+            "turns": 1.143298875772807,
+            "net": 0.06570596217890112,
+            "path": 1173.4475372268894,
+            "targetPath": 584.0258772646504,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 815.365480580515
+          },
+          {
+            "mouse": 1,
+            "start": 157.03333333333333,
+            "end": 160.03333333333333,
+            "turns": 1.115556462850074,
+            "net": -0.02240950261049196,
+            "path": 1319.6257111519442,
+            "targetPath": 1611.019886243388,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 1,
+            "displacement": 784.2500888830717
+          },
+          {
+            "mouse": 1,
+            "start": 156.03333333333333,
+            "end": 159.03333333333333,
+            "turns": 1.0939317053848654,
+            "net": 0.5354729561838144,
+            "path": 1117.458981450695,
+            "targetPath": 1026.5320242650575,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 366.38636989351306
+          }
+        ]
+      }
+    },
+    {
+      "name": "paw-23-30",
+      "before": {
+        "sha256": "a3581603e208cfbce7deda12486a7d16e968fa5a760f875e32d3334970c358c2",
+        "visibleSeconds": 224.09999999998985,
+        "visiblePathPx": 48185.54256912459,
+        "minPawDistance": 161.53999999999996,
+        "maxPawPenetration": 2.842170943040401e-14,
+        "maxMouseOverlap": 0.1934492299190822,
+        "collisionImpulses": 1617,
+        "maxBlockedSeconds": 2.1000000000000023,
+        "maxEmptySeconds": 3.1999999999999984,
+        "exits": 34,
+        "maxActiveStepPx": 57.60386598169233,
+        "finite": true,
+        "maxSegmentTurns": 1.9974670239138796,
+        "maxWindowTurns": 2.1371878337549615,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 172.53333333333333,
+            "end": 175.53333333333333,
+            "turns": 2.1371878337549615,
+            "net": -0.29425904587397334,
+            "path": 592.915973359616,
+            "targetPath": 632.1080820288034,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "watch"
+            ],
+            "collisions": 51,
+            "displacement": 162.75006100160132
+          },
+          {
+            "mouse": 0,
+            "start": 173.03333333333333,
+            "end": 176.03333333333333,
+            "turns": 2.092605657736575,
+            "net": -0.023166619603896044,
+            "path": 365.59919756889065,
+            "targetPath": 746.8468648395439,
+            "changes": 2,
+            "phases": [
+              "dart",
+              "watch",
+              "creep"
+            ],
+            "collisions": 3,
+            "displacement": 211.9103175373756
+          },
+          {
+            "mouse": 0,
+            "start": 173.53333333333333,
+            "end": 176.53333333333333,
+            "turns": 1.9776751571802835,
+            "net": 0.4608321760169568,
+            "path": 380.1144578394823,
+            "targetPath": 746.8468648395439,
+            "changes": 2,
+            "phases": [
+              "dart",
+              "watch",
+              "creep"
+            ],
+            "collisions": 3,
+            "displacement": 278.72326577238806
+          }
+        ]
+      },
+      "after": {
+        "sha256": "c6d01e2bc2539c2e901e786c634c392ce57c840cb75dbb8d2590374caf372644",
+        "visibleSeconds": 221.69999999998998,
+        "visiblePathPx": 48104.44873989277,
+        "minPawDistance": 159.27729154041953,
+        "maxPawPenetration": 2.262708459580466,
+        "maxMouseOverlap": 1.4689405333657533,
+        "collisionImpulses": 3424,
+        "maxBlockedSeconds": 2.533333333333334,
+        "maxEmptySeconds": 3.166666666666665,
+        "exits": 33,
+        "maxActiveStepPx": 54.073412137365544,
+        "finite": true,
+        "maxSegmentTurns": 3.7130909951536166,
+        "maxWindowTurns": 1.6179976213313976,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 117.03333333333333,
+            "end": 120.03333333333333,
+            "turns": 1.6179976213313976,
+            "net": 0.02255829704951008,
+            "path": 619.8513141224488,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "retreat"
+            ],
+            "collisions": 265,
+            "displacement": 144.3018235129766
+          },
+          {
+            "mouse": 0,
+            "start": 116.53333333333333,
+            "end": 119.53333333333333,
+            "turns": 1.6110531662151657,
+            "net": -0.4366409339226105,
+            "path": 589.2179717882947,
+            "targetPath": 1058.1456458328219,
+            "changes": 1,
+            "phases": [
+              "watch",
+              "retreat"
+            ],
+            "collisions": 291,
+            "displacement": 101.8836461440523
+          },
+          {
+            "mouse": 1,
+            "start": 14.033333333333333,
+            "end": 17.03333333333333,
+            "turns": 1.4757573493936333,
+            "net": 0.6463358321246635,
+            "path": 473.65361538166866,
+            "targetPath": 1135.2496182275,
+            "changes": 1,
+            "phases": [
+              "creep",
+              "retreat"
+            ],
+            "collisions": 360,
+            "displacement": 75.58887899173166
+          }
+        ]
+      }
+    },
+    {
+      "name": "paw-59-30",
+      "before": {
+        "sha256": "2c3d333865b941e199093ec10f786a1a4fa10bf9897d2fe8afcd89d84185f06f",
+        "visibleSeconds": 233.86666666665596,
+        "visiblePathPx": 48062.29723470461,
+        "minPawDistance": 158.78410379195853,
+        "maxPawPenetration": 2.755896208041463,
+        "maxMouseOverlap": 0.4341608210245056,
+        "collisionImpulses": 3570,
+        "maxBlockedSeconds": 3.299999999999998,
+        "maxEmptySeconds": 3.1999999999999984,
+        "exits": 33,
+        "maxActiveStepPx": 54.204036032481106,
+        "finite": true,
+        "maxSegmentTurns": 12.342179592889492,
+        "maxWindowTurns": 2.3050111356479706,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 66.03333333333333,
+            "end": 69.03333333333333,
+            "turns": 2.3050111356479706,
+            "net": -0.3629333506300446,
+            "path": 298.3516375236296,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "retreat"
+            ],
+            "collisions": 201,
+            "displacement": 10.469055649948086
+          },
+          {
+            "mouse": 0,
+            "start": 70.03333333333333,
+            "end": 73.03333333333333,
+            "turns": 2.2911514852433115,
+            "net": -0.6656996281523732,
+            "path": 362.64544571009645,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "retreat"
+            ],
+            "collisions": 71,
+            "displacement": 138.1163442209535
+          },
+          {
+            "mouse": 0,
+            "start": 70.53333333333333,
+            "end": 73.53333333333333,
+            "turns": 2.2724646967972646,
+            "net": -0.6275947169526535,
+            "path": 353.1414662651297,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "retreat"
+            ],
+            "collisions": 54,
+            "displacement": 87.69114214190336
+          }
+        ]
+      },
+      "after": {
+        "sha256": "96e0990e99b52c045dba9aa5b568e874c7e0ad78d62cad5ee0a4c00144239682",
+        "visibleSeconds": 217.76666666665687,
+        "visiblePathPx": 56015.270537594064,
+        "minPawDistance": 161.07084684880093,
+        "maxPawPenetration": 0.4691531511990661,
+        "maxMouseOverlap": 1.4872814089806923,
+        "collisionImpulses": 1208,
+        "maxBlockedSeconds": 1.2666666666666673,
+        "maxEmptySeconds": 3.0333333333333323,
+        "exits": 37,
+        "maxActiveStepPx": 53.937758076173225,
+        "finite": true,
+        "maxSegmentTurns": 1.8373033477254745,
+        "maxWindowTurns": 1.4161673925847147,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 4.533333333333333,
+            "end": 7.533333333333333,
+            "turns": 1.4161673925847147,
+            "net": -0.20280509812774752,
+            "path": 430.7648869223648,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 329,
+            "displacement": 77.6280165133374
+          },
+          {
+            "mouse": 0,
+            "start": 93.03333333333333,
+            "end": 96.03333333333333,
+            "turns": 1.4060021491053454,
+            "net": 0.7310765141230936,
+            "path": 955.9412374723191,
+            "targetPath": 1035.6668344586528,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 134,
+            "displacement": 625.8283347021136
+          },
+          {
+            "mouse": 1,
+            "start": 5.033333333333333,
+            "end": 8.033333333333333,
+            "turns": 1.3877139806309828,
+            "net": 0.17722036811763583,
+            "path": 445.6568217854864,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 327,
+            "displacement": 77.51515652221094
+          }
+        ]
+      }
+    },
+    {
+      "name": "passive-23-120",
+      "before": {
+        "sha256": "4a20c2f878c0032a521bcbccd7e8787ca47b54dcdcf39eb018acf8fbbb069322",
+        "visibleSeconds": 210.4416666666396,
+        "visiblePathPx": 62866.767551065146,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.4210854715202004e-13,
+        "collisionImpulses": 1297,
+        "maxBlockedSeconds": 1.8749999999999958,
+        "maxEmptySeconds": 2.966666666666659,
+        "exits": 39,
+        "maxActiveStepPx": 14.38684370413112,
+        "finite": true,
+        "maxSegmentTurns": 0.7389361698296397,
+        "maxWindowTurns": 1.2192033779637954,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 154.50833333333333,
+            "end": 157.50833333333333,
+            "turns": 1.2192033779637954,
+            "net": -0.1721962053364873,
+            "path": 964.4892700978072,
+            "targetPath": 1416.3094441091027,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 90,
+            "displacement": 558.6395410258389
+          },
+          {
+            "mouse": 0,
+            "start": 71.50833333333333,
+            "end": 74.50833333333333,
+            "turns": 1.14440202552747,
+            "net": -0.2946144951290851,
+            "path": 1076.16850242946,
+            "targetPath": 1253.95034310873,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 738.7489011453346
+          },
+          {
+            "mouse": 0,
+            "start": 176.50833333333333,
+            "end": 179.50833333333333,
+            "turns": 1.0965261493574778,
+            "net": 1.0965261493574778,
+            "path": 1264.423812673002,
+            "targetPath": 778.284242005528,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 88,
+            "displacement": 866.8825856915772
+          }
+        ]
+      },
+      "after": {
+        "sha256": "4a20c2f878c0032a521bcbccd7e8787ca47b54dcdcf39eb018acf8fbbb069322",
+        "visibleSeconds": 210.4416666666396,
+        "visiblePathPx": 62866.767551065146,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.4210854715202004e-13,
+        "collisionImpulses": 1297,
+        "maxBlockedSeconds": 1.8749999999999958,
+        "maxEmptySeconds": 2.966666666666659,
+        "exits": 39,
+        "maxActiveStepPx": 14.38684370413112,
+        "finite": true,
+        "maxSegmentTurns": 0.7389361698296397,
+        "maxWindowTurns": 1.2192033779637954,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 154.50833333333333,
+            "end": 157.50833333333333,
+            "turns": 1.2192033779637954,
+            "net": -0.1721962053364873,
+            "path": 964.4892700978072,
+            "targetPath": 1416.3094441091027,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 90,
+            "displacement": 558.6395410258389
+          },
+          {
+            "mouse": 0,
+            "start": 71.50833333333333,
+            "end": 74.50833333333333,
+            "turns": 1.14440202552747,
+            "net": -0.2946144951290851,
+            "path": 1076.16850242946,
+            "targetPath": 1253.95034310873,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 738.7489011453346
+          },
+          {
+            "mouse": 0,
+            "start": 176.50833333333333,
+            "end": 179.50833333333333,
+            "turns": 1.0965261493574778,
+            "net": 1.0965261493574778,
+            "path": 1264.423812673002,
+            "targetPath": 778.284242005528,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 88,
+            "displacement": 866.8825856915772
+          }
+        ]
+      }
+    },
+    {
+      "name": "passive-59-120",
+      "before": {
+        "sha256": "106b032ccc5db560d989e3464b2c38c432919c30f49ad0f6344a9b4b2d2d5d1c",
+        "visibleSeconds": 210.99999999997243,
+        "visiblePathPx": 72511.1311987807,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.4210854715202004e-13,
+        "collisionImpulses": 345,
+        "maxBlockedSeconds": 0.41666666666666713,
+        "maxEmptySeconds": 2.724999999999993,
+        "exits": 40,
+        "maxActiveStepPx": 14.455735894688024,
+        "finite": true,
+        "maxSegmentTurns": 0.6057703073255019,
+        "maxWindowTurns": 1.1801282982229,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 34.00833333333333,
+            "end": 37.00833333333333,
+            "turns": 1.1801282982229,
+            "net": -1.1801282982229,
+            "path": 1532.4862105785119,
+            "targetPath": 978.670214549818,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 238.41894586254568
+          },
+          {
+            "mouse": 0,
+            "start": 14.508333333333333,
+            "end": 17.508333333333333,
+            "turns": 1.142094142292651,
+            "net": 0.07293408132170616,
+            "path": 1166.8998256790562,
+            "targetPath": 584.0258772646504,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 813.5313676499618
+          },
+          {
+            "mouse": 1,
+            "start": 33.50833333333333,
+            "end": 36.50833333333333,
+            "turns": 1.1149795227489228,
+            "net": -1.0929016081301757,
+            "path": 1237.6578338572524,
+            "targetPath": 1482.3074043172805,
+            "changes": 1,
+            "phases": [
+              "creep",
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 143.31746014481735
+          }
+        ]
+      },
+      "after": {
+        "sha256": "106b032ccc5db560d989e3464b2c38c432919c30f49ad0f6344a9b4b2d2d5d1c",
+        "visibleSeconds": 210.99999999997243,
+        "visiblePathPx": 72511.1311987807,
+        "minPawDistance": null,
+        "maxPawPenetration": 0,
+        "maxMouseOverlap": 1.4210854715202004e-13,
+        "collisionImpulses": 345,
+        "maxBlockedSeconds": 0.41666666666666713,
+        "maxEmptySeconds": 2.724999999999993,
+        "exits": 40,
+        "maxActiveStepPx": 14.455735894688024,
+        "finite": true,
+        "maxSegmentTurns": 0.6057703073255019,
+        "maxWindowTurns": 1.1801282982229,
+        "rankedWindows": [
+          {
+            "mouse": 1,
+            "start": 34.00833333333333,
+            "end": 37.00833333333333,
+            "turns": 1.1801282982229,
+            "net": -1.1801282982229,
+            "path": 1532.4862105785119,
+            "targetPath": 978.670214549818,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 238.41894586254568
+          },
+          {
+            "mouse": 0,
+            "start": 14.508333333333333,
+            "end": 17.508333333333333,
+            "turns": 1.142094142292651,
+            "net": 0.07293408132170616,
+            "path": 1166.8998256790562,
+            "targetPath": 584.0258772646504,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 813.5313676499618
+          },
+          {
+            "mouse": 1,
+            "start": 33.50833333333333,
+            "end": 36.50833333333333,
+            "turns": 1.1149795227489228,
+            "net": -1.0929016081301757,
+            "path": 1237.6578338572524,
+            "targetPath": 1482.3074043172805,
+            "changes": 1,
+            "phases": [
+              "creep",
+              "dart"
+            ],
+            "collisions": 0,
+            "displacement": 143.31746014481735
+          }
+        ]
+      }
+    },
+    {
+      "name": "paw-23-120",
+      "before": {
+        "sha256": "0fcbe163dc8b72e6149832176349baac4ed06568776e8733ed1d72791a122407",
+        "visibleSeconds": 245.35833333327452,
+        "visiblePathPx": 46239.48717703995,
+        "minPawDistance": 158.90439639547088,
+        "maxPawPenetration": 2.635603604529109,
+        "maxMouseOverlap": 0.4620814996117417,
+        "collisionImpulses": 4811,
+        "maxBlockedSeconds": 2.758333333333326,
+        "maxEmptySeconds": 3.224999999999991,
+        "exits": 32,
+        "maxActiveStepPx": 13.643236513477811,
+        "finite": true,
+        "maxSegmentTurns": 4.325798145170063,
+        "maxWindowTurns": 1.9856594134657926,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 119.50833333333333,
+            "end": 122.50833333333333,
+            "turns": 1.9856594134657926,
+            "net": 0.14230152900035462,
+            "path": 409.02790336616954,
+            "targetPath": 0,
+            "changes": 1,
+            "phases": [
+              "traverse",
+              "retreat"
+            ],
+            "collisions": 347,
+            "displacement": 29.08776627592298
+          },
+          {
+            "mouse": 0,
+            "start": 119.00833333333333,
+            "end": 122.00833333333333,
+            "turns": 1.9425581006039272,
+            "net": -0.08666244165178962,
+            "path": 415.54262599502925,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 351,
+            "displacement": 41.4919676143219
+          },
+          {
+            "mouse": 0,
+            "start": 118.50833333333333,
+            "end": 121.50833333333333,
+            "turns": 1.8462660393738974,
+            "net": 0.23391007084596954,
+            "path": 447.45502693514044,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 351,
+            "displacement": 52.09420180498921
+          }
+        ]
+      },
+      "after": {
+        "sha256": "a86caeddbfa5ecf7463f9429fd4d7e335e3de3683120f698eced732b3729c882",
+        "visibleSeconds": 240.26666666661248,
+        "visiblePathPx": 54507.23490026749,
+        "minPawDistance": 161.5399999999999,
+        "maxPawPenetration": 8.526512829121202e-14,
+        "maxMouseOverlap": 0.3679913306157232,
+        "collisionImpulses": 2927,
+        "maxBlockedSeconds": 1.0083333333333322,
+        "maxEmptySeconds": 2.3583333333333276,
+        "exits": 31,
+        "maxActiveStepPx": 13.552804031417388,
+        "finite": true,
+        "maxSegmentTurns": 1.6137300713682583,
+        "maxWindowTurns": 1.5182673518542642,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 12.508333333333333,
+            "end": 15.508333333333333,
+            "turns": 1.5182673518542642,
+            "net": -0.41895028392349093,
+            "path": 717.6018167133396,
+            "targetPath": 952.328556671593,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "retreat"
+            ],
+            "collisions": 0,
+            "displacement": 257.34278266004986
+          },
+          {
+            "mouse": 1,
+            "start": 166.00833333333333,
+            "end": 169.00833333333333,
+            "turns": 1.4172909248292067,
+            "net": 0.01864836834781043,
+            "path": 624.4224436052327,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 317,
+            "displacement": 289.9073048037166
+          },
+          {
+            "mouse": 0,
+            "start": 164.00833333333333,
+            "end": 167.00833333333333,
+            "turns": 1.4000108554075532,
+            "net": 0.3369568238223378,
+            "path": 947.0610272850655,
+            "targetPath": 787.7834822614783,
+            "changes": 0,
+            "phases": [
+              "dart"
+            ],
+            "collisions": 115,
+            "displacement": 264.53730202660836
+          }
+        ]
+      }
+    },
+    {
+      "name": "paw-59-120",
+      "before": {
+        "sha256": "0c2217271ad28ab2321aaa02fa31e5dc18a9b68f1e6fde9ca993230aad9329ec",
+        "visibleSeconds": 209.89999999997343,
+        "visiblePathPx": 44783.694796910924,
+        "minPawDistance": 158.1141263902416,
+        "maxPawPenetration": 3.4258736097583835,
+        "maxMouseOverlap": 0.587533699324041,
+        "collisionImpulses": 2121,
+        "maxBlockedSeconds": 2.866666666666659,
+        "maxEmptySeconds": 3.3083333333333242,
+        "exits": 40,
+        "maxActiveStepPx": 13.477726154922149,
+        "finite": true,
+        "maxSegmentTurns": 4.582522274648318,
+        "maxWindowTurns": 1.960833735606322,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 100.50833333333333,
+            "end": 103.50833333333333,
+            "turns": 1.960833735606322,
+            "net": 0.13677069832174343,
+            "path": 495.3126868652194,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 359,
+            "displacement": 72.84889082332963
+          },
+          {
+            "mouse": 0,
+            "start": 101.00833333333333,
+            "end": 104.00833333333333,
+            "turns": 1.9181008316975234,
+            "net": 0.03334471514413406,
+            "path": 534.4112986957439,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 358,
+            "displacement": 68.51063708757002
+          },
+          {
+            "mouse": 1,
+            "start": 5.008333333333333,
+            "end": 8.008333333333333,
+            "turns": 1.911843314111184,
+            "net": 0.28913270200750485,
+            "path": 488.05794308057517,
+            "targetPath": 0,
+            "changes": 0,
+            "phases": [
+              "traverse"
+            ],
+            "collisions": 196,
+            "displacement": 76.76728219354504
+          }
+        ]
+      },
+      "after": {
+        "sha256": "993c7b360d60a25a2e77923a43e69b6eac859b18b5f22e37cd5b27444bf3724f",
+        "visibleSeconds": 216.74166666663388,
+        "visiblePathPx": 56718.037731686665,
+        "minPawDistance": 161.53999999999994,
+        "maxPawPenetration": 5.684341886080802e-14,
+        "maxMouseOverlap": 1.0377956903336383,
+        "collisionImpulses": 2986,
+        "maxBlockedSeconds": 2.199999999999995,
+        "maxEmptySeconds": 3.0083333333333253,
+        "exits": 38,
+        "maxActiveStepPx": 13.505156176869368,
+        "finite": true,
+        "maxSegmentTurns": 1.6957771064668405,
+        "maxWindowTurns": 1.5567817894999196,
+        "rankedWindows": [
+          {
+            "mouse": 0,
+            "start": 93.00833333333333,
+            "end": 96.00833333333333,
+            "turns": 1.5567817894999196,
+            "net": -0.46688731456189975,
+            "path": 582.0082659619422,
+            "targetPath": 643.3087453812578,
+            "changes": 1,
+            "phases": [
+              "dart",
+              "watch"
+            ],
+            "collisions": 259,
+            "displacement": 40.49116741330928
+          },
+          {
+            "mouse": 0,
+            "start": 92.50833333333333,
+            "end": 95.50833333333333,
+            "turns": 1.5408444757255813,
+            "net": -0.5421988348269152,
+            "path": 511.54449435682073,
+            "targetPath": 609.6936088246015,
+            "changes": 1,
+            "phases": [
+              "watch",
+              "dart"
+            ],
+            "collisions": 199,
+            "displacement": 41.666202086606745
+          },
+          {
+            "mouse": 0,
+            "start": 93.50833333333333,
+            "end": 96.50833333333333,
+            "turns": 1.3436291346588367,
+            "net": -0.2537346597208156,
+            "path": 702.4301011270213,
+            "targetPath": 1451.87411465516,
+            "changes": 2,
+            "phases": [
+              "dart",
+              "watch",
+              "retreat"
+            ],
+            "collisions": 315,
+            "displacement": 219.35409247021778
+          }
+        ]
+      }
+    }
+  ]
+}

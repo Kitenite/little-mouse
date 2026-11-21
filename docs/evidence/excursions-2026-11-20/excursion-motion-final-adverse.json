@@ -1,0 +1,4 @@
+{
+  "passed": 31,
+  "scope": "Direct geometric cases and zero/invalid time; no new seed search. No substep collision-position guarantee."
+}

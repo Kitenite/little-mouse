@@ -274,6 +274,8 @@
         "little-mouse/tests/behavior-benchmark.test.mjs",
         "little-mouse/scripts/behavior-visibility.mjs",
         "little-mouse/scripts/behavior-route-metrics.mjs",
+        "little-mouse/scripts/behavior-excursions.mjs",
+        "little-mouse/tests/behavior-excursions.test.mjs",
         "little-mouse/tests/behavior-visibility.test.mjs",
         "little-mouse/tests/behavior-route-metrics.test.mjs"
       ],
@@ -281,7 +283,8 @@
         "docs/behavior-evaluation.md",
         "docs/improvement-cycles.md",
         "docs/behavior-visibility.md",
-        "docs/behavior-route-metrics.md"
+        "docs/behavior-route-metrics.md",
+        "docs/behavior-excursions.md"
       ],
       "report": "docs/cycles/behavior-hill-climb.md",
       "objective": "Reproducible actual-motion benchmarks and bounded offline coordinate search. Keep fixed training seeds, reserve heldout until final selection, record rejection reasons and source fingerprints. Never apply settings or call engineering utility cat reward. Separate neutral-body visibility and executed-route diagnostics from the frozen utility; bound histories, censor discontinuities and hash helper dependencies.",
@@ -300,7 +303,8 @@
         "docs/behavior-evaluation.md",
         "docs/improvement-cycles.md",
         "docs/behavior-visibility.md",
-        "docs/behavior-route-metrics.md"
+        "docs/behavior-route-metrics.md",
+        "docs/behavior-excursions.md"
       ],
       "report": "docs/cycles/behavior-hill-climb.md",
       "objective": "Challenge metric validity, movement discontinuities, score gaming, candidate bounds, train/heldout isolation and source provenance. Independently reproduce malformed/pathological rejection and reported improvements. Read-only; no tuning on heldout or feline efficacy claims. Challenge partial-body geometry, route novelty denominators, jitter/teleports/frame-rate aliasing and dependency hashes before promoting any diagnostic into utility."

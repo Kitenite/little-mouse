@@ -71,7 +71,7 @@ test('a loaded evaluator refuses later on-disk script edits',async()=>{
  try{
   const path=join(dir,'behavior-benchmark.mjs'),source=await readFile(new URL('../scripts/behavior-benchmark.mjs',import.meta.url),'utf8');
   await writeFile(path,source);
-  for(const name of ['behavior-visibility.mjs','behavior-route-metrics.mjs'])
+  for(const name of ['behavior-visibility.mjs','behavior-route-metrics.mjs','behavior-excursions.mjs'])
    await writeFile(join(dir,name),await readFile(new URL('../scripts/'+name,import.meta.url),'utf8'));
   const module=await import(pathToFileURL(path));
   module.assertEvaluatorUnchanged();await writeFile(path,source+'\n// changed after import\n');
@@ -81,10 +81,10 @@ test('a loaded evaluator refuses later on-disk script edits',async()=>{
 
 
 test('helper edits invalidate the loaded evaluator fingerprint',async()=>{
- for(const changed of ['behavior-visibility.mjs','behavior-route-metrics.mjs']){
+ for(const changed of ['behavior-visibility.mjs','behavior-route-metrics.mjs','behavior-excursions.mjs']){
   const dir=await mkdtemp(join(tmpdir(),'prey-helper-hash-'));
   try{
-   for(const name of ['behavior-benchmark.mjs','behavior-visibility.mjs','behavior-route-metrics.mjs'])
+   for(const name of ['behavior-benchmark.mjs','behavior-visibility.mjs','behavior-route-metrics.mjs','behavior-excursions.mjs'])
     await writeFile(join(dir,name),await readFile(new URL('../scripts/'+name,import.meta.url),'utf8'));
    const module=await import(pathToFileURL(join(dir,'behavior-benchmark.mjs')));
    module.assertEvaluatorUnchanged();
@@ -96,8 +96,8 @@ test('helper edits invalidate the loaded evaluator fingerprint',async()=>{
 
 test('diagnostics report partial peeks without replacing legacy scores or learning',async()=>{
  const r=await evaluate({seconds:30,seeds:[11],scenarios:['passive'],metadata:true});
- assert.equal(r.version,3);assert.equal(r.diagnosticContract.participatesInUtility,false);
- assert.deepEqual(Object.keys(r.provenance.evaluatorHashes).sort(),['behavior-benchmark.mjs','behavior-route-metrics.mjs','behavior-visibility.mjs']);
+ assert.equal(r.version,4);assert.equal(r.diagnosticContract.participatesInUtility,false);
+ assert.deepEqual(Object.keys(r.provenance.evaluatorHashes).sort(),['behavior-benchmark.mjs','behavior-excursions.mjs','behavior-route-metrics.mjs','behavior-visibility.mjs']);
  const row=r.rows[0],body=row.diagnostics.bodyVisibility;
  assert.equal(body.samples,1800);assert.equal(body.totalMouseSeconds,60);assert.equal(body.invalidSamples,0);
  assert.ok(body.anyBodyFraction>=row.metrics.visibleFraction-1e-10);
@@ -126,4 +126,51 @@ test('archived runtime provides the diagnostic body profile rather than current 
   assert.notDeepEqual(archive.rows[0].diagnostics.bodyVisibility,live.rows[0].diagnostics.bodyVisibility);
   assert.notEqual(archive.sourceHash,live.sourceHash);
  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('whole-appearance integration completes geometric crossings and censors contact or hidden interruptions',async()=>{
+ for(const mode of ['continuous','hold','hidden','hidden-relocation','touch','toss','injury']){
+  const dir=await mkdtemp(join(tmpdir(),'prey-excursion-wiring-'));
+  try{
+   const publicDir=new URL('../public/',import.meta.url);
+   for(const name of await readdir(publicDir))if(name.endsWith('.js'))
+    await writeFile(join(dir,name),await readFile(new URL(name,publicDir),'utf8'));
+   await writeFile(join(dir,'package.json'),'{"type":"module"}');
+   // A scripted input at the runtime boundary isolates adapter classification. It is
+   // not evidence that production steering generates this authored trajectory.
+   let hunt=await readFile(join(dir,'enrichment.js'),'utf8');
+   hunt=hunt.replace('export function updateHunt(', 'function originalUpdateHunt(');
+   hunt+=`\nexport function updateHunt(m,c,t,w,h,...rest){
+    if(m.castIndex===undefined)return originalUpdateHunt(m,c,t,w,h,...rest);
+    m.state='active';m.hiddenUntil=0;m.hunt={phase:'dart',chapter:{id:'fixture'}};
+    m.targetX=2*w;m.targetY=h/2;return true;
+   }\n`;
+   await writeFile(join(dir,'enrichment.js'),hunt);
+   let physics=await readFile(join(dir,'physics.js'),'utf8');
+   physics=physics.replace('export function stepMice(', 'function originalStepMice(');
+   physics+=`\nexport function stepMice(mice,c,t,dt,w,h,...rest){
+    if(mice[0]?.castIndex===undefined)return originalStepMice(mice,c,t,dt,w,h,...rest);
+    for(const m of mice){m.x=(-.6+t*.28)*w;m.y=h*(m.castIndex?.7:.3);m.angle=0;m.vx=.28*w;m.vy=0;
+     const interrupted=t>=3&&t<4;
+     m.hold=${JSON.stringify(mode)}==='hold'&&interrupted?{part:'body'}:null;
+     m.hiddenUntil=['hidden','hidden-relocation'].includes(${JSON.stringify(mode)})&&interrupted?t+1:0;
+     if(${JSON.stringify(mode)}==='hidden-relocation'&&t>=3.5)m.x+=.025*w;
+     if(${JSON.stringify(mode)}==='touch'&&interrupted)m.hunt.phase='touch';
+     m.tossUntil=${JSON.stringify(mode)}==='toss'&&interrupted?t+1:0;
+     m.injuredUntil=${JSON.stringify(mode)}==='injury'&&interrupted?t+1:0;
+    }return 0;
+   }\n`;
+   await writeFile(join(dir,'physics.js'),physics);
+   const result=await evaluate({sourceDir:dir,seconds:9,seeds:[11],scenarios:['passive'],metadata:false});
+   for(const excursion of result.rows[0].diagnostics.excursions){
+    assert.equal(excursion.counts.invalidSamples,0);
+    assert.equal(excursion.counts.completedAppearances,mode==='continuous'?1:0,mode);
+    if(mode==='continuous'){
+     assert.equal(excursion.history[0].entryEdge,'left');assert.equal(excursion.history[0].exitEdge,'right');
+     assert.ok(excursion.history[0].signature[0].x<0,'partial entry is retained outside viewport');
+     assert.ok(excursion.history[0].signature.at(-1).x>1,'partial exit is retained outside viewport');
+    }else assert.ok(excursion.censorReasons.ineligible>0,mode);
+   }
+  }finally{await rm(dir,{recursive:true,force:true});}
+ }
 });

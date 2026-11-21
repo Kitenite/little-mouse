@@ -1,0 +1,67 @@
+✖ seeded collision-paw retreats physically exit with bounded elapsed time and actual progress (104.695166ms)
+ℹ {"episodes":11,"maxSeconds":18.233333333333334,"maxTurns":12.342582209061874,"collisions":1938}
+✖ seeded collision-paw retreats do not accumulate repeated corrective rotations (0.368291ms)
+✖ same-paw steering is continuous at the outer safety band and outward in overlap (0.424542ms)
+✔ different live paw overrides same-paw commitment and held bodies retain their anchor (1.497541ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 185.766916
+
+✖ failing tests:
+
+test at ../../../../private/var/folders/6p/h3cw025x0z38clvxby6gqylh0000gn/T/excursion-recovery-baseline-m_y9fz6l/little-mouse/tests/paw-collision-recovery.test.mjs:66:1
+✖ seeded collision-paw retreats physically exit with bounded elapsed time and actual progress (104.695166ms)
+  AssertionError [ERR_ASSERTION]: mouse 0 at 56.8: 18.233333333333334s to exit (limit 8s)
+      at TestContext.<anonymous> (file:///private/var/folders/6p/h3cw025x0z38clvxby6gqylh0000gn/T/excursion-recovery-baseline-m_y9fz6l/little-mouse/tests/paw-collision-recovery.test.mjs:78:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at ../../../../private/var/folders/6p/h3cw025x0z38clvxby6gqylh0000gn/T/excursion-recovery-baseline-m_y9fz6l/little-mouse/tests/paw-collision-recovery.test.mjs:81:1
+✖ seeded collision-paw retreats do not accumulate repeated corrective rotations (0.368291ms)
+  AssertionError [ERR_ASSERTION]: mouse 0 at 56.8: 12.342582209061874 absolute rotations; net -0.17864210317722995 (limit 3)
+      at TestContext.<anonymous> (file:///private/var/folders/6p/h3cw025x0z38clvxby6gqylh0000gn/T/excursion-recovery-baseline-m_y9fz6l/little-mouse/tests/paw-collision-recovery.test.mjs:83:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at ../../../../private/var/folders/6p/h3cw025x0z38clvxby6gqylh0000gn/T/excursion-recovery-baseline-m_y9fz6l/little-mouse/tests/paw-collision-recovery.test.mjs:95:1
+✖ same-paw steering is continuous at the outer safety band and outward in overlap (0.424542ms)
+  AssertionError [ERR_ASSERTION]: tiny band crossing must not reverse heading demand
+      at TestContext.<anonymous> (file:///private/var/folders/6p/h3cw025x0z38clvxby6gqylh0000gn/T/excursion-recovery-baseline-m_y9fz6l/little-mouse/tests/paw-collision-recovery.test.mjs:101:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

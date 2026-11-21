@@ -79,11 +79,16 @@ Live paw overlap overrides watch/rest and steers outward. Hunt destinations insi
 paw clearance are projected outside it, so old tap investigation does not approach a held
 area. Free mice commit to one obstacle identity and detour side across physics substeps,
 pointer jitter and release into recent memory. Each mouse retains its own approach axis;
-a forward flank waypoint carries it past the paw. Live overlap always overrides that waypoint,
-even for a different paw. Claims discard the commitment and held mice bypass paw steering.
+a forward flank waypoint carries it past the paw. Same-paw safety-band steering retains tangential progress while blending radial demand
+toward outward escape; actual overlap demands outward motion. A different live paw
+still immediately overrides the commitment. Claims discard the commitment and held mice bypass paw steering.
 Commitments clear on passing the paw, obstacle removal/expiry, arrival, a material goal change
 (over 40 CSS px or half clearance), or bounded accumulated travel. Reused pointer IDs receive
 new identities. Recent footprints shrink steering clearance and remain nonphysical.
+Free integrated travel stops at the first crossed live-paw boundary, including a fast step
+whose endpoint would lie beyond the paw. Tangential/outward travel, recent memory and held
+anchors are excluded; a newly overlapping paw retains gradual bounded depenetration.
+Collision displacement can still create overlap and is handled by the existing constraint.
 This bounded local avoidance is implemented, not a global pathfinding solver; dense paw
 arrangements and physical-device motion quality still require observational validation.
 ## Acceptance criteria
