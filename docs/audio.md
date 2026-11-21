@@ -26,10 +26,11 @@ This establishes scheduling, not physical audibility.
 Missing/failed clips stay silent; there is no generated primer or fallback.
 
 Tap and release use floor vocals. Injury uses uncertain mouse/rat and floor vocals.
-Tap gain is 0.48 (was 0.20); squeak 0.48 (0.28); hit 0.48 (0.38); hurt 0.48 (0.32).
-These are +7.60, +4.68, +2.03 and +3.52 dB respectively before limiting.
+Tap, ambient squeak bank, hit, hurt and release gains are now 0.96; sustained-hold
+vocals are 0.80. This doubles vocal amplitude (+6.02 dB before limiting) over the
+previous mix while keeping movement gains unchanged. The limiter reduces peak boosts.
 Held/dragged mice receive the normal down squeak; after three seconds, a visible sustained
-hold can produce a floor vocal at gain 0.40, recurring every 4–7 seconds. It cannot steal
+hold can produce a floor vocal at gain 0.80, recurring every 4–7 seconds. It cannot steal
 priority from direct contacts. Hold vocals also duck movement/ambience through their duration
 or at least 450 ms. No hold cue survives hiding, mouse removal, cancellation, pause or mute.
 Release/toss is vocal, replacing the former paper release. Quick harmless releases within
@@ -70,8 +71,8 @@ Canceling a nonowner pointer does not clear the owner's hold. Pause clears audio
 so a stale hold deadline cannot squeak immediately when playback resumes.
 Test sound can play while paused but respects application mute and zero volume.
 
-Master gain stays 1.8 × saved volume. A 0.5 input gain and compensating range-2 waveshaper
-allow the conservative 1.497 three-voice peak sum without hard input clamping. The curve is
+Master gain stays 1.8 × saved volume. A 0.25 input gain and compensating range-4 waveshaper
+allow the conservative 2.994 three-voice peak sum without hard input clamping. The curve is
 linear below 0.6 and softly limits above it; its static ceiling is below 0.85.
 This is a mathematical/sample-domain bound, not measured browser true-peak or speaker proof.
 No saved volume/activity/mute values are changed by this mix upgrade: existing users get the

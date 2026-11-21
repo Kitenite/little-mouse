@@ -17,7 +17,7 @@ export const sampleBanks={
 };
 // Legacy call/reply keys are quiet social movement foley, not vocalizations.
 // Keep surface details behind vocal cues; avoid artificial footstep beat trains.
-export const sampleMix={eat:.3,groom:.025,facewipe:.025,hindlegscratch:.035,stretch:.02,roll:.03,peek:.025,squeak:.48,tease:.025,call:.02,reply:.02,hit:.48,hurt:.48,nibble:.3,sniff:.02,rustle:.03,patter:.018,retreat:.022,flinch:.025,dodge:.025,tap:.48,scratch:.035,dragstart:.40,dragloop:.022,dragrelease:.48};
+export const sampleMix={eat:.3,groom:.025,facewipe:.025,hindlegscratch:.035,stretch:.02,roll:.03,peek:.025,squeak:.96,tease:.025,call:.02,reply:.02,hit:.96,hurt:.96,nibble:.3,sniff:.02,rustle:.03,patter:.018,retreat:.022,flinch:.025,dodge:.025,tap:.96,scratch:.035,dragstart:.80,dragloop:.022,dragrelease:.96};
 
 // Preserve recorded transient/dynamic differences; no extra friction normalization.
 export const sampleTrim={};

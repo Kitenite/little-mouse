@@ -338,7 +338,7 @@ test('walking and dragging stay substantially below squeaks while contact gain r
  const rms=new Map(manifest.clips.map(c=>[c.id,c.rms]));
  const power=kind=>Math.sqrt(sampleBanks[kind].reduce((sum,id)=>sum+(rms.get(id)*(sampleTrim[id]??1)*sampleMix[kind])**2,0)/sampleBanks[kind].length);
  for(const kind of ['patter','retreat','dragloop'])assert.ok(20*Math.log10(power(kind)/power('squeak')) < -22,kind);
- assert.equal(sampleMix.tap,.48);assert.equal(sampleMix.hit,.48);assert.equal(sampleMix.hurt,.48);assert.equal(sampleMix.squeak,.48);
+ assert.equal(sampleMix.tap,.96);assert.equal(sampleMix.hit,.96);assert.equal(sampleMix.hurt,.96);assert.equal(sampleMix.squeak,.96);
  assert.ok(power('tap')>power('patter')*5);
 });
 test('startup loads touch vocal recordings before movement textures',async()=>{
@@ -525,11 +525,11 @@ test('every cue uses native-rate recordings and no synthesized fallback when all
  assert.equal(context.sources.length,count);
 });
 test('three loudest recorded peaks fit limiter input headroom and static output remains bounded',async()=>{
- const {audio}=setup();audio.setState(true,true);await audio.unlock();assert.equal(audio.limiterInput.gain.value,.5);
+ const {audio}=setup();audio.setState(true,true);await audio.unlock();assert.equal(audio.limiterInput.gain.value,.25);
  const manifest=JSON.parse(readFileSync(new URL('../public/assets/audio/ATTRIBUTION.json',import.meta.url)));
  const peaks=new Map(manifest.clips.map(c=>[c.id,c.peak]));
  const voicePeak=Math.max(...Object.entries(sampleBanks).flatMap(([kind,ids])=>ids.map(id=>peaks.get(id)*sampleMix[kind]*(sampleTrim[id]??1)*1.05)));
- const maximum=voicePeak*1.8*3;assert.ok(maximum>1&&maximum*.5<1);
+ const maximum=voicePeak*1.8*3;assert.ok(maximum>1&&maximum*audio.limiterInput.gain.value<1);
  const curve=audio.limiter.curve;assert.ok(curve.every(v=>Number.isFinite(v)&&Math.abs(v)<.85));
  for(let i=1;i<curve.length;i++)assert.ok(curve[i]>=curve[i-1]);
 });

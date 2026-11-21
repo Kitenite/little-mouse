@@ -4,7 +4,7 @@ import{recordedSamples,sampleBanks,sampleMix,sampleTrim,surfaceFriction}from'./a
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const OUTPUT_GAIN=1.8;
 // Identity through normal levels and a soft knee above .6. The graph scales
-// input by 1/2 and restores it in the curve, accommodating three loud voices
+// input by 1/4 and restores it in the curve, accommodating three loud voices
 // without hard clamping the waveshaper input. Static output stays below .85.
 export function createLimiterCurve(inputRange=1){const curve=new Float32Array(2049);for(let i=0;i<curve.length;i++){const x=(i/(curve.length-1)*2-1)*inputRange,a=Math.abs(x);curve[i]=Math.sign(x)*(a<=.6?a:.6+.25*(1-Math.exp(-(a-.6)/.25)));}return curve;}
 export const audioDefaults={soundVolume:.7,soundFrequency:1,soundVariety:'varied'};
@@ -49,8 +49,8 @@ export class PreyAudio {
       if(!this.context||this.context.state==='closed'){
         this.context=this.contextFactory();this.master=this.context.createGain();
         this.masterVolume=this.settings.soundVolume*OUTPUT_GAIN;this.master.gain.value=this.masterVolume;
-        this.limiterInput=this.context.createGain();this.limiterInput.gain.value=.5;
-        this.limiter=this.context.createWaveShaper();this.limiter.curve=createLimiterCurve(2);this.limiter.oversample='2x';this.master.connect(this.limiterInput);this.limiterInput.connect(this.limiter);
+        this.limiterInput=this.context.createGain();this.limiterInput.gain.value=.25;
+        this.limiter=this.context.createWaveShaper();this.limiter.curve=createLimiterCurve(4);this.limiter.oversample='2x';this.master.connect(this.limiterInput);this.limiterInput.connect(this.limiter);
         this.analyser=this.context.createAnalyser?.();
         if(this.analyser){this.analyser.fftSize=256;this.samples=new Float32Array(256);this.limiter.connect(this.analyser);this.analyser.connect(this.context.destination);}else this.limiter.connect(this.context.destination);
         this.context.onstatechange=()=>{if(!this.ready)this.stop();else this.flushContacts();};

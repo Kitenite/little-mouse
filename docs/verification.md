@@ -3,9 +3,18 @@
 Reviewed 2026-11-20. Current checks replace earlier suite totals; historical evidence remains
 in [cycle reports](cycles/README.md). Test success does not establish feline preference.
 
+## Current vocal mix
+
+Recorded vocal gains doubled (+6.02 dB before limiting); movement levels remain unchanged.
+Limiter input headroom increased to range four with the same output ceiling. All 450 web
+tests and production build pass; no physical speaker-loudness claim. Native lint/typecheck pass.
+The Mac LAN address is now `10.0.0.49`; Metro was restarted with the matching game URL.
+Latest iPad relaunch attempt was rejected by iOS because Guided Access is active.
+Device loading remains pending until the owner exits Guided Access; no new native binary needed.
+
 ## Current collision–paw repair and appearance diagnostics
 
-**450 web tests pass**; production build **91839a4344eb**, Worker syntax, catalog and four
+**450 web tests pass**; production build **ddfe156a53d6**, Worker syntax, catalog and four
 eligibility checks pass. Native code is unchanged; prior native lint/typecheck remain historical.
 [Current batch](cycles/excursions.md) preserves baseline-failing collision/turn regressions,
 continuous same-paw escape steering, swept live-paw travel and complete entry-to-exit diagnostics.
@@ -14,7 +23,7 @@ Final independent reviews and their limitations are retained with the batch evid
 
 Game port 8787 and development-client Metro 8088 run in persistent Paradev terminals.
 The sidebar uses `http://localhost:8787/?surface=ipad`; current development fingerprint
-is `968435eeaa19`. Browser startup checks do not establish physical iPad motion or audio.
+is `aaea4ae23bbe`. Browser startup checks do not establish physical iPad motion or audio.
 Source/evidence published on main at `19951b1`; completed worker sessions retired.
 No new native install or hosted publication. [Evidence](evidence/excursions-2026-11-20/README.md).
 
