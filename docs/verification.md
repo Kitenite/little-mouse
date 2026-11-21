@@ -15,6 +15,7 @@ Final independent reviews and their limitations are retained with the batch evid
 Game port 8787 and development-client Metro 8088 run in persistent Paradev terminals.
 The sidebar uses `http://localhost:8787/?surface=ipad`; current development fingerprint
 is `968435eeaa19`. Browser startup checks do not establish physical iPad motion or audio.
+Source/evidence published on main at `19951b1`; completed worker sessions retired.
 No new native install or hosted publication. [Evidence](evidence/excursions-2026-11-20/README.md).
 
 ## Accepted hill climbing and context-isolated learning

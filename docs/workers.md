@@ -74,16 +74,16 @@ and actual-route diagnostics. All workers from both batches were retired after s
 publication. Historical terminal tables remain in Git at `4ba72c4`; reusable roles are in code.
 Main workspace, sidebar, game server and Metro are retained; release status is in verification.
 
-## Active whole-appearance and motion review
+## Completed whole-appearance and motion review
 
 Baseline `4ba72c4`, local workspace above; intentionally disjoint shared worktree ownership.
 
 | Task | Terminal | Status / dependency / ownership |
 | --- | --- | --- |
-| Excursion builder | `9f7718a4-5081-4a0c-a7b9-cf1f55bf1949` | completed; helper and baseline-failing recovery regression verified |
-| Measurement critic | `6283fe10-62c0-4495-9c45-60db1121742a` | completed; round3 accepted measurement contract |
-| Motion trace critic | `96133374-ac7e-4878-bfd9-350e89f09a05` | completed; scoped acceptance with two exact residual cases queued |
-| Root | coordinator | final checks passed; publishing reviewed work and preserving residual collision queue |
+| Excursion builder | `9f7718a4-5081-4a0c-a7b9-cf1f55bf1949` | retired; helper and baseline-failing recovery regression verified |
+| Measurement critic | `6283fe10-62c0-4495-9c45-60db1121742a` | retired; round3 accepted measurement contract |
+| Motion trace critic | `96133374-ac7e-4878-bfd9-350e89f09a05` | retired; scoped acceptance with two exact residual cases queued |
+| Root | coordinator | published at `19951b1`, remote verified; residual collision queue retained |
 
 Acceptance: continuous witnessed entry-to-exit geometry; partial/censored appearances explicitly
 separated; bounded memory and real displacement; unchanged existing score metrics unless a
@@ -96,3 +96,6 @@ and Metro `268209c7-0d6c-4906-b6c0-4ddb94c75d20`.
 Next motion batch: seed23 prolonged retreat and post-sweep collision-induced paw intrusion;
 see the final motion critic artifacts. Whole-appearance replacement/resize adapters remain
 out of scope until those scenarios are added. No claim of all spinning resolved.
+
+All three completed worker terminals were closed after remote preservation at `19951b1`.
+Main workspace, sidebar and both non-agent servers remain available.
